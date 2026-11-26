@@ -4077,178 +4077,177 @@ class AppLocalizationsAr extends AppLocalizations {
       'افتح قائمة الجلسات لاختيار محادثة. مسودتك محفوظة.';
 
   @override
-  String get composer_snippets => 'Prompt snippets';
+  String get composer_snippets => 'مقتطفات الطلبات';
 
   @override
   String get composer_snippets_description =>
-      'Pick a starter prompt to drop into the composer.';
+      'اختر طلبًا مبدئيًا لإدراجه في محرّر الرسائل.';
 
   @override
-  String get composer_snippet_review => 'Code review';
+  String get composer_snippet_review => 'مراجعة الشيفرة';
 
   @override
   String get composer_snippet_review_body =>
-      'Audit the current change for regressions, dropped edge cases and missing tests.';
+      'راجع التغيير الحالي بحثًا عن تراجعات وحالات طرفية أُغفلت واختبارات ناقصة.';
 
   @override
   String get composer_snippet_review_text =>
-      'Please review this for bugs, regressions and missing tests.';
+      'يرجى مراجعة هذا بحثًا عن أخطاء وتراجعات واختبارات ناقصة.';
 
   @override
-  String get composer_snippet_plan => 'Implementation plan';
+  String get composer_snippet_plan => 'خطة التنفيذ';
 
   @override
   String get composer_snippet_plan_body =>
-      'Outline an approach before touching code so the diff stays focused.';
+      'حدّد نهجًا قبل تعديل الشيفرة لإبقاء التغييرات مركّزة.';
 
   @override
   String get composer_snippet_plan_text =>
-      'Please make a concise implementation plan before changing code.';
+      'يرجى وضع خطة تنفيذ موجزة قبل تعديل الشيفرة.';
 
   @override
-  String get composer_snippet_explain => 'Explain this';
+  String get composer_snippet_explain => 'اشرح هذا';
 
   @override
   String get composer_snippet_explain_body =>
-      'Walk through how the selected code works and point to the key files.';
+      'اشرح طريقة عمل الشيفرة المحددة وأشِر إلى الملفات الأساسية.';
 
   @override
   String get composer_snippet_explain_text =>
-      'Please explain how this works and point me to the key files.';
+      'يرجى شرح طريقة عمل هذا وإرشادي إلى الملفات الأساسية.';
 
   @override
-  String get composer_status => 'Status';
+  String get composer_status => 'الحالة';
 
   @override
-  String get composer_status_context => 'Context';
+  String get composer_status_context => 'السياق';
 
   @override
-  String get composer_status_cache => 'Cache hit';
+  String get composer_status_cache => 'إصابة الذاكرة المؤقتة';
 
   @override
-  String get composer_status_throughput => 'Output tokens/sec';
+  String get composer_status_throughput => 'رموز الإخراج/ثانية';
 
   @override
-  String get composer_status_running => 'Running';
+  String get composer_status_running => 'قيد التشغيل';
 
   @override
-  String get composer_status_session => 'Session';
+  String get composer_status_session => 'الجلسة';
 
   @override
-  String get composer_status_not_reported => 'Not reported';
+  String get composer_status_not_reported => 'لم يُبلّغ عنه';
 
   @override
-  String get composer_status_empty => 'No context breakdown was reported.';
+  String get composer_status_empty => 'لم تُرسل تفاصيل توزيع السياق.';
 
   @override
-  String get composer_status_loading => 'Loading context breakdown';
+  String get composer_status_loading => 'جارٍ تحميل تفاصيل توزيع السياق';
 
   @override
-  String get composer_status_reset => 'Reset status bar';
+  String get composer_status_reset => 'إعادة ضبط شريط الحالة';
 
   @override
-  String get composer_resume_title => 'Resume a chat';
+  String get composer_resume_title => 'استئناف دردشة';
 
   @override
-  String get composer_resume_search => 'Search titles and ids';
+  String get composer_resume_search => 'البحث في العناوين والمعرّفات';
 
   @override
-  String get composer_resume_empty => 'No chats match.';
+  String get composer_resume_empty => 'لا توجد دردشات مطابقة.';
 
   @override
   String get composer_resume_unavailable =>
-      'This pane has no chat list to search.';
+      'لا تتضمن هذه اللوحة قائمة دردشات للبحث فيها.';
 
   @override
-  String get composer_failure_retry => 'Retry';
+  String get composer_failure_retry => 'إعادة المحاولة';
 
   @override
   String composer_failure_retry_at(String time) {
-    return 'Retry at $time';
+    return 'إعادة المحاولة عند $time';
   }
 
   @override
-  String get composer_failure_compress => 'Compress';
+  String get composer_failure_compress => 'ضغط';
 
   @override
-  String get composer_failure_switch_model => 'Switch model';
+  String get composer_failure_switch_model => 'تبديل النموذج';
 
   @override
   String composer_failure_switch_to(String model) {
-    return 'Switch to $model';
+    return 'التبديل إلى $model';
   }
 
   @override
-  String get composer_failure_new_chat => 'New chat';
+  String get composer_failure_new_chat => 'محادثة جديدة';
 
   @override
-  String get composer_failure_edit => 'Edit message';
+  String get composer_failure_edit => 'تعديل الرسالة';
 
   @override
-  String get composer_failure_details => 'Details';
+  String get composer_failure_details => 'التفاصيل';
 
   @override
-  String get composer_failure_hide_details => 'Hide details';
+  String get composer_failure_hide_details => 'إخفاء التفاصيل';
 
   @override
-  String get composer_failure_copy => 'Copy diagnostics';
+  String get composer_failure_copy => 'نسخ بيانات التشخيص';
 
   @override
   String get composer_failure_account =>
-      'The other fix is on the gateway account. This chat cannot do it.';
+      'الحل الآخر يتطلب إجراءً في حساب البوابة. لا يمكن تنفيذه من هذه الدردشة.';
 
   @override
   String get composer_failure_account_only =>
-      'This has to be fixed on the gateway account. This chat cannot do it.';
+      'يجب إصلاح هذا في حساب البوابة. لا يمكن تنفيذه من هذه الدردشة.';
 
   @override
   String get composer_failure_confirm_compress =>
-      'Compress this chat? The gateway will shorten the transcript.';
+      'هل تريد ضغط هذه الدردشة؟ ستختصر البوابة سجل المحادثة.';
 
   @override
   String composer_failure_confirm_model(String model) {
-    return 'Switch this chat to $model?';
+    return 'هل تريد تبديل هذه الدردشة إلى $model؟';
   }
 
   @override
-  String get composer_drop_attach => 'Drop to attach';
+  String get composer_drop_attach => 'أفلت للإرفاق';
 
   @override
   String get composer_drop_folder_unsupported =>
-      'Folders can\'t be attached. Drop the files instead.';
+      'لا يمكن إرفاق المجلدات. أفلت الملفات بدلًا منها.';
 
   @override
-  String get composer_drop_reference => 'Drop to reference';
+  String get composer_drop_reference => 'أفلت لإضافة مرجع';
 
   @override
-  String get composer_reference_copy => 'Copy reference';
+  String get composer_reference_copy => 'نسخ المرجع';
 
   @override
-  String get composer_reference_remove => 'Remove reference';
+  String get composer_reference_remove => 'إزالة المرجع';
 
   @override
   String get composer_btw_usage =>
-      'Usage: /btw <question> — answered from a snapshot of this conversation without interrupting it.';
+      'الاستخدام: /btw <question> — إجابة من لقطة لهذه المحادثة دون مقاطعتها.';
 
   @override
   String get composer_background_usage =>
-      'Usage: /background <prompt> — the task runs separately and the result comes back here.';
+      'الاستخدام: /background <prompt> — تعمل المهمة بشكل منفصل وتعود النتيجة إلى هنا.';
 
   @override
   String get composer_handoff_usage =>
-      'Usage: /handoff <platform> — transfer this chat to that messaging platform.';
+      'الاستخدام: /handoff <platform> — نقل هذه الدردشة إلى منصة المراسلة المحددة.';
 
   @override
-  String get composer_command_needs_session =>
-      'This command needs an open chat.';
+  String get composer_command_needs_session => 'يتطلب هذا الأمر دردشة مفتوحة.';
 
   @override
   String get composer_retry_not_found =>
-      'This turn is not in the saved history, so Retry cannot replace it. Nothing was sent again. Edit the message and send it for another try.';
+      'هذا التبادل غير موجود في السجل المحفوظ، لذا لا يمكن لخيار «إعادة المحاولة» استبداله. لم يُرسل شيء مجددًا. عدّل الرسالة وأرسلها للمحاولة من جديد.';
 
   @override
   String get composer_retry_unavailable =>
-      'Retry cannot replace a turn on this connection, so nothing was sent again. Edit the message and send it for another try.';
+      'لا يمكن لخيار «إعادة المحاولة» استبدال تبادل عبر هذا الاتصال، لذا لم يُرسل شيء مجددًا. عدّل الرسالة وأرسلها للمحاولة من جديد.';
 
   @override
   String get composer_failure_switch_no_retry =>
@@ -4256,52 +4255,50 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get composer_command_needs_gateway_session =>
-      'This chat has no gateway session yet. Send a message first, then run the command again.';
+      'ليس لهذه الدردشة جلسة على البوابة بعد. أرسل رسالة أولًا، ثم شغّل الأمر مجددًا.';
 
   @override
-  String get composer_side_question =>
-      'btw — answering from a conversation snapshot';
+  String get composer_side_question => 'btw — إجابة من لقطة للمحادثة';
 
   @override
   String composer_side_question_id(String id) {
-    return 'btw $id — answering from a conversation snapshot';
+    return 'btw $id — إجابة من لقطة للمحادثة';
   }
 
   @override
   String get composer_background_started =>
-      'Background task started. You can keep chatting. The result will appear here.';
+      'بدأت المهمة في الخلفية. يمكنك متابعة الدردشة. ستظهر النتيجة هنا.';
 
   @override
   String composer_background_started_id(String id) {
-    return 'Background task $id started. You can keep chatting. The result will appear here.';
+    return 'بدأت المهمة $id في الخلفية. يمكنك متابعة الدردشة. ستظهر النتيجة هنا.';
   }
 
   @override
   String composer_handoff_requested(String platform) {
-    return 'Handoff to $platform requested.';
+    return 'طُلب النقل إلى $platform.';
   }
 
   @override
   String composer_handoff_done(String platform) {
-    return 'Handed this chat to $platform.';
+    return 'نُقلت هذه الدردشة إلى $platform.';
   }
 
   @override
-  String get composer_handoff_failed => 'Handoff failed.';
+  String get composer_handoff_failed => 'تعذّر النقل.';
 
   @override
   String get composer_handoff_timeout =>
-      'Handoff did not finish. It may still be running on the gateway.';
+      'لم يكتمل النقل. قد يكون لا يزال قيد التنفيذ على البوابة.';
 
   @override
-  String get composer_compress_done => 'Compressed this chat.';
+  String get composer_compress_done => 'ضُغطت هذه الدردشة.';
 
   @override
-  String get composer_file_missing => 'That file is not on this device.';
+  String get composer_file_missing => 'هذا الملف غير موجود على هذا الجهاز.';
 
   @override
-  String get composer_attach_busy =>
-      'Attachments can be added when this reply finishes.';
+  String get composer_attach_busy => 'يمكن إضافة المرفقات بعد اكتمال هذا الرد.';
 
   @override
   String get nextgen_toggle => 'واجهة NextGen';
@@ -6783,123 +6780,122 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get render_widget_file_truncated =>
-      'Only the start of this file was read, so the widget may be incomplete.';
+      'قُرئت بداية هذا الملف فقط، لذا قد يكون عنصر الواجهة غير مكتمل.';
 
   @override
-  String get setup_beat_title => 'Setup';
+  String get setup_beat_title => 'الإعداد';
 
   @override
   String setup_beat_use_name(String name) {
-    return 'Use $name';
+    return 'استخدام $name';
   }
 
   @override
-  String get setup_beat_name_hint => 'What should Hermes call you?';
+  String get setup_beat_name_hint => 'بأي اسم تريد أن يناديك Hermes؟';
 
   @override
   String get setup_beat_on_computer =>
-      'This step is done in Hermes on the computer it runs on. Continue keeps what is set up there.';
+      'تُنفّذ هذه الخطوة في Hermes على الحاسوب الذي يعمل عليه. يحافظ خيار «متابعة» على الإعدادات الموجودة هناك.';
 
   @override
-  String get setup_beat_not_waiting =>
-      'This setup card is no longer waiting for an answer.';
+  String get setup_beat_not_waiting => 'لم تعد بطاقة الإعداد هذه تنتظر إجابة.';
 
   @override
-  String get catalog_kind_plugin => 'Plugin';
+  String get catalog_kind_plugin => 'إضافة';
 
   @override
-  String get catalog_kind_skill => 'Skill';
+  String get catalog_kind_skill => 'مهارة';
 
   @override
-  String get catalog_tier_official => 'Official';
+  String get catalog_tier_official => 'رسمي';
 
   @override
-  String get catalog_tier_verified => 'Verified';
+  String get catalog_tier_verified => 'تم التحقق منه';
 
   @override
-  String get catalog_tier_community => 'Community';
+  String get catalog_tier_community => 'مجتمعي';
 
   @override
-  String get catalog_install => 'Install';
+  String get catalog_install => 'تثبيت';
 
   @override
-  String get catalog_waiting => 'Waiting for your choice';
+  String get catalog_waiting => 'بانتظار اختيارك';
 
   @override
-  String get catalog_installed => 'Installed';
+  String get catalog_installed => 'مثبّت';
 
   @override
-  String get catalog_installed_off => 'Installed, not turned on';
+  String get catalog_installed_off => 'مثبّت، غير مفعّل';
 
   @override
-  String get catalog_skipped => 'Skipped';
+  String get catalog_skipped => 'تم التخطي';
 
   @override
-  String get catalog_not_installed => 'Not installed';
+  String get catalog_not_installed => 'غير مثبّت';
 
   @override
   String catalog_target_profile(String profile) {
-    return 'Installs into the $profile profile';
+    return 'يُثبّت في الملف الشخصي $profile';
   }
 
   @override
   String catalog_source(String repo, String sha) {
-    return '$repo at $sha';
+    return '$repo عند المراجعة $sha';
   }
 
   @override
   String catalog_scan(String status, String summary) {
-    return 'Security scan: $status. $summary';
+    return 'الفحص الأمني: $status. $summary';
   }
 
   @override
   String catalog_requires_hermes(String range) {
-    return 'Needs Hermes $range';
+    return 'يتطلب Hermes $range';
   }
 
   @override
   String catalog_skill_ready(String name) {
-    return 'Skill $name is ready to use';
+    return 'المهارة $name جاهزة للاستخدام';
   }
 
   @override
   String catalog_missing_env(String names) {
-    return 'Still needs: $names';
+    return 'لا يزال يتطلب: $names';
   }
 
   @override
   String catalog_server_error(String name, String error) {
-    return '$name did not connect: $error';
+    return 'لم يتصل $name: $error';
   }
 
   @override
-  String get catalog_send_failed => 'Your choice was not sent. Try again.';
+  String get catalog_send_failed => 'لم يُرسل اختيارك. حاول مجددًا.';
 
   @override
-  String get attachment_video_speed => 'Playback speed';
+  String get attachment_video_speed => 'سرعة التشغيل';
 
   @override
-  String get catalog_installing => 'Installing…';
+  String get catalog_installing => 'جارٍ التثبيت…';
 
   @override
-  String get catalog_phase_downloading => 'Downloading…';
+  String get catalog_phase_downloading => 'جارٍ التنزيل…';
 
   @override
-  String get catalog_phase_python_packages => 'Installing Python packages…';
+  String get catalog_phase_python_packages => 'جارٍ تثبيت حزم Python…';
 
   @override
-  String get catalog_phase_loading_tools => 'Loading its tools…';
+  String get catalog_phase_loading_tools => 'جارٍ تحميل أدواته…';
 
   @override
-  String get setup_beat_send_failed => 'Your answer was not sent. Try again.';
+  String get setup_beat_send_failed => 'لم تُرسل إجابتك. حاول مجددًا.';
 
   @override
   String catalog_tool_count(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count tools',
-      one: '1 tool',
+      other: '$count أداة',
+      one: 'أداة واحدة',
     );
     return '$_temp0';
   }
@@ -9558,4 +9554,2475 @@ class AppLocalizationsAr extends AppLocalizations {
   String ng_bots_section_toggle(String name) {
     return 'إظهار $name أو إخفاؤه';
   }
+
+  @override
+  String
+  get release_core_transcript_reader_this_passage_is_no_longer_in_the_loaded =>
+      'لم يعد هذا المقطع ضمن الجزء المحمّل من المحادثة.';
+
+  @override
+  String get release_core_transcript_reader_loaded_prompts =>
+      'الطلبات المحمّلة';
+
+  @override
+  String get release_core_transcript_reader_jump_to_latest =>
+      'الانتقال إلى أحدث الرسائل';
+
+  @override
+  String get release_core_transcript_reader_no_prompts_loaded =>
+      'لا توجد طلبات محمّلة';
+
+  @override
+  String get release_core_transcript_reader_find_in_loaded_messages =>
+      'البحث في الرسائل المحمّلة';
+
+  @override
+  String get release_core_transcript_reader_previous_match => 'النتيجة السابقة';
+
+  @override
+  String get release_core_transcript_reader_next_match => 'النتيجة التالية';
+
+  @override
+  String get release_core_transcript_reader_prompt_timeline =>
+      'التسلسل الزمني للطلبات';
+
+  @override
+  String get release_core_transcript_reader_close_find => 'إغلاق البحث';
+
+  @override
+  String get release_core_session_organisation_organise_chats =>
+      'تنظيم المحادثات';
+
+  @override
+  String get release_core_session_organisation_show_model_and_usage =>
+      'عرض النموذج والاستخدام';
+
+  @override
+  String
+  get release_core_session_files_view_connection_changed_reopen_files_on_the_new_connection =>
+      'تغيّر الاتصال. أعد فتح الملفات عبر الاتصال الجديد.';
+
+  @override
+  String
+  get release_core_session_files_view_the_connection_or_session_changed_reopen_this_pane =>
+      'تغيّر الاتصال أو الجلسة. أعد فتح هذه اللوحة.';
+
+  @override
+  String
+  get release_core_session_files_view_no_verified_host_working_directory_for_this_session =>
+      'لا يوجد مجلد عمل مؤكّد على المضيف لهذه الجلسة.';
+
+  @override
+  String
+  get release_core_session_files_view_the_gateway_denied_this_operation =>
+      'رفضت البوابة هذه العملية.';
+
+  @override
+  String
+  get release_core_session_files_view_this_gateway_does_not_support_this_operation =>
+      'لا تدعم هذه البوابة هذه العملية.';
+
+  @override
+  String
+  get release_core_session_files_view_the_file_owner_or_working_directory_changed_reload =>
+      'تغيّر الملف أو المالك أو مجلد العمل. أعد التحميل والمراجعة.';
+
+  @override
+  String
+  get release_core_session_files_view_the_gateway_returned_an_unsafe_path_or_invalid =>
+      'أعادت البوابة مسارًا غير آمن أو استجابة ملف غير صالحة.';
+
+  @override
+  String
+  get release_core_session_files_view_workspace_access_requires_a_secure_gateway_connection =>
+      'يتطلب الوصول إلى مساحة العمل اتصالًا آمنًا بالبوابة.';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_unavailable_refresh_to_check_the_current_state =>
+      'البوابة غير متاحة. حدّث للتحقق من الحالة الحالية.';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_operation_could_not_be_confirmed =>
+      'تعذّر تأكيد تنفيذ العملية على البوابة.';
+
+  @override
+  String get release_core_session_files_view_git_status_unavailable =>
+      'حالة Git غير متاحة.';
+
+  @override
+  String
+  get release_core_session_files_view_change_this_chat_s_working_directory =>
+      'هل تريد تغيير مجلد العمل لهذه المحادثة؟';
+
+  @override
+  String get release_core_session_files_view_absolute_gateway_directory =>
+      'المسار المطلق للمجلد على البوابة';
+
+  @override
+  String get release_core_session_files_view_change_directory => 'تغيير المجلد';
+
+  @override
+  String get release_core_session_files_view_replace_gateway_file =>
+      'هل تريد استبدال الملف على البوابة؟';
+
+  @override
+  String
+  release_core_session_files_view_only_if_the_file_still_matches_the_version(
+    String path,
+  ) {
+    return '$path\n\nفقط إذا ظل الملف مطابقًا للنسخة التي راجعتها. يحتفظ المضيف المتوافق بالملف المستبدَل لإتاحة استعادته.';
+  }
+
+  @override
+  String get release_core_session_files_view_save_changes => 'حفظ التغييرات';
+
+  @override
+  String
+  get release_core_session_files_view_saved_and_verified_on_the_gateway =>
+      'تم الحفظ والتحقق على البوابة.';
+
+  @override
+  String
+  get release_core_session_files_view_guarded_saving_is_unavailable_on_this_gateway_your =>
+      'لا يتوفر الحفظ مع التحقق من النسخة على هذه البوابة. ما زالت مسودتك هنا.';
+
+  @override
+  String
+  release_core_session_files_view_save_was_not_confirmed_your_draft_is_still(
+    String reason,
+  ) {
+    return '$reason لم يُؤكَّد الحفظ. ما زالت مسودتك هنا.';
+  }
+
+  @override
+  String get release_core_session_files_view_review_current_gateway_version =>
+      'مراجعة النسخة الحالية على البوابة';
+
+  @override
+  String get release_core_session_files_view_discard_draft_and_reload =>
+      'تجاهل المسودة وإعادة التحميل';
+
+  @override
+  String get release_core_session_files_view_keep_draft_against_this_version =>
+      'الاحتفاظ بالمسودة مع اعتماد هذه النسخة أساسًا';
+
+  @override
+  String get release_core_session_files_view_discard_unsaved_edits =>
+      'هل تريد تجاهل التعديلات غير المحفوظة؟';
+
+  @override
+  String get release_core_session_files_view_keep_editing => 'متابعة التعديل';
+
+  @override
+  String get release_core_session_files_view_discard_edits => 'تجاهل التعديلات';
+
+  @override
+  String get release_core_session_files_view_remote_working_directory =>
+      'مجلد العمل البعيد';
+
+  @override
+  String get release_core_session_files_view_change_working_directory =>
+      'تغيير مجلد العمل';
+
+  @override
+  String get release_core_session_files_view_show_ignored_files =>
+      'عرض الملفات المتجاهَلة';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_does_not_report_ignored_status =>
+      'لا توضح البوابة الملفات المتجاهَلة.';
+
+  @override
+  String get release_core_session_files_view_no_visible_entries =>
+      'لا توجد عناصر ظاهرة';
+
+  @override
+  String get release_core_session_files_view_changed => 'معدَّل';
+
+  @override
+  String get release_core_session_files_view_ignored => 'متجاهَل';
+
+  @override
+  String release_core_session_files_view_actions_for(String name) {
+    return 'إجراءات $name';
+  }
+
+  @override
+  String get release_core_session_files_view_copy_relative_path =>
+      'نسخ المسار النسبي';
+
+  @override
+  String get release_core_session_files_view_copy_gateway_path =>
+      'نسخ المسار على البوابة';
+
+  @override
+  String get release_core_session_files_view_attach_folder_reference =>
+      'إرفاق مرجع المجلد';
+
+  @override
+  String get release_core_session_files_view_attach_file_reference =>
+      'إرفاق مرجع الملف';
+
+  @override
+  String
+  get release_core_session_files_view_preview_truncated_editing_disabled =>
+      'المعاينة مقتطعة — التعديل معطّل.';
+
+  @override
+  String get release_core_session_files_view_select_lines => 'تحديد أسطر';
+
+  @override
+  String get release_core_session_files_view_review_gateway_version =>
+      'مراجعة النسخة على البوابة';
+
+  @override
+  String get release_core_session_files_view_attach_selected_lines =>
+      'إرفاق الأسطر المحدّدة';
+
+  @override
+  String get release_core_session_files_view_binary_file_no_text_preview =>
+      'ملف ثنائي — لا تتوفر معاينة نصية.';
+
+  @override
+  String get release_core_session_files_view_file_source => 'مصدر الملف';
+
+  @override
+  String get release_core_session_files_view_close_session_files =>
+      'إغلاق ملفات الجلسة';
+
+  @override
+  String get release_core_session_files_view_back_to_tree =>
+      'العودة إلى الشجرة';
+
+  @override
+  String get release_core_session_files_view_session_files => 'ملفات الجلسة';
+
+  @override
+  String get release_core_session_files_view_git_review => 'مراجعة Git';
+
+  @override
+  String get release_core_session_files_view_refresh_tree => 'تحديث الشجرة';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_this_connection_changed_reopen_its_chat =>
+      'تغيّر هذا الاتصال. أعد فتح محادثته.';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_disconnected_reconnect_the_chat_then_refresh =>
+      'انقطع الاتصال. أعد توصيل المحادثة، ثم حدّث.';
+
+  @override
+  String release_core_gateway_queue_screen_gateway_queue_unavailable(
+    String reason,
+  ) {
+    return 'قائمة انتظار البوابة غير متاحة: $reason.';
+  }
+
+  @override
+  String release_core_gateway_queue_screen_not_confirmed_nothing_was_resent(
+    String reason,
+  ) {
+    return 'لم يُؤكَّد ($reason). لم يُعَد إرسال أي شيء.';
+  }
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_confirmed_admission =>
+      'أكّدت البوابة قبول الطلب.';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_edited_entry_admitted_at_the_end_of_the =>
+      'أُضيف العنصر المعدَّل إلى نهاية قائمة الانتظار.';
+
+  @override
+  String get release_core_gateway_queue_screen_discard_unknown_outcome =>
+      'هل تريد تجاهل الطلب ذي النتيجة غير المعروفة؟';
+
+  @override
+  String get release_core_gateway_queue_screen_remove_this_entry =>
+      'هل تريد إزالة هذا العنصر؟';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_the_lost_turn_will_not_be_retried_waiting =>
+      'لن تُعاد محاولة الجولة المفقودة. يمكن الآن تنفيذ الجولات المنتظرة.';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_if_the_gateway_has_just_started_this_entry =>
+      'إذا كانت البوابة قد بدأت للتو معالجة هذا العنصر، فقد تؤدي إزالته إلى إيقاف تلك الجولة.';
+
+  @override
+  String get release_core_gateway_queue_screen_keep => 'إبقاء';
+
+  @override
+  String get release_core_gateway_queue_screen_discard_and_resume =>
+      'تجاهل واستئناف';
+
+  @override
+  String get release_core_gateway_queue_screen_remove_entry => 'إزالة العنصر';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_lost_admission_resolved_it_was_not_resent =>
+      'حُسمت حالة القبول التي فُقد تأكيدها؛ لم يُعَد إرسال الطلب.';
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_acknowledged_removal =>
+      'أكّدت البوابة الإزالة.';
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_queue =>
+      'قائمة انتظار البوابة';
+
+  @override
+  String get release_core_gateway_queue_screen_refresh_queue =>
+      'تحديث قائمة الانتظار';
+
+  @override
+  String get release_core_gateway_queue_screen_queue_paused_unknown_outcome =>
+      'قائمة الانتظار متوقفة مؤقتًا: النتيجة غير معروفة';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_review_the_lost_admission_before_resuming_nothing_is =>
+      'راجع الطلب الذي فُقد تأكيد قبوله قبل الاستئناف. لن يُعَد إرسال أي شيء.';
+
+  @override
+  String get release_core_gateway_queue_screen_no_pending_admissions =>
+      'لا توجد طلبات بانتظار القبول';
+
+  @override
+  String get release_core_gateway_queue_screen_discard => 'تجاهل…';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_gateway_acknowledged_the_steering_request =>
+      'أكّدت البوابة استلام طلب توجيه الجولة.';
+
+  @override
+  String get release_core_gateway_queue_screen_steer_running_turn =>
+      'توجيه الجولة الجارية';
+
+  @override
+  String get release_core_gateway_queue_screen_remove => 'إزالة…';
+
+  @override
+  String get release_core_gateway_queue_screen_next_prompt => 'الطلب التالي';
+
+  @override
+  String get release_core_gateway_queue_screen_edit_queued_prompt =>
+      'تعديل الطلب في قائمة الانتظار';
+
+  @override
+  String get release_core_gateway_queue_screen_submit_to_gateway_queue =>
+      'الإرسال إلى قائمة انتظار البوابة';
+
+  @override
+  String get release_core_gateway_queue_screen_save_at_queue_end =>
+      'الحفظ في نهاية قائمة الانتظار';
+
+  @override
+  String get release_core_gateway_queue_screen_cancel_edit => 'إلغاء التعديل';
+
+  @override
+  String get release_core_git_review_pane_the_git_operation_did_not_complete =>
+      'لم تكتمل عملية Git.';
+
+  @override
+  String get release_core_git_review_pane_close_git_review =>
+      'إغلاق مراجعة Git';
+
+  @override
+  String get release_core_git_review_pane_pin_lane => 'تثبيت المسار';
+
+  @override
+  String get release_core_git_review_pane_refresh_git_review =>
+      'تحديث مراجعة Git';
+
+  @override
+  String get release_core_git_review_pane_uncommitted => 'تغييرات غير مثبّتة';
+
+  @override
+  String get release_core_git_review_pane_last_turn => 'الجولة الأخيرة';
+
+  @override
+  String
+  get release_core_git_review_pane_branch_and_last_turn_views_are_read_only =>
+      'عرض الفرع والجولة الأخيرة متاح للقراءة فقط.';
+
+  @override
+  String get release_core_git_review_pane_mark_head_as_the_turn_baseline =>
+      'تعيين HEAD كحالة مرجعية للجولة';
+
+  @override
+  String get release_core_git_review_pane_stage_all =>
+      'إضافة الكل إلى منطقة التجهيز';
+
+  @override
+  String get release_core_git_review_pane_discard_every_uncommitted_change =>
+      'هل تريد تجاهل كل التغييرات غير المثبّتة؟';
+
+  @override
+  String
+  get release_core_git_review_pane_tracked_files_return_to_head_and_untracked_files =>
+      'ستعود الملفات المتتبَّعة إلى حالة HEAD، وستُحذف الملفات غير المتتبَّعة في مجلد هذه الجلسة.';
+
+  @override
+  String get release_core_git_review_pane_discard => 'تجاهل التغييرات';
+
+  @override
+  String get release_core_git_review_pane_discard_all => 'تجاهل الكل';
+
+  @override
+  String get release_core_git_review_pane_unstage => 'إزالة من منطقة التجهيز';
+
+  @override
+  String get release_core_git_review_pane_stage => 'إضافة إلى منطقة التجهيز';
+
+  @override
+  String get release_core_git_review_pane_discard_file => 'تجاهل تغييرات الملف';
+
+  @override
+  String release_core_git_review_pane_discard_2(String path) {
+    return 'هل تريد تجاهل التغييرات في $path؟';
+  }
+
+  @override
+  String
+  get release_core_git_review_pane_this_restores_the_committed_copy_or_removes_the =>
+      'سيؤدي هذا إلى استعادة النسخة المثبّتة أو حذف الملف غير المتتبَّع.';
+
+  @override
+  String get release_core_git_review_pane_commit_message => 'رسالة التثبيت';
+
+  @override
+  String get release_core_git_review_pane_nothing_in_the_diff_to_summarise =>
+      'لا توجد تغييرات في الفروق لتلخيصها.';
+
+  @override
+  String get release_core_git_review_pane_generate_message => 'توليد رسالة';
+
+  @override
+  String get release_core_git_review_pane_commit => 'تثبيت التغييرات';
+
+  @override
+  String get release_core_git_review_pane_commit_and_push =>
+      'تثبيت التغييرات ودفعها';
+
+  @override
+  String get release_core_git_review_pane_push => 'دفع التغييرات';
+
+  @override
+  String get release_core_git_review_pane_create_pull_request =>
+      'إنشاء طلب دمج';
+
+  @override
+  String get release_core_git_review_pane_pull_request_ready =>
+      'طلب الدمج جاهز';
+
+  @override
+  String get release_core_git_review_pane_ask_hermes_to_ship =>
+      'اطلب من Hermes نشر التغييرات';
+
+  @override
+  String get release_core_git_review_pane_gh_is_authenticated_on_this_gateway =>
+      'تم تسجيل الدخول إلى gh على هذه البوابة.';
+
+  @override
+  String
+  get release_core_git_review_pane_install_the_github_cli_gh_and_sign_in =>
+      'ثبّت GitHub CLI ‏(gh) وسجّل الدخول لفتح طلبات الدمج';
+
+  @override
+  String get release_core_git_review_pane_worktrees => 'أشجار العمل';
+
+  @override
+  String get release_core_git_review_pane_main => 'الرئيسية';
+
+  @override
+  String release_core_git_review_pane_follow(String branch) {
+    return 'هل تريد متابعة الفرع $branch؟';
+  }
+
+  @override
+  String
+  get release_core_git_review_pane_the_session_working_directory_becomes_this_worktree_unless =>
+      'سيصبح مجلد عمل الجلسة هو شجرة العمل هذه، ما لم يكن المسار مثبّتًا.';
+
+  @override
+  String get release_core_git_review_pane_follow_2 => 'متابعة';
+
+  @override
+  String release_core_git_review_pane_remove(String branch) {
+    return 'هل تريد إزالة $branch؟';
+  }
+
+  @override
+  String get release_core_git_review_pane_the_worktree_directory_is_removed =>
+      'سيُحذف مجلد شجرة العمل.';
+
+  @override
+  String get release_core_git_review_pane_remove_2 => 'إزالة';
+
+  @override
+  String get release_core_git_review_pane_new_worktree_name =>
+      'اسم شجرة العمل الجديدة';
+
+  @override
+  String get release_core_git_review_pane_new_branch => 'فرع جديد';
+
+  @override
+  String get release_core_git_review_pane_base_branch => 'الفرع الأساس';
+
+  @override
+  String get release_core_git_review_pane_create_worktree => 'إنشاء شجرة عمل';
+
+  @override
+  String get release_core_git_review_pane_existing_branch => 'فرع موجود';
+
+  @override
+  String get release_core_git_review_pane_convert_branch_to_worktree =>
+      'تحويل الفرع إلى شجرة عمل';
+
+  @override
+  String get release_core_git_review_pane_switch_branch => 'تبديل الفرع';
+
+  @override
+  String
+  get release_core_git_review_pane_this_gateway_does_not_support_that_git_operation =>
+      'لا تدعم هذه البوابة عملية Git هذه.';
+
+  @override
+  String
+  get release_core_git_review_pane_git_needs_the_session_directory_on_the_local =>
+      'يتطلب Git وجود مجلد الجلسة على محرّك الطرفية المحلي.';
+
+  @override
+  String
+  get release_core_git_review_pane_the_gateway_refused_the_git_operation =>
+      'رفضت البوابة عملية Git.';
+
+  @override
+  String
+  get release_core_git_review_pane_the_session_changed_refresh_and_try_again =>
+      'تغيّرت الجلسة. حدّث ثم حاول مجددًا.';
+
+  @override
+  String
+  get release_core_git_review_pane_this_review_is_no_longer_the_selected_session =>
+      'لم تعد هذه المراجعة تخص الجلسة المحدّدة.';
+
+  @override
+  String
+  get release_core_git_review_pane_the_gateway_returned_an_unexpected_git_result =>
+      'أعادت البوابة نتيجة غير متوقعة من Git.';
+
+  @override
+  String
+  get release_core_git_review_pane_git_review_requires_the_gateway_transport =>
+      'تتطلب مراجعة Git قناة النقل الخاصة بالبوابة.';
+
+  @override
+  String get release_core_client_held_queue_bar_resume => 'استئناف';
+
+  @override
+  String get release_core_client_held_queue_bar_send_queued_prompt =>
+      'إرسال الطلب من قائمة الانتظار';
+
+  @override
+  String get release_core_client_held_queue_bar_edit_unsent_prompt =>
+      'تعديل الطلب غير المرسَل';
+
+  @override
+  String get release_core_client_held_queue_bar_remove_unsent_prompt =>
+      'إزالة الطلب غير المرسَل';
+
+  @override
+  String get release_core_workspace_discovery_view_repository_discovery =>
+      'اكتشاف المستودعات';
+
+  @override
+  String get release_core_workspace_discovery_view_refresh_results =>
+      'تحديث النتائج';
+
+  @override
+  String release_core_workspace_discovery_view_hide(String path) {
+    return 'إخفاء $path';
+  }
+
+  @override
+  String
+  get release_core_workspace_discovery_view_invalid_path_or_discovery_data_use_absolute_server =>
+      'المسار أو بيانات الاكتشاف غير صالحة. استخدم مسارات مطلقة على الخادم لا تتضمن المكوّنين . أو ..';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_this_gateway_does_not_support_repository_discovery =>
+      'لا تدعم هذه البوابة اكتشاف المستودعات.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_gateway_denied_access_to_repository_discovery =>
+      'رفضت البوابة الوصول إلى اكتشاف المستودعات.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_connection_changed_reopen_discovery_on_the_current =>
+      'تغيّر الاتصال. أعد فتح الاكتشاف على البوابة الحالية.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_displayed_settings_have_changed_refresh_before_trying =>
+      'تغيّرت الإعدادات المعروضة. حدّث قبل المحاولة مجددًا.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_could_not_load_or_verify_discovery_settings_refresh =>
+      'تعذّر تحميل إعدادات الاكتشاف أو التحقق منها. حدّث للمحاولة مجددًا.';
+
+  @override
+  String release_core_workspace_discovery_view_repositories_shown_of(
+    int visible,
+    int total,
+  ) {
+    return 'المستودعات المعروضة: $visible من $total';
+  }
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_gateway_returned_no_repositories =>
+      'لم تُرجع البوابة أي مستودعات.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_no_repositories_match_your_device_filters =>
+      'لا توجد مستودعات تطابق عوامل التصفية على جهازك.';
+
+  @override
+  String get release_core_workspace_discovery_view_gateway_scan_policy =>
+      'سياسة الفحص على البوابة';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_this_gateway_did_not_report_a_scan_policy =>
+      'لم توضح هذه البوابة سياسة الفحص.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_to_scan_folders_configure_repository_scanning_in_the =>
+      'لفحص المجلدات، اضبط فحص المستودعات في إعدادات سطح المكتب للملف الشخصي للبوابة.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_results_can_include_cached_repositories_and_repositories_with =>
+      'قد تتضمن النتائج مستودعات مخزّنة مؤقتًا ومستودعات لها جلسات. لا يضمن الفحص الوصول إلى كل مجلد.';
+
+  @override
+  String get release_core_workspace_discovery_view_scan_gateway_roots =>
+      'فحص المجلدات الجذرية للبوابة';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_filter_results_on_this_device =>
+      'تصفية النتائج على هذا الجهاز';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_only_this_discovery_list_changes_not_the_gateway =>
+      'يتغيّر فقط هذا السرد لنتائج الاكتشاف، وليس فحص البوابة.';
+
+  @override
+  String get release_core_workspace_discovery_view_include_subtrees_empty_all =>
+      'تضمين الأشجار الفرعية (فارغ = الكل)';
+
+  @override
+  String get release_core_workspace_discovery_view_exclude_subtrees =>
+      'استبعاد الأشجار الفرعية';
+
+  @override
+  String get release_core_workspace_discovery_view_apply_filters =>
+      'تطبيق عوامل التصفية';
+
+  @override
+  String release_core_workspace_discovery_view_hidden_repositories(int count) {
+    return 'المستودعات المخفية ($count)';
+  }
+
+  @override
+  String get release_core_workspace_discovery_view_undo_hide =>
+      'التراجع عن الإخفاء';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_one_absolute_server_path_per_line =>
+      'مسار مطلق واحد على الخادم في كل سطر';
+
+  @override
+  String get release_core_project_settings_view_project_settings =>
+      'إعدادات المشروع';
+
+  @override
+  String
+  get release_core_project_settings_view_the_gateway_did_not_confirm_the_selected_project =>
+      'لم تؤكّد البوابة المشروع المحدّد أو التغيير. راجع الإعدادات قبل المحاولة مجددًا.';
+
+  @override
+  String
+  get release_core_project_settings_view_could_not_verify_these_settings_use_one_absolute =>
+      'تعذّر التحقق من هذه الإعدادات. أدخل مسارًا مطلقًا واحدًا لمجلد على الخادم في كل سطر، من دون المكوّنين . أو ..';
+
+  @override
+  String get release_core_project_settings_view_set_active => 'تعيين كنشط';
+
+  @override
+  String get release_core_project_settings_view_icon => 'الأيقونة';
+
+  @override
+  String get release_core_project_settings_view_folder => 'مجلد';
+
+  @override
+  String get release_core_project_settings_view_repository => 'مستودع';
+
+  @override
+  String get release_core_project_settings_view_rocket => 'صاروخ';
+
+  @override
+  String get release_core_project_settings_view_star => 'نجمة';
+
+  @override
+  String get release_core_project_settings_view_book => 'كتاب';
+
+  @override
+  String get release_core_project_settings_view_terminal => 'طرفية';
+
+  @override
+  String get release_core_project_settings_view_colour => 'اللون';
+
+  @override
+  String get release_core_project_settings_view_primary_folder =>
+      'المجلد الرئيسي';
+
+  @override
+  String get release_core_project_settings_view_server_folder_paths =>
+      'مسارات المجلدات على الخادم';
+
+  @override
+  String
+  get release_core_project_settings_view_one_absolute_path_per_line_existing_folders_are =>
+      'مسار مطلق واحد في كل سطر. تُحفَظ المجلدات الموجودة.';
+
+  @override
+  String get release_core_project_settings_view_add_folders => 'إضافة مجلدات';
+
+  @override
+  String release_core_project_settings_view_choose(String label) {
+    return 'اختيار $label';
+  }
+
+  @override
+  String
+  get release_core_prepared_image_recovery_wait_for_an_empty_draft_before_restoring =>
+      'انتظر حتى تصبح المسودة فارغة قبل الاستعادة.';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_no_unacknowledged_image_drafts_in_this_chat =>
+      'لا توجد في هذه المحادثة مسودات صور لم يُؤكَّد استلامها.';
+
+  @override
+  String get release_core_prepared_image_recovery_unacknowledged_image_drafts =>
+      'مسودات صور لم يُؤكَّد استلامها';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_the_gateway_may_already_have_received_these_restore =>
+      'ربما استلمتها البوابة بالفعل. استعدها للمراجعة؛ لن يُرسَل أي شيء.';
+
+  @override
+  String get release_core_prepared_image_recovery_image_draft => 'مسودة صورة';
+
+  @override
+  String get release_core_prepared_image_recovery_discard_local_copy =>
+      'تجاهل النسخة المحلية';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_discard_this_local_image_draft =>
+      'هل تريد تجاهل مسودة الصورة المحلية هذه؟';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_image_draft_recovery_is_unavailable =>
+      'استعادة مسودات الصور غير متاحة.';
+
+  @override
+  String get release_core_prepared_image_recovery_recover_image_draft =>
+      'استعادة مسودة صورة…';
+
+  @override
+  String get release_core_session_search_mode_menu_could_not_save_search_mode =>
+      'تعذّر حفظ وضع البحث.';
+
+  @override
+  String get release_core_projects_pane_discover_repositories =>
+      'اكتشاف المستودعات';
+
+  @override
+  String
+  get release_core_projects_pane_project_created_but_the_gateway_did_not_confirm =>
+      'أُنشئ المشروع، لكن البوابة لم تؤكّد فكرته.';
+
+  @override
+  String get release_core_projects_pane_project_idea_optional =>
+      'فكرة المشروع (اختياري)';
+
+  @override
+  String
+  get release_core_projects_pane_saved_in_the_project_description_not_a_file =>
+      'تُحفَظ في وصف المشروع، وليس في ملف.';
+
+  @override
+  String get release_core_project_detail_screen_new_chat_in_this_lane =>
+      'محادثة جديدة في هذا المسار';
+
+  @override
+  String get release_core_project_detail_screen_review_git => 'مراجعة Git';
+
+  @override
+  String get release_core_more_pane_gateway_fleet => 'مجموعة البوابات';
+
+  @override
+  String
+  get release_core_more_pane_connected_sessions_hermes_cloud_and_desktop_webapp =>
+      'الجلسات المتصلة وHermes Cloud وتطبيق سطح المكتب على الويب';
+
+  @override
+  String get release_core_more_pane_use_dashboard_sign_in_for_a_named_profile =>
+      'استخدم تسجيل الدخول عبر لوحة التحكم لملف شخصي مسمّى. لا تستطيع واجهة API القديمة هذه تأكيد الملف الشخصي الذي يملك سجل المحادثة.';
+
+  @override
+  String get release_core_more_pane_capabilities => 'الإمكانات';
+
+  @override
+  String
+  get release_core_more_pane_install_and_govern_skills_plugins_connectors_and_tool =>
+      'تثبيت المهارات والملحقات والموصّلات ومحرّكات الأدوات وإدارتها';
+
+  @override
+  String get release_core_more_pane_browser_vault => 'خزنة المتصفح';
+
+  @override
+  String
+  get release_core_more_pane_site_logins_addresses_cards_and_credential_sources =>
+      'بيانات الدخول إلى المواقع والعناوين والبطاقات ومصادر بيانات الاعتماد';
+
+  @override
+  String get release_core_more_pane_agent_policy => 'سياسة الوكيل';
+
+  @override
+  String
+  get release_core_more_pane_approvals_checkpoints_browser_access_and_shared_metrics =>
+      'الموافقات ونقاط التحقق والوصول إلى المتصفح والمقاييس المشتركة';
+
+  @override
+  String get release_core_more_pane_remote_logs_health_maintenance_and_update =>
+      'السجلات البعيدة والحالة والصيانة والتحديث';
+
+  @override
+  String get release_core_more_pane_schedules => 'الجداول';
+
+  @override
+  String get release_core_more_pane_all_profiles_blueprints_catch_up_and_stop =>
+      'جميع الملفات الشخصية والقوالب وتعويض التشغيل الفائت والإيقاف';
+
+  @override
+  String get release_core_more_pane_memory_graph => 'رسم الذاكرة البياني';
+
+  @override
+  String get release_core_more_pane_timeline_edits_and_memory_providers =>
+      'التسلسل الزمني والتعديلات ومزوّدو الذاكرة';
+
+  @override
+  String get release_core_more_pane_providers_and_routes =>
+      'المزوّدون والمسارات';
+
+  @override
+  String get release_core_more_pane_keys_endpoints_delegation_and_mixtures =>
+      'المفاتيح ونقاط الاتصال والتفويض ومزيج النماذج';
+
+  @override
+  String get release_core_more_pane_credits_and_plans => 'الأرصدة والخطط';
+
+  @override
+  String
+  get release_core_more_pane_consented_nous_billing_when_the_account_allows_it =>
+      'إدارة فوترة Nous بموافقتك عندما يسمح الحساب بذلك';
+
+  @override
+  String
+  get release_core_fleet_screen_this_gateway_does_not_offer_this_service =>
+      'لا توفّر هذه البوابة هذه الخدمة.';
+
+  @override
+  String
+  get release_core_fleet_screen_sign_in_or_permission_required_on_this_gateway =>
+      'يلزم تسجيل الدخول أو الحصول على إذن على هذه البوابة.';
+
+  @override
+  String get release_core_fleet_screen_a_secure_gateway_address_is_required =>
+      'يلزم عنوان آمن للبوابة.';
+
+  @override
+  String
+  get release_core_fleet_screen_the_owner_changed_refresh_before_continuing =>
+      'تغيّر المالك. حدّث قبل المتابعة.';
+
+  @override
+  String
+  get release_core_fleet_screen_could_not_verify_the_operation_check_the_gateway =>
+      'تعذّر التحقق من تنفيذ العملية. تحقّق من البوابة ثم حدّث.';
+
+  @override
+  String get release_core_fleet_screen_verified_ssh => 'SSH موثَّق';
+
+  @override
+  String
+  get release_core_fleet_screen_confirm_a_host_key_inspect_a_remote_service =>
+      'تأكيد مفتاح المضيف أو فحص خدمة بعيدة أو فتح صدفتها';
+
+  @override
+  String get release_core_fleet_screen_cloud_and_desktop_webapp =>
+      'السحابة وتطبيق سطح المكتب على الويب';
+
+  @override
+  String get release_core_fleet_screen_register_an_existing_gateway_or_webapp =>
+      'تسجيل بوابة أو تطبيق ويب موجود';
+
+  @override
+  String
+  get release_core_fleet_screen_sign_in_to_its_address_nothing_is_hosted =>
+      'سجّل الدخول عبر عنوانه. لا يُستضاف أي شيء على هذا الجهاز.';
+
+  @override
+  String get release_core_fleet_screen_fleet_updates =>
+      'تحديثات مجموعة البوابات';
+
+  @override
+  String get release_core_fleet_screen_refresh_roster => 'تحديث قائمة البوابات';
+
+  @override
+  String release_core_fleet_screen_disconnect(String gateway) {
+    return 'قطع الاتصال بـ $gateway';
+  }
+
+  @override
+  String get release_core_fleet_screen_open_this_gateway_on_launch =>
+      'فتح هذه البوابة عند بدء التشغيل';
+
+  @override
+  String
+  get release_core_fleet_screen_primary_for_ares_does_not_change_the_last =>
+      'البوابة الرئيسية لـ Ares؛ لا يغيّر ذلك آخر بوابة مستخدمة.';
+
+  @override
+  String get release_core_fleet_screen_reconnect_in_fleet_on_launch =>
+      'إعادة الاتصال ضمن مجموعة البوابات عند بدء التشغيل';
+
+  @override
+  String get release_core_fleet_screen_no_sessions_for_this_profile =>
+      'لا توجد جلسات لهذا الملف الشخصي.';
+
+  @override
+  String get release_core_fleet_screen_more_sessions => 'مزيد من الجلسات';
+
+  @override
+  String get release_core_fleet_screen_this_gateway_was_disconnected =>
+      'قُطع الاتصال بهذه البوابة.';
+
+  @override
+  String
+  get release_core_fleet_screen_some_conversation_data_could_not_be_loaded =>
+      'تعذّر تحميل بعض بيانات المحادثة.';
+
+  @override
+  String get release_core_fleet_screen_message_this_session =>
+      'مراسلة هذه الجلسة';
+
+  @override
+  String get release_core_fleet_screen_send_to_this_session =>
+      'الإرسال إلى هذه الجلسة';
+
+  @override
+  String get release_core_fleet_updates_screen_update_these_remote_gateways =>
+      'هل تريد تحديث هذه البوابات البعيدة؟';
+
+  @override
+  String
+  release_core_fleet_updates_screen_this_can_restart_the_backend_and_interrupt_other(
+    String gateways,
+  ) {
+    return 'قد يؤدي هذا إلى إعادة تشغيل الخدمة الخلفية ومقاطعة المستخدمين الآخرين. لن يُحدَّث Ares.\n\n$gateways';
+  }
+
+  @override
+  String get release_core_fleet_updates_screen_update_listed_gateways =>
+      'تحديث البوابات المدرجة';
+
+  @override
+  String
+  get release_core_fleet_updates_screen_checks_connected_gateways_cloud_is_platform_managed_entries =>
+      'يفحص البوابات المتصلة. تتولى المنصة إدارة السحابة؛ تُستبعد العناصر التي لا يتوفر توثيق لمصدر تسجيلها.';
+
+  @override
+  String get release_core_fleet_updates_screen_check_connected_gateways =>
+      'فحص البوابات المتصلة';
+
+  @override
+  String get release_core_fleet_updates_screen_read_update_receipt =>
+      'قراءة إيصال التحديث';
+
+  @override
+  String get release_core_fleet_updates_screen_review_eligible_updates =>
+      'مراجعة التحديثات المؤهَّلة';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_account_changed_reopen_this_page =>
+      'تغيّر الحساب. أعد فتح هذه الصفحة.';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_set_the_webapp_s_primary_gateway =>
+      'هل تريد تعيين البوابة الرئيسية لتطبيق الويب؟';
+
+  @override
+  String
+  release_core_fleet_webapp_screen_this_changes_the_shared_registry_not_the_last(
+    String webapp,
+    String gateway,
+    String id,
+  ) {
+    return '$webapp → $gateway ($id)\nيغيّر هذا السجل المشترك، وليس آخر بوابة مستخدمة.';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_set_primary => 'تعيين كرئيسي';
+
+  @override
+  String get release_core_fleet_webapp_screen_serving_profile =>
+      'الملف الشخصي الذي يقدّم الخدمة';
+
+  @override
+  String get release_core_fleet_webapp_screen_hermes_cloud => 'Hermes Cloud';
+
+  @override
+  String get release_core_fleet_webapp_screen_discover_signed_in_agents =>
+      'اكتشاف الوكلاء المسجّلين دخولهم';
+
+  @override
+  String release_core_fleet_webapp_screen_organisation(String organisation) {
+    return 'المؤسسة: $organisation';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_no_agents_available =>
+      'لا يوجد وكلاء متاحون.';
+
+  @override
+  String get release_core_fleet_webapp_screen_existing_desktop_webapp =>
+      'تطبيق سطح مكتب موجود على الويب';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_check_gateway_and_web_access_status =>
+      'فحص حالة البوابة والوصول عبر الويب';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_these_settings_belong_to_the_machine_serving_this =>
+      'تخص هذه الإعدادات الجهاز الذي يقدّم تطبيق الويب هذا. النشر وإعادة التشغيل ليسا إجراءين عن بُعد.';
+
+  @override
+  String get release_core_fleet_webapp_screen_read_webapp_gateway_registry =>
+      'قراءة سجل بوابات تطبيق الويب';
+
+  @override
+  String get release_core_fleet_webapp_screen_last_used => 'آخر استخدام';
+
+  @override
+  String get release_core_fleet_webapp_screen_primary => 'الرئيسي';
+
+  @override
+  String release_core_fleet_webapp_screen_set_primary_2(String gateway) {
+    return 'تعيين كرئيسي: $gateway';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_read_shared_display_preferences =>
+      'قراءة تفضيلات العرض المشتركة';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_chat_text_direction_on_this_webapp_and_desktop =>
+      'اتجاه نص المحادثة في تطبيق الويب هذا وتطبيق سطح المكتب';
+
+  @override
+  String release_core_schedule_desk_screen_created_on(
+    String job,
+    String profile,
+  ) {
+    return 'أُنشئت المهمة $job في الملف الشخصي $profile.';
+  }
+
+  @override
+  String
+  get release_core_schedule_desk_screen_the_list_covers_every_profile_on_this_gateway =>
+      'تشمل القائمة جميع الملفات الشخصية على هذه البوابة. تُرسَل إجراءات الإيقاف والإيقاف المؤقت وتعويض التشغيل الفائت والتسليم والقوالب إلى الملف الشخصي المالك للمهمة.';
+
+  @override
+  String get release_core_schedule_desk_screen_a_run_is_in_progress =>
+      'هناك تشغيل جارٍ';
+
+  @override
+  String get release_core_schedule_desk_screen_no_current_run =>
+      'لا يوجد تشغيل حالي';
+
+  @override
+  String release_core_schedule_desk_screen_stop_requested_for(String job) {
+    return 'طُلب إيقاف المهمة $job.';
+  }
+
+  @override
+  String release_core_schedule_desk_screen_no_run_was_in_flight_for(
+    String job,
+  ) {
+    return 'لم يكن هناك تشغيل جارٍ للمهمة $job.';
+  }
+
+  @override
+  String get release_core_schedule_desk_screen_stop_current_run =>
+      'إيقاف التشغيل الحالي';
+
+  @override
+  String get release_core_schedule_desk_screen_pause_future_runs =>
+      'إيقاف عمليات التشغيل المستقبلية مؤقتًا';
+
+  @override
+  String get release_core_schedule_desk_screen_resume_future_runs =>
+      'استئناف عمليات التشغيل المستقبلية';
+
+  @override
+  String get release_core_schedule_desk_screen_catch_up_default =>
+      'الإعداد الافتراضي لتعويض التشغيل الفائت';
+
+  @override
+  String get release_core_schedule_desk_screen_run_one_missed =>
+      'تنفيذ تشغيل فائت واحد';
+
+  @override
+  String get release_core_schedule_desk_screen_skip_missed =>
+      'تجاوز عمليات التشغيل الفائتة';
+
+  @override
+  String get release_core_schedule_desk_screen_blueprint_recipes =>
+      'وصفات القوالب';
+
+  @override
+  String get release_core_schedule_desk_screen_profile_for_the_new_job =>
+      'الملف الشخصي للمهمة الجديدة';
+
+  @override
+  String release_core_schedule_desk_screen_create(String blueprint) {
+    return 'إنشاء $blueprint';
+  }
+
+  @override
+  String get release_core_schedule_desk_screen_loading_delivery_targets =>
+      'جارٍ تحميل وجهات التسليم';
+
+  @override
+  String release_core_schedule_desk_screen_no_home_channel(String target) {
+    return '$target (لا توجد قناة رئيسية)';
+  }
+
+  @override
+  String release_core_memory_graph_screen_edit(String label) {
+    return 'تعديل $label';
+  }
+
+  @override
+  String get release_core_memory_graph_screen_content => 'المحتوى';
+
+  @override
+  String get release_core_memory_graph_screen_archive_skill => 'أرشفة المهارة';
+
+  @override
+  String get release_core_memory_graph_screen_delete_memory =>
+      'حذف معلومة من الذاكرة';
+
+  @override
+  String release_core_memory_graph_screen_archive_on_it_can_be_restored_on_the(
+    String label,
+    String profile,
+  ) {
+    return 'هل تريد أرشفة $label في الملف الشخصي $profile؟ يمكن استعادته على المضيف باستخدام منسّق المهارات.';
+  }
+
+  @override
+  String release_core_memory_graph_screen_delete_from_this_removes_that_memory(
+    String label,
+    String profile,
+  ) {
+    return 'هل تريد حذف $label من الملف الشخصي $profile؟ ستُحذف هذه المعلومة من الذاكرة.';
+  }
+
+  @override
+  String get release_core_memory_graph_screen_filter => 'تصفية';
+
+  @override
+  String get release_core_memory_graph_screen_timeline => 'التسلسل الزمني';
+
+  @override
+  String get release_core_memory_graph_screen_play_timeline =>
+      'تشغيل التسلسل الزمني';
+
+  @override
+  String get release_core_memory_graph_screen_layout_code => 'رمز التخطيط';
+
+  @override
+  String get release_core_memory_graph_screen_external_memory_providers =>
+      'مزوّدو الذاكرة الخارجيون';
+
+  @override
+  String
+  get release_core_memory_graph_screen_a_value_is_stored_leave_blank_to_keep =>
+      'توجد قيمة محفوظة. اترك الحقل فارغًا للإبقاء عليها.';
+
+  @override
+  String get release_core_memory_graph_screen_save_provider => 'حفظ المزوّد';
+
+  @override
+  String release_core_workspace_profiles_screen_applies_to(String profile) {
+    return 'يسري على: $profile';
+  }
+
+  @override
+  String get release_core_workspace_profiles_screen_choose_another_profile =>
+      'اختيار ملف شخصي آخر';
+
+  @override
+  String
+  get release_core_workspace_profiles_screen_could_not_verify_the_selected_profile_on_this =>
+      'تعذّر التحقق من الملف الشخصي المحدّد على هذه البوابة.';
+
+  @override
+  String get release_core_workspace_profiles_screen_create_profile =>
+      'إنشاء ملف شخصي';
+
+  @override
+  String get release_core_workspace_profiles_screen_new_profile_id =>
+      'معرّف الملف الشخصي الجديد';
+
+  @override
+  String get release_core_assets_screen_links => 'الروابط';
+
+  @override
+  String get release_core_workspace_picker_no_matching_items =>
+      'لا توجد عناصر مطابقة.';
+
+  @override
+  String get release_core_workspace_picker_save_layout => 'حفظ التخطيط';
+
+  @override
+  String get release_core_workspace_picker_layout_name => 'اسم التخطيط';
+
+  @override
+  String
+  get release_core_workspace_popout_this_chat_already_has_a_pop_out_window =>
+      'توجد بالفعل نافذة مستقلة لهذه المحادثة.';
+
+  @override
+  String
+  get release_core_workspace_popout_could_not_open_this_saved_chat_check_the =>
+      'تعذّر فتح هذه المحادثة المحفوظة. تحقّق من الاتصال ثم حاول مجددًا.';
+
+  @override
+  String
+  get release_core_popout_bootstrap_use_the_main_window_to_change_your_connection =>
+      'استخدم النافذة الرئيسية لتغيير الاتصال.';
+
+  @override
+  String get release_core_guarded_save_refused =>
+      'لا يمكن للبوابة حفظ هذا الملف';
+
+  @override
+  String get release_core_guarded_save_unavailable =>
+      'لا يتوفر الحفظ مع التحقق من النسخة على هذه البوابة';
+
+  @override
+  String release_core_git_files_changed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'عدد الملفات المعدَّلة في هذه الجولة: $count',
+      one: 'عُدّل ملف واحد في هذه الجولة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String release_core_git_entries_omitted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'عدد عناصر Git المستبعَدة لأن عرضها غير آمن: $count.',
+      one: 'حُذف عنصر واحد من Git من العرض لأن عرضه غير آمن.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get release_core_git_staged => 'في منطقة التجهيز';
+
+  @override
+  String get release_core_session_sort_recent => 'النشاط الأخير';
+
+  @override
+  String get release_core_session_sort_created => 'الأحدث إنشاءً';
+
+  @override
+  String get release_core_session_sort_status => 'الجارية أولًا';
+
+  @override
+  String get release_core_session_sort_tokens => 'الأكثر استهلاكًا للرموز';
+
+  @override
+  String get release_core_session_sort_cost => 'الأعلى تكلفة';
+
+  @override
+  String get release_core_session_group_standard => 'التجميع الافتراضي';
+
+  @override
+  String get release_core_session_group_status => 'التجميع حسب الحالة';
+
+  @override
+  String get release_core_session_group_project => 'التجميع حسب المشروع';
+
+  @override
+  String release_core_session_tokens(int count) {
+    return 'عدد الرموز: $count';
+  }
+
+  @override
+  String release_core_search_gateway_mode(String mode) {
+    return '$mode (البوابة)';
+  }
+
+  @override
+  String release_core_search_mode_tooltip(String label, String mode) {
+    return '$label: $mode';
+  }
+
+  @override
+  String get release_core_image_recovery_new_turn =>
+      'يؤدي الإرسال إلى إنشاء جولة جديدة';
+
+  @override
+  String release_core_image_recovery_metadata(int count, String date) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'عدد الصور: $count · $date',
+      one: 'صورة واحدة · $date',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String release_core_discovery_scanning(String state) {
+    return 'الفحص: $state';
+  }
+
+  @override
+  String get release_core_discovery_enabled => 'مفعّل';
+
+  @override
+  String get release_core_discovery_disabled => 'معطّل';
+
+  @override
+  String get release_core_discovery_none => 'لا شيء';
+
+  @override
+  String release_core_discovery_roots(String paths) {
+    return 'المجلدات الجذرية للفحص: $paths';
+  }
+
+  @override
+  String release_core_discovery_excluded(String paths) {
+    return 'الأشجار الفرعية المستبعَدة: $paths';
+  }
+
+  @override
+  String release_core_discovery_repository_sessions(String path, int count) {
+    return '$path\nالجلسات: $count';
+  }
+
+  @override
+  String get release_core_projects_local_only =>
+      'إصدار بوابة Hermes هذه أقدم من ميزة المشاريع على الخادم، لذا يقتصر تجميع المحادثات على هذا الجهاز. حدّث Hermes لاستخدام المشاريع نفسها على جميع أجهزتك.';
+
+  @override
+  String get release_core_fleet_no_address => 'لم يُحدَّد عنوان للبوابة بعد';
+
+  @override
+  String release_core_fleet_diagnostics(String version, String access) {
+    return 'البوابة $version · $access';
+  }
+
+  @override
+  String get release_core_schedule_builtin => 'مدمج';
+
+  @override
+  String get release_core_memory_gateway_profile => 'البوابة';
+
+  @override
+  String release_core_memory_profile_summary(String profile, String gateway) {
+    return 'الملف الشخصي $profile على البوابة $gateway. لا يحفظ رمز المشاركة سوى التكبير والوقت وعوامل التصفية.';
+  }
+
+  @override
+  String release_core_memory_layers_summary(
+    int memoryBytes,
+    int userBytes,
+    String provider,
+  ) {
+    return 'الذاكرة المدمجة: $memoryBytes بايت، وذاكرة المستخدم: $userBytes بايت. المزوّد النشط: $provider.';
+  }
+
+  @override
+  String get release_core_memory_kind_all => 'الكل';
+
+  @override
+  String get release_core_memory_kind_skill => 'المهارات';
+
+  @override
+  String get release_core_memory_kind_memory => 'الذاكرة';
+
+  @override
+  String get release_core_workspace_failure_stale => 'تغيّر الاتصال';
+
+  @override
+  String get release_core_workspace_failure_unbound => 'لا يوجد مجلد عمل مؤكّد';
+
+  @override
+  String get release_core_workspace_failure_denied => 'رُفض الإذن';
+
+  @override
+  String get release_core_workspace_failure_ineligible =>
+      'العملية غير مسموحة لهذا الملف';
+
+  @override
+  String get release_core_workspace_failure_unsupported =>
+      'غير مدعوم على هذه البوابة';
+
+  @override
+  String get release_core_workspace_failure_mismatch => 'تغيّرت الحالة البعيدة';
+
+  @override
+  String get release_core_workspace_failure_invalid =>
+      'استجابة غير صالحة من البوابة';
+
+  @override
+  String get release_core_workspace_failure_insecure => 'يلزم اتصال آمن';
+
+  @override
+  String get release_core_workspace_failure_unavailable => 'البوابة غير متاحة';
+
+  @override
+  String get release_core_queue_state_queued => 'في قائمة الانتظار';
+
+  @override
+  String get release_core_queue_state_started => 'بدأ التنفيذ';
+
+  @override
+  String get release_core_queue_state_unknown => 'النتيجة غير معروفة';
+
+  @override
+  String get release_core_unknown_state => 'غير معروف';
+
+  @override
+  String get release_core_fleet_state_idle => 'غير متصل';
+
+  @override
+  String get release_core_fleet_state_connected => 'متصل';
+
+  @override
+  String get release_core_fleet_state_reconnecting => 'جارٍ إعادة الاتصال…';
+
+  @override
+  String get release_core_fleet_state_sessionExpired => 'تم تسجيل الخروج';
+
+  @override
+  String get release_core_fleet_state_failed => 'فشل الاتصال';
+
+  @override
+  String release_core_workspace_operation_failed(String reason) {
+    return 'تعذّر تأكيد تنفيذ العملية على البوابة: $reason.';
+  }
+
+  @override
+  String get release_core_workspace_invalid_data =>
+      'تعذّر التحقق من البيانات أو المدخلات. راجعها ثم حاول مجددًا.';
+
+  @override
+  String
+  get release_core_parallel_workspace_layout_changed_in_this_window_but_could_not =>
+      'تغيّر التخطيط في هذه النافذة، لكن تعذّر حفظه.';
+
+  @override
+  String get release_core_parallel_workspace_first_pane => 'اللوحة الأولى';
+
+  @override
+  String get release_core_parallel_workspace_second_pane => 'اللوحة الثانية';
+
+  @override
+  String get release_core_parallel_workspace_unavailable_page =>
+      'صفحة غير متاحة';
+
+  @override
+  String release_core_parallel_workspace_close_a_tab_first_maximum(
+    String maximum,
+  ) {
+    return 'أغلق علامة تبويب أولًا (الحد الأقصى: $maximum).';
+  }
+
+  @override
+  String get release_core_parallel_workspace_dock_beside_current_pane =>
+      'إرساء بجوار اللوحة الحالية';
+
+  @override
+  String get release_core_parallel_workspace_add_chat => 'إضافة محادثة';
+
+  @override
+  String
+  get release_core_parallel_workspace_action_failed_check_the_connection_and_try_again =>
+      'فشل الإجراء. تحقّق من الاتصال ثم حاول مجددًا.';
+
+  @override
+  String
+  get release_core_parallel_workspace_close_a_tab_before_reopening_another =>
+      'أغلق علامة تبويب قبل إعادة فتح أخرى.';
+
+  @override
+  String release_core_parallel_workspace_replace_layout(String name) {
+    return 'هل تريد استبدال التخطيط «$name»؟';
+  }
+
+  @override
+  String
+  get release_core_parallel_workspace_layout_limit_reached_replace_an_existing_layout =>
+      'بلغت الحد الأقصى للتخطيطات. استبدل تخطيطًا موجودًا.';
+
+  @override
+  String get release_core_parallel_workspace_restore_layout =>
+      'استعادة التخطيط';
+
+  @override
+  String get release_core_parallel_workspace_workspace_options =>
+      'خيارات مساحة العمل';
+
+  @override
+  String get release_core_parallel_workspace_dock_another_pane =>
+      'إرساء لوحة أخرى';
+
+  @override
+  String get release_core_parallel_workspace_swap_panes =>
+      'تبديل موضعي اللوحتين';
+
+  @override
+  String get release_core_parallel_workspace_undock_second_pane =>
+      'فك إرساء اللوحة الثانية';
+
+  @override
+  String get release_core_parallel_workspace_arrange_side_by_side =>
+      'ترتيب جنبًا إلى جنب';
+
+  @override
+  String get release_core_parallel_workspace_arrange_top_to_bottom =>
+      'ترتيب من أعلى إلى أسفل';
+
+  @override
+  String release_core_parallel_workspace_change_split_size(String percent) {
+    return 'تغيير نسبة التقسيم ($percent٪)';
+  }
+
+  @override
+  String get release_core_parallel_workspace_focus_pane_full_screen =>
+      'عرض اللوحة بملء الشاشة';
+
+  @override
+  String get release_core_parallel_workspace_open_chat_in_new_window =>
+      'فتح المحادثة في نافذة جديدة';
+
+  @override
+  String get release_core_parallel_workspace_hide_pane_keep_running =>
+      'إخفاء اللوحة (مع استمرار التشغيل)';
+
+  @override
+  String get release_core_parallel_workspace_previous_tab =>
+      'علامة التبويب السابقة';
+
+  @override
+  String get release_core_parallel_workspace_next_tab =>
+      'علامة التبويب التالية';
+
+  @override
+  String get release_core_parallel_workspace_move_tab_left =>
+      'نقل علامة التبويب إلى اليسار';
+
+  @override
+  String get release_core_parallel_workspace_move_tab_right =>
+      'نقل علامة التبويب إلى اليمين';
+
+  @override
+  String get release_core_parallel_workspace_reload_current_tab =>
+      'إعادة تحميل علامة التبويب الحالية';
+
+  @override
+  String get release_core_parallel_workspace_close_tab => 'إغلاق علامة التبويب';
+
+  @override
+  String get release_core_parallel_workspace_close_other_tabs =>
+      'إغلاق علامات التبويب الأخرى';
+
+  @override
+  String get release_core_parallel_workspace_close_tabs_to_the_right =>
+      'إغلاق علامات التبويب إلى اليمين';
+
+  @override
+  String get release_core_parallel_workspace_close_all_tabs =>
+      'إغلاق جميع علامات التبويب';
+
+  @override
+  String get release_core_parallel_workspace_reopen_closed_tab =>
+      'إعادة فتح علامة التبويب المغلقة';
+
+  @override
+  String get release_core_parallel_workspace_save_named_layout =>
+      'حفظ تخطيط باسم';
+
+  @override
+  String get release_core_parallel_workspace_restore_named_layout =>
+      'استعادة تخطيط مسمّى';
+
+  @override
+  String get release_core_parallel_workspace_refresh_chat_list =>
+      'تحديث قائمة المحادثات';
+
+  @override
+  String get release_core_parallel_workspace_workspace_tools =>
+      'أدوات مساحة العمل';
+
+  @override
+  String get release_core_parallel_workspace_choose_a_chat_for_this_pane =>
+      'اختر محادثة لهذه اللوحة';
+
+  @override
+  String release_core_parallel_workspace_choose_chat_for(String pane) {
+    return 'اختيار محادثة للوحة $pane';
+  }
+
+  @override
+  String get release_core_parallel_workspace_add_a_chat_to_start_a_workspace =>
+      'أضف محادثة لبدء مساحة عمل.';
+
+  @override
+  String get release_core_parallel_workspace_select_a_tab_to_show_its_pane =>
+      'حدّد علامة تبويب لعرض لوحتها.';
+
+  @override
+  String get release_core_parallel_workspace_parallel_workspace =>
+      'مساحة عمل متوازية';
+
+  @override
+  String get release_core_parallel_workspace_show_workspace =>
+      'عرض مساحة العمل';
+
+  @override
+  String get release_core_parallel_workspace_could_not_load_chats_retry =>
+      'تعذّر تحميل المحادثات. إعادة المحاولة';
+
+  @override
+  String release_core_parallel_workspace_close(String pane) {
+    return 'إغلاق $pane';
+  }
+
+  @override
+  String release_core_parallel_workspace_switch_pane(String pane) {
+    return 'تبديل اللوحة: $pane';
+  }
+
+  @override
+  String get release_core_workspace_registry_session_id_copied =>
+      'نُسخ معرّف الجلسة.';
+
+  @override
+  String get release_core_workspace_registry_chat_details => 'تفاصيل المحادثة';
+
+  @override
+  String get release_core_workspace_registry_server_default =>
+      'الإعداد الافتراضي للخادم';
+
+  @override
+  String get release_core_workspace_registry_session_id => 'معرّف الجلسة';
+
+  @override
+  String get release_core_workspace_registry_title => 'العنوان';
+
+  @override
+  String get release_core_workspace_label_terminals => 'الطرفيات';
+
+  @override
+  String get release_core_workspace_label_copy_id => 'نسخ معرّف الجلسة';
+
+  @override
+  String get release_core_workspace_label_contributions => 'المساهمات';
+
+  @override
+  String get release_core_workspace_owner_inactive =>
+      'لم يعد مالك مساحة العمل هذه نشطًا.';
+
+  @override
+  String get release_core_workspace_select_chat => 'حدّد محادثة أولًا.';
+
+  @override
+  String get release_core_workspace_chat_unavailable =>
+      'هذه المحادثة غير متاحة لهذا الاتصال.';
+
+  @override
+  String get release_core_workspace_page_unavailable =>
+      'هذه الصفحة غير متاحة لهذا الاتصال.';
+
+  @override
+  String release_core_client_queue_count(int count) {
+    return 'في قائمة الانتظار: $count';
+  }
+
+  @override
+  String release_core_client_queue_paused_count(int count) {
+    return 'في قائمة الانتظار: $count — متوقفة مؤقتًا';
+  }
+
+  @override
+  String release_core_git_diff_truncated(String diff) {
+    return '$diff\n… مقتطع';
+  }
+
+  @override
+  String get release_core_search_no_models =>
+      'لم يُرجع Hermes أي نماذج مضبوطة يمكن اختيارها.';
+
+  @override
+  String get release_core_chat_archive_unavailable =>
+      'إجراء أرشفة المحادثة غير متاح.';
+
+  @override
+  String get release_core_chat_pin_unconfirmed => 'لم تُؤكَّد حالة التثبيت.';
+
+  @override
+  String get release_core_chat_archive_unconfirmed =>
+      'لم تُؤكَّد حالة الأرشفة.';
+
+  @override
+  String get release_core_chat_archive_history_unavailable =>
+      'السجل المؤرشف غير متاح';
+
+  @override
+  String get release_core_quick_chat_history_unavailable =>
+      'سجل المحادثات السريعة غير متاح';
+
+  @override
+  String get release_core_chat_project_ownership_unavailable =>
+      'معلومات ملكية المشروع غير متاحة';
+
+  @override
+  String get release_core_chat_unknown_project => 'مشروع غير معروف';
+
+  @override
+  String get release_core_chat_local_search_fallback =>
+      'البحث في الرسائل غير متاح. تُعرض النتائج المحلية المطابقة.';
+
+  @override
+  String release_core_fleet_update_eligible(String version) {
+    return 'مؤهَّل للتحديث · $version';
+  }
+
+  @override
+  String get release_core_fleet_update_state_1 => 'تم التجاوز: التثبيت نفسه';
+
+  @override
+  String get release_core_fleet_update_state_2 => 'لم يُفحص';
+
+  @override
+  String get release_core_fleet_update_state_3 => 'تم التجاوز: تديره السحابة';
+
+  @override
+  String get release_core_fleet_update_state_4 =>
+      'تم التجاوز: غير مسجّل كبوابة مباشرة';
+
+  @override
+  String get release_core_fleet_update_state_5 =>
+      'تم التجاوز: غير متصل أو مشغول';
+
+  @override
+  String get release_core_fleet_update_state_6 => 'لا يوجد تحديث مناسب';
+
+  @override
+  String get release_core_fleet_update_state_7 =>
+      'تعذّر التحقق من أهلية التحديث';
+
+  @override
+  String get release_core_fleet_update_state_8 =>
+      'تم التجاوز: البيانات قديمة أو البوابة مشغولة أو أُرسل الطلب بالفعل';
+
+  @override
+  String get release_core_fleet_update_state_9 => 'جارٍ إرسال الطلب';
+
+  @override
+  String get release_core_fleet_update_state_10 => 'مقبول؛ الإيصال غير متاح';
+
+  @override
+  String get release_core_fleet_update_state_11 => 'مقبول؛ بانتظار الإيصال';
+
+  @override
+  String get release_core_fleet_update_state_12 =>
+      'تم التجاوز: هناك محادثة جارية على هذا التثبيت';
+
+  @override
+  String get release_core_fleet_update_state_13 =>
+      'غير مؤكَّد؛ لا تُعِد الإرسال تلقائيًا';
+
+  @override
+  String get release_core_fleet_update_state_14 =>
+      'أعد الاتصال للتحقق من الإيصال';
+
+  @override
+  String get release_core_fleet_update_state_15 => 'الإيصال غير متاح';
+
+  @override
+  String get release_core_fleet_update_state_16 => 'بانتظار الإيصال المطابق';
+
+  @override
+  String get release_core_fleet_update_state_17 => 'تم التحديث؛ تلزم متابعة';
+
+  @override
+  String get release_core_fleet_update_state_19 => 'تم التحديث جزئيًا';
+
+  @override
+  String get release_core_fleet_update_state_20 => 'فشل التحديث';
+
+  @override
+  String get release_core_fleet_update_state_21 => 'غير مؤكَّد';
+
+  @override
+  String get release_core_cloud_status_ready => 'جاهز';
+
+  @override
+  String get release_core_cloud_status_online => 'متصل';
+
+  @override
+  String get release_core_cloud_status_stopped => 'متوقف';
+
+  @override
+  String get release_core_cloud_status_error => 'خطأ';
+
+  @override
+  String get ng_release_more_contributions_subtitle =>
+      'بطاقات الردود المراجَعة لهذا الاتصال';
+
+  @override
+  String get ng_release_more_gateway_fleet => 'مجموعة البوابات';
+
+  @override
+  String get ng_release_more_memory_graph => 'رسم الذاكرة البياني';
+
+  @override
+  String get ng_release_more_memory_graph_subtitle =>
+      'التسلسل الزمني والتعديلات ومزوّدو الذاكرة';
+
+  @override
+  String get ng_release_more_capabilities_subtitle =>
+      'تثبيت المهارات والملحقات والموصّلات ومحرّكات الأدوات وإدارتها';
+
+  @override
+  String get ng_release_more_browser_vault => 'خزنة المتصفح';
+
+  @override
+  String get ng_release_more_browser_vault_subtitle =>
+      'بيانات الدخول إلى المواقع والعناوين والبطاقات ومصادر بيانات الاعتماد';
+
+  @override
+  String get ng_release_more_agent_policy => 'سياسة الوكيل';
+
+  @override
+  String get ng_release_more_agent_policy_subtitle =>
+      'الموافقات ونقاط التحقق والوصول إلى المتصفح والمقاييس المشتركة';
+
+  @override
+  String get ng_release_more_schedules => 'الجداول';
+
+  @override
+  String get ng_release_more_schedules_subtitle =>
+      'جميع الملفات الشخصية والقوالب وتعويض التشغيل الفائت والإيقاف';
+
+  @override
+  String get ng_release_more_host_subtitle =>
+      'السجلات البعيدة والحالة والصيانة والتحديث';
+
+  @override
+  String get ng_release_more_providers_routes => 'المزوّدون والمسارات';
+
+  @override
+  String get ng_release_more_providers_routes_subtitle =>
+      'المفاتيح ونقاط الاتصال والتفويض ومزيج النماذج';
+
+  @override
+  String get ng_release_more_credits_plans => 'الأرصدة والخطط';
+
+  @override
+  String get ng_release_more_credits_plans_subtitle =>
+      'إدارة فوترة Nous بموافقتك عندما يسمح الحساب بذلك';
+
+  @override
+  String get ng_release_sign_in_or => 'أو';
+
+  @override
+  String ng_release_deployment_sign_in_hint(String message) {
+    return '$message لا يزال بإمكانك تسجيل الدخول برمز جلسة النشر في الخطوة التالية.';
+  }
+
+  @override
+  String get ng_release_message_search_unavailable =>
+      'البحث في الرسائل غير متاح. تُعرض النتائج المحلية المطابقة.';
+
+  @override
+  String ng_release_insights_days(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'عدد الأيام: $days',
+      one: '$days يوم',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_release_signed_in_you => 'أنت';
+
+  @override
+  String get release_chat_unsent_prompt_gone =>
+      'لم يعد ذلك الطلب غير المرسَل في قائمة الانتظار.';
+
+  @override
+  String ng_release_attachment_not_attached(String name) {
+    return 'لم تُرفق البوابة $name.';
+  }
+
+  @override
+  String get ng_release_gateway_not_connected => 'لم يتم الاتصال بالبوابة بعد.';
+
+  @override
+  String get ng_release_gateway_unreachable => 'تعذّر الوصول إلى البوابة.';
+
+  @override
+  String get ng_release_projects_scope_changed =>
+      'لم يعد نطاق المشاريع محدّدًا';
+
+  @override
+  String get ng_release_missing_providers => 'مزوّدون مفقودون';
+
+  @override
+  String get ng_release_missing_tasks => 'مهام مفقودة';
+
+  @override
+  String ng_release_age_minutes(int count) {
+    return '$count د';
+  }
+
+  @override
+  String ng_release_age_hours(int count) {
+    return '$count س';
+  }
+
+  @override
+  String ng_release_age_days(int count) {
+    return '$count ي';
+  }
+
+  @override
+  String ng_release_age_weeks(int count) {
+    return '$count أ';
+  }
+
+  @override
+  String ng_release_age_years(int count) {
+    return '$count سنة';
+  }
+
+  @override
+  String ng_release_compact_billions(String count) {
+    return '$count مليار';
+  }
+
+  @override
+  String ng_release_compact_millions(String count) {
+    return '$count مليون';
+  }
+
+  @override
+  String ng_release_compact_thousands(String count) {
+    return '$count ألف';
+  }
+
+  @override
+  String ng_release_token_thousands(String count) {
+    return '$count ألف';
+  }
+
+  @override
+  String ng_release_elapsed_minutes_seconds(int minutes, int seconds) {
+    return '$minutes د $seconds ث';
+  }
+
+  @override
+  String ng_release_elapsed_seconds(int seconds) {
+    return '$seconds ث';
+  }
+
+  @override
+  String get ng_release_notification_foreground => 'كان Ares ظاهرًا على الشاشة';
+
+  @override
+  String get ng_release_notification_stopped => 'أُوقفت الجولة';
+
+  @override
+  String get ng_release_more_parallel_workspace => 'مساحة عمل متوازية';
+
+  @override
+  String get ng_release_more_parallel_workspace_subtitle =>
+      'افتح عدة محادثات في علامات تبويب أو جنبًا إلى جنب.';
+
+  @override
+  String get release_chat_unknown_model => 'غير معروف';
+
+  @override
+  String release_chat_profile_default(String model) {
+    return 'الإعداد الافتراضي للملف الشخصي: $model';
+  }
+
+  @override
+  String release_chat_profile_default_provider(String model, String provider) {
+    return 'الإعداد الافتراضي للملف الشخصي: $model • $provider';
+  }
+
+  @override
+  String get release_chat_choose_provider =>
+      'يتوفر هذا النموذج لدى عدة مزوّدين. اختر مزوّدًا للمتابعة.';
+
+  @override
+  String get release_chat_slash_needs_gateway =>
+      'تتطلب أوامر الشرطة المائلة بوابة سطح المكتب';
+
+  @override
+  String get release_chat_recovering_without_resending =>
+      'جارٍ الاستعادة من دون إعادة الإرسال';
+
+  @override
+  String get release_chat_live_request_unreachable =>
+      'عذرًا، تعذّر عليّ الوصول إلى Hermes لتنفيذ هذا الطلب.';
+
+  @override
+  String release_chat_live_working(String tool) {
+    return 'يعمل Hermes الآن: $tool. لم ينتهِ بعد.';
+  }
+
+  @override
+  String get release_chat_live_finished_without_spoken_result =>
+      'أكمل Hermes هذا الطلب من دون نتيجة منطوقة.';
+
+  @override
+  String get release_chat_reply_language_unavailable =>
+      'لغة الرد المحدّدة غير متاحة';
+
+  @override
+  String get release_chat_reply_voice_unavailable =>
+      'الصوت المحدّد للرد غير متاح';
+
+  @override
+  String get release_chat_reply_voice_configuration_unavailable =>
+      'إعداد صوت الرد غير متاح';
+
+  @override
+  String get release_chat_notification_review_action =>
+      'افتح المحادثة لمراجعة الإجراء المطلوب.';
+
+  @override
+  String get release_chat_notification_respond => 'افتح المحادثة للرد.';
+
+  @override
+  String get release_chat_start_new_main_window =>
+      'ابدأ محادثة جديدة في النافذة الرئيسية.';
+
+  @override
+  String get release_chat_no_desktop_gateway => 'لا توجد بوابة سطح مكتب';
+
+  @override
+  String get release_chat_attachment_preparation_cancelled =>
+      'أُلغي تجهيز المرفق.';
+
+  @override
+  String get release_chat_approval_authority_revoked =>
+      'سُحبت صلاحية الموافقة.';
+
+  @override
+  String get release_chat_gateway_session_disconnected =>
+      'لم تعد جلسة بوابة سطح المكتب متصلة';
+
+  @override
+  String get release_chat_stop_requested =>
+      'طُلب الإيقاف. بانتظار انتهاء Hermes.';
+
+  @override
+  String release_chat_stop_request_failed(String error) {
+    return 'تعذّر طلب الإيقاف: $error';
+  }
+
+  @override
+  String get release_chat_queued_prompt_not_sent =>
+      'لم يُرسَل الطلب من قائمة الانتظار.';
+
+  @override
+  String get release_chat_running_turn_unreachable =>
+      'تعذّر الوصول إلى الجولة الجارية. جارٍ إعادة الاتصال من دون إعادة الإرسال.';
+
+  @override
+  String get release_chat_wait_for_composer =>
+      'انتظر حتى يصبح محرّر الرسائل متاحًا.';
+
+  @override
+  String get release_chat_find_in_transcript => 'البحث في نص المحادثة';
+
+  @override
+  String get release_chat_open_browser_preview => 'فتح معاينة المتصفح';
+
+  @override
+  String get release_chat_more_tools => 'مزيد من أدوات المحادثة';
+
+  @override
+  String get release_chat_queue_until_finished =>
+      'إضافة إلى قائمة الانتظار حتى تنتهي هذه الجولة';
+
+  @override
+  String get release_chat_format_bold => 'عريض';
+
+  @override
+  String get release_chat_format_italic => 'مائل';
+
+  @override
+  String get ng_release_chat_gateway_queue_requirements =>
+      'تتطلب قائمة انتظار البوابة محادثة مرتبطة وطلبًا نصيًا فقط.';
+
+  @override
+  String get ng_release_chat_start_new_main_screen =>
+      'ابدأ محادثة جديدة من شاشة المحادثات الرئيسية.';
+
+  @override
+  String get ng_release_chat_image => 'صورة';
+
+  @override
+  String ng_release_chat_tool_seconds(String seconds) {
+    return '$seconds ث';
+  }
+
+  @override
+  String get release_preview_chat_changed =>
+      'تغيّرت المحادثة. أعد توصيل المعاينة للمتابعة.';
+
+  @override
+  String get release_preview_authenticating_chat =>
+      'جارٍ التحقق من هوية المحادثة…';
+
+  @override
+  String release_preview_unavailable_reason(String reason) {
+    return 'المعاينة غير متاحة: $reason';
+  }
+
+  @override
+  String get release_preview_operation_failed => 'فشلت عملية المعاينة.';
+
+  @override
+  String get release_preview_added_to_draft =>
+      'أُضيف إلى المسودة. لم يُرسَل أي شيء.';
+
+  @override
+  String get release_preview_open_site_title => 'هل تريد فتح هذا الموقع؟';
+
+  @override
+  String release_preview_open_site_body(String origin) {
+    return '$origin\n\nيحمّل وضع القراءة هذا المستند فقط. ولا يشارك ملفات تعريف الارتباط أو بيانات الدخول أو الصفحة مع Hermes.';
+  }
+
+  @override
+  String get release_preview_open_site => 'فتح الموقع';
+
+  @override
+  String get release_preview_discard_pins_title =>
+      'هل تريد تجاهل العلامات غير المضافة إلى المسودة؟';
+
+  @override
+  String get release_preview_keep_pins => 'إبقاء العلامات';
+
+  @override
+  String get release_preview_share_page_title =>
+      'هل تريد مشاركة هذه الصفحة مع هذه المحادثة؟';
+
+  @override
+  String release_preview_share_page_body(String origin) {
+    return 'يمكن لـ Hermes قراءة النص المعروض وقائمة العناصر من $origin، وتمرير هذه اللوحة. ينتهي الإذن بالمشاركة عند الانتقال إلى صفحة أخرى. لا تُشارَك النماذج ولا بيانات الاعتماد.';
+  }
+
+  @override
+  String get release_preview_share_page => 'مشاركة الصفحة';
+
+  @override
+  String release_preview_comment_number(int number) {
+    return 'تعليق رقم $number';
+  }
+
+  @override
+  String get release_preview_note => 'ملاحظة';
+
+  @override
+  String get release_preview_keep_pin => 'إبقاء العلامة';
+
+  @override
+  String get release_preview_title => 'معاينة المتصفح';
+
+  @override
+  String get release_preview_hide => 'إخفاء المعاينة';
+
+  @override
+  String get release_preview_close_and_forget => 'إغلاق الصفحة ونسيانها';
+
+  @override
+  String get release_preview_site_address => 'عنوان الموقع';
+
+  @override
+  String get release_preview_go_to_address => 'الانتقال إلى العنوان';
+
+  @override
+  String get release_preview_forward => 'إلى الأمام';
+
+  @override
+  String get release_preview_reload => 'إعادة التحميل';
+
+  @override
+  String get release_preview_share_with_hermes => 'مشاركة الصفحة مع Hermes';
+
+  @override
+  String get release_preview_stop_sharing => 'إيقاف مشاركة الصفحة';
+
+  @override
+  String get release_preview_annotate => 'إضافة تعليق على عنصر أو منطقة';
+
+  @override
+  String get release_preview_reader_console => 'وحدة تحكم وضع القراءة';
+
+  @override
+  String get release_preview_reconnect => 'إعادة توصيل المعاينة';
+
+  @override
+  String get release_preview_reader_mode_help =>
+      'وضع القراءة: HTML ونص. بلا نصوص برمجية أو موارد مضمّنة أو ملف متصفح مسجّل الدخول.';
+
+  @override
+  String release_preview_sharing_origin(String origin) {
+    return 'وضع القراءة مشارَك مع هذه المحادثة: $origin';
+  }
+
+  @override
+  String get release_preview_annotation_help =>
+      'اضغط على عنصر أو اسحب لتحديد منطقة لإضافة تعليق.';
+
+  @override
+  String get release_preview_reader_requests =>
+      'طلبات وضع القراءة (JavaScript معطّل)';
+
+  @override
+  String release_preview_selected_requests(int count) {
+    return 'المحدّد: $count · JavaScript معطّل';
+  }
+
+  @override
+  String get release_preview_copy_all => 'نسخ الكل';
+
+  @override
+  String get release_preview_copy_selected => 'نسخ المحدّد';
+
+  @override
+  String get release_preview_add_log_to_draft => 'إضافة السجل إلى المسودة';
+
+  @override
+  String release_preview_requests_draft(String log) {
+    return 'طلبات وضع القراءة:\n$log';
+  }
+
+  @override
+  String release_preview_add_pins_to_draft(int count) {
+    return 'إضافة $count إلى المسودة';
+  }
+
+  @override
+  String release_preview_request_loaded(String origin, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'عدد عناصر وضع القراءة: $count',
+      one: '$count عنصر في وضع القراءة',
+    );
+    return 'HTTP 200 · $origin · $_temp0';
+  }
+
+  @override
+  String release_preview_annotation_intro(String origin) {
+    return 'راجع هذه التعليقات على معاينة $origin. رُقّمت اللقطات المقتطعة المرفقة بالترتيب نفسه.';
+  }
+
+  @override
+  String get release_preview_reader_region => 'منطقة وضع القراءة';
+
+  @override
+  String get release_preview_capture_failed => 'تعذّر التقاط هذه البكسلات.';
+
+  @override
+  String get release_preview_address_not_approved =>
+      'هذا العنوان خارج نطاق المصدر المسموح به للمعاينة.';
+
+  @override
+  String get release_preview_page_limit =>
+      'تتجاوز الصفحة الحد المسموح به لوضع القراءة.';
+
+  @override
+  String get release_preview_page_unreadable => 'تعذّرت قراءة الصفحة.';
+
+  @override
+  String get release_preview_page_complex =>
+      'هذه الصفحة معقّدة جدًا لوضع القراءة.';
+
+  @override
+  String release_preview_http_failed(int statusCode) {
+    return 'HTTP $statusCode. لم يُتَّبع أي تحويل ولم يُسجَّل الدخول.';
+  }
+
+  @override
+  String get release_preview_unsupported_type =>
+      'يمكن فتح HTML والنص العادي فقط في وضع القراءة.';
+
+  @override
+  String get release_preview_load_insecure => 'تعذّر تحميل الموقع بأمان.';
+
+  @override
+  String get release_preview_crop_limit =>
+      'تتجاوز لقطة المعاينة المقتطعة الحد المسموح به.';
+
+  @override
+  String get release_preview_image_unreadable =>
+      'الصورة المحدّدة فارغة أو غير قابلة للقراءة.';
+
+  @override
+  String get release_preview_image_budget =>
+      'تتجاوز الصورة المحدّدة الحد المسموح به للمسودة والبالغ 64 ميبيبايت.';
+
+  @override
+  String get release_preview_image_format =>
+      'تنسيق الصورة غير مدعوم. اختر صورة JPEG أو PNG أو WebP.';
+
+  @override
+  String get release_preview_image_decode =>
+      'تعذّر فك ترميز صورة JPEG أو PNG أو WebP المحدّدة بأمان.';
+
+  @override
+  String get release_preview_image_sanitize =>
+      'تعذّر تنقية هذه الصورة من المحتوى غير الآمن. اختر صورة JPEG أو PNG أو WebP صالحة.';
+
+  @override
+  String get release_preview_draft_budget =>
+      'يقتصر الحجم الإجمالي للمرفقات في كل مسودة على 64 ميبيبايت.';
+
+  @override
+  String get release_preview_generic_file_limit =>
+      'يقتصر حجم كل ملف عام على 16 ميبيبايت.';
+
+  @override
+  String get release_preview_image_not_sanitized =>
+      'يجب تنقية الصور البعيدة من المحتوى غير الآمن قبل رفعها.';
+
+  @override
+  String get release_preview_stage_failed =>
+      'تعذّرت إضافة شواهد المعاينة إلى المسودة. حاول مجددًا.';
+
+  @override
+  String get release_misc_find_hermes_on_lan =>
+      'البحث عن Hermes في الشبكة المحلية';
+
+  @override
+  String release_misc_discovery_failed(String error) {
+    return 'فشل الاكتشاف: $error';
+  }
+
+  @override
+  String get release_misc_no_lan_servers =>
+      'لم يُعثر على خوادم Hermes في الشبكة المحلية.';
+
+  @override
+  String release_misc_api_key_rejected(String endpoint, int statusCode) {
+    return 'رفضت نقطة الاتصال $endpoint مفتاح API ‏(HTTP $statusCode).';
+  }
+
+  @override
+  String get release_misc_api_key_required =>
+      'يتطلب الخادم مفتاح API. أدخل قيمة API_SERVER_KEY الخاصة بك.';
+
+  @override
+  String release_misc_gateway_not_found(String endpoint) {
+    return 'أعادت نقطة اتصال البوابة $endpoint رمز HTTP 404. تحقّق من بادئة مسار البوابة ومسارات الوكيل العكسي.';
+  }
+
+  @override
+  String release_misc_gateway_http_error(String endpoint, int statusCode) {
+    return 'أعادت نقطة اتصال البوابة $endpoint رمز HTTP $statusCode.';
+  }
+
+  @override
+  String release_misc_gateway_unreachable(String endpoint) {
+    return 'يتعذّر الوصول إلى نقطة اتصال البوابة $endpoint.';
+  }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target =>
+      'وجهة التسليم غير صالحة';
+
+  @override
+  String get release_core_file_save_direct_only =>
+      'لا يمكن حفظ إلا ملف موجود مباشرة في دليل العمل.';
+
+  @override
+  String get release_core_file_save_hidden =>
+      'لا يمكن للبوابة حفظ الملفات المخفية.';
 }

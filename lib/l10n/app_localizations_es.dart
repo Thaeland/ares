@@ -317,17 +317,17 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String message_time_recorded(String time) {
-    return 'Recorded by server: $time (local time)';
+    return 'Registrado por el servidor: $time (hora local)';
   }
 
   @override
   String message_time_sent(String time) {
-    return 'Send observed on this device: $time (local time)';
+    return 'Envío observado en este dispositivo: $time (hora local)';
   }
 
   @override
   String message_time_received(String time) {
-    return 'First received on this device: $time (local time)';
+    return 'Primera recepción en este dispositivo: $time (hora local)';
   }
 
   @override
@@ -448,28 +448,28 @@ class AppLocalizationsEs extends AppLocalizations {
   String get attachment_retry => 'Reintentar';
 
   @override
-  String get saved_history_heading => 'Saved history';
+  String get saved_history_heading => 'Historial guardado';
 
   @override
   String get received_output_heading =>
-      'Received output — match to saved history unconfirmed';
+      'Salida recibida — coincidencia con el historial guardado sin confirmar';
 
   @override
-  String get received_output_details => 'About received output';
+  String get received_output_details => 'Acerca de la salida recibida';
 
   @override
   String get received_output_explanation =>
-      'This may also appear in saved history. The app cannot confirm a match.';
+      'Esto también puede aparecer en el historial guardado. La aplicación no puede confirmar que coincida.';
 
   @override
-  String get local_prompt_context => 'Local prompt context';
+  String get local_prompt_context => 'Contexto local del prompt';
 
   @override
-  String get received_output_badge => 'Received · match unconfirmed';
+  String get received_output_badge => 'Recibido · coincidencia sin confirmar';
 
   @override
   String get received_output_lifetime =>
-      'Received output is kept temporarily in this app session and may be shortened or removed as limits are reached. It may not be available after the app or connection is closed.';
+      'La salida recibida se conserva temporalmente durante esta sesión de la aplicación y puede acortarse o eliminarse al alcanzar los límites. Puede dejar de estar disponible al cerrar la aplicación o la conexión.';
 
   @override
   String get theme_palette => 'Tema de color';
@@ -674,14 +674,14 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get allow_folder_until_sandbox_off =>
-      'Allow this folder until the sandbox is switched off.';
+      'Permitir esta carpeta hasta que se desactive el sandbox.';
 
   @override
   String get allow_once => 'Permitir una vez';
 
   @override
   String get allow_website_until_sandbox_off =>
-      'Allow this website until the sandbox is switched off.';
+      'Permitir este sitio web hasta que se desactive el sandbox.';
 
   @override
   String get always_allow => 'Permitir siempre';
@@ -920,7 +920,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get code_copied => 'Código copiado';
 
   @override
-  String get code_format => 'Code';
+  String get code_format => 'Código';
 
   @override
   String get coming_next => 'Próximamente';
@@ -929,25 +929,25 @@ class AppLocalizationsEs extends AppLocalizations {
   String get command => 'Comando';
 
   @override
-  String get command_palette => 'Command palette';
+  String get command_palette => 'Paleta de comandos';
 
   @override
-  String get command_palette_hint => 'Type a command';
+  String get command_palette_hint => 'Escribe un comando';
 
   @override
-  String get command_palette_no_results => 'No commands found';
+  String get command_palette_no_results => 'No se encontraron comandos';
 
   @override
-  String get command_palette_new_chat => 'New chat';
+  String get command_palette_new_chat => 'Nuevo chat';
 
   @override
-  String get command_palette_search_chats => 'Search chats';
+  String get command_palette_search_chats => 'Buscar chats';
 
   @override
-  String get command_palette_toggle_theme => 'Toggle theme';
+  String get command_palette_toggle_theme => 'Alternar tema';
 
   @override
-  String get command_palette_copy_last_code => 'Copy last code block';
+  String get command_palette_copy_last_code => 'Copiar último bloque de código';
 
   @override
   String get command_line_chats => 'Chats de línea de comandos';
@@ -1142,14 +1142,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cron => 'Cron';
 
   @override
-  String get crons => 'Crons';
+  String get crons => 'Tareas cron';
 
   @override
   String get cron_conversations_empty =>
-      'Conversations from scheduled jobs appear here, including older runs.';
+      'Las conversaciones de tareas programadas aparecen aquí, incluidas las ejecuciones anteriores.';
 
   @override
-  String get search_cron_conversations => 'Search cron conversations';
+  String get search_cron_conversations => 'Buscar conversaciones de cron';
 
   @override
   String get cron_jobs => 'Tareas de Cron';
@@ -1945,51 +1945,50 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get windows_notifications_blocked =>
-      'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.';
+      'Las notificaciones no están disponibles. Usa la aplicación Ares instalada y revisa Configuración → Sistema → Notificaciones en Windows.';
 
   @override
-  String get windows_notification_diagnostics =>
-      'What Ares submitted to Windows';
+  String get windows_notification_diagnostics => 'Lo que Ares envió a Windows';
 
   @override
-  String get chat_activity_share => 'Share chat activity';
+  String get chat_activity_share => 'Compartir actividad del chat';
 
   @override
   String get chat_activity_share_hint =>
-      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+      'Indica a un gateway compatible conectado cuándo usas este chat para que su complemento de notificaciones del teléfono evite alertas duplicadas. No se envían claves ni texto de mensajes.';
 
   @override
-  String get completion_sound => 'Completion sound';
+  String get completion_sound => 'Sonido de finalización';
 
   @override
-  String get completion_sound_system => 'System default';
+  String get completion_sound_system => 'Predeterminado del sistema';
 
   @override
-  String get completion_sound_mail => 'Mail';
+  String get completion_sound_mail => 'Correo';
 
   @override
-  String get completion_sound_reminder => 'Reminder';
+  String get completion_sound_reminder => 'Recordatorio';
 
   @override
-  String get completion_sound_silent => 'Silent';
+  String get completion_sound_silent => 'Silencio';
 
   @override
   String get completion_sound_scope =>
-      'Plays for finished replies, the test notification and inside the app. Approvals and other alerts keep their usual sound.';
+      'Suena al finalizar respuestas, en la notificación de prueba y dentro de la aplicación. Las aprobaciones y otras alertas conservan su sonido habitual.';
 
   @override
   String get completion_sound_scope_android =>
-      'Plays for finished replies, the test notification and inside the app. Approvals, other alerts, background notifications from the server and Android Auto messages keep their usual sound.';
+      'Suena al finalizar respuestas, en la notificación de prueba y dentro de la aplicación. Las aprobaciones, otras alertas, las notificaciones en segundo plano del servidor y los mensajes de Android Auto conservan su sonido habitual.';
 
   @override
-  String get notification_open_action => 'Open';
+  String get notification_open_action => 'Abrir';
 
   @override
-  String get app_sounds_mute => 'Mute app sounds';
+  String get app_sounds_mute => 'Silenciar sonidos de la aplicación';
 
   @override
   String get app_sounds_mute_hint =>
-      'Stops the completion sound Ares plays while it is open. Notifications keep their own sound.';
+      'Desactiva el sonido de finalización que Ares reproduce mientras está abierto. Las notificaciones conservan su propio sonido.';
 
   @override
   String get notifications_permission_denied =>
@@ -2473,10 +2472,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get starting_hermes => 'Iniciando Hermes…';
 
   @override
-  String get media_card_download => 'Download file';
+  String get media_card_download => 'Descargar archivo';
 
   @override
-  String get media_card_tap_to_download => 'Tap to download';
+  String get media_card_tap_to_download => 'Toca para descargar';
 
   @override
   String get still_loading_your_projects => 'Todavía cargando tus proyectos.';
@@ -2782,7 +2781,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get verbose_mode => 'Modo detallado';
 
   @override
-  String get message_metadata => 'Message details';
+  String get message_metadata => 'Detalles del mensaje';
 
   @override
   String get voice => 'Voz';
@@ -3369,45 +3368,44 @@ class AppLocalizationsEs extends AppLocalizations {
       'Compacta quita las etiquetas «You» y «Hermes» y reduce el relleno, el espaciado y los márgenes laterales de las burbujas.';
 
   @override
-  String get client_certificate_mtls => 'Client certificate (mTLS)';
+  String get client_certificate_mtls => 'Certificado de cliente (mTLS)';
 
   @override
   String get client_certificate_mtls_description =>
-      'Present a certificate when an HTTPS proxy requires mutual TLS.';
+      'Presentar un certificado cuando un proxy HTTPS requiera TLS mutuo.';
 
   @override
   String get client_certificate_https_only =>
-      'Client certificates are only used for HTTPS connections.';
+      'Los certificados de cliente solo se usan en conexiones HTTPS.';
 
   @override
-  String get choose_certificate => 'Choose certificate';
+  String get choose_certificate => 'Elegir certificado';
 
   @override
-  String get certificate_password => 'Certificate password';
+  String get certificate_password => 'Contraseña del certificado';
 
   @override
   String get this_certificate_is_password_protected =>
-      'This certificate is password-protected. It opens as you type.';
+      'Este certificado está protegido por contraseña. Se abre mientras escribes.';
 
   @override
   String get enter_the_certificate_password_to_finish_loading_it =>
-      'Enter the certificate password to finish loading the certificate you chose.';
+      'Introduce la contraseña del certificado para terminar de cargar el certificado elegido.';
 
   @override
   String get client_certificate_required =>
-      'Load a client certificate or turn off the client certificate option.';
+      'Carga un certificado de cliente o desactiva la opción de certificado de cliente.';
 
   @override
   String client_certificate_loaded(String label) {
-    return 'Loaded: $label';
+    return 'Cargado: $label';
   }
 
   @override
-  String get remove_certificate => 'Remove certificate';
+  String get remove_certificate => 'Eliminar certificado';
 
   @override
-  String get certificate_import_failed =>
-      'That certificate could not be loaded.';
+  String get certificate_import_failed => 'No se pudo cargar ese certificado.';
 
   @override
   String get background_work => 'Trabajo en segundo plano';
@@ -3887,73 +3885,74 @@ class AppLocalizationsEs extends AppLocalizations {
       'Estado de la cuenta del servidor no disponible.';
 
   @override
-  String get app_language => 'App language';
+  String get app_language => 'Idioma de la aplicación';
 
   @override
-  String get app_language_system => 'Same as phone';
+  String get app_language_system => 'El del teléfono';
 
   @override
-  String get auto_archives_after_72_hours => 'Auto-archives after 72 hours';
+  String get auto_archives_after_72_hours =>
+      'Se archiva automáticamente tras 72 horas';
 
   @override
-  String get automation => 'Automation';
+  String get automation => 'Automatización';
 
   @override
-  String get voice_recording_start => 'Record voice message';
+  String get voice_recording_start => 'Grabar mensaje de voz';
 
   @override
-  String get voice_recording_pause => 'Pause recording';
+  String get voice_recording_pause => 'Pausar grabación';
 
   @override
-  String get voice_recording_preview => 'Play recording';
+  String get voice_recording_preview => 'Reproducir grabación';
 
   @override
-  String get voice_recording_resume => 'Continue recording';
+  String get voice_recording_resume => 'Continuar grabación';
 
   @override
-  String get voice_recording_send => 'Send voice message';
+  String get voice_recording_send => 'Enviar mensaje de voz';
 
   @override
-  String get voice_recording_discard => 'Discard recording';
+  String get voice_recording_discard => 'Descartar grabación';
 
   @override
-  String get voice_recording_processing => 'Preparing voice message…';
+  String get voice_recording_processing => 'Preparando mensaje de voz…';
 
   @override
   String voice_recording_elapsed(String time) {
-    return 'Recording $time';
+    return 'Grabando $time';
   }
 
   @override
   String voice_recording_draft(String time) {
-    return 'Voice message $time';
+    return 'Mensaje de voz $time';
   }
 
   @override
   String get voice_recording_permission =>
-      'Allow microphone access to record a voice message.';
+      'Permite el acceso al micrófono para grabar un mensaje de voz.';
 
   @override
   String get voice_recording_limit =>
-      'This recording has reached the ten-minute limit.';
+      'Esta grabación ha alcanzado el límite de diez minutos.';
 
   @override
-  String get voice_recording_empty => 'No audio was recorded. Try again.';
+  String get voice_recording_empty => 'No se grabó audio. Inténtalo de nuevo.';
 
   @override
   String get voice_recording_failed =>
-      'Could not process the recording. Any saved fragments have been kept.';
+      'No se pudo procesar la grabación. Se han conservado los fragmentos guardados.';
 
   @override
   String get voice_recording_unconfirmed =>
-      'Delivery was not confirmed. Your recording is saved. Check the chat before trying again.';
+      'No se confirmó la entrega. Tu grabación está guardada. Revisa el chat antes de volver a intentarlo.';
 
   @override
   String get voice_recording_submit_failed =>
-      'Could not send the voice message. Your recording is saved. Check the connection, Dashboard access and server transcription settings.';
+      'No se pudo enviar el mensaje de voz. Tu grabación está guardada. Comprueba la conexión, el acceso al panel y los ajustes de transcripción del servidor.';
 
   @override
-  String get voice_recording_pause_playback => 'Pause playback';
+  String get voice_recording_pause_playback => 'Pausar reproducción';
 
   @override
   String get projects_root_title => 'Carpeta de Proyectos en el servidor';
@@ -4108,178 +4107,179 @@ class AppLocalizationsEs extends AppLocalizations {
       'Abre la lista de sesiones para elegir un chat. Se conservó tu borrador.';
 
   @override
-  String get composer_snippets => 'Prompt snippets';
+  String get composer_snippets => 'Fragmentos de prompts';
 
   @override
   String get composer_snippets_description =>
-      'Pick a starter prompt to drop into the composer.';
+      'Elige un prompt inicial para insertarlo en el editor.';
 
   @override
-  String get composer_snippet_review => 'Code review';
+  String get composer_snippet_review => 'Revisión de código';
 
   @override
   String get composer_snippet_review_body =>
-      'Audit the current change for regressions, dropped edge cases and missing tests.';
+      'Revisa el cambio actual en busca de regresiones, casos límite olvidados y pruebas que falten.';
 
   @override
   String get composer_snippet_review_text =>
-      'Please review this for bugs, regressions and missing tests.';
+      'Revisa esto en busca de errores, regresiones y pruebas que falten.';
 
   @override
-  String get composer_snippet_plan => 'Implementation plan';
+  String get composer_snippet_plan => 'Plan de implementación';
 
   @override
   String get composer_snippet_plan_body =>
-      'Outline an approach before touching code so the diff stays focused.';
+      'Esboza un enfoque antes de tocar el código para limitar los cambios al objetivo.';
 
   @override
   String get composer_snippet_plan_text =>
-      'Please make a concise implementation plan before changing code.';
+      'Haz un plan de implementación conciso antes de cambiar el código.';
 
   @override
-  String get composer_snippet_explain => 'Explain this';
+  String get composer_snippet_explain => 'Explicar esto';
 
   @override
   String get composer_snippet_explain_body =>
-      'Walk through how the selected code works and point to the key files.';
+      'Explica cómo funciona el código seleccionado e indica los archivos clave.';
 
   @override
   String get composer_snippet_explain_text =>
-      'Please explain how this works and point me to the key files.';
+      'Explica cómo funciona esto e indícame los archivos clave.';
 
   @override
-  String get composer_status => 'Status';
+  String get composer_status => 'Estado';
 
   @override
-  String get composer_status_context => 'Context';
+  String get composer_status_context => 'Contexto';
 
   @override
-  String get composer_status_cache => 'Cache hit';
+  String get composer_status_cache => 'Acierto de caché';
 
   @override
-  String get composer_status_throughput => 'Output tokens/sec';
+  String get composer_status_throughput => 'Tokens de salida/s';
 
   @override
-  String get composer_status_running => 'Running';
+  String get composer_status_running => 'En ejecución';
 
   @override
-  String get composer_status_session => 'Session';
+  String get composer_status_session => 'Sesión';
 
   @override
-  String get composer_status_not_reported => 'Not reported';
+  String get composer_status_not_reported => 'Sin datos';
 
   @override
-  String get composer_status_empty => 'No context breakdown was reported.';
+  String get composer_status_empty =>
+      'No se proporcionó un desglose del contexto.';
 
   @override
-  String get composer_status_loading => 'Loading context breakdown';
+  String get composer_status_loading => 'Cargando desglose del contexto';
 
   @override
-  String get composer_status_reset => 'Reset status bar';
+  String get composer_status_reset => 'Restablecer barra de estado';
 
   @override
-  String get composer_resume_title => 'Resume a chat';
+  String get composer_resume_title => 'Retomar un chat';
 
   @override
-  String get composer_resume_search => 'Search titles and ids';
+  String get composer_resume_search => 'Buscar títulos e ID';
 
   @override
-  String get composer_resume_empty => 'No chats match.';
+  String get composer_resume_empty => 'No hay chats que coincidan.';
 
   @override
   String get composer_resume_unavailable =>
-      'This pane has no chat list to search.';
+      'Este panel no tiene una lista de chats en la que buscar.';
 
   @override
-  String get composer_failure_retry => 'Retry';
+  String get composer_failure_retry => 'Reintentar';
 
   @override
   String composer_failure_retry_at(String time) {
-    return 'Retry at $time';
+    return 'Reintentar a las $time';
   }
 
   @override
-  String get composer_failure_compress => 'Compress';
+  String get composer_failure_compress => 'Comprimir';
 
   @override
-  String get composer_failure_switch_model => 'Switch model';
+  String get composer_failure_switch_model => 'Cambiar de modelo';
 
   @override
   String composer_failure_switch_to(String model) {
-    return 'Switch to $model';
+    return 'Cambiar a $model';
   }
 
   @override
-  String get composer_failure_new_chat => 'New chat';
+  String get composer_failure_new_chat => 'Nuevo chat';
 
   @override
-  String get composer_failure_edit => 'Edit message';
+  String get composer_failure_edit => 'Editar mensaje';
 
   @override
-  String get composer_failure_details => 'Details';
+  String get composer_failure_details => 'Detalles';
 
   @override
-  String get composer_failure_hide_details => 'Hide details';
+  String get composer_failure_hide_details => 'Ocultar detalles';
 
   @override
-  String get composer_failure_copy => 'Copy diagnostics';
+  String get composer_failure_copy => 'Copiar diagnóstico';
 
   @override
   String get composer_failure_account =>
-      'The other fix is on the gateway account. This chat cannot do it.';
+      'La otra solución requiere actuar en la cuenta del gateway. No se puede aplicar desde este chat.';
 
   @override
   String get composer_failure_account_only =>
-      'This has to be fixed on the gateway account. This chat cannot do it.';
+      'Esto debe solucionarse en la cuenta del gateway. No se puede hacer desde este chat.';
 
   @override
   String get composer_failure_confirm_compress =>
-      'Compress this chat? The gateway will shorten the transcript.';
+      '¿Comprimir este chat? El gateway acortará la transcripción.';
 
   @override
   String composer_failure_confirm_model(String model) {
-    return 'Switch this chat to $model?';
+    return '¿Cambiar este chat a $model?';
   }
 
   @override
-  String get composer_drop_attach => 'Drop to attach';
+  String get composer_drop_attach => 'Suelta para adjuntar';
 
   @override
   String get composer_drop_folder_unsupported =>
-      'Folders can\'t be attached. Drop the files instead.';
+      'No se pueden adjuntar carpetas. Suelta los archivos en su lugar.';
 
   @override
-  String get composer_drop_reference => 'Drop to reference';
+  String get composer_drop_reference => 'Suelta para referenciar';
 
   @override
-  String get composer_reference_copy => 'Copy reference';
+  String get composer_reference_copy => 'Copiar referencia';
 
   @override
-  String get composer_reference_remove => 'Remove reference';
+  String get composer_reference_remove => 'Eliminar referencia';
 
   @override
   String get composer_btw_usage =>
-      'Usage: /btw <question> — answered from a snapshot of this conversation without interrupting it.';
+      'Uso: /btw <question> — se responde desde una instantánea de esta conversación sin interrumpirla.';
 
   @override
   String get composer_background_usage =>
-      'Usage: /background <prompt> — the task runs separately and the result comes back here.';
+      'Uso: /background <prompt> — la tarea se ejecuta por separado y el resultado vuelve aquí.';
 
   @override
   String get composer_handoff_usage =>
-      'Usage: /handoff <platform> — transfer this chat to that messaging platform.';
+      'Uso: /handoff <platform> — transfiere este chat a esa plataforma de mensajería.';
 
   @override
   String get composer_command_needs_session =>
-      'This command needs an open chat.';
+      'Este comando necesita un chat abierto.';
 
   @override
   String get composer_retry_not_found =>
-      'This turn is not in the saved history, so Retry cannot replace it. Nothing was sent again. Edit the message and send it for another try.';
+      'Este turno no está en el historial guardado, por lo que Reintentar no puede reemplazarlo. No se ha reenviado nada. Edita el mensaje y envíalo para volver a intentarlo.';
 
   @override
   String get composer_retry_unavailable =>
-      'Retry cannot replace a turn on this connection, so nothing was sent again. Edit the message and send it for another try.';
+      'Reintentar no puede reemplazar un turno en esta conexión, por lo que no se ha reenviado nada. Edita el mensaje y envíalo para volver a intentarlo.';
 
   @override
   String get composer_failure_switch_no_retry =>
@@ -4287,52 +4287,53 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get composer_command_needs_gateway_session =>
-      'This chat has no gateway session yet. Send a message first, then run the command again.';
+      'Este chat aún no tiene una sesión en el gateway. Envía primero un mensaje y vuelve a ejecutar el comando.';
 
   @override
   String get composer_side_question =>
-      'btw — answering from a conversation snapshot';
+      'btw — respondiendo desde una instantánea de la conversación';
 
   @override
   String composer_side_question_id(String id) {
-    return 'btw $id — answering from a conversation snapshot';
+    return 'btw $id — respondiendo desde una instantánea de la conversación';
   }
 
   @override
   String get composer_background_started =>
-      'Background task started. You can keep chatting. The result will appear here.';
+      'Tarea en segundo plano iniciada. Puedes seguir chateando. El resultado aparecerá aquí.';
 
   @override
   String composer_background_started_id(String id) {
-    return 'Background task $id started. You can keep chatting. The result will appear here.';
+    return 'Tarea en segundo plano $id iniciada. Puedes seguir chateando. El resultado aparecerá aquí.';
   }
 
   @override
   String composer_handoff_requested(String platform) {
-    return 'Handoff to $platform requested.';
+    return 'Transferencia a $platform solicitada.';
   }
 
   @override
   String composer_handoff_done(String platform) {
-    return 'Handed this chat to $platform.';
+    return 'Este chat se ha transferido a $platform.';
   }
 
   @override
-  String get composer_handoff_failed => 'Handoff failed.';
+  String get composer_handoff_failed => 'La transferencia ha fallado.';
 
   @override
   String get composer_handoff_timeout =>
-      'Handoff did not finish. It may still be running on the gateway.';
+      'La transferencia no terminó. Puede que siga en curso en el gateway.';
 
   @override
-  String get composer_compress_done => 'Compressed this chat.';
+  String get composer_compress_done => 'Este chat se ha comprimido.';
 
   @override
-  String get composer_file_missing => 'That file is not on this device.';
+  String get composer_file_missing =>
+      'Ese archivo no está en este dispositivo.';
 
   @override
   String get composer_attach_busy =>
-      'Attachments can be added when this reply finishes.';
+      'Podrás añadir adjuntos cuando termine esta respuesta.';
 
   @override
   String get nextgen_toggle => 'Interfaz NextGen';
@@ -6483,74 +6484,75 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ng_aux_curator_hint => 'Revisa cómo se usan las habilidades';
 
   @override
-  String get appearance_save_failed => 'Could not save this change.';
+  String get appearance_save_failed => 'No se pudo guardar este cambio.';
 
   @override
-  String get appearance_keep_which_theme => 'Keep which theme?';
+  String get appearance_keep_which_theme => '¿Qué tema quieres conservar?';
 
   @override
-  String get appearance_tour_back => 'Back';
+  String get appearance_tour_back => 'Atrás';
 
   @override
-  String get appearance_tour_finish => 'Finish';
+  String get appearance_tour_finish => 'Finalizar';
 
   @override
-  String get appearance_tour_next => 'Next';
+  String get appearance_tour_next => 'Siguiente';
 
   @override
-  String get appearance_tour_close => 'Close tour';
+  String get appearance_tour_close => 'Cerrar recorrido';
 
   @override
-  String get appearance_dismiss_tip => 'Dismiss tip';
+  String get appearance_dismiss_tip => 'Descartar consejo';
 
   @override
-  String get appearance_search_settings => 'Search settings';
+  String get appearance_search_settings => 'Buscar ajustes';
 
   @override
-  String get appearance_search_show => 'Show';
+  String get appearance_search_show => 'Mostrar';
 
   @override
-  String get appearance_no_matching_setting => 'No matching setting.';
+  String get appearance_no_matching_setting => 'Ningún ajuste coincide.';
 
   @override
-  String get appearance_replay_tour => 'Replay tour';
+  String get appearance_replay_tour => 'Repetir recorrido';
 
   @override
-  String get appearance_show_tips_again => 'Show tips again';
+  String get appearance_show_tips_again => 'Volver a mostrar consejos';
 
   @override
   String get appearance_window_translucency_unavailable =>
-      'Window translucency is not available on this host. Linux cannot provide it, and the Apple and Windows runners paint an opaque Flutter view.';
+      'La translucidez de la ventana no está disponible en este equipo. Linux no la admite y los ejecutables de Apple y Windows dibujan una vista opaca de Flutter.';
 
   @override
-  String get appearance_imported_themes => 'Imported themes';
+  String get appearance_imported_themes => 'Temas importados';
 
   @override
-  String get appearance_import_theme_file => 'Import theme file';
+  String get appearance_import_theme_file => 'Importar archivo de tema';
 
   @override
-  String get appearance_remove_theme => 'Remove theme';
+  String get appearance_remove_theme => 'Eliminar tema';
 
   @override
-  String get appearance_chat_font => 'Chat font';
+  String get appearance_chat_font => 'Fuente del chat';
 
   @override
-  String get appearance_terminal_font => 'Terminal font';
+  String get appearance_terminal_font => 'Fuente del terminal';
 
   @override
-  String get appearance_font_platform => 'Platform';
+  String get appearance_font_platform => 'Plataforma';
 
   @override
-  String get appearance_automatic => 'Automatic';
+  String get appearance_automatic => 'Automático';
 
   @override
-  String get appearance_force_left_to_right => 'Force left to right';
+  String get appearance_force_left_to_right => 'Forzar de izquierda a derecha';
 
   @override
-  String get appearance_force_right_to_left => 'Force right to left';
+  String get appearance_force_right_to_left => 'Forzar de derecha a izquierda';
 
   @override
-  String get appearance_user_bubble_opacity => 'User bubble opacity';
+  String get appearance_user_bubble_opacity =>
+      'Opacidad de la burbuja del usuario';
 
   @override
   String get appearance_inline_embeds => 'Contenido insertado';
@@ -6600,17 +6602,18 @@ class AppLocalizationsEs extends AppLocalizations {
       'Vista previa no disponible';
 
   @override
-  String get appearance_emoji_reactions => 'Emoji reactions';
+  String get appearance_emoji_reactions => 'Reacciones con emojis';
 
   @override
-  String get appearance_celebration_hearts => 'Celebration hearts';
+  String get appearance_celebration_hearts => 'Corazones de celebración';
 
   @override
   String get appearance_celebration_hearts_hint =>
-      'A heart plays when a reply arrives while you were away.';
+      'Se anima un corazón cuando llega una respuesta mientras no estás.';
 
   @override
-  String get appearance_pop_out_companion => 'Pop out companion';
+  String get appearance_pop_out_companion =>
+      'Abrir compañero en ventana independiente';
 
   @override
   String get appearance_mosskip => 'Mosskip';
@@ -6622,212 +6625,212 @@ class AppLocalizationsEs extends AppLocalizations {
   String get appearance_tideling => 'Tideling';
 
   @override
-  String get appearance_my_hatchling => 'My hatchling';
+  String get appearance_my_hatchling => 'Mi cría';
 
   @override
-  String get appearance_at_rest => 'At rest';
+  String get appearance_at_rest => 'En reposo';
 
   @override
-  String get appearance_working => 'Working';
+  String get appearance_working => 'Trabajando';
 
   @override
-  String get appearance_thinking => 'Thinking';
+  String get appearance_thinking => 'Pensando';
 
   @override
-  String get appearance_waiting_for_you => 'Waiting for you';
+  String get appearance_waiting_for_you => 'Esperándote';
 
   @override
-  String get appearance_reply_ready => 'Reply ready';
+  String get appearance_reply_ready => 'Respuesta lista';
 
   @override
-  String get appearance_turn_failed => 'Turn failed';
+  String get appearance_turn_failed => 'Turno fallido';
 
   @override
-  String get appearance_small => 'Small';
+  String get appearance_small => 'Pequeño';
 
   @override
-  String get appearance_medium => 'Medium';
+  String get appearance_medium => 'Mediano';
 
   @override
-  String get appearance_large => 'Large';
+  String get appearance_large => 'Grande';
 
   @override
-  String get appearance_hello => 'Hello!';
+  String get appearance_hello => '¡Hola!';
 
   @override
-  String get appearance_unread_reply => 'Unread reply';
+  String get appearance_unread_reply => 'Respuesta sin leer';
 
   @override
-  String get appearance_compose => 'Compose';
+  String get appearance_compose => 'Redactar';
 
   @override
-  String get appearance_say_hello => 'Say hello';
+  String get appearance_say_hello => 'Saludar';
 
   @override
   String get appearance_pet_image_failed =>
-      'Could not open that image. Choose a smaller PNG or JPEG.';
+      'No se pudo abrir esa imagen. Elige un PNG o JPEG más pequeño.';
 
   @override
-  String get appearance_pet_companion => 'Pet companion';
+  String get appearance_pet_companion => 'Mascota de compañía';
 
   @override
   String get appearance_pet_companion_hint =>
-      'Show a companion while you chat.';
+      'Muestra un compañero mientras chateas.';
 
   @override
-  String get appearance_adopt_a_companion => 'Adopt a companion';
+  String get appearance_adopt_a_companion => 'Adoptar un compañero';
 
   @override
-  String get appearance_roam_when_idle => 'Roam when idle';
+  String get appearance_roam_when_idle => 'Pasear al estar inactivo';
 
   @override
-  String get appearance_pet_size => 'Pet size';
+  String get appearance_pet_size => 'Tamaño de la mascota';
 
   @override
   String get appearance_hatch_from_a_local_picture =>
-      'Hatch from a local picture';
+      'Crear una cría a partir de una imagen local';
 
   @override
   String get appearance_pet_image_limits =>
-      'Choose a PNG or JPEG (up to 4 MiB, 4096 px per side and 8 MP). Preview it first. Hatching saves one 24 × 24 pixel portrait and replaces your previous hatchling.';
+      'Elige un PNG o JPEG (hasta 4 MiB, 4096 px por lado y 8 MP). Previsualízalo primero. Al crear la cría se guarda un retrato de 24 × 24 píxeles y se reemplaza la cría anterior.';
 
   @override
-  String get appearance_choose_picture => 'Choose picture';
+  String get appearance_choose_picture => 'Elegir imagen';
 
   @override
-  String get appearance_hatchling_preview => 'Hatchling preview';
+  String get appearance_hatchling_preview => 'Vista previa de la cría';
 
   @override
-  String get appearance_hatch_and_adopt => 'Hatch and adopt';
+  String get appearance_hatch_and_adopt => 'Crear y adoptar';
 
   @override
-  String get appearance_discard_draft => 'Discard draft';
+  String get appearance_discard_draft => 'Descartar borrador';
 
   @override
-  String get appearance_forget_saved_hatchling => 'Forget saved hatchling';
+  String get appearance_forget_saved_hatchling => 'Olvidar cría guardada';
 
   @override
   String get appearance_radio => 'Radio';
 
   @override
   String appearance_radio_hint(String stations) {
-    return 'Streams come straight from $stations and start only when you press Play. Station search stays on this device.';
+    return 'Las emisiones vienen directamente de $stations y solo se inician al pulsar Reproducir. La búsqueda de emisoras se realiza en este dispositivo.';
   }
 
   @override
   String get appearance_radio_save_failed =>
-      'Radio settings could not be saved.';
+      'No se pudieron guardar los ajustes de la radio.';
 
   @override
-  String get appearance_choose_a_station => 'Choose a station';
+  String get appearance_choose_a_station => 'Elegir una emisora';
 
   @override
-  String get appearance_pause_radio => 'Pause radio';
+  String get appearance_pause_radio => 'Pausar radio';
 
   @override
-  String get appearance_play_radio => 'Play radio';
+  String get appearance_play_radio => 'Reproducir radio';
 
   @override
-  String get appearance_next_station => 'Next station';
+  String get appearance_next_station => 'Siguiente emisora';
 
   @override
   String get appearance_radio_trace_semantics =>
-      'Stream activity. Audio levels are unavailable, so this line stays flat.';
+      'Actividad de la emisión. Los niveles de audio no están disponibles, por lo que esta línea permanece plana.';
 
   @override
-  String get appearance_radio_is_off => 'Radio is off';
+  String get appearance_radio_is_off => 'La radio está apagada';
 
   @override
-  String get appearance_paused => 'Paused';
+  String get appearance_paused => 'En pausa';
 
   @override
-  String get appearance_connecting => 'Connecting…';
+  String get appearance_connecting => 'Conectando…';
 
   @override
-  String get appearance_live => 'Live';
+  String get appearance_live => 'En directo';
 
   @override
-  String get appearance_stream_unavailable => 'Stream unavailable';
+  String get appearance_stream_unavailable => 'Emisión no disponible';
 
   @override
   String appearance_now_playing(String credit) {
-    return 'Now playing: $credit';
+    return 'Reproduciendo: $credit';
   }
 
   @override
   String get appearance_audio_only_waveform_unavailable =>
-      'Audio only · waveform unavailable';
+      'Solo audio · forma de onda no disponible';
 
   @override
-  String get appearance_volume => 'Volume';
+  String get appearance_volume => 'Volumen';
 
   @override
-  String get appearance_search_presets => 'Search presets';
+  String get appearance_search_presets => 'Buscar emisoras predefinidas';
 
   @override
-  String get appearance_no_stations_found => 'No stations found';
+  String get appearance_no_stations_found => 'No se encontraron emisoras';
 
   @override
   String appearance_unpin_station(String station) {
-    return 'Unpin station: $station';
+    return 'Desfijar emisora: $station';
   }
 
   @override
   String appearance_pin_station(String station) {
-    return 'Pin station: $station';
+    return 'Fijar emisora: $station';
   }
 
   @override
   String get appearance_radio_picker_metadata_notice =>
-      'While this picker is open, playing stations may share track details directly from the broadcaster.';
+      'Mientras este selector esté abierto, las emisoras en reproducción pueden compartir detalles de las pistas directamente desde la emisora.';
 
   @override
   String get appearance_message_from_your_companion =>
-      'Message from your companion';
+      'Mensaje de tu compañero';
 
   @override
-  String get appearance_send_to_the_open_chat => 'Send to the open chat';
+  String get appearance_send_to_the_open_chat => 'Enviar al chat abierto';
 
   @override
   String get appearance_tour_theme_body =>
-      'Import a VS Code colour theme from a file on this device, then choose which variant to keep.';
+      'Importa un tema de color de VS Code desde un archivo de este dispositivo y elige qué variante conservar.';
 
   @override
-  String get appearance_tour_fonts_title => 'Reading fonts';
+  String get appearance_tour_fonts_title => 'Fuentes de lectura';
 
   @override
   String get appearance_tour_fonts_body =>
-      'Chat prose and terminal code use separate faces shipped with Ares.';
+      'El texto del chat y el código del terminal usan fuentes distintas incluidas en Ares.';
 
   @override
-  String get appearance_tour_direction_title => 'Transcript direction';
+  String get appearance_tour_direction_title => 'Dirección de la transcripción';
 
   @override
   String get appearance_tour_direction_body =>
-      'Leave this on automatic, or force the transcript left to right or right to left.';
+      'Déjalo en automático o fuerza la transcripción de izquierda a derecha o de derecha a izquierda.';
 
   @override
-  String get appearance_tour_pet_title => 'Companion';
+  String get appearance_tour_pet_title => 'Compañero';
 
   @override
   String get appearance_tour_pet_body =>
-      'The companion is off until you adopt one. Pop-out adds a small composer.';
+      'El compañero está desactivado hasta que adoptes uno. La ventana independiente añade un pequeño editor.';
 
   @override
   String get appearance_tour_radio_body =>
-      'Radio stays off until you enable it. Play is what opens a stream.';
+      'La radio permanece apagada hasta que la actives. Pulsar Reproducir es lo que abre una emisión.';
 
   @override
   String get appearance_tip_theme =>
-      'Imported themes replace the built-in palette until you clear the selection. Only the colours are kept.';
+      'Los temas importados sustituyen la paleta integrada hasta que borres la selección. Solo se conservan los colores.';
 
   @override
   String get appearance_tip_pet =>
-      'The companion stores one small portrait on this device. It does not upload the picture you hatch from.';
+      'El compañero guarda un pequeño retrato en este dispositivo. No sube la imagen a partir de la que creas la cría.';
 
   @override
   String get appearance_theme_import_failed =>
-      'Could not import that theme. Choose a VS Code colour theme saved as a .vsix, .json or .jsonc file.';
+      'No se pudo importar ese tema. Elige un tema de color de VS Code guardado como archivo .vsix, .json o .jsonc.';
 
   @override
   String get render_widget_file_truncated =>
@@ -9651,4 +9654,2514 @@ class AppLocalizationsEs extends AppLocalizations {
   String ng_bots_section_toggle(String name) {
     return 'Mostrar u ocultar $name';
   }
+
+  @override
+  String
+  get release_core_transcript_reader_this_passage_is_no_longer_in_the_loaded =>
+      'Este pasaje ya no está en la ventana cargada.';
+
+  @override
+  String get release_core_transcript_reader_loaded_prompts =>
+      'Prompts cargados';
+
+  @override
+  String get release_core_transcript_reader_jump_to_latest =>
+      'Ir a lo más reciente';
+
+  @override
+  String get release_core_transcript_reader_no_prompts_loaded =>
+      'No hay prompts cargados';
+
+  @override
+  String get release_core_transcript_reader_find_in_loaded_messages =>
+      'Buscar en los mensajes cargados';
+
+  @override
+  String get release_core_transcript_reader_previous_match =>
+      'Coincidencia anterior';
+
+  @override
+  String get release_core_transcript_reader_next_match =>
+      'Coincidencia siguiente';
+
+  @override
+  String get release_core_transcript_reader_prompt_timeline =>
+      'Cronología de prompts';
+
+  @override
+  String get release_core_transcript_reader_close_find => 'Cerrar búsqueda';
+
+  @override
+  String get release_core_session_organisation_organise_chats =>
+      'Organizar chats';
+
+  @override
+  String get release_core_session_organisation_show_model_and_usage =>
+      'Mostrar modelo y uso';
+
+  @override
+  String
+  get release_core_session_files_view_connection_changed_reopen_files_on_the_new_connection =>
+      'La conexión ha cambiado. Vuelve a abrir los archivos en la nueva conexión.';
+
+  @override
+  String
+  get release_core_session_files_view_the_connection_or_session_changed_reopen_this_pane =>
+      'La conexión o la sesión ha cambiado. Vuelve a abrir este panel.';
+
+  @override
+  String
+  get release_core_session_files_view_no_verified_host_working_directory_for_this_session =>
+      'No hay un directorio de trabajo verificado en el host para esta sesión.';
+
+  @override
+  String
+  get release_core_session_files_view_the_gateway_denied_this_operation =>
+      'La pasarela ha denegado esta operación.';
+
+  @override
+  String
+  get release_core_session_files_view_this_gateway_does_not_support_this_operation =>
+      'Esta pasarela no admite esta operación.';
+
+  @override
+  String
+  get release_core_session_files_view_the_file_owner_or_working_directory_changed_reload =>
+      'El archivo, el propietario o el directorio de trabajo ha cambiado. Vuelve a cargar y revisa.';
+
+  @override
+  String
+  get release_core_session_files_view_the_gateway_returned_an_unsafe_path_or_invalid =>
+      'La pasarela ha devuelto una ruta insegura o una respuesta de archivo no válida.';
+
+  @override
+  String
+  get release_core_session_files_view_workspace_access_requires_a_secure_gateway_connection =>
+      'El acceso al espacio de trabajo requiere una conexión segura con la pasarela.';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_unavailable_refresh_to_check_the_current_state =>
+      'Pasarela no disponible. Actualiza para comprobar el estado actual.';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_operation_could_not_be_confirmed =>
+      'No se pudo confirmar la operación de la pasarela.';
+
+  @override
+  String get release_core_session_files_view_git_status_unavailable =>
+      'Estado de Git no disponible.';
+
+  @override
+  String
+  get release_core_session_files_view_change_this_chat_s_working_directory =>
+      '¿Cambiar el directorio de trabajo de este chat?';
+
+  @override
+  String get release_core_session_files_view_absolute_gateway_directory =>
+      'Ruta absoluta del directorio en la pasarela';
+
+  @override
+  String get release_core_session_files_view_change_directory =>
+      'Cambiar directorio';
+
+  @override
+  String get release_core_session_files_view_replace_gateway_file =>
+      '¿Reemplazar el archivo de la pasarela?';
+
+  @override
+  String
+  release_core_session_files_view_only_if_the_file_still_matches_the_version(
+    String path,
+  ) {
+    return '$path\n\nSolo si el archivo sigue coincidiendo con la versión que has revisado. Un host compatible conserva el archivo reemplazado para poder recuperarlo.';
+  }
+
+  @override
+  String get release_core_session_files_view_save_changes => 'Guardar cambios';
+
+  @override
+  String
+  get release_core_session_files_view_saved_and_verified_on_the_gateway =>
+      'Guardado y verificado en la pasarela.';
+
+  @override
+  String
+  get release_core_session_files_view_guarded_saving_is_unavailable_on_this_gateway_your =>
+      'El guardado con protección no está disponible en esta pasarela. Tu borrador sigue aquí.';
+
+  @override
+  String
+  release_core_session_files_view_save_was_not_confirmed_your_draft_is_still(
+    String reason,
+  ) {
+    return '$reason No se ha confirmado el guardado. Tu borrador sigue aquí.';
+  }
+
+  @override
+  String get release_core_session_files_view_review_current_gateway_version =>
+      'Revisar la versión actual de la pasarela';
+
+  @override
+  String get release_core_session_files_view_discard_draft_and_reload =>
+      'Descartar borrador y volver a cargar';
+
+  @override
+  String get release_core_session_files_view_keep_draft_against_this_version =>
+      'Conservar el borrador sobre esta versión';
+
+  @override
+  String get release_core_session_files_view_discard_unsaved_edits =>
+      '¿Descartar los cambios sin guardar?';
+
+  @override
+  String get release_core_session_files_view_keep_editing => 'Seguir editando';
+
+  @override
+  String get release_core_session_files_view_discard_edits =>
+      'Descartar cambios';
+
+  @override
+  String get release_core_session_files_view_remote_working_directory =>
+      'Directorio de trabajo remoto';
+
+  @override
+  String get release_core_session_files_view_change_working_directory =>
+      'Cambiar directorio de trabajo';
+
+  @override
+  String get release_core_session_files_view_show_ignored_files =>
+      'Mostrar archivos ignorados';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_does_not_report_ignored_status =>
+      'La pasarela no informa de qué archivos están ignorados.';
+
+  @override
+  String get release_core_session_files_view_no_visible_entries =>
+      'No hay entradas visibles';
+
+  @override
+  String get release_core_session_files_view_changed => 'Modificado';
+
+  @override
+  String get release_core_session_files_view_ignored => 'Ignorado';
+
+  @override
+  String release_core_session_files_view_actions_for(String name) {
+    return 'Acciones para $name';
+  }
+
+  @override
+  String get release_core_session_files_view_copy_relative_path =>
+      'Copiar ruta relativa';
+
+  @override
+  String get release_core_session_files_view_copy_gateway_path =>
+      'Copiar ruta de la pasarela';
+
+  @override
+  String get release_core_session_files_view_attach_folder_reference =>
+      'Adjuntar referencia a la carpeta';
+
+  @override
+  String get release_core_session_files_view_attach_file_reference =>
+      'Adjuntar referencia al archivo';
+
+  @override
+  String
+  get release_core_session_files_view_preview_truncated_editing_disabled =>
+      'Vista previa truncada: edición deshabilitada.';
+
+  @override
+  String get release_core_session_files_view_select_lines =>
+      'Seleccionar líneas';
+
+  @override
+  String get release_core_session_files_view_review_gateway_version =>
+      'Revisar versión de la pasarela';
+
+  @override
+  String get release_core_session_files_view_attach_selected_lines =>
+      'Adjuntar líneas seleccionadas';
+
+  @override
+  String get release_core_session_files_view_binary_file_no_text_preview =>
+      'Archivo binario: sin vista previa de texto.';
+
+  @override
+  String get release_core_session_files_view_file_source =>
+      'Origen del archivo';
+
+  @override
+  String get release_core_session_files_view_close_session_files =>
+      'Cerrar archivos de la sesión';
+
+  @override
+  String get release_core_session_files_view_back_to_tree => 'Volver al árbol';
+
+  @override
+  String get release_core_session_files_view_session_files =>
+      'Archivos de la sesión';
+
+  @override
+  String get release_core_session_files_view_git_review => 'Revisión de Git';
+
+  @override
+  String get release_core_session_files_view_refresh_tree => 'Actualizar árbol';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_this_connection_changed_reopen_its_chat =>
+      'Esta conexión ha cambiado. Vuelve a abrir su chat.';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_disconnected_reconnect_the_chat_then_refresh =>
+      'Sin conexión. Vuelve a conectar el chat y después actualiza.';
+
+  @override
+  String release_core_gateway_queue_screen_gateway_queue_unavailable(
+    String reason,
+  ) {
+    return 'Cola de la pasarela no disponible: $reason.';
+  }
+
+  @override
+  String release_core_gateway_queue_screen_not_confirmed_nothing_was_resent(
+    String reason,
+  ) {
+    return 'Sin confirmar ($reason). No se ha reenviado nada.';
+  }
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_confirmed_admission =>
+      'La pasarela ha confirmado la admisión.';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_edited_entry_admitted_at_the_end_of_the =>
+      'La entrada editada se ha admitido al final de la cola.';
+
+  @override
+  String get release_core_gateway_queue_screen_discard_unknown_outcome =>
+      '¿Descartar el resultado desconocido?';
+
+  @override
+  String get release_core_gateway_queue_screen_remove_this_entry =>
+      '¿Eliminar esta entrada?';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_the_lost_turn_will_not_be_retried_waiting =>
+      'No se volverá a intentar el turno perdido. Los turnos en espera ya pueden ejecutarse.';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_if_the_gateway_has_just_started_this_entry =>
+      'Si la pasarela acaba de iniciar esta entrada, eliminarla puede detener ese turno.';
+
+  @override
+  String get release_core_gateway_queue_screen_keep => 'Conservar';
+
+  @override
+  String get release_core_gateway_queue_screen_discard_and_resume =>
+      'Descartar y reanudar';
+
+  @override
+  String get release_core_gateway_queue_screen_remove_entry =>
+      'Eliminar entrada';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_lost_admission_resolved_it_was_not_resent =>
+      'Se ha resuelto la admisión perdida; no se ha reenviado.';
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_acknowledged_removal =>
+      'La pasarela ha confirmado la eliminación.';
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_queue =>
+      'Cola de la pasarela';
+
+  @override
+  String get release_core_gateway_queue_screen_refresh_queue =>
+      'Actualizar cola';
+
+  @override
+  String get release_core_gateway_queue_screen_queue_paused_unknown_outcome =>
+      'Cola en pausa: resultado desconocido';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_review_the_lost_admission_before_resuming_nothing_is =>
+      'Revisa la admisión perdida antes de reanudar. No se vuelve a enviar nada.';
+
+  @override
+  String get release_core_gateway_queue_screen_no_pending_admissions =>
+      'No hay admisiones pendientes';
+
+  @override
+  String get release_core_gateway_queue_screen_discard => 'Descartar…';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_gateway_acknowledged_the_steering_request =>
+      'La pasarela ha confirmado la recepción de la solicitud de reorientación.';
+
+  @override
+  String get release_core_gateway_queue_screen_steer_running_turn =>
+      'Reorientar el turno en curso';
+
+  @override
+  String get release_core_gateway_queue_screen_remove => 'Eliminar…';
+
+  @override
+  String get release_core_gateway_queue_screen_next_prompt =>
+      'Siguiente prompt';
+
+  @override
+  String get release_core_gateway_queue_screen_edit_queued_prompt =>
+      'Editar prompt en cola';
+
+  @override
+  String get release_core_gateway_queue_screen_submit_to_gateway_queue =>
+      'Enviar a la cola de la pasarela';
+
+  @override
+  String get release_core_gateway_queue_screen_save_at_queue_end =>
+      'Guardar al final de la cola';
+
+  @override
+  String get release_core_gateway_queue_screen_cancel_edit =>
+      'Cancelar edición';
+
+  @override
+  String get release_core_git_review_pane_the_git_operation_did_not_complete =>
+      'La operación de Git no se ha completado.';
+
+  @override
+  String get release_core_git_review_pane_close_git_review =>
+      'Cerrar revisión de Git';
+
+  @override
+  String get release_core_git_review_pane_pin_lane => 'Fijar carril';
+
+  @override
+  String get release_core_git_review_pane_refresh_git_review =>
+      'Actualizar revisión de Git';
+
+  @override
+  String get release_core_git_review_pane_uncommitted => 'Sin confirmar';
+
+  @override
+  String get release_core_git_review_pane_last_turn => 'Último turno';
+
+  @override
+  String
+  get release_core_git_review_pane_branch_and_last_turn_views_are_read_only =>
+      'Las vistas de la rama y del último turno son de solo lectura.';
+
+  @override
+  String get release_core_git_review_pane_mark_head_as_the_turn_baseline =>
+      'Marcar HEAD como referencia inicial del turno';
+
+  @override
+  String get release_core_git_review_pane_stage_all => 'Preparar todo';
+
+  @override
+  String get release_core_git_review_pane_discard_every_uncommitted_change =>
+      '¿Descartar todos los cambios sin confirmar?';
+
+  @override
+  String
+  get release_core_git_review_pane_tracked_files_return_to_head_and_untracked_files =>
+      'Los archivos bajo seguimiento vuelven a HEAD y se eliminan los archivos sin seguimiento de este directorio de sesión.';
+
+  @override
+  String get release_core_git_review_pane_discard => 'Descartar';
+
+  @override
+  String get release_core_git_review_pane_discard_all => 'Descartar todo';
+
+  @override
+  String get release_core_git_review_pane_unstage =>
+      'Quitar del área de preparación';
+
+  @override
+  String get release_core_git_review_pane_stage => 'Preparar';
+
+  @override
+  String get release_core_git_review_pane_discard_file => 'Descartar archivo';
+
+  @override
+  String release_core_git_review_pane_discard_2(String path) {
+    return '¿Descartar $path?';
+  }
+
+  @override
+  String
+  get release_core_git_review_pane_this_restores_the_committed_copy_or_removes_the =>
+      'Esto restaura la copia confirmada o elimina el archivo sin seguimiento.';
+
+  @override
+  String get release_core_git_review_pane_commit_message =>
+      'Mensaje del commit';
+
+  @override
+  String get release_core_git_review_pane_nothing_in_the_diff_to_summarise =>
+      'No hay nada que resumir en el diff.';
+
+  @override
+  String get release_core_git_review_pane_generate_message => 'Generar mensaje';
+
+  @override
+  String get release_core_git_review_pane_commit => 'Crear commit';
+
+  @override
+  String get release_core_git_review_pane_commit_and_push =>
+      'Crear commit y enviar';
+
+  @override
+  String get release_core_git_review_pane_push => 'Enviar cambios';
+
+  @override
+  String get release_core_git_review_pane_create_pull_request =>
+      'Crear solicitud de incorporación';
+
+  @override
+  String get release_core_git_review_pane_pull_request_ready =>
+      'Solicitud de incorporación lista';
+
+  @override
+  String get release_core_git_review_pane_ask_hermes_to_ship =>
+      'Pedir a Hermes que publique los cambios';
+
+  @override
+  String get release_core_git_review_pane_gh_is_authenticated_on_this_gateway =>
+      'gh está autenticado en esta pasarela.';
+
+  @override
+  String
+  get release_core_git_review_pane_install_the_github_cli_gh_and_sign_in =>
+      'Instala la CLI de GitHub (gh) e inicia sesión para abrir solicitudes de incorporación';
+
+  @override
+  String get release_core_git_review_pane_worktrees => 'Árboles de trabajo';
+
+  @override
+  String get release_core_git_review_pane_main => 'Principal';
+
+  @override
+  String release_core_git_review_pane_follow(String branch) {
+    return '¿Seguir $branch?';
+  }
+
+  @override
+  String
+  get release_core_git_review_pane_the_session_working_directory_becomes_this_worktree_unless =>
+      'El directorio de trabajo de la sesión pasa a ser este árbol de trabajo, salvo que el carril esté fijado.';
+
+  @override
+  String get release_core_git_review_pane_follow_2 => 'Seguir';
+
+  @override
+  String release_core_git_review_pane_remove(String branch) {
+    return '¿Eliminar $branch?';
+  }
+
+  @override
+  String get release_core_git_review_pane_the_worktree_directory_is_removed =>
+      'Se elimina el directorio del árbol de trabajo.';
+
+  @override
+  String get release_core_git_review_pane_remove_2 => 'Eliminar';
+
+  @override
+  String get release_core_git_review_pane_new_worktree_name =>
+      'Nombre del nuevo árbol de trabajo';
+
+  @override
+  String get release_core_git_review_pane_new_branch => 'Nueva rama';
+
+  @override
+  String get release_core_git_review_pane_base_branch => 'Rama base';
+
+  @override
+  String get release_core_git_review_pane_create_worktree =>
+      'Crear árbol de trabajo';
+
+  @override
+  String get release_core_git_review_pane_existing_branch => 'Rama existente';
+
+  @override
+  String get release_core_git_review_pane_convert_branch_to_worktree =>
+      'Convertir rama en árbol de trabajo';
+
+  @override
+  String get release_core_git_review_pane_switch_branch => 'Cambiar de rama';
+
+  @override
+  String
+  get release_core_git_review_pane_this_gateway_does_not_support_that_git_operation =>
+      'Esta pasarela no admite esa operación de Git.';
+
+  @override
+  String
+  get release_core_git_review_pane_git_needs_the_session_directory_on_the_local =>
+      'Git necesita que el directorio de la sesión esté en el backend de terminal local.';
+
+  @override
+  String
+  get release_core_git_review_pane_the_gateway_refused_the_git_operation =>
+      'La pasarela ha rechazado la operación de Git.';
+
+  @override
+  String
+  get release_core_git_review_pane_the_session_changed_refresh_and_try_again =>
+      'La sesión ha cambiado. Actualiza e inténtalo de nuevo.';
+
+  @override
+  String
+  get release_core_git_review_pane_this_review_is_no_longer_the_selected_session =>
+      'Esta revisión ya no corresponde a la sesión seleccionada.';
+
+  @override
+  String
+  get release_core_git_review_pane_the_gateway_returned_an_unexpected_git_result =>
+      'La pasarela ha devuelto un resultado de Git inesperado.';
+
+  @override
+  String
+  get release_core_git_review_pane_git_review_requires_the_gateway_transport =>
+      'La revisión de Git requiere el transporte de la pasarela.';
+
+  @override
+  String get release_core_client_held_queue_bar_resume => 'Reanudar';
+
+  @override
+  String get release_core_client_held_queue_bar_send_queued_prompt =>
+      'Enviar prompt en cola';
+
+  @override
+  String get release_core_client_held_queue_bar_edit_unsent_prompt =>
+      'Editar prompt sin enviar';
+
+  @override
+  String get release_core_client_held_queue_bar_remove_unsent_prompt =>
+      'Eliminar prompt sin enviar';
+
+  @override
+  String get release_core_workspace_discovery_view_repository_discovery =>
+      'Detección de repositorios';
+
+  @override
+  String get release_core_workspace_discovery_view_refresh_results =>
+      'Actualizar resultados';
+
+  @override
+  String release_core_workspace_discovery_view_hide(String path) {
+    return 'Ocultar $path';
+  }
+
+  @override
+  String
+  get release_core_workspace_discovery_view_invalid_path_or_discovery_data_use_absolute_server =>
+      'Ruta o datos de detección no válidos. Usa rutas absolutas del servidor sin componentes «.» ni «..».';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_this_gateway_does_not_support_repository_discovery =>
+      'Esta pasarela no admite la detección de repositorios.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_gateway_denied_access_to_repository_discovery =>
+      'La pasarela ha denegado el acceso a la detección de repositorios.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_connection_changed_reopen_discovery_on_the_current =>
+      'La conexión ha cambiado. Vuelve a abrir la detección en la pasarela actual.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_displayed_settings_have_changed_refresh_before_trying =>
+      'Los ajustes mostrados han cambiado. Actualiza antes de volver a intentarlo.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_could_not_load_or_verify_discovery_settings_refresh =>
+      'No se pudieron cargar o verificar los ajustes de detección. Actualiza para volver a intentarlo.';
+
+  @override
+  String release_core_workspace_discovery_view_repositories_shown_of(
+    int visible,
+    int total,
+  ) {
+    return 'Repositorios mostrados: $visible de $total';
+  }
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_gateway_returned_no_repositories =>
+      'La pasarela no ha devuelto ningún repositorio.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_no_repositories_match_your_device_filters =>
+      'Ningún repositorio coincide con los filtros de tu dispositivo.';
+
+  @override
+  String get release_core_workspace_discovery_view_gateway_scan_policy =>
+      'Política de exploración de la pasarela';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_this_gateway_did_not_report_a_scan_policy =>
+      'Esta pasarela no ha indicado una política de exploración.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_to_scan_folders_configure_repository_scanning_in_the =>
+      'Para explorar carpetas, configura la exploración de repositorios en los ajustes de Desktop del perfil de la pasarela.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_results_can_include_cached_repositories_and_repositories_with =>
+      'Los resultados pueden incluir repositorios en caché y repositorios con sesiones. Una exploración no garantiza que se haya accedido a todas las carpetas.';
+
+  @override
+  String get release_core_workspace_discovery_view_scan_gateway_roots =>
+      'Explorar las raíces de la pasarela';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_filter_results_on_this_device =>
+      'Filtrar resultados en este dispositivo';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_only_this_discovery_list_changes_not_the_gateway =>
+      'Solo cambia esta lista de detección, no la exploración de la pasarela.';
+
+  @override
+  String get release_core_workspace_discovery_view_include_subtrees_empty_all =>
+      'Incluir subárboles (vacío = todos)';
+
+  @override
+  String get release_core_workspace_discovery_view_exclude_subtrees =>
+      'Excluir subárboles';
+
+  @override
+  String get release_core_workspace_discovery_view_apply_filters =>
+      'Aplicar filtros';
+
+  @override
+  String release_core_workspace_discovery_view_hidden_repositories(int count) {
+    return 'Repositorios ocultos ($count)';
+  }
+
+  @override
+  String get release_core_workspace_discovery_view_undo_hide =>
+      'Deshacer ocultación';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_one_absolute_server_path_per_line =>
+      'Una ruta absoluta del servidor por línea';
+
+  @override
+  String get release_core_project_settings_view_project_settings =>
+      'Ajustes del proyecto';
+
+  @override
+  String
+  get release_core_project_settings_view_the_gateway_did_not_confirm_the_selected_project =>
+      'La pasarela no ha confirmado el proyecto seleccionado o el cambio. Revisa los ajustes antes de volver a intentarlo.';
+
+  @override
+  String
+  get release_core_project_settings_view_could_not_verify_these_settings_use_one_absolute =>
+      'No se pudieron verificar estos ajustes. Usa una ruta absoluta de carpeta del servidor por línea, sin componentes «.» ni «..».';
+
+  @override
+  String get release_core_project_settings_view_set_active => 'Activar';
+
+  @override
+  String get release_core_project_settings_view_icon => 'Icono';
+
+  @override
+  String get release_core_project_settings_view_folder => 'Carpeta';
+
+  @override
+  String get release_core_project_settings_view_repository => 'Repositorio';
+
+  @override
+  String get release_core_project_settings_view_rocket => 'Cohete';
+
+  @override
+  String get release_core_project_settings_view_star => 'Estrella';
+
+  @override
+  String get release_core_project_settings_view_book => 'Libro';
+
+  @override
+  String get release_core_project_settings_view_terminal => 'Terminal';
+
+  @override
+  String get release_core_project_settings_view_colour => 'Color';
+
+  @override
+  String get release_core_project_settings_view_primary_folder =>
+      'Carpeta principal';
+
+  @override
+  String get release_core_project_settings_view_server_folder_paths =>
+      'Rutas de carpetas del servidor';
+
+  @override
+  String
+  get release_core_project_settings_view_one_absolute_path_per_line_existing_folders_are =>
+      'Una ruta absoluta por línea. Se conservan las carpetas existentes.';
+
+  @override
+  String get release_core_project_settings_view_add_folders =>
+      'Añadir carpetas';
+
+  @override
+  String release_core_project_settings_view_choose(String label) {
+    return 'Elegir $label';
+  }
+
+  @override
+  String
+  get release_core_prepared_image_recovery_wait_for_an_empty_draft_before_restoring =>
+      'Espera a que el borrador esté vacío antes de restaurar.';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_no_unacknowledged_image_drafts_in_this_chat =>
+      'No hay borradores de imágenes sin acuse de recibo en este chat.';
+
+  @override
+  String get release_core_prepared_image_recovery_unacknowledged_image_drafts =>
+      'Borradores de imágenes sin acuse de recibo';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_the_gateway_may_already_have_received_these_restore =>
+      'Es posible que la pasarela ya los haya recibido. Restáuralos para revisarlos; no se envía nada.';
+
+  @override
+  String get release_core_prepared_image_recovery_image_draft =>
+      'Borrador de imagen';
+
+  @override
+  String get release_core_prepared_image_recovery_discard_local_copy =>
+      'Descartar copia local';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_discard_this_local_image_draft =>
+      '¿Descartar este borrador de imagen local?';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_image_draft_recovery_is_unavailable =>
+      'La recuperación de borradores de imágenes no está disponible.';
+
+  @override
+  String get release_core_prepared_image_recovery_recover_image_draft =>
+      'Recuperar borrador de imagen…';
+
+  @override
+  String get release_core_session_search_mode_menu_could_not_save_search_mode =>
+      'No se pudo guardar el modo de búsqueda.';
+
+  @override
+  String get release_core_projects_pane_discover_repositories =>
+      'Detectar repositorios';
+
+  @override
+  String
+  get release_core_projects_pane_project_created_but_the_gateway_did_not_confirm =>
+      'Se ha creado el proyecto, pero la pasarela no ha confirmado su idea.';
+
+  @override
+  String get release_core_projects_pane_project_idea_optional =>
+      'Idea del proyecto (opcional)';
+
+  @override
+  String
+  get release_core_projects_pane_saved_in_the_project_description_not_a_file =>
+      'Se guarda en la descripción del proyecto, no en un archivo.';
+
+  @override
+  String get release_core_project_detail_screen_new_chat_in_this_lane =>
+      'Nuevo chat en este carril';
+
+  @override
+  String get release_core_project_detail_screen_review_git => 'Revisar Git';
+
+  @override
+  String get release_core_more_pane_gateway_fleet => 'Flota de pasarelas';
+
+  @override
+  String
+  get release_core_more_pane_connected_sessions_hermes_cloud_and_desktop_webapp =>
+      'Sesiones conectadas, Hermes Cloud y aplicación web de Desktop';
+
+  @override
+  String get release_core_more_pane_use_dashboard_sign_in_for_a_named_profile =>
+      'Usa el inicio de sesión del panel para un perfil con nombre. Esta API heredada no puede confirmar a qué perfil pertenece el historial de chat.';
+
+  @override
+  String get release_core_more_pane_capabilities => 'Capacidades';
+
+  @override
+  String
+  get release_core_more_pane_install_and_govern_skills_plugins_connectors_and_tool =>
+      'Instala y administra habilidades, plugins, conectores y backends de herramientas';
+
+  @override
+  String get release_core_more_pane_browser_vault => 'Bóveda del navegador';
+
+  @override
+  String
+  get release_core_more_pane_site_logins_addresses_cards_and_credential_sources =>
+      'Inicios de sesión en sitios, direcciones, tarjetas y fuentes de credenciales';
+
+  @override
+  String get release_core_more_pane_agent_policy => 'Política del agente';
+
+  @override
+  String
+  get release_core_more_pane_approvals_checkpoints_browser_access_and_shared_metrics =>
+      'Aprobaciones, puntos de control, acceso al navegador y métricas compartidas';
+
+  @override
+  String get release_core_more_pane_remote_logs_health_maintenance_and_update =>
+      'Registros remotos, estado, mantenimiento y actualización';
+
+  @override
+  String get release_core_more_pane_schedules => 'Programaciones';
+
+  @override
+  String get release_core_more_pane_all_profiles_blueprints_catch_up_and_stop =>
+      'Todos los perfiles, plantillas, recuperación de ejecuciones omitidas y detención';
+
+  @override
+  String get release_core_more_pane_memory_graph => 'Grafo de memoria';
+
+  @override
+  String get release_core_more_pane_timeline_edits_and_memory_providers =>
+      'Cronología, ediciones y proveedores de memoria';
+
+  @override
+  String get release_core_more_pane_providers_and_routes =>
+      'Proveedores y rutas';
+
+  @override
+  String get release_core_more_pane_keys_endpoints_delegation_and_mixtures =>
+      'Claves, endpoints, delegación y mezclas';
+
+  @override
+  String get release_core_more_pane_credits_and_plans => 'Créditos y planes';
+
+  @override
+  String
+  get release_core_more_pane_consented_nous_billing_when_the_account_allows_it =>
+      'Facturación de Nous con consentimiento cuando la cuenta lo permite';
+
+  @override
+  String
+  get release_core_fleet_screen_this_gateway_does_not_offer_this_service =>
+      'Esta pasarela no ofrece este servicio.';
+
+  @override
+  String
+  get release_core_fleet_screen_sign_in_or_permission_required_on_this_gateway =>
+      'Esta pasarela requiere iniciar sesión o disponer de permiso.';
+
+  @override
+  String get release_core_fleet_screen_a_secure_gateway_address_is_required =>
+      'Se requiere una dirección segura de la pasarela.';
+
+  @override
+  String
+  get release_core_fleet_screen_the_owner_changed_refresh_before_continuing =>
+      'El propietario ha cambiado. Actualiza antes de continuar.';
+
+  @override
+  String
+  get release_core_fleet_screen_could_not_verify_the_operation_check_the_gateway =>
+      'No se pudo verificar la operación. Comprueba la pasarela y actualiza.';
+
+  @override
+  String get release_core_fleet_screen_verified_ssh => 'SSH verificado';
+
+  @override
+  String
+  get release_core_fleet_screen_confirm_a_host_key_inspect_a_remote_service =>
+      'Confirma una clave de host, inspecciona un servicio remoto o abre su shell';
+
+  @override
+  String get release_core_fleet_screen_cloud_and_desktop_webapp =>
+      'Cloud y aplicación web de Desktop';
+
+  @override
+  String get release_core_fleet_screen_register_an_existing_gateway_or_webapp =>
+      'Registrar una pasarela o aplicación web existente';
+
+  @override
+  String
+  get release_core_fleet_screen_sign_in_to_its_address_nothing_is_hosted =>
+      'Inicia sesión en su dirección. No se aloja nada en este dispositivo.';
+
+  @override
+  String get release_core_fleet_screen_fleet_updates =>
+      'Actualizaciones de la flota';
+
+  @override
+  String get release_core_fleet_screen_refresh_roster =>
+      'Actualizar lista de pasarelas';
+
+  @override
+  String release_core_fleet_screen_disconnect(String gateway) {
+    return 'Desconectar $gateway';
+  }
+
+  @override
+  String get release_core_fleet_screen_open_this_gateway_on_launch =>
+      'Abrir esta pasarela al iniciar';
+
+  @override
+  String
+  get release_core_fleet_screen_primary_for_ares_does_not_change_the_last =>
+      'Principal para Ares; no cambia la última pasarela utilizada.';
+
+  @override
+  String get release_core_fleet_screen_reconnect_in_fleet_on_launch =>
+      'Volver a conectar en la flota al iniciar';
+
+  @override
+  String get release_core_fleet_screen_no_sessions_for_this_profile =>
+      'No hay sesiones para este perfil.';
+
+  @override
+  String get release_core_fleet_screen_more_sessions => 'Más sesiones';
+
+  @override
+  String get release_core_fleet_screen_this_gateway_was_disconnected =>
+      'Esta pasarela se ha desconectado.';
+
+  @override
+  String
+  get release_core_fleet_screen_some_conversation_data_could_not_be_loaded =>
+      'No se pudieron cargar algunos datos de la conversación.';
+
+  @override
+  String get release_core_fleet_screen_message_this_session =>
+      'Enviar un mensaje a esta sesión';
+
+  @override
+  String get release_core_fleet_screen_send_to_this_session =>
+      'Enviar a esta sesión';
+
+  @override
+  String get release_core_fleet_updates_screen_update_these_remote_gateways =>
+      '¿Actualizar estas pasarelas remotas?';
+
+  @override
+  String
+  release_core_fleet_updates_screen_this_can_restart_the_backend_and_interrupt_other(
+    String gateways,
+  ) {
+    return 'Esto puede reiniciar el backend e interrumpir a otros usuarios. No actualizará Ares.\n\n$gateways';
+  }
+
+  @override
+  String get release_core_fleet_updates_screen_update_listed_gateways =>
+      'Actualizar las pasarelas de la lista';
+
+  @override
+  String
+  get release_core_fleet_updates_screen_checks_connected_gateways_cloud_is_platform_managed_entries =>
+      'Comprueba las pasarelas conectadas. Cloud está gestionado por la plataforma; se excluyen las entradas cuya procedencia de registro no consta.';
+
+  @override
+  String get release_core_fleet_updates_screen_check_connected_gateways =>
+      'Comprobar pasarelas conectadas';
+
+  @override
+  String get release_core_fleet_updates_screen_read_update_receipt =>
+      'Consultar comprobante de actualización';
+
+  @override
+  String get release_core_fleet_updates_screen_review_eligible_updates =>
+      'Revisar actualizaciones aplicables';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_account_changed_reopen_this_page =>
+      'La cuenta ha cambiado. Vuelve a abrir esta página.';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_set_the_webapp_s_primary_gateway =>
+      '¿Establecer la pasarela principal de la aplicación web?';
+
+  @override
+  String
+  release_core_fleet_webapp_screen_this_changes_the_shared_registry_not_the_last(
+    String webapp,
+    String gateway,
+    String id,
+  ) {
+    return '$webapp → $gateway ($id)\nEsto cambia el registro compartido, no la última pasarela utilizada.';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_set_primary =>
+      'Establecer como principal';
+
+  @override
+  String get release_core_fleet_webapp_screen_serving_profile =>
+      'Perfil que presta el servicio';
+
+  @override
+  String get release_core_fleet_webapp_screen_hermes_cloud => 'Hermes Cloud';
+
+  @override
+  String get release_core_fleet_webapp_screen_discover_signed_in_agents =>
+      'Detectar agentes con sesión iniciada';
+
+  @override
+  String release_core_fleet_webapp_screen_organisation(String organisation) {
+    return 'Organización: $organisation';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_no_agents_available =>
+      'No hay agentes disponibles.';
+
+  @override
+  String get release_core_fleet_webapp_screen_existing_desktop_webapp =>
+      'Aplicación web de Desktop existente';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_check_gateway_and_web_access_status =>
+      'Comprobar el estado de la pasarela y del acceso web';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_these_settings_belong_to_the_machine_serving_this =>
+      'Estos ajustes pertenecen al equipo que sirve esta aplicación web. La publicación y los reinicios no son acciones remotas.';
+
+  @override
+  String get release_core_fleet_webapp_screen_read_webapp_gateway_registry =>
+      'Consultar el registro de pasarelas de la aplicación web';
+
+  @override
+  String get release_core_fleet_webapp_screen_last_used => 'Última utilizada';
+
+  @override
+  String get release_core_fleet_webapp_screen_primary => 'Principal';
+
+  @override
+  String release_core_fleet_webapp_screen_set_primary_2(String gateway) {
+    return 'Establecer como principal: $gateway';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_read_shared_display_preferences =>
+      'Consultar preferencias de visualización compartidas';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_chat_text_direction_on_this_webapp_and_desktop =>
+      'Dirección del texto del chat en esta aplicación web y en Desktop';
+
+  @override
+  String release_core_schedule_desk_screen_created_on(
+    String job,
+    String profile,
+  ) {
+    return 'Se ha creado $job en $profile.';
+  }
+
+  @override
+  String
+  get release_core_schedule_desk_screen_the_list_covers_every_profile_on_this_gateway =>
+      'La lista incluye todos los perfiles de esta pasarela. Las acciones de detener, pausar, recuperar ejecuciones omitidas, entrega y plantillas se envían al perfil al que pertenece la tarea.';
+
+  @override
+  String get release_core_schedule_desk_screen_a_run_is_in_progress =>
+      'Hay una ejecución en curso';
+
+  @override
+  String get release_core_schedule_desk_screen_no_current_run =>
+      'No hay ninguna ejecución en curso';
+
+  @override
+  String release_core_schedule_desk_screen_stop_requested_for(String job) {
+    return 'Se ha solicitado detener $job.';
+  }
+
+  @override
+  String release_core_schedule_desk_screen_no_run_was_in_flight_for(
+    String job,
+  ) {
+    return 'No había ninguna ejecución en curso para $job.';
+  }
+
+  @override
+  String get release_core_schedule_desk_screen_stop_current_run =>
+      'Detener ejecución actual';
+
+  @override
+  String get release_core_schedule_desk_screen_pause_future_runs =>
+      'Pausar futuras ejecuciones';
+
+  @override
+  String get release_core_schedule_desk_screen_resume_future_runs =>
+      'Reanudar futuras ejecuciones';
+
+  @override
+  String get release_core_schedule_desk_screen_catch_up_default =>
+      'Recuperación predeterminada de ejecuciones omitidas';
+
+  @override
+  String get release_core_schedule_desk_screen_run_one_missed =>
+      'Ejecutar una omitida';
+
+  @override
+  String get release_core_schedule_desk_screen_skip_missed =>
+      'Saltar ejecuciones omitidas';
+
+  @override
+  String get release_core_schedule_desk_screen_blueprint_recipes =>
+      'Recetas de plantillas';
+
+  @override
+  String get release_core_schedule_desk_screen_profile_for_the_new_job =>
+      'Perfil para la nueva tarea';
+
+  @override
+  String release_core_schedule_desk_screen_create(String blueprint) {
+    return 'Crear $blueprint';
+  }
+
+  @override
+  String get release_core_schedule_desk_screen_loading_delivery_targets =>
+      'Cargando destinos de entrega';
+
+  @override
+  String release_core_schedule_desk_screen_no_home_channel(String target) {
+    return '$target (sin canal principal)';
+  }
+
+  @override
+  String release_core_memory_graph_screen_edit(String label) {
+    return 'Editar $label';
+  }
+
+  @override
+  String get release_core_memory_graph_screen_content => 'Contenido';
+
+  @override
+  String get release_core_memory_graph_screen_archive_skill =>
+      'Archivar habilidad';
+
+  @override
+  String get release_core_memory_graph_screen_delete_memory =>
+      'Eliminar recuerdo';
+
+  @override
+  String release_core_memory_graph_screen_archive_on_it_can_be_restored_on_the(
+    String label,
+    String profile,
+  ) {
+    return '¿Archivar $label en $profile? Se puede restaurar en el host con Curator.';
+  }
+
+  @override
+  String release_core_memory_graph_screen_delete_from_this_removes_that_memory(
+    String label,
+    String profile,
+  ) {
+    return '¿Eliminar $label de $profile? Esto elimina ese recuerdo.';
+  }
+
+  @override
+  String get release_core_memory_graph_screen_filter => 'Filtrar';
+
+  @override
+  String get release_core_memory_graph_screen_timeline => 'Cronología';
+
+  @override
+  String get release_core_memory_graph_screen_play_timeline =>
+      'Reproducir cronología';
+
+  @override
+  String get release_core_memory_graph_screen_layout_code =>
+      'Código de disposición';
+
+  @override
+  String get release_core_memory_graph_screen_external_memory_providers =>
+      'Proveedores de memoria externos';
+
+  @override
+  String
+  get release_core_memory_graph_screen_a_value_is_stored_leave_blank_to_keep =>
+      'Hay un valor guardado. Déjalo en blanco para conservarlo.';
+
+  @override
+  String get release_core_memory_graph_screen_save_provider =>
+      'Guardar proveedor';
+
+  @override
+  String release_core_workspace_profiles_screen_applies_to(String profile) {
+    return 'Se aplica a: $profile';
+  }
+
+  @override
+  String get release_core_workspace_profiles_screen_choose_another_profile =>
+      'Elegir otro perfil';
+
+  @override
+  String
+  get release_core_workspace_profiles_screen_could_not_verify_the_selected_profile_on_this =>
+      'No se pudo verificar el perfil seleccionado en esta pasarela.';
+
+  @override
+  String get release_core_workspace_profiles_screen_create_profile =>
+      'Crear perfil';
+
+  @override
+  String get release_core_workspace_profiles_screen_new_profile_id =>
+      'ID del nuevo perfil';
+
+  @override
+  String get release_core_assets_screen_links => 'Enlaces';
+
+  @override
+  String get release_core_workspace_picker_no_matching_items =>
+      'No hay elementos coincidentes.';
+
+  @override
+  String get release_core_workspace_picker_save_layout => 'Guardar disposición';
+
+  @override
+  String get release_core_workspace_picker_layout_name =>
+      'Nombre de la disposición';
+
+  @override
+  String
+  get release_core_workspace_popout_this_chat_already_has_a_pop_out_window =>
+      'Este chat ya tiene una ventana independiente.';
+
+  @override
+  String
+  get release_core_workspace_popout_could_not_open_this_saved_chat_check_the =>
+      'No se pudo abrir este chat guardado. Comprueba la conexión e inténtalo de nuevo.';
+
+  @override
+  String
+  get release_core_popout_bootstrap_use_the_main_window_to_change_your_connection =>
+      'Usa la ventana principal para cambiar la conexión.';
+
+  @override
+  String get release_core_guarded_save_refused =>
+      'La pasarela no puede guardar este archivo';
+
+  @override
+  String get release_core_guarded_save_unavailable =>
+      'El guardado con protección no está disponible en esta pasarela';
+
+  @override
+  String release_core_git_files_changed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count archivos modificados en este turno',
+      one: '1 archivo modificado en este turno',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String release_core_git_entries_omitted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Se han omitido $count entradas de Git porque no era seguro mostrarlas.',
+      one: 'Se ha omitido 1 entrada de Git porque no era seguro mostrarla.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get release_core_git_staged => 'Preparado';
+
+  @override
+  String get release_core_session_sort_recent => 'Actividad reciente';
+
+  @override
+  String get release_core_session_sort_created => 'Creados más recientemente';
+
+  @override
+  String get release_core_session_sort_status => 'En ejecución primero';
+
+  @override
+  String get release_core_session_sort_tokens => 'Más tokens';
+
+  @override
+  String get release_core_session_sort_cost => 'Mayor coste';
+
+  @override
+  String get release_core_session_group_standard => 'Agrupación predeterminada';
+
+  @override
+  String get release_core_session_group_status => 'Agrupar por estado';
+
+  @override
+  String get release_core_session_group_project => 'Agrupar por proyecto';
+
+  @override
+  String release_core_session_tokens(int count) {
+    return '$count tokens';
+  }
+
+  @override
+  String release_core_search_gateway_mode(String mode) {
+    return '$mode (pasarela)';
+  }
+
+  @override
+  String release_core_search_mode_tooltip(String label, String mode) {
+    return '$label: $mode';
+  }
+
+  @override
+  String get release_core_image_recovery_new_turn =>
+      'El envío crea un nuevo turno';
+
+  @override
+  String release_core_image_recovery_metadata(int count, String date) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count imágenes · $date',
+      one: '1 imagen · $date',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String release_core_discovery_scanning(String state) {
+    return 'Exploración: $state';
+  }
+
+  @override
+  String get release_core_discovery_enabled => 'habilitada';
+
+  @override
+  String get release_core_discovery_disabled => 'deshabilitada';
+
+  @override
+  String get release_core_discovery_none => 'ninguna';
+
+  @override
+  String release_core_discovery_roots(String paths) {
+    return 'Raíces de exploración: $paths';
+  }
+
+  @override
+  String release_core_discovery_excluded(String paths) {
+    return 'Subárboles excluidos: $paths';
+  }
+
+  @override
+  String release_core_discovery_repository_sessions(String path, int count) {
+    return '$path\nSesiones: $count';
+  }
+
+  @override
+  String get release_core_projects_local_only =>
+      'Esta pasarela de Hermes es anterior a los proyectos del servidor, por lo que los chats solo se agrupan en este dispositivo. Actualiza Hermes para compartir los mismos proyectos entre tus dispositivos.';
+
+  @override
+  String get release_core_fleet_no_address =>
+      'Aún no hay dirección de la pasarela';
+
+  @override
+  String release_core_fleet_diagnostics(String version, String access) {
+    return 'Pasarela $version · $access';
+  }
+
+  @override
+  String get release_core_schedule_builtin => 'integrada';
+
+  @override
+  String get release_core_memory_gateway_profile => 'pasarela';
+
+  @override
+  String release_core_memory_profile_summary(String profile, String gateway) {
+    return 'Perfil $profile en $gateway. El código para compartir solo guarda el zoom, el tiempo y los filtros.';
+  }
+
+  @override
+  String release_core_memory_layers_summary(
+    int memoryBytes,
+    int userBytes,
+    String provider,
+  ) {
+    return 'Memoria integrada: $memoryBytes bytes; usuario: $userBytes bytes. Proveedor activo: $provider.';
+  }
+
+  @override
+  String get release_core_memory_kind_all => 'Todos';
+
+  @override
+  String get release_core_memory_kind_skill => 'Habilidades';
+
+  @override
+  String get release_core_memory_kind_memory => 'Memoria';
+
+  @override
+  String get release_core_workspace_failure_stale => 'la conexión ha cambiado';
+
+  @override
+  String get release_core_workspace_failure_unbound =>
+      'sin directorio de trabajo verificado';
+
+  @override
+  String get release_core_workspace_failure_denied => 'permiso denegado';
+
+  @override
+  String get release_core_workspace_failure_ineligible =>
+      'operación no permitida para este archivo';
+
+  @override
+  String get release_core_workspace_failure_unsupported =>
+      'no compatible con esta pasarela';
+
+  @override
+  String get release_core_workspace_failure_mismatch =>
+      'el estado remoto ha cambiado';
+
+  @override
+  String get release_core_workspace_failure_invalid =>
+      'respuesta de la pasarela no válida';
+
+  @override
+  String get release_core_workspace_failure_insecure =>
+      'se requiere una conexión segura';
+
+  @override
+  String get release_core_workspace_failure_unavailable =>
+      'pasarela no disponible';
+
+  @override
+  String get release_core_queue_state_queued => 'En cola';
+
+  @override
+  String get release_core_queue_state_started => 'Iniciado';
+
+  @override
+  String get release_core_queue_state_unknown => 'Resultado desconocido';
+
+  @override
+  String get release_core_unknown_state => 'Desconocido';
+
+  @override
+  String get release_core_fleet_state_idle => 'Sin conexión';
+
+  @override
+  String get release_core_fleet_state_connected => 'Conectado';
+
+  @override
+  String get release_core_fleet_state_reconnecting => 'Volviendo a conectar…';
+
+  @override
+  String get release_core_fleet_state_sessionExpired => 'Sesión cerrada';
+
+  @override
+  String get release_core_fleet_state_failed => 'Error de conexión';
+
+  @override
+  String release_core_workspace_operation_failed(String reason) {
+    return 'No se pudo confirmar la operación de la pasarela: $reason.';
+  }
+
+  @override
+  String get release_core_workspace_invalid_data =>
+      'No se pudieron verificar los datos o la entrada. Revísalos e inténtalo de nuevo.';
+
+  @override
+  String
+  get release_core_parallel_workspace_layout_changed_in_this_window_but_could_not =>
+      'La disposición ha cambiado en esta ventana, pero no se pudo guardar.';
+
+  @override
+  String get release_core_parallel_workspace_first_pane => 'Primer panel';
+
+  @override
+  String get release_core_parallel_workspace_second_pane => 'Segundo panel';
+
+  @override
+  String get release_core_parallel_workspace_unavailable_page =>
+      'Página no disponible';
+
+  @override
+  String release_core_parallel_workspace_close_a_tab_first_maximum(
+    String maximum,
+  ) {
+    return 'Cierra primero una pestaña (máximo $maximum).';
+  }
+
+  @override
+  String get release_core_parallel_workspace_dock_beside_current_pane =>
+      'Acoplar junto al panel actual';
+
+  @override
+  String get release_core_parallel_workspace_add_chat => 'Añadir chat';
+
+  @override
+  String
+  get release_core_parallel_workspace_action_failed_check_the_connection_and_try_again =>
+      'La acción ha fallado. Comprueba la conexión e inténtalo de nuevo.';
+
+  @override
+  String
+  get release_core_parallel_workspace_close_a_tab_before_reopening_another =>
+      'Cierra una pestaña antes de volver a abrir otra.';
+
+  @override
+  String release_core_parallel_workspace_replace_layout(String name) {
+    return '¿Reemplazar la disposición «$name»?';
+  }
+
+  @override
+  String
+  get release_core_parallel_workspace_layout_limit_reached_replace_an_existing_layout =>
+      'Se ha alcanzado el límite de disposiciones. Reemplaza una existente.';
+
+  @override
+  String get release_core_parallel_workspace_restore_layout =>
+      'Restaurar disposición';
+
+  @override
+  String get release_core_parallel_workspace_workspace_options =>
+      'Opciones del espacio de trabajo';
+
+  @override
+  String get release_core_parallel_workspace_dock_another_pane =>
+      'Acoplar otro panel';
+
+  @override
+  String get release_core_parallel_workspace_swap_panes =>
+      'Intercambiar paneles';
+
+  @override
+  String get release_core_parallel_workspace_undock_second_pane =>
+      'Desacoplar segundo panel';
+
+  @override
+  String get release_core_parallel_workspace_arrange_side_by_side =>
+      'Colocar uno al lado del otro';
+
+  @override
+  String get release_core_parallel_workspace_arrange_top_to_bottom =>
+      'Colocar uno encima del otro';
+
+  @override
+  String release_core_parallel_workspace_change_split_size(String percent) {
+    return 'Cambiar proporción de división ($percent%)';
+  }
+
+  @override
+  String get release_core_parallel_workspace_focus_pane_full_screen =>
+      'Enfocar panel a pantalla completa';
+
+  @override
+  String get release_core_parallel_workspace_open_chat_in_new_window =>
+      'Abrir chat en una ventana nueva';
+
+  @override
+  String get release_core_parallel_workspace_hide_pane_keep_running =>
+      'Ocultar panel (mantener en ejecución)';
+
+  @override
+  String get release_core_parallel_workspace_previous_tab => 'Pestaña anterior';
+
+  @override
+  String get release_core_parallel_workspace_next_tab => 'Pestaña siguiente';
+
+  @override
+  String get release_core_parallel_workspace_move_tab_left =>
+      'Mover pestaña a la izquierda';
+
+  @override
+  String get release_core_parallel_workspace_move_tab_right =>
+      'Mover pestaña a la derecha';
+
+  @override
+  String get release_core_parallel_workspace_reload_current_tab =>
+      'Volver a cargar la pestaña actual';
+
+  @override
+  String get release_core_parallel_workspace_close_tab => 'Cerrar pestaña';
+
+  @override
+  String get release_core_parallel_workspace_close_other_tabs =>
+      'Cerrar las demás pestañas';
+
+  @override
+  String get release_core_parallel_workspace_close_tabs_to_the_right =>
+      'Cerrar pestañas a la derecha';
+
+  @override
+  String get release_core_parallel_workspace_close_all_tabs =>
+      'Cerrar todas las pestañas';
+
+  @override
+  String get release_core_parallel_workspace_reopen_closed_tab =>
+      'Volver a abrir pestaña cerrada';
+
+  @override
+  String get release_core_parallel_workspace_save_named_layout =>
+      'Guardar disposición con nombre';
+
+  @override
+  String get release_core_parallel_workspace_restore_named_layout =>
+      'Restaurar disposición con nombre';
+
+  @override
+  String get release_core_parallel_workspace_refresh_chat_list =>
+      'Actualizar lista de chats';
+
+  @override
+  String get release_core_parallel_workspace_workspace_tools =>
+      'Herramientas del espacio de trabajo';
+
+  @override
+  String get release_core_parallel_workspace_choose_a_chat_for_this_pane =>
+      'Elige un chat para este panel';
+
+  @override
+  String release_core_parallel_workspace_choose_chat_for(String pane) {
+    return 'Elegir chat para $pane';
+  }
+
+  @override
+  String get release_core_parallel_workspace_add_a_chat_to_start_a_workspace =>
+      'Añade un chat para iniciar un espacio de trabajo.';
+
+  @override
+  String get release_core_parallel_workspace_select_a_tab_to_show_its_pane =>
+      'Selecciona una pestaña para mostrar su panel.';
+
+  @override
+  String get release_core_parallel_workspace_parallel_workspace =>
+      'Espacio de trabajo en paralelo';
+
+  @override
+  String get release_core_parallel_workspace_show_workspace =>
+      'Mostrar espacio de trabajo';
+
+  @override
+  String get release_core_parallel_workspace_could_not_load_chats_retry =>
+      'No se pudieron cargar los chats. Reintentar';
+
+  @override
+  String release_core_parallel_workspace_close(String pane) {
+    return 'Cerrar $pane';
+  }
+
+  @override
+  String release_core_parallel_workspace_switch_pane(String pane) {
+    return 'Cambiar de panel: $pane';
+  }
+
+  @override
+  String get release_core_workspace_registry_session_id_copied =>
+      'ID de sesión copiado.';
+
+  @override
+  String get release_core_workspace_registry_chat_details =>
+      'Detalles del chat';
+
+  @override
+  String get release_core_workspace_registry_server_default =>
+      'Predeterminado del servidor';
+
+  @override
+  String get release_core_workspace_registry_session_id => 'ID de sesión';
+
+  @override
+  String get release_core_workspace_registry_title => 'Título';
+
+  @override
+  String get release_core_workspace_label_terminals => 'Terminales';
+
+  @override
+  String get release_core_workspace_label_copy_id => 'Copiar ID de sesión';
+
+  @override
+  String get release_core_workspace_label_contributions => 'Contribuciones';
+
+  @override
+  String get release_core_workspace_owner_inactive =>
+      'El propietario de este espacio de trabajo ya no está activo.';
+
+  @override
+  String get release_core_workspace_select_chat =>
+      'Selecciona primero un chat.';
+
+  @override
+  String get release_core_workspace_chat_unavailable =>
+      'Este chat no está disponible para esta conexión.';
+
+  @override
+  String get release_core_workspace_page_unavailable =>
+      'Esta página no está disponible para esta conexión.';
+
+  @override
+  String release_core_client_queue_count(int count) {
+    return '$count en cola';
+  }
+
+  @override
+  String release_core_client_queue_paused_count(int count) {
+    return '$count en cola — en pausa';
+  }
+
+  @override
+  String release_core_git_diff_truncated(String diff) {
+    return '$diff\n… truncado';
+  }
+
+  @override
+  String get release_core_search_no_models =>
+      'Hermes no ha devuelto ningún modelo configurado que se pueda seleccionar.';
+
+  @override
+  String get release_core_chat_archive_unavailable =>
+      'La acción de archivar el chat no está disponible.';
+
+  @override
+  String get release_core_chat_pin_unconfirmed =>
+      'No se ha confirmado el estado de fijación.';
+
+  @override
+  String get release_core_chat_archive_unconfirmed =>
+      'No se ha confirmado el estado de archivo.';
+
+  @override
+  String get release_core_chat_archive_history_unavailable =>
+      'Historial archivado no disponible';
+
+  @override
+  String get release_core_quick_chat_history_unavailable =>
+      'Historial del chat rápido no disponible';
+
+  @override
+  String get release_core_chat_project_ownership_unavailable =>
+      'Propiedad del proyecto no disponible';
+
+  @override
+  String get release_core_chat_unknown_project => 'Proyecto desconocido';
+
+  @override
+  String get release_core_chat_local_search_fallback =>
+      'Búsqueda de mensajes no disponible. Se muestran las coincidencias locales.';
+
+  @override
+  String release_core_fleet_update_eligible(String version) {
+    return 'Apta · $version';
+  }
+
+  @override
+  String get release_core_fleet_update_state_1 => 'Omitida: misma instalación';
+
+  @override
+  String get release_core_fleet_update_state_2 => 'Sin comprobar';
+
+  @override
+  String get release_core_fleet_update_state_3 =>
+      'Omitida: gestionada por Cloud';
+
+  @override
+  String get release_core_fleet_update_state_4 =>
+      'Omitida: no registrada como pasarela directa';
+
+  @override
+  String get release_core_fleet_update_state_5 =>
+      'Omitida: desconectada u ocupada';
+
+  @override
+  String get release_core_fleet_update_state_6 =>
+      'No hay ninguna actualización aplicable';
+
+  @override
+  String get release_core_fleet_update_state_7 =>
+      'No se pudo verificar si es apta';
+
+  @override
+  String get release_core_fleet_update_state_8 =>
+      'Omitida: desactualizada, ocupada o ya solicitada';
+
+  @override
+  String get release_core_fleet_update_state_9 => 'Solicitando';
+
+  @override
+  String get release_core_fleet_update_state_10 =>
+      'Aceptada; comprobante no disponible';
+
+  @override
+  String get release_core_fleet_update_state_11 =>
+      'Aceptada; esperando comprobante';
+
+  @override
+  String get release_core_fleet_update_state_12 =>
+      'Omitida: hay un chat en ejecución en esta instalación';
+
+  @override
+  String get release_core_fleet_update_state_13 =>
+      'Sin confirmar; no reenviar automáticamente';
+
+  @override
+  String get release_core_fleet_update_state_14 =>
+      'Vuelve a conectar para comprobar el comprobante';
+
+  @override
+  String get release_core_fleet_update_state_15 => 'Comprobante no disponible';
+
+  @override
+  String get release_core_fleet_update_state_16 =>
+      'Esperando comprobante coincidente';
+
+  @override
+  String get release_core_fleet_update_state_17 =>
+      'Actualizada; se requiere seguimiento';
+
+  @override
+  String get release_core_fleet_update_state_19 => 'Actualizada parcialmente';
+
+  @override
+  String get release_core_fleet_update_state_20 =>
+      'La actualización ha fallado';
+
+  @override
+  String get release_core_fleet_update_state_21 => 'Sin confirmar';
+
+  @override
+  String get release_core_cloud_status_ready => 'Listo';
+
+  @override
+  String get release_core_cloud_status_online => 'En línea';
+
+  @override
+  String get release_core_cloud_status_stopped => 'Detenido';
+
+  @override
+  String get release_core_cloud_status_error => 'Error';
+
+  @override
+  String get ng_release_more_contributions_subtitle =>
+      'Tarjetas de respuesta revisadas para esta conexión';
+
+  @override
+  String get ng_release_more_gateway_fleet => 'Flota de pasarelas';
+
+  @override
+  String get ng_release_more_memory_graph => 'Grafo de memoria';
+
+  @override
+  String get ng_release_more_memory_graph_subtitle =>
+      'Cronología, ediciones y proveedores de memoria';
+
+  @override
+  String get ng_release_more_capabilities_subtitle =>
+      'Instala y administra habilidades, plugins, conectores y backends de herramientas';
+
+  @override
+  String get ng_release_more_browser_vault => 'Bóveda del navegador';
+
+  @override
+  String get ng_release_more_browser_vault_subtitle =>
+      'Inicios de sesión en sitios, direcciones, tarjetas y fuentes de credenciales';
+
+  @override
+  String get ng_release_more_agent_policy => 'Política del agente';
+
+  @override
+  String get ng_release_more_agent_policy_subtitle =>
+      'Aprobaciones, puntos de control, acceso al navegador y métricas compartidas';
+
+  @override
+  String get ng_release_more_schedules => 'Programaciones';
+
+  @override
+  String get ng_release_more_schedules_subtitle =>
+      'Todos los perfiles, plantillas, recuperación de ejecuciones omitidas y detención';
+
+  @override
+  String get ng_release_more_host_subtitle =>
+      'Registros remotos, estado, mantenimiento y actualización';
+
+  @override
+  String get ng_release_more_providers_routes => 'Proveedores y rutas';
+
+  @override
+  String get ng_release_more_providers_routes_subtitle =>
+      'Claves, endpoints, delegación y mezclas';
+
+  @override
+  String get ng_release_more_credits_plans => 'Créditos y planes';
+
+  @override
+  String get ng_release_more_credits_plans_subtitle =>
+      'Facturación de Nous con consentimiento cuando la cuenta lo permite';
+
+  @override
+  String get ng_release_sign_in_or => 'o';
+
+  @override
+  String ng_release_deployment_sign_in_hint(String message) {
+    return '$message Aún puedes iniciar sesión con un token de sesión del despliegue en el siguiente paso.';
+  }
+
+  @override
+  String get ng_release_message_search_unavailable =>
+      'Búsqueda de mensajes no disponible. Se muestran las coincidencias locales.';
+
+  @override
+  String ng_release_insights_days(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days días',
+      one: '$days día',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_release_signed_in_you => 'tú';
+
+  @override
+  String get release_chat_unsent_prompt_gone =>
+      'Ese prompt sin enviar ya no está en la cola.';
+
+  @override
+  String ng_release_attachment_not_attached(String name) {
+    return 'La pasarela no ha adjuntado $name.';
+  }
+
+  @override
+  String get ng_release_gateway_not_connected =>
+      'Aún no hay conexión con la pasarela.';
+
+  @override
+  String get ng_release_gateway_unreachable =>
+      'No se pudo acceder a la pasarela.';
+
+  @override
+  String get ng_release_projects_scope_changed =>
+      'El ámbito de proyectos ya no está seleccionado';
+
+  @override
+  String get ng_release_missing_providers => 'Faltan proveedores';
+
+  @override
+  String get ng_release_missing_tasks => 'Faltan tareas';
+
+  @override
+  String ng_release_age_minutes(int count) {
+    return '${count}m';
+  }
+
+  @override
+  String ng_release_age_hours(int count) {
+    return '${count}h';
+  }
+
+  @override
+  String ng_release_age_days(int count) {
+    return '${count}d';
+  }
+
+  @override
+  String ng_release_age_weeks(int count) {
+    return '${count}sem';
+  }
+
+  @override
+  String ng_release_age_years(int count) {
+    return '${count}a';
+  }
+
+  @override
+  String ng_release_compact_billions(String count) {
+    return '$count mil M';
+  }
+
+  @override
+  String ng_release_compact_millions(String count) {
+    return '${count}M';
+  }
+
+  @override
+  String ng_release_compact_thousands(String count) {
+    return '${count}k';
+  }
+
+  @override
+  String ng_release_token_thousands(String count) {
+    return '${count}K';
+  }
+
+  @override
+  String ng_release_elapsed_minutes_seconds(int minutes, int seconds) {
+    return '${minutes}m ${seconds}s';
+  }
+
+  @override
+  String ng_release_elapsed_seconds(int seconds) {
+    return '${seconds}s';
+  }
+
+  @override
+  String get ng_release_notification_foreground => 'Ares estaba en pantalla';
+
+  @override
+  String get ng_release_notification_stopped => 'se detuvo el turno';
+
+  @override
+  String get ng_release_more_parallel_workspace =>
+      'Espacio de trabajo en paralelo';
+
+  @override
+  String get ng_release_more_parallel_workspace_subtitle =>
+      'Abre varios chats en pestañas o uno al lado del otro.';
+
+  @override
+  String get release_chat_unknown_model => 'desconocido';
+
+  @override
+  String release_chat_profile_default(String model) {
+    return 'Predeterminado del perfil: $model';
+  }
+
+  @override
+  String release_chat_profile_default_provider(String model, String provider) {
+    return 'Predeterminado del perfil: $model • $provider';
+  }
+
+  @override
+  String get release_chat_choose_provider =>
+      'Este modelo está disponible a través de varios proveedores. Elige uno para continuar.';
+
+  @override
+  String get release_chat_slash_needs_gateway =>
+      'Los comandos con barra requieren la pasarela de Desktop';
+
+  @override
+  String get release_chat_recovering_without_resending =>
+      'Recuperando sin reenviar';
+
+  @override
+  String get release_chat_live_request_unreachable =>
+      'Lo siento, no he podido contactar con Hermes para esa solicitud.';
+
+  @override
+  String release_chat_live_working(String tool) {
+    return 'Hermes está trabajando: $tool. Aún no ha terminado.';
+  }
+
+  @override
+  String get release_chat_live_finished_without_spoken_result =>
+      'Hermes ha terminado esa solicitud sin un resultado hablado.';
+
+  @override
+  String get release_chat_reply_language_unavailable =>
+      'El idioma de respuesta seleccionado no está disponible';
+
+  @override
+  String get release_chat_reply_voice_unavailable =>
+      'La voz de respuesta seleccionada no está disponible';
+
+  @override
+  String get release_chat_reply_voice_configuration_unavailable =>
+      'La configuración de la voz de respuesta no está disponible';
+
+  @override
+  String get release_chat_notification_review_action =>
+      'Abre el chat para revisar la acción solicitada.';
+
+  @override
+  String get release_chat_notification_respond =>
+      'Abre el chat para responder.';
+
+  @override
+  String get release_chat_start_new_main_window =>
+      'Inicia un nuevo chat en la ventana principal.';
+
+  @override
+  String get release_chat_no_desktop_gateway => 'No hay pasarela de Desktop';
+
+  @override
+  String get release_chat_attachment_preparation_cancelled =>
+      'Se ha cancelado la preparación del archivo adjunto.';
+
+  @override
+  String get release_chat_approval_authority_revoked =>
+      'Se ha revocado la autoridad de aprobación.';
+
+  @override
+  String get release_chat_gateway_session_disconnected =>
+      'La sesión de la pasarela de Desktop ya no está conectada';
+
+  @override
+  String get release_chat_stop_requested =>
+      'Se ha solicitado la detención. Esperando a que Hermes termine.';
+
+  @override
+  String release_chat_stop_request_failed(String error) {
+    return 'No se pudo solicitar la detención: $error';
+  }
+
+  @override
+  String get release_chat_queued_prompt_not_sent =>
+      'El prompt en cola no se ha enviado.';
+
+  @override
+  String get release_chat_running_turn_unreachable =>
+      'No se pudo acceder al turno en curso. Volviendo a conectar sin reenviar.';
+
+  @override
+  String get release_chat_wait_for_composer =>
+      'Espera a que el editor de mensajes esté disponible.';
+
+  @override
+  String get release_chat_find_in_transcript => 'Buscar en la transcripción';
+
+  @override
+  String get release_chat_open_browser_preview =>
+      'Abrir vista previa del navegador';
+
+  @override
+  String get release_chat_more_tools => 'Más herramientas del chat';
+
+  @override
+  String get release_chat_queue_until_finished =>
+      'Poner en cola hasta que termine este turno';
+
+  @override
+  String get release_chat_format_bold => 'Negrita';
+
+  @override
+  String get release_chat_format_italic => 'Cursiva';
+
+  @override
+  String get ng_release_chat_gateway_queue_requirements =>
+      'La cola de la pasarela requiere un chat vinculado y un prompt solo de texto.';
+
+  @override
+  String get ng_release_chat_start_new_main_screen =>
+      'Inicia un nuevo chat desde la pantalla principal de chats.';
+
+  @override
+  String get ng_release_chat_image => 'imagen';
+
+  @override
+  String ng_release_chat_tool_seconds(String seconds) {
+    return '${seconds}s';
+  }
+
+  @override
+  String get release_preview_chat_changed =>
+      'El chat ha cambiado. Vuelve a conectar la vista previa para continuar.';
+
+  @override
+  String get release_preview_authenticating_chat => 'Autenticando chat…';
+
+  @override
+  String release_preview_unavailable_reason(String reason) {
+    return 'Vista previa no disponible: $reason';
+  }
+
+  @override
+  String get release_preview_operation_failed =>
+      'La operación de vista previa ha fallado.';
+
+  @override
+  String get release_preview_added_to_draft =>
+      'Añadido al borrador. No se ha enviado nada.';
+
+  @override
+  String get release_preview_open_site_title => '¿Abrir este sitio?';
+
+  @override
+  String release_preview_open_site_body(String origin) {
+    return '$origin\n\nEl modo de lectura solo carga este documento. No comparte cookies, datos de inicio de sesión ni la página con Hermes.';
+  }
+
+  @override
+  String get release_preview_open_site => 'Abrir sitio';
+
+  @override
+  String get release_preview_discard_pins_title =>
+      '¿Descartar los marcadores aún no añadidos al borrador?';
+
+  @override
+  String get release_preview_keep_pins => 'Conservar marcadores';
+
+  @override
+  String get release_preview_share_page_title =>
+      '¿Compartir esta página con este chat?';
+
+  @override
+  String release_preview_share_page_body(String origin) {
+    return 'Hermes puede leer el texto mostrado y la lista de elementos de $origin, y desplazarse por este panel. Al navegar se deja de compartir. No se comparten formularios ni credenciales.';
+  }
+
+  @override
+  String get release_preview_share_page => 'Compartir página';
+
+  @override
+  String release_preview_comment_number(int number) {
+    return 'Comentario n.º $number';
+  }
+
+  @override
+  String get release_preview_note => 'Nota';
+
+  @override
+  String get release_preview_keep_pin => 'Conservar marcador';
+
+  @override
+  String get release_preview_title => 'Vista previa del navegador';
+
+  @override
+  String get release_preview_hide => 'Ocultar vista previa';
+
+  @override
+  String get release_preview_close_and_forget => 'Cerrar y olvidar página';
+
+  @override
+  String get release_preview_site_address => 'Dirección del sitio';
+
+  @override
+  String get release_preview_go_to_address => 'Ir a la dirección';
+
+  @override
+  String get release_preview_forward => 'Adelante';
+
+  @override
+  String get release_preview_reload => 'Volver a cargar';
+
+  @override
+  String get release_preview_share_with_hermes => 'Compartir página con Hermes';
+
+  @override
+  String get release_preview_stop_sharing => 'Dejar de compartir página';
+
+  @override
+  String get release_preview_annotate => 'Anotar elemento o región';
+
+  @override
+  String get release_preview_reader_console => 'Consola del lector';
+
+  @override
+  String get release_preview_reconnect => 'Volver a conectar vista previa';
+
+  @override
+  String get release_preview_reader_mode_help =>
+      'Modo de lectura: HTML y texto. Sin scripts, recursos incrustados ni perfil de navegador con sesión iniciada.';
+
+  @override
+  String release_preview_sharing_origin(String origin) {
+    return 'Compartiendo el lector con este chat: $origin';
+  }
+
+  @override
+  String get release_preview_annotation_help =>
+      'Toca un elemento o arrastra para delimitar una región y comentarla.';
+
+  @override
+  String get release_preview_reader_requests =>
+      'Solicitudes del lector (JavaScript está desactivado)';
+
+  @override
+  String release_preview_selected_requests(int count) {
+    return '$count seleccionadas · JavaScript está desactivado';
+  }
+
+  @override
+  String get release_preview_copy_all => 'Copiar todo';
+
+  @override
+  String get release_preview_copy_selected => 'Copiar selección';
+
+  @override
+  String get release_preview_add_log_to_draft => 'Añadir registro al borrador';
+
+  @override
+  String release_preview_requests_draft(String log) {
+    return 'Solicitudes del lector:\n$log';
+  }
+
+  @override
+  String release_preview_add_pins_to_draft(int count) {
+    return 'Añadir $count al borrador';
+  }
+
+  @override
+  String release_preview_request_loaded(String origin, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count elementos del lector',
+      one: '$count elemento del lector',
+    );
+    return 'HTTP 200 · $origin · $_temp0';
+  }
+
+  @override
+  String release_preview_annotation_intro(String origin) {
+    return 'Revisa estos comentarios sobre la vista previa de $origin. Los recortes adjuntos están numerados en el mismo orden.';
+  }
+
+  @override
+  String get release_preview_reader_region => 'región del lector';
+
+  @override
+  String get release_preview_capture_failed =>
+      'No se pudieron capturar estos píxeles.';
+
+  @override
+  String get release_preview_address_not_approved =>
+      'Esta dirección está fuera del origen aprobado para la vista previa.';
+
+  @override
+  String get release_preview_page_limit =>
+      'La página supera el límite del lector.';
+
+  @override
+  String get release_preview_page_unreadable => 'No se pudo leer la página.';
+
+  @override
+  String get release_preview_page_complex =>
+      'Esta página es demasiado compleja para el modo de lectura.';
+
+  @override
+  String release_preview_http_failed(int statusCode) {
+    return 'HTTP $statusCode. No se ha seguido ninguna redirección ni inicio de sesión.';
+  }
+
+  @override
+  String get release_preview_unsupported_type =>
+      'En el modo de lectura solo se pueden abrir HTML y texto sin formato.';
+
+  @override
+  String get release_preview_load_insecure =>
+      'No se pudo cargar el sitio de forma segura.';
+
+  @override
+  String get release_preview_crop_limit =>
+      'El recorte de la vista previa supera su límite.';
+
+  @override
+  String get release_preview_image_unreadable =>
+      'La imagen seleccionada está vacía o no se puede leer.';
+
+  @override
+  String get release_preview_image_budget =>
+      'La imagen seleccionada supera el límite de 64 MiB del borrador.';
+
+  @override
+  String get release_preview_image_format =>
+      'Formato de imagen no compatible. Elige una imagen JPEG, PNG o WebP.';
+
+  @override
+  String get release_preview_image_decode =>
+      'No se pudo descodificar de forma segura la imagen JPEG, PNG o WebP seleccionada.';
+
+  @override
+  String get release_preview_image_sanitize =>
+      'No se pudo sanear esta imagen. Elige una imagen JPEG, PNG o WebP válida.';
+
+  @override
+  String get release_preview_draft_budget =>
+      'Los archivos adjuntos tienen un límite total de 64 MiB por borrador.';
+
+  @override
+  String get release_preview_generic_file_limit =>
+      'Los archivos genéricos tienen un límite de 16 MiB cada uno.';
+
+  @override
+  String get release_preview_image_not_sanitized =>
+      'Las imágenes remotas deben sanearse antes de subirlas.';
+
+  @override
+  String get release_preview_stage_failed =>
+      'No se pudieron añadir las pruebas de la vista previa al borrador. Inténtalo de nuevo.';
+
+  @override
+  String get release_misc_find_hermes_on_lan => 'Buscar Hermes en la LAN';
+
+  @override
+  String release_misc_discovery_failed(String error) {
+    return 'La detección ha fallado: $error';
+  }
+
+  @override
+  String get release_misc_no_lan_servers =>
+      'No se han encontrado servidores de Hermes en la red local.';
+
+  @override
+  String release_misc_api_key_rejected(String endpoint, int statusCode) {
+    return '$endpoint ha rechazado la clave de API (HTTP $statusCode).';
+  }
+
+  @override
+  String get release_misc_api_key_required =>
+      'El servidor requiere una clave de API. Introduce tu API_SERVER_KEY.';
+
+  @override
+  String release_misc_gateway_not_found(String endpoint) {
+    return 'El endpoint $endpoint de la pasarela ha devuelto HTTP 404. Comprueba el prefijo de ruta de la pasarela y las rutas del proxy inverso.';
+  }
+
+  @override
+  String release_misc_gateway_http_error(String endpoint, int statusCode) {
+    return 'El endpoint $endpoint de la pasarela ha devuelto HTTP $statusCode.';
+  }
+
+  @override
+  String release_misc_gateway_unreachable(String endpoint) {
+    return 'No se puede acceder al endpoint $endpoint de la pasarela.';
+  }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target =>
+      'Destino de entrega no válido';
+
+  @override
+  String get release_core_file_save_direct_only =>
+      'Solo se puede guardar un archivo situado directamente en el directorio de trabajo.';
+
+  @override
+  String get release_core_file_save_hidden =>
+      'La puerta de enlace no puede guardar archivos ocultos.';
 }

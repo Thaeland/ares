@@ -5,6 +5,8 @@ import 'dart:math' as math;
 import 'transcript_body.dart';
 
 import 'package:flutter/material.dart';
+
+import '../l10n/l10n.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -100,7 +102,7 @@ class TranscriptReaderState extends State<TranscriptReader> {
   int _generation = 0;
   Object? _selectedId;
   int _occurrence = 0;
-  String? _notice;
+  bool _passageUnavailable = false;
   SharedPreferences? _prefs;
   late String? _scope;
   DialogRoute<_TimelineChoice>? _timeline;
@@ -139,7 +141,7 @@ class TranscriptReaderState extends State<TranscriptReader> {
     _open = false;
     _field.clear();
     _selectedId = null;
-    _notice = null;
+    _passageUnavailable = false;
     _userScrolling = false;
     unawaited(_restore(epoch));
   }
@@ -222,7 +224,7 @@ class TranscriptReaderState extends State<TranscriptReader> {
       _open = false;
       _selectedId = null;
       _field.clear();
-      _notice = null;
+      _passageUnavailable = false;
     });
   }
 
@@ -257,7 +259,7 @@ class TranscriptReaderState extends State<TranscriptReader> {
       ++_generation;
       setState(() {
         _selectedId = null;
-        _notice = null;
+        _passageUnavailable = false;
       });
       return;
     }
@@ -275,7 +277,7 @@ class TranscriptReaderState extends State<TranscriptReader> {
     setState(() {
       _selectedId = id;
       _occurrence = occurrence;
-      _notice = null;
+      _passageUnavailable = false;
     });
     unawaited(_reveal(++_generation, id));
   }
@@ -411,9 +413,7 @@ class TranscriptReaderState extends State<TranscriptReader> {
       pos.jumpTo(next);
     }
     if (mounted && epoch == _generation) {
-      setState(
-        () => _notice = 'This passage is no longer in the loaded window.',
-      );
+      setState(() => _passageUnavailable = true);
     }
   }
 
@@ -430,19 +430,27 @@ class TranscriptReaderState extends State<TranscriptReader> {
     route = DialogRoute<_TimelineChoice>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Loaded prompts'),
+        title: Text(
+          context.sharedL10n.release_core_transcript_reader_loaded_prompts,
+        ),
         actions: [
           TextButton.icon(
             onPressed: () => choose(null),
             icon: const Icon(Icons.vertical_align_bottom),
-            label: const Text('Jump to latest'),
+            label: Text(
+              context.sharedL10n.release_core_transcript_reader_jump_to_latest,
+            ),
           ),
         ],
         content: SizedBox(
           width: 400,
           height: 320,
           child: rows.isEmpty
-              ? const Text('No prompts loaded')
+              ? Text(
+                  context
+                      .sharedL10n
+                      .release_core_transcript_reader_no_prompts_loaded,
+                )
               : ListView.builder(
                   itemCount: rows.length,
                   itemBuilder: (_, i) => ListTile(
@@ -514,8 +522,10 @@ class TranscriptReaderState extends State<TranscriptReader> {
                             _focus.requestFocus();
                           },
                           onChanged: _queryChanged,
-                          decoration: const InputDecoration(
-                            hintText: 'Find in loaded messages',
+                          decoration: InputDecoration(
+                            hintText: context
+                                .sharedL10n
+                                .release_core_transcript_reader_find_in_loaded_messages,
                             isDense: true,
                           ),
                         ),
@@ -523,28 +533,41 @@ class TranscriptReaderState extends State<TranscriptReader> {
                     ),
                     Text(_field.text.isEmpty ? '' : '${at + 1}/${hits.length}'),
                     IconButton(
-                      tooltip: 'Previous match',
+                      tooltip: context
+                          .sharedL10n
+                          .release_core_transcript_reader_previous_match,
                       onPressed: hits.isEmpty ? null : () => step(-1),
                       icon: const Icon(Icons.keyboard_arrow_up),
                     ),
                     IconButton(
-                      tooltip: 'Next match',
+                      tooltip: context
+                          .sharedL10n
+                          .release_core_transcript_reader_next_match,
                       onPressed: hits.isEmpty ? null : () => step(1),
                       icon: const Icon(Icons.keyboard_arrow_down),
                     ),
                     IconButton(
-                      tooltip: 'Prompt timeline',
+                      tooltip: context
+                          .sharedL10n
+                          .release_core_transcript_reader_prompt_timeline,
                       onPressed: _prompts,
                       icon: const Icon(Icons.format_list_numbered),
                     ),
                     IconButton(
-                      tooltip: 'Close find',
+                      tooltip: context
+                          .sharedL10n
+                          .release_core_transcript_reader_close_find,
                       onPressed: _close,
                       icon: const Icon(Icons.close),
                     ),
                   ],
                 ),
-                if (_notice != null) Text(_notice!),
+                if (_passageUnavailable)
+                  Text(
+                    context
+                        .sharedL10n
+                        .release_core_transcript_reader_this_passage_is_no_longer_in_the_loaded,
+                  ),
               ],
             ),
           ),

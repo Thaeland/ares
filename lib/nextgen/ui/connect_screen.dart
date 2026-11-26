@@ -788,7 +788,9 @@ class _NgConnectScreenState extends State<NgConnectScreen> {
             if (!status.canSignIn) ...[
               const SizedBox(height: 10),
               Text(
-                '${ngL.ng_this_dashboard_offers_neither_a_username} You can still sign in with a deployment session token on the next step.',
+                ngL.ng_release_deployment_sign_in_hint(
+                  ngL.ng_this_dashboard_offers_neither_a_username,
+                ),
                 style: NgType.bodySmall.copyWith(color: c.warning),
               ),
             ] else if (!status.authRequired &&
@@ -988,7 +990,7 @@ class _NgConnectScreenState extends State<NgConnectScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Text(
-                      'or',
+                      ngL.ng_release_sign_in_or,
                       style: NgType.caption.copyWith(color: c.text3),
                     ),
                   ),

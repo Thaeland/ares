@@ -416,8 +416,12 @@ class _PopoutChatAppState extends State<PopoutChatApp> {
 
   Future<void> mainOnly() async {
     _messenger.currentState?.showSnackBar(
-      const SnackBar(
-        content: Text('Use the main window to change your connection.'),
+      SnackBar(
+        content: Text(
+          context
+              .sharedL10n
+              .release_core_popout_bootstrap_use_the_main_window_to_change_your_connection,
+        ),
       ),
     );
   }

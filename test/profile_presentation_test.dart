@@ -13,6 +13,7 @@ import 'package:hermes_android/core/workspace/profile_presentation.dart';
 import 'package:hermes_android/core/workspace/profile_presentation_store.dart';
 import 'package:hermes_android/core/workspace/workspace_layout.dart';
 import 'package:hermes_android/nextgen/theme/nextgen_theme.dart';
+import 'package:hermes_android/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'portable_profile_bundle_test.dart' show tar;
@@ -174,8 +175,17 @@ void main() {
         );
         await t.pumpWidget(app());
         await t.pumpAndSettle();
-        final first = find.text('Choose chat for first pane'),
-            second = find.text('Choose chat for second pane');
+        final l10n = lookupAppLocalizations(const Locale('en'));
+        final first = find.text(
+          l10n.release_core_parallel_workspace_choose_chat_for(
+            l10n.release_core_parallel_workspace_first_pane,
+          ),
+        );
+        final second = find.text(
+          l10n.release_core_parallel_workspace_choose_chat_for(
+            l10n.release_core_parallel_workspace_second_pane,
+          ),
+        );
         expect(first, findsOneWidget);
         expect(second, findsOneWidget);
         expect(opened, isEmpty);
@@ -193,7 +203,13 @@ void main() {
         t.view.physicalSize = const Size(430, 820);
         await t.pumpAndSettle();
         expect(second, findsNothing);
-        await t.tap(find.text('Switch pane: Second pane'));
+        await t.tap(
+          find.text(
+            l10n.release_core_parallel_workspace_switch_pane(
+              l10n.release_core_parallel_workspace_second_pane,
+            ),
+          ),
+        );
         await t.pumpAndSettle();
         expect(second, findsOneWidget);
         await t.pumpWidget(const SizedBox());

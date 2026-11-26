@@ -22,6 +22,8 @@ import '../widgets/session_name_dialog.dart';
 import '../widgets/session_organisation.dart';
 
 import 'package:hermes_android/core/l10n/l10n.dart';
+import '../l10n/ui_message_exception.dart';
+import '../l10n/service_strings.dart';
 
 export '../utils/session_sources.dart';
 
@@ -520,7 +522,7 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
       _searchTitleRevision = 0,
       _searchArchiveRevision = 0;
   List<SessionSearchHit> _hits = const [];
-  String? _searchError;
+  String Function(AppLocalizations)? _searchError;
   bool _searching = false;
   SessionSearchAccess? _access;
   int _accessGeneration = 0;
@@ -530,12 +532,19 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
     _access?.dispose();
     _access = null;
     final scope = widget.searchScope;
-    if (scope == null || widget.searchMessages == null) return;
+    final search = widget.searchMessages;
+    if (scope == null || search == null) return;
+    final identity = sessionSearchIdentity(scope);
     try {
       final prefs = await SessionSearchPreferences.open();
-      if (!mounted || generation != _accessGeneration) return;
-      _access = SessionSearchAccess(prefs, sessionSearchIdentity(scope))
-        ..addListener(_modeChanged);
+      if (!mounted ||
+          generation != _accessGeneration ||
+          widget.searchMessages == null ||
+          widget.searchScope == null ||
+          sessionSearchIdentity(widget.searchScope!) != identity) {
+        return;
+      }
+      _access = SessionSearchAccess(prefs, identity)..addListener(_modeChanged);
       _modeChanged();
     } catch (_) {
       // No readable preference: stay local.
@@ -548,7 +557,14 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
     final term = value.trim();
     final request = ++_searchGeneration;
     _searchTimer?.cancel();
-    final search = _access?.value == true ? widget.searchMessages : null;
+    final access = _access;
+    final search = access?.value == true ? widget.searchMessages : null;
+    bool isCurrent() =>
+        mounted &&
+        request == _searchGeneration &&
+        identical(access, _access) &&
+        access?.isActive == true &&
+        access?.value == true;
     setState(() {
       _query = term;
       _hits = const [];
@@ -560,22 +576,19 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
       _searchTitleRevision = _titleRevision;
       _searchArchiveRevision = _archiveChanges.revision;
       try {
-        final hits = await search(
-          term,
-          () =>
-              mounted && request == _searchGeneration && _access?.value == true,
-        );
-        if (!mounted || request != _searchGeneration) return;
+        if (!isCurrent()) return;
+        final hits = await search(term, isCurrent);
+        if (!isCurrent()) return;
         setState(() {
           _hits = hits;
           _searching = false;
         });
       } catch (e) {
-        if (!mounted || request != _searchGeneration) return;
+        if (!isCurrent()) return;
         setState(() {
-          _searchError = e is SessionSearchException
+          _searchError = (l10n) => e is SessionSearchException
               ? e.message
-              : 'Message search unavailable. Showing local matches.';
+              : l10n.release_core_chat_local_search_fallback;
           _searching = false;
         });
       }
@@ -681,6 +694,7 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
   void didUpdateWidget(covariant WorkspaceSessionsScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.searchScope != widget.searchScope ||
+        (oldWidget.searchMessages == null) != (widget.searchMessages == null) ||
         oldWidget.kind != widget.kind) {
       unawaited(_bindSearchAccess());
       _queryField.clear();
@@ -1373,6 +1387,7 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
   }
 
   Future<void> _setArchived(Session session, bool archived) async {
+    final releaseStrings = mounted ? context.sharedL10n : serviceStrings;
     final archive = widget.onArchive;
     if (archive == null ||
         !mounted ||
@@ -1390,7 +1405,9 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
       if (current == null) return;
       final confirmed = await archive(current, archived);
       if (confirmed != archived) {
-        throw StateError('Archive state was not confirmed');
+        throw UiMessageException(
+          releaseStrings.release_core_chat_archive_unconfirmed,
+        );
       }
       if (!mounted) return;
       setState(() {
@@ -1448,6 +1465,7 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
   /// Pins or unpins through the server flag Hermes Desktop also uses, so
   /// the change follows the chat to every client of this host.
   Future<void> _setPinned(Session session, bool pinned) async {
+    final releaseStrings = mounted ? context.sharedL10n : serviceStrings;
     final pin = widget.onPin;
     if (pin == null ||
         !mounted ||
@@ -1465,7 +1483,9 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
       if (current == null) return;
       final confirmed = await pin(current, pinned);
       if (confirmed != pinned) {
-        throw StateError('Pin state was not confirmed');
+        throw UiMessageException(
+          releaseStrings.release_core_chat_pin_unconfirmed,
+        );
       }
       if (!mounted) return;
       setState(() => _recordPin(current, pinned));
@@ -1524,13 +1544,26 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
         _error ??
         (archiveScope ? data.archiveError : data.sessionsError) ??
         (archiveScope && !data.archivesKnown && !data.archivedIsPartial
-            ? StateError('Archived history unavailable')
+            ? UiMessageException(
+                context
+                    .sharedL10n
+                    .release_core_chat_archive_history_unavailable,
+              )
             : null) ??
         (unresolvedQuick && !data.isPartial
-            ? data.sessionsError ?? StateError('Quick Chat history unavailable')
+            ? data.sessionsError ??
+                  UiMessageException(
+                    context
+                        .sharedL10n
+                        .release_core_quick_chat_history_unavailable,
+                  )
             : null) ??
         (_isUnassignedSurface && !data.projectsKnown && !data.projectsLoading
-            ? StateError('Project ownership unavailable')
+            ? UiMessageException(
+                context
+                    .sharedL10n
+                    .release_core_chat_project_ownership_unavailable,
+              )
             : null);
     // The embedded browser filters over the union of the gateway's active
     // list and the dashboard's archived list: the Archived chip needs the
@@ -1612,7 +1645,7 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
             data.projectLabels[s.id] ??
             (data.projectsKnown && !data.claimedSessionIds.contains(s.id)
                 ? context.l10n.unassigned
-                : 'Unknown project'),
+                : context.sharedL10n.release_core_chat_unknown_project),
       ).entries,
       SessionGroup.standard
           when widget.embedded && _sort == SessionSort.recent =>
@@ -1714,7 +1747,7 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
           ],
           const SizedBox(height: HermesSpacing.lg),
           if (_searching) const LinearProgressIndicator(),
-          if (_searchError != null) Text(_searchError!),
+          if (_searchError != null) Text(_searchError!(context.sharedL10n)),
           if (sessions.isEmpty &&
               !scopeLoading &&
               scopeError == null &&
@@ -1860,7 +1893,7 @@ class WorkspaceSessionsScreenState extends State<WorkspaceSessionsScreen>
                 ),
                 if (_details)
                   Text(
-                    sessionDetails(session),
+                    sessionDetails(session, context.sharedL10n),
                     style: TextStyle(color: tokens.muted),
                   ),
                 if (excerpt?.isNotEmpty == true || session.preview.isNotEmpty)

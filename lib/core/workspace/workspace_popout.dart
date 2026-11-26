@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import '../l10n/l10n.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -146,6 +148,7 @@ Future<void> openWorkspacePopout(
   required String profile,
   required bool nextGen,
 }) async {
+  final l10n = context.sharedL10n;
   try {
     if (!supportsWorkspacePopout) throw UnsupportedError('Desktop only');
     final target = PopoutTarget(
@@ -166,8 +169,10 @@ Future<void> openWorkspacePopout(
     if (!current()) throw StateError('Owner changed');
     if (!_openTargets.add(target.key)) {
       ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-        const SnackBar(
-          content: Text('This chat already has a pop-out window.'),
+        SnackBar(
+          content: Text(
+            l10n.release_core_workspace_popout_this_chat_already_has_a_pop_out_window,
+          ),
         ),
       );
       return;
@@ -182,9 +187,9 @@ Future<void> openWorkspacePopout(
   } catch (_) {
     if (context.mounted) {
       ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'Could not open this saved chat. Check the connection and try again.',
+            l10n.release_core_workspace_popout_could_not_open_this_saved_chat_check_the,
           ),
         ),
       );

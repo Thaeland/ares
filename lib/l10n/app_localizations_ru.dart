@@ -319,17 +319,17 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String message_time_recorded(String time) {
-    return 'Recorded by server: $time (local time)';
+    return 'Записано сервером: $time (местное время)';
   }
 
   @override
   String message_time_sent(String time) {
-    return 'Send observed on this device: $time (local time)';
+    return 'Отправка зафиксирована на этом устройстве: $time (местное время)';
   }
 
   @override
   String message_time_received(String time) {
-    return 'First received on this device: $time (local time)';
+    return 'Впервые получено на этом устройстве: $time (местное время)';
   }
 
   @override
@@ -450,28 +450,28 @@ class AppLocalizationsRu extends AppLocalizations {
   String get attachment_retry => 'Повторить';
 
   @override
-  String get saved_history_heading => 'Saved history';
+  String get saved_history_heading => 'Сохранённая история';
 
   @override
   String get received_output_heading =>
-      'Received output — match to saved history unconfirmed';
+      'Полученный вывод — совпадение с сохранённой историей не подтверждено';
 
   @override
-  String get received_output_details => 'About received output';
+  String get received_output_details => 'О полученном выводе';
 
   @override
   String get received_output_explanation =>
-      'This may also appear in saved history. The app cannot confirm a match.';
+      'Этот вывод может быть и в сохранённой истории. Приложение не может подтвердить совпадение.';
 
   @override
-  String get local_prompt_context => 'Local prompt context';
+  String get local_prompt_context => 'Локальный контекст промпта';
 
   @override
-  String get received_output_badge => 'Received · match unconfirmed';
+  String get received_output_badge => 'Получено · совпадение не подтверждено';
 
   @override
   String get received_output_lifetime =>
-      'Received output is kept temporarily in this app session and may be shortened or removed as limits are reached. It may not be available after the app or connection is closed.';
+      'Полученный вывод временно хранится в этой сессии приложения и может быть сокращён или удалён при достижении лимитов. После закрытия приложения или подключения он может стать недоступен.';
 
   @override
   String get theme_palette => 'Цветовая тема';
@@ -675,14 +675,14 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get allow_folder_until_sandbox_off =>
-      'Allow this folder until the sandbox is switched off.';
+      'Разрешить эту папку до отключения песочницы.';
 
   @override
   String get allow_once => 'Разрешить один раз';
 
   @override
   String get allow_website_until_sandbox_off =>
-      'Allow this website until the sandbox is switched off.';
+      'Разрешить этот сайт до отключения песочницы.';
 
   @override
   String get always_allow => 'Всегда разрешать';
@@ -918,7 +918,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get code_copied => 'Код скопирован';
 
   @override
-  String get code_format => 'Code';
+  String get code_format => 'Код';
 
   @override
   String get coming_next => 'Скоро';
@@ -927,25 +927,26 @@ class AppLocalizationsRu extends AppLocalizations {
   String get command => 'Команда';
 
   @override
-  String get command_palette => 'Command palette';
+  String get command_palette => 'Палитра команд';
 
   @override
-  String get command_palette_hint => 'Type a command';
+  String get command_palette_hint => 'Введите команду';
 
   @override
-  String get command_palette_no_results => 'No commands found';
+  String get command_palette_no_results => 'Команды не найдены';
 
   @override
-  String get command_palette_new_chat => 'New chat';
+  String get command_palette_new_chat => 'Новый чат';
 
   @override
-  String get command_palette_search_chats => 'Search chats';
+  String get command_palette_search_chats => 'Поиск чатов';
 
   @override
-  String get command_palette_toggle_theme => 'Toggle theme';
+  String get command_palette_toggle_theme => 'Переключить тему';
 
   @override
-  String get command_palette_copy_last_code => 'Copy last code block';
+  String get command_palette_copy_last_code =>
+      'Скопировать последний блок кода';
 
   @override
   String get command_line_chats => 'Чаты в командной строке';
@@ -1138,14 +1139,14 @@ class AppLocalizationsRu extends AppLocalizations {
   String get cron => 'Cron';
 
   @override
-  String get crons => 'Crons';
+  String get crons => 'Крон';
 
   @override
   String get cron_conversations_empty =>
-      'Conversations from scheduled jobs appear here, including older runs.';
+      'Здесь появятся чаты запланированных заданий, включая предыдущие запуски.';
 
   @override
-  String get search_cron_conversations => 'Search cron conversations';
+  String get search_cron_conversations => 'Поиск чатов cron';
 
   @override
   String get cron_jobs => 'Задачи Cron';
@@ -1938,51 +1939,50 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get windows_notifications_blocked =>
-      'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.';
+      'Уведомления недоступны. Используйте установленное приложение Ares и проверьте Параметры → Система → Уведомления в Windows.';
 
   @override
-  String get windows_notification_diagnostics =>
-      'What Ares submitted to Windows';
+  String get windows_notification_diagnostics => 'Что Ares передал в Windows';
 
   @override
-  String get chat_activity_share => 'Share chat activity';
+  String get chat_activity_share => 'Делиться активностью в чате';
 
   @override
   String get chat_activity_share_hint =>
-      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+      'Сообщать совместимому подключённому шлюзу, когда вы пользуетесь этим чатом, чтобы его плагин уведомлений для телефона не отправлял повторные оповещения. Ключи и текст сообщений не передаются.';
 
   @override
-  String get completion_sound => 'Completion sound';
+  String get completion_sound => 'Звук завершения';
 
   @override
-  String get completion_sound_system => 'System default';
+  String get completion_sound_system => 'Системный по умолчанию';
 
   @override
-  String get completion_sound_mail => 'Mail';
+  String get completion_sound_mail => 'Почта';
 
   @override
-  String get completion_sound_reminder => 'Reminder';
+  String get completion_sound_reminder => 'Напоминание';
 
   @override
-  String get completion_sound_silent => 'Silent';
+  String get completion_sound_silent => 'Без звука';
 
   @override
   String get completion_sound_scope =>
-      'Plays for finished replies, the test notification and inside the app. Approvals and other alerts keep their usual sound.';
+      'Звучит при завершении ответов, для тестового уведомления и внутри приложения. Запросы разрешений и другие оповещения сохраняют обычный звук.';
 
   @override
   String get completion_sound_scope_android =>
-      'Plays for finished replies, the test notification and inside the app. Approvals, other alerts, background notifications from the server and Android Auto messages keep their usual sound.';
+      'Звучит при завершении ответов, для тестового уведомления и внутри приложения. Запросы разрешений, другие оповещения, фоновые уведомления сервера и сообщения Android Auto сохраняют обычный звук.';
 
   @override
-  String get notification_open_action => 'Open';
+  String get notification_open_action => 'Открыть';
 
   @override
-  String get app_sounds_mute => 'Mute app sounds';
+  String get app_sounds_mute => 'Отключить звуки приложения';
 
   @override
   String get app_sounds_mute_hint =>
-      'Stops the completion sound Ares plays while it is open. Notifications keep their own sound.';
+      'Отключает звук завершения, который Ares воспроизводит, пока приложение открыто. Уведомления сохраняют свой звук.';
 
   @override
   String get notifications_permission_denied =>
@@ -2467,10 +2467,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get starting_hermes => 'Запуск Hermes…';
 
   @override
-  String get media_card_download => 'Download file';
+  String get media_card_download => 'Скачать файл';
 
   @override
-  String get media_card_tap_to_download => 'Tap to download';
+  String get media_card_tap_to_download => 'Нажмите, чтобы скачать';
 
   @override
   String get still_loading_your_projects => 'Ваши проекты всё ещё загружаются.';
@@ -2777,7 +2777,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get verbose_mode => 'Подробный режим';
 
   @override
-  String get message_metadata => 'Message details';
+  String get message_metadata => 'Сведения о сообщении';
 
   @override
   String get voice => 'Голос';
@@ -3374,45 +3374,45 @@ class AppLocalizationsRu extends AppLocalizations {
       'Компактный режим убирает подписи You и Hermes и уменьшает внутренние отступы, промежутки и боковые поля пузырей.';
 
   @override
-  String get client_certificate_mtls => 'Client certificate (mTLS)';
+  String get client_certificate_mtls => 'Клиентский сертификат (mTLS)';
 
   @override
   String get client_certificate_mtls_description =>
-      'Present a certificate when an HTTPS proxy requires mutual TLS.';
+      'Предъявлять сертификат, если HTTPS-прокси требует взаимной аутентификации TLS.';
 
   @override
   String get client_certificate_https_only =>
-      'Client certificates are only used for HTTPS connections.';
+      'Клиентские сертификаты используются только для подключений HTTPS.';
 
   @override
-  String get choose_certificate => 'Choose certificate';
+  String get choose_certificate => 'Выбрать сертификат';
 
   @override
-  String get certificate_password => 'Certificate password';
+  String get certificate_password => 'Пароль сертификата';
 
   @override
   String get this_certificate_is_password_protected =>
-      'This certificate is password-protected. It opens as you type.';
+      'Этот сертификат защищён паролем. Он открывается по мере ввода.';
 
   @override
   String get enter_the_certificate_password_to_finish_loading_it =>
-      'Enter the certificate password to finish loading the certificate you chose.';
+      'Введите пароль сертификата, чтобы завершить загрузку выбранного сертификата.';
 
   @override
   String get client_certificate_required =>
-      'Load a client certificate or turn off the client certificate option.';
+      'Загрузите клиентский сертификат или отключите использование клиентского сертификата.';
 
   @override
   String client_certificate_loaded(String label) {
-    return 'Loaded: $label';
+    return 'Загружен: $label';
   }
 
   @override
-  String get remove_certificate => 'Remove certificate';
+  String get remove_certificate => 'Удалить сертификат';
 
   @override
   String get certificate_import_failed =>
-      'That certificate could not be loaded.';
+      'Не удалось загрузить этот сертификат.';
 
   @override
   String get background_work => 'Фоновая работа';
@@ -3887,73 +3887,73 @@ class AppLocalizationsRu extends AppLocalizations {
       'Статус аккаунта на хосте недоступен.';
 
   @override
-  String get app_language => 'App language';
+  String get app_language => 'Язык приложения';
 
   @override
-  String get app_language_system => 'Same as phone';
+  String get app_language_system => 'Как на телефоне';
 
   @override
-  String get auto_archives_after_72_hours => 'Auto-archives after 72 hours';
+  String get auto_archives_after_72_hours =>
+      'Автоматически архивируется через 72 часа';
 
   @override
-  String get automation => 'Automation';
+  String get automation => 'Автоматизация';
 
   @override
-  String get voice_recording_start => 'Record voice message';
+  String get voice_recording_start => 'Записать голосовое сообщение';
 
   @override
-  String get voice_recording_pause => 'Pause recording';
+  String get voice_recording_pause => 'Приостановить запись';
 
   @override
-  String get voice_recording_preview => 'Play recording';
+  String get voice_recording_preview => 'Воспроизвести запись';
 
   @override
-  String get voice_recording_resume => 'Continue recording';
+  String get voice_recording_resume => 'Продолжить запись';
 
   @override
-  String get voice_recording_send => 'Send voice message';
+  String get voice_recording_send => 'Отправить голосовое сообщение';
 
   @override
-  String get voice_recording_discard => 'Discard recording';
+  String get voice_recording_discard => 'Удалить запись';
 
   @override
-  String get voice_recording_processing => 'Preparing voice message…';
+  String get voice_recording_processing => 'Подготовка голосового сообщения…';
 
   @override
   String voice_recording_elapsed(String time) {
-    return 'Recording $time';
+    return 'Запись $time';
   }
 
   @override
   String voice_recording_draft(String time) {
-    return 'Voice message $time';
+    return 'Голосовое сообщение $time';
   }
 
   @override
   String get voice_recording_permission =>
-      'Allow microphone access to record a voice message.';
+      'Разрешите доступ к микрофону для записи голосового сообщения.';
 
   @override
-  String get voice_recording_limit =>
-      'This recording has reached the ten-minute limit.';
+  String get voice_recording_limit => 'Достигнут лимит записи в десять минут.';
 
   @override
-  String get voice_recording_empty => 'No audio was recorded. Try again.';
+  String get voice_recording_empty => 'Звук не записан. Попробуйте ещё раз.';
 
   @override
   String get voice_recording_failed =>
-      'Could not process the recording. Any saved fragments have been kept.';
+      'Не удалось обработать запись. Все сохранённые фрагменты оставлены.';
 
   @override
   String get voice_recording_unconfirmed =>
-      'Delivery was not confirmed. Your recording is saved. Check the chat before trying again.';
+      'Доставка не подтверждена. Запись сохранена. Проверьте чат, прежде чем повторять попытку.';
 
   @override
   String get voice_recording_submit_failed =>
-      'Could not send the voice message. Your recording is saved. Check the connection, Dashboard access and server transcription settings.';
+      'Не удалось отправить голосовое сообщение. Запись сохранена. Проверьте подключение, доступ к панели управления и настройки расшифровки на сервере.';
 
   @override
-  String get voice_recording_pause_playback => 'Pause playback';
+  String get voice_recording_pause_playback => 'Приостановить воспроизведение';
 
   @override
   String get projects_root_title => 'Папка проектов на сервере';
@@ -4108,178 +4108,178 @@ class AppLocalizationsRu extends AppLocalizations {
       'Откройте список сессий, чтобы выбрать чат. Черновик сохранён.';
 
   @override
-  String get composer_snippets => 'Prompt snippets';
+  String get composer_snippets => 'Шаблоны промптов';
 
   @override
   String get composer_snippets_description =>
-      'Pick a starter prompt to drop into the composer.';
+      'Выберите начальный промпт для вставки в поле ввода.';
 
   @override
-  String get composer_snippet_review => 'Code review';
+  String get composer_snippet_review => 'Ревью кода';
 
   @override
   String get composer_snippet_review_body =>
-      'Audit the current change for regressions, dropped edge cases and missing tests.';
+      'Проверьте текущее изменение на регрессии, упущенные граничные случаи и недостающие тесты.';
 
   @override
   String get composer_snippet_review_text =>
-      'Please review this for bugs, regressions and missing tests.';
+      'Проверь, пожалуйста, этот код на ошибки, регрессии и недостающие тесты.';
 
   @override
-  String get composer_snippet_plan => 'Implementation plan';
+  String get composer_snippet_plan => 'План реализации';
 
   @override
   String get composer_snippet_plan_body =>
-      'Outline an approach before touching code so the diff stays focused.';
+      'Наметьте подход до изменения кода, чтобы не выходить за рамки задачи.';
 
   @override
   String get composer_snippet_plan_text =>
-      'Please make a concise implementation plan before changing code.';
+      'Составь, пожалуйста, краткий план реализации перед изменением кода.';
 
   @override
-  String get composer_snippet_explain => 'Explain this';
+  String get composer_snippet_explain => 'Объяснить это';
 
   @override
   String get composer_snippet_explain_body =>
-      'Walk through how the selected code works and point to the key files.';
+      'Разберите, как работает выбранный код, и укажите ключевые файлы.';
 
   @override
   String get composer_snippet_explain_text =>
-      'Please explain how this works and point me to the key files.';
+      'Объясни, пожалуйста, как это работает, и укажи ключевые файлы.';
 
   @override
-  String get composer_status => 'Status';
+  String get composer_status => 'Статус';
 
   @override
-  String get composer_status_context => 'Context';
+  String get composer_status_context => 'Контекст';
 
   @override
-  String get composer_status_cache => 'Cache hit';
+  String get composer_status_cache => 'Попадание в кэш';
 
   @override
-  String get composer_status_throughput => 'Output tokens/sec';
+  String get composer_status_throughput => 'Выходных токенов/с';
 
   @override
-  String get composer_status_running => 'Running';
+  String get composer_status_running => 'Выполняется';
 
   @override
-  String get composer_status_session => 'Session';
+  String get composer_status_session => 'Сессия';
 
   @override
-  String get composer_status_not_reported => 'Not reported';
+  String get composer_status_not_reported => 'Не сообщается';
 
   @override
-  String get composer_status_empty => 'No context breakdown was reported.';
+  String get composer_status_empty => 'Разбивка контекста не получена.';
 
   @override
-  String get composer_status_loading => 'Loading context breakdown';
+  String get composer_status_loading => 'Загрузка разбивки контекста';
 
   @override
-  String get composer_status_reset => 'Reset status bar';
+  String get composer_status_reset => 'Сбросить строку состояния';
 
   @override
-  String get composer_resume_title => 'Resume a chat';
+  String get composer_resume_title => 'Продолжить чат';
 
   @override
-  String get composer_resume_search => 'Search titles and ids';
+  String get composer_resume_search => 'Поиск по названиям и ID';
 
   @override
-  String get composer_resume_empty => 'No chats match.';
+  String get composer_resume_empty => 'Подходящих чатов нет.';
 
   @override
   String get composer_resume_unavailable =>
-      'This pane has no chat list to search.';
+      'В этой панели нет списка чатов для поиска.';
 
   @override
-  String get composer_failure_retry => 'Retry';
+  String get composer_failure_retry => 'Повторить';
 
   @override
   String composer_failure_retry_at(String time) {
-    return 'Retry at $time';
+    return 'Повторить в $time';
   }
 
   @override
-  String get composer_failure_compress => 'Compress';
+  String get composer_failure_compress => 'Сжать';
 
   @override
-  String get composer_failure_switch_model => 'Switch model';
+  String get composer_failure_switch_model => 'Сменить модель';
 
   @override
   String composer_failure_switch_to(String model) {
-    return 'Switch to $model';
+    return 'Переключиться на $model';
   }
 
   @override
-  String get composer_failure_new_chat => 'New chat';
+  String get composer_failure_new_chat => 'Новый чат';
 
   @override
-  String get composer_failure_edit => 'Edit message';
+  String get composer_failure_edit => 'Изменить сообщение';
 
   @override
-  String get composer_failure_details => 'Details';
+  String get composer_failure_details => 'Подробности';
 
   @override
-  String get composer_failure_hide_details => 'Hide details';
+  String get composer_failure_hide_details => 'Скрыть подробности';
 
   @override
-  String get composer_failure_copy => 'Copy diagnostics';
+  String get composer_failure_copy => 'Скопировать диагностику';
 
   @override
   String get composer_failure_account =>
-      'The other fix is on the gateway account. This chat cannot do it.';
+      'Другой способ исправления требует действий в учётной записи шлюза. В этом чате это сделать нельзя.';
 
   @override
   String get composer_failure_account_only =>
-      'This has to be fixed on the gateway account. This chat cannot do it.';
+      'Это нужно исправить в учётной записи шлюза. В этом чате это сделать нельзя.';
 
   @override
   String get composer_failure_confirm_compress =>
-      'Compress this chat? The gateway will shorten the transcript.';
+      'Сжать этот чат? Шлюз сократит переписку.';
 
   @override
   String composer_failure_confirm_model(String model) {
-    return 'Switch this chat to $model?';
+    return 'Переключить этот чат на $model?';
   }
 
   @override
-  String get composer_drop_attach => 'Drop to attach';
+  String get composer_drop_attach => 'Перетащите, чтобы прикрепить';
 
   @override
   String get composer_drop_folder_unsupported =>
-      'Folders can\'t be attached. Drop the files instead.';
+      'Папки прикреплять нельзя. Перетащите файлы из них.';
 
   @override
-  String get composer_drop_reference => 'Drop to reference';
+  String get composer_drop_reference => 'Перетащите, чтобы добавить ссылку';
 
   @override
-  String get composer_reference_copy => 'Copy reference';
+  String get composer_reference_copy => 'Скопировать ссылку';
 
   @override
-  String get composer_reference_remove => 'Remove reference';
+  String get composer_reference_remove => 'Удалить ссылку';
 
   @override
   String get composer_btw_usage =>
-      'Usage: /btw <question> — answered from a snapshot of this conversation without interrupting it.';
+      'Использование: /btw <question> — ответ по снимку этой беседы без её прерывания.';
 
   @override
   String get composer_background_usage =>
-      'Usage: /background <prompt> — the task runs separately and the result comes back here.';
+      'Использование: /background <prompt> — задача выполняется отдельно, а результат возвращается сюда.';
 
   @override
   String get composer_handoff_usage =>
-      'Usage: /handoff <platform> — transfer this chat to that messaging platform.';
+      'Использование: /handoff <platform> — передать этот чат на указанную платформу обмена сообщениями.';
 
   @override
   String get composer_command_needs_session =>
-      'This command needs an open chat.';
+      'Для этой команды нужен открытый чат.';
 
   @override
   String get composer_retry_not_found =>
-      'This turn is not in the saved history, so Retry cannot replace it. Nothing was sent again. Edit the message and send it for another try.';
+      'Этого хода нет в сохранённой истории, поэтому действие «Повторить» не может его заменить. Ничего не отправлено повторно. Измените сообщение и отправьте его для новой попытки.';
 
   @override
   String get composer_retry_unavailable =>
-      'Retry cannot replace a turn on this connection, so nothing was sent again. Edit the message and send it for another try.';
+      'Действие «Повторить» не может заменить ход при этом подключении, поэтому ничего не отправлено повторно. Измените сообщение и отправьте его для новой попытки.';
 
   @override
   String get composer_failure_switch_no_retry =>
@@ -4287,52 +4287,51 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get composer_command_needs_gateway_session =>
-      'This chat has no gateway session yet. Send a message first, then run the command again.';
+      'У этого чата ещё нет сессии на шлюзе. Сначала отправьте сообщение, затем повторите команду.';
 
   @override
-  String get composer_side_question =>
-      'btw — answering from a conversation snapshot';
+  String get composer_side_question => 'btw — ответ по снимку беседы';
 
   @override
   String composer_side_question_id(String id) {
-    return 'btw $id — answering from a conversation snapshot';
+    return 'btw $id — ответ по снимку беседы';
   }
 
   @override
   String get composer_background_started =>
-      'Background task started. You can keep chatting. The result will appear here.';
+      'Фоновая задача запущена. Можно продолжать чат. Результат появится здесь.';
 
   @override
   String composer_background_started_id(String id) {
-    return 'Background task $id started. You can keep chatting. The result will appear here.';
+    return 'Фоновая задача $id запущена. Можно продолжать чат. Результат появится здесь.';
   }
 
   @override
   String composer_handoff_requested(String platform) {
-    return 'Handoff to $platform requested.';
+    return 'Запрошена передача на $platform.';
   }
 
   @override
   String composer_handoff_done(String platform) {
-    return 'Handed this chat to $platform.';
+    return 'Этот чат передан на $platform.';
   }
 
   @override
-  String get composer_handoff_failed => 'Handoff failed.';
+  String get composer_handoff_failed => 'Не удалось передать чат.';
 
   @override
   String get composer_handoff_timeout =>
-      'Handoff did not finish. It may still be running on the gateway.';
+      'Передача не завершена. Возможно, она ещё выполняется на шлюзе.';
 
   @override
-  String get composer_compress_done => 'Compressed this chat.';
+  String get composer_compress_done => 'Этот чат сжат.';
 
   @override
-  String get composer_file_missing => 'That file is not on this device.';
+  String get composer_file_missing => 'Этого файла нет на устройстве.';
 
   @override
   String get composer_attach_busy =>
-      'Attachments can be added when this reply finishes.';
+      'Вложения можно будет добавить после завершения этого ответа.';
 
   @override
   String get nextgen_toggle => 'Интерфейс NextGen';
@@ -6483,74 +6482,76 @@ class AppLocalizationsRu extends AppLocalizations {
   String get ng_aux_curator_hint => 'Проверяет, как используются навыки';
 
   @override
-  String get appearance_save_failed => 'Could not save this change.';
+  String get appearance_save_failed => 'Не удалось сохранить это изменение.';
 
   @override
-  String get appearance_keep_which_theme => 'Keep which theme?';
+  String get appearance_keep_which_theme => 'Какую тему оставить?';
 
   @override
-  String get appearance_tour_back => 'Back';
+  String get appearance_tour_back => 'Назад';
 
   @override
-  String get appearance_tour_finish => 'Finish';
+  String get appearance_tour_finish => 'Завершить';
 
   @override
-  String get appearance_tour_next => 'Next';
+  String get appearance_tour_next => 'Далее';
 
   @override
-  String get appearance_tour_close => 'Close tour';
+  String get appearance_tour_close => 'Закрыть обзор';
 
   @override
-  String get appearance_dismiss_tip => 'Dismiss tip';
+  String get appearance_dismiss_tip => 'Скрыть подсказку';
 
   @override
-  String get appearance_search_settings => 'Search settings';
+  String get appearance_search_settings => 'Поиск настроек';
 
   @override
-  String get appearance_search_show => 'Show';
+  String get appearance_search_show => 'Показать';
 
   @override
-  String get appearance_no_matching_setting => 'No matching setting.';
+  String get appearance_no_matching_setting =>
+      'Подходящая настройка не найдена.';
 
   @override
-  String get appearance_replay_tour => 'Replay tour';
+  String get appearance_replay_tour => 'Повторить обзор';
 
   @override
-  String get appearance_show_tips_again => 'Show tips again';
+  String get appearance_show_tips_again => 'Снова показывать подсказки';
 
   @override
   String get appearance_window_translucency_unavailable =>
-      'Window translucency is not available on this host. Linux cannot provide it, and the Apple and Windows runners paint an opaque Flutter view.';
+      'Полупрозрачность окна недоступна на этом хосте. Linux её не поддерживает, а приложения для Apple и Windows отрисовывают непрозрачную область Flutter.';
 
   @override
-  String get appearance_imported_themes => 'Imported themes';
+  String get appearance_imported_themes => 'Импортированные темы';
 
   @override
-  String get appearance_import_theme_file => 'Import theme file';
+  String get appearance_import_theme_file => 'Импортировать файл темы';
 
   @override
-  String get appearance_remove_theme => 'Remove theme';
+  String get appearance_remove_theme => 'Удалить тему';
 
   @override
-  String get appearance_chat_font => 'Chat font';
+  String get appearance_chat_font => 'Шрифт чата';
 
   @override
-  String get appearance_terminal_font => 'Terminal font';
+  String get appearance_terminal_font => 'Шрифт терминала';
 
   @override
-  String get appearance_font_platform => 'Platform';
+  String get appearance_font_platform => 'Платформа';
 
   @override
-  String get appearance_automatic => 'Automatic';
+  String get appearance_automatic => 'Автоматически';
 
   @override
-  String get appearance_force_left_to_right => 'Force left to right';
+  String get appearance_force_left_to_right => 'Принудительно слева направо';
 
   @override
-  String get appearance_force_right_to_left => 'Force right to left';
+  String get appearance_force_right_to_left => 'Принудительно справа налево';
 
   @override
-  String get appearance_user_bubble_opacity => 'User bubble opacity';
+  String get appearance_user_bubble_opacity =>
+      'Непрозрачность сообщений пользователя';
 
   @override
   String get appearance_inline_embeds => 'Встроенный контент';
@@ -6601,17 +6602,18 @@ class AppLocalizationsRu extends AppLocalizations {
   String get appearance_embed_preview_unavailable => 'Превью недоступно';
 
   @override
-  String get appearance_emoji_reactions => 'Emoji reactions';
+  String get appearance_emoji_reactions => 'Реакции эмодзи';
 
   @override
-  String get appearance_celebration_hearts => 'Celebration hearts';
+  String get appearance_celebration_hearts => 'Праздничные сердечки';
 
   @override
   String get appearance_celebration_hearts_hint =>
-      'A heart plays when a reply arrives while you were away.';
+      'Анимация сердечка появляется, когда ответ приходит в ваше отсутствие.';
 
   @override
-  String get appearance_pop_out_companion => 'Pop out companion';
+  String get appearance_pop_out_companion =>
+      'Вынести компаньона в отдельное окно';
 
   @override
   String get appearance_mosskip => 'Mosskip';
@@ -6623,212 +6625,212 @@ class AppLocalizationsRu extends AppLocalizations {
   String get appearance_tideling => 'Tideling';
 
   @override
-  String get appearance_my_hatchling => 'My hatchling';
+  String get appearance_my_hatchling => 'Мой питомец';
 
   @override
-  String get appearance_at_rest => 'At rest';
+  String get appearance_at_rest => 'Отдыхает';
 
   @override
-  String get appearance_working => 'Working';
+  String get appearance_working => 'Работает';
 
   @override
-  String get appearance_thinking => 'Thinking';
+  String get appearance_thinking => 'Думает';
 
   @override
-  String get appearance_waiting_for_you => 'Waiting for you';
+  String get appearance_waiting_for_you => 'Ждёт вас';
 
   @override
-  String get appearance_reply_ready => 'Reply ready';
+  String get appearance_reply_ready => 'Ответ готов';
 
   @override
-  String get appearance_turn_failed => 'Turn failed';
+  String get appearance_turn_failed => 'Ошибка хода';
 
   @override
-  String get appearance_small => 'Small';
+  String get appearance_small => 'Маленький';
 
   @override
-  String get appearance_medium => 'Medium';
+  String get appearance_medium => 'Средний';
 
   @override
-  String get appearance_large => 'Large';
+  String get appearance_large => 'Большой';
 
   @override
-  String get appearance_hello => 'Hello!';
+  String get appearance_hello => 'Привет!';
 
   @override
-  String get appearance_unread_reply => 'Unread reply';
+  String get appearance_unread_reply => 'Непрочитанный ответ';
 
   @override
-  String get appearance_compose => 'Compose';
+  String get appearance_compose => 'Написать';
 
   @override
-  String get appearance_say_hello => 'Say hello';
+  String get appearance_say_hello => 'Поздороваться';
 
   @override
   String get appearance_pet_image_failed =>
-      'Could not open that image. Choose a smaller PNG or JPEG.';
+      'Не удалось открыть это изображение. Выберите PNG или JPEG меньшего размера.';
 
   @override
-  String get appearance_pet_companion => 'Pet companion';
+  String get appearance_pet_companion => 'Питомец-компаньон';
 
   @override
   String get appearance_pet_companion_hint =>
-      'Show a companion while you chat.';
+      'Показывать компаньона во время чата.';
 
   @override
-  String get appearance_adopt_a_companion => 'Adopt a companion';
+  String get appearance_adopt_a_companion => 'Завести компаньона';
 
   @override
-  String get appearance_roam_when_idle => 'Roam when idle';
+  String get appearance_roam_when_idle => 'Гулять во время простоя';
 
   @override
-  String get appearance_pet_size => 'Pet size';
+  String get appearance_pet_size => 'Размер питомца';
 
   @override
   String get appearance_hatch_from_a_local_picture =>
-      'Hatch from a local picture';
+      'Вылупить питомца из локального изображения';
 
   @override
   String get appearance_pet_image_limits =>
-      'Choose a PNG or JPEG (up to 4 MiB, 4096 px per side and 8 MP). Preview it first. Hatching saves one 24 × 24 pixel portrait and replaces your previous hatchling.';
+      'Выберите PNG или JPEG (до 4 МиБ, 4096 пикселей по каждой стороне и 8 Мп). Сначала просмотрите его. При вылуплении сохраняется один портрет размером 24 × 24 пикселя, заменяющий предыдущего питомца.';
 
   @override
-  String get appearance_choose_picture => 'Choose picture';
+  String get appearance_choose_picture => 'Выбрать изображение';
 
   @override
-  String get appearance_hatchling_preview => 'Hatchling preview';
+  String get appearance_hatchling_preview => 'Предпросмотр питомца';
 
   @override
-  String get appearance_hatch_and_adopt => 'Hatch and adopt';
+  String get appearance_hatch_and_adopt => 'Вылупить и приютить';
 
   @override
-  String get appearance_discard_draft => 'Discard draft';
+  String get appearance_discard_draft => 'Удалить черновик';
 
   @override
-  String get appearance_forget_saved_hatchling => 'Forget saved hatchling';
+  String get appearance_forget_saved_hatchling => 'Забыть сохранённого питомца';
 
   @override
-  String get appearance_radio => 'Radio';
+  String get appearance_radio => 'Радио';
 
   @override
   String appearance_radio_hint(String stations) {
-    return 'Streams come straight from $stations and start only when you press Play. Station search stays on this device.';
+    return 'Трансляции поступают напрямую от $stations и начинаются только при нажатии «Воспроизвести». Поиск станций остаётся на этом устройстве.';
   }
 
   @override
   String get appearance_radio_save_failed =>
-      'Radio settings could not be saved.';
+      'Не удалось сохранить настройки радио.';
 
   @override
-  String get appearance_choose_a_station => 'Choose a station';
+  String get appearance_choose_a_station => 'Выбрать станцию';
 
   @override
-  String get appearance_pause_radio => 'Pause radio';
+  String get appearance_pause_radio => 'Приостановить радио';
 
   @override
-  String get appearance_play_radio => 'Play radio';
+  String get appearance_play_radio => 'Включить радио';
 
   @override
-  String get appearance_next_station => 'Next station';
+  String get appearance_next_station => 'Следующая станция';
 
   @override
   String get appearance_radio_trace_semantics =>
-      'Stream activity. Audio levels are unavailable, so this line stays flat.';
+      'Активность трансляции. Уровни звука недоступны, поэтому линия остаётся ровной.';
 
   @override
-  String get appearance_radio_is_off => 'Radio is off';
+  String get appearance_radio_is_off => 'Радио выключено';
 
   @override
-  String get appearance_paused => 'Paused';
+  String get appearance_paused => 'На паузе';
 
   @override
-  String get appearance_connecting => 'Connecting…';
+  String get appearance_connecting => 'Подключение…';
 
   @override
-  String get appearance_live => 'Live';
+  String get appearance_live => 'В эфире';
 
   @override
-  String get appearance_stream_unavailable => 'Stream unavailable';
+  String get appearance_stream_unavailable => 'Трансляция недоступна';
 
   @override
   String appearance_now_playing(String credit) {
-    return 'Now playing: $credit';
+    return 'Сейчас играет: $credit';
   }
 
   @override
   String get appearance_audio_only_waveform_unavailable =>
-      'Audio only · waveform unavailable';
+      'Только аудио · звуковая волна недоступна';
 
   @override
-  String get appearance_volume => 'Volume';
+  String get appearance_volume => 'Громкость';
 
   @override
-  String get appearance_search_presets => 'Search presets';
+  String get appearance_search_presets => 'Поиск предустановок';
 
   @override
-  String get appearance_no_stations_found => 'No stations found';
+  String get appearance_no_stations_found => 'Станции не найдены';
 
   @override
   String appearance_unpin_station(String station) {
-    return 'Unpin station: $station';
+    return 'Открепить станцию: $station';
   }
 
   @override
   String appearance_pin_station(String station) {
-    return 'Pin station: $station';
+    return 'Закрепить станцию: $station';
   }
 
   @override
   String get appearance_radio_picker_metadata_notice =>
-      'While this picker is open, playing stations may share track details directly from the broadcaster.';
+      'Пока это окно выбора открыто, проигрываемые станции могут передавать сведения о треках напрямую от вещателя.';
 
   @override
   String get appearance_message_from_your_companion =>
-      'Message from your companion';
+      'Сообщение от вашего компаньона';
 
   @override
-  String get appearance_send_to_the_open_chat => 'Send to the open chat';
+  String get appearance_send_to_the_open_chat => 'Отправить в открытый чат';
 
   @override
   String get appearance_tour_theme_body =>
-      'Import a VS Code colour theme from a file on this device, then choose which variant to keep.';
+      'Импортируйте цветовую тему VS Code из файла на этом устройстве, затем выберите вариант, который хотите оставить.';
 
   @override
-  String get appearance_tour_fonts_title => 'Reading fonts';
+  String get appearance_tour_fonts_title => 'Шрифты для чтения';
 
   @override
   String get appearance_tour_fonts_body =>
-      'Chat prose and terminal code use separate faces shipped with Ares.';
+      'Для текста чата и кода терминала используются разные шрифты из комплекта Ares.';
 
   @override
-  String get appearance_tour_direction_title => 'Transcript direction';
+  String get appearance_tour_direction_title => 'Направление переписки';
 
   @override
   String get appearance_tour_direction_body =>
-      'Leave this on automatic, or force the transcript left to right or right to left.';
+      'Оставьте автоматический выбор или задайте направление переписки слева направо либо справа налево.';
 
   @override
-  String get appearance_tour_pet_title => 'Companion';
+  String get appearance_tour_pet_title => 'Компаньон';
 
   @override
   String get appearance_tour_pet_body =>
-      'The companion is off until you adopt one. Pop-out adds a small composer.';
+      'Компаньон выключен, пока вы его не заведёте. В отдельном окне есть небольшое поле ввода.';
 
   @override
   String get appearance_tour_radio_body =>
-      'Radio stays off until you enable it. Play is what opens a stream.';
+      'Радио выключено, пока вы его не включите. Трансляция открывается при нажатии «Воспроизвести».';
 
   @override
   String get appearance_tip_theme =>
-      'Imported themes replace the built-in palette until you clear the selection. Only the colours are kept.';
+      'Импортированные темы заменяют встроенную палитру, пока вы не сбросите выбор. Сохраняются только цвета.';
 
   @override
   String get appearance_tip_pet =>
-      'The companion stores one small portrait on this device. It does not upload the picture you hatch from.';
+      'Компаньон хранит один маленький портрет на этом устройстве. Исходное изображение питомца никуда не загружается.';
 
   @override
   String get appearance_theme_import_failed =>
-      'Could not import that theme. Choose a VS Code colour theme saved as a .vsix, .json or .jsonc file.';
+      'Не удалось импортировать эту тему. Выберите цветовую тему VS Code в файле .vsix, .json или .jsonc.';
 
   @override
   String get render_widget_file_truncated =>
@@ -9649,4 +9651,2510 @@ class AppLocalizationsRu extends AppLocalizations {
   String ng_bots_section_toggle(String name) {
     return 'Показать или скрыть «$name»';
   }
+
+  @override
+  String
+  get release_core_transcript_reader_this_passage_is_no_longer_in_the_loaded =>
+      'Этот фрагмент больше не входит в загруженную часть переписки.';
+
+  @override
+  String get release_core_transcript_reader_loaded_prompts =>
+      'Загруженные промпты';
+
+  @override
+  String get release_core_transcript_reader_jump_to_latest =>
+      'К последним сообщениям';
+
+  @override
+  String get release_core_transcript_reader_no_prompts_loaded =>
+      'Нет загруженных промптов';
+
+  @override
+  String get release_core_transcript_reader_find_in_loaded_messages =>
+      'Поиск в загруженных сообщениях';
+
+  @override
+  String get release_core_transcript_reader_previous_match =>
+      'Предыдущее совпадение';
+
+  @override
+  String get release_core_transcript_reader_next_match =>
+      'Следующее совпадение';
+
+  @override
+  String get release_core_transcript_reader_prompt_timeline =>
+      'Хронология промптов';
+
+  @override
+  String get release_core_transcript_reader_close_find => 'Закрыть поиск';
+
+  @override
+  String get release_core_session_organisation_organise_chats =>
+      'Упорядочить чаты';
+
+  @override
+  String get release_core_session_organisation_show_model_and_usage =>
+      'Показывать модель и использование';
+
+  @override
+  String
+  get release_core_session_files_view_connection_changed_reopen_files_on_the_new_connection =>
+      'Подключение изменилось. Откройте файлы заново в новом подключении.';
+
+  @override
+  String
+  get release_core_session_files_view_the_connection_or_session_changed_reopen_this_pane =>
+      'Подключение или сессия изменились. Откройте эту панель заново.';
+
+  @override
+  String
+  get release_core_session_files_view_no_verified_host_working_directory_for_this_session =>
+      'Для этой сессии нет подтверждённой рабочей папки на хосте.';
+
+  @override
+  String
+  get release_core_session_files_view_the_gateway_denied_this_operation =>
+      'Шлюз запретил эту операцию.';
+
+  @override
+  String
+  get release_core_session_files_view_this_gateway_does_not_support_this_operation =>
+      'Этот шлюз не поддерживает эту операцию.';
+
+  @override
+  String
+  get release_core_session_files_view_the_file_owner_or_working_directory_changed_reload =>
+      'Файл, владелец или рабочая папка изменились. Перезагрузите и проверьте.';
+
+  @override
+  String
+  get release_core_session_files_view_the_gateway_returned_an_unsafe_path_or_invalid =>
+      'Шлюз вернул небезопасный путь или некорректный ответ с файлом.';
+
+  @override
+  String
+  get release_core_session_files_view_workspace_access_requires_a_secure_gateway_connection =>
+      'Для доступа к рабочей области нужно защищённое подключение к шлюзу.';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_unavailable_refresh_to_check_the_current_state =>
+      'Шлюз недоступен. Обновите, чтобы проверить текущее состояние.';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_operation_could_not_be_confirmed =>
+      'Не удалось подтвердить выполнение операции на шлюзе.';
+
+  @override
+  String get release_core_session_files_view_git_status_unavailable =>
+      'Статус Git недоступен.';
+
+  @override
+  String
+  get release_core_session_files_view_change_this_chat_s_working_directory =>
+      'Изменить рабочую папку этого чата?';
+
+  @override
+  String get release_core_session_files_view_absolute_gateway_directory =>
+      'Абсолютный путь к папке на шлюзе';
+
+  @override
+  String get release_core_session_files_view_change_directory =>
+      'Изменить папку';
+
+  @override
+  String get release_core_session_files_view_replace_gateway_file =>
+      'Заменить файл на шлюзе?';
+
+  @override
+  String
+  release_core_session_files_view_only_if_the_file_still_matches_the_version(
+    String path,
+  ) {
+    return '$path\n\nТолько если файл по-прежнему совпадает с проверенной вами версией. Совместимый хост сохраняет заменённый файл для восстановления.';
+  }
+
+  @override
+  String get release_core_session_files_view_save_changes =>
+      'Сохранить изменения';
+
+  @override
+  String
+  get release_core_session_files_view_saved_and_verified_on_the_gateway =>
+      'Сохранено и проверено на шлюзе.';
+
+  @override
+  String
+  get release_core_session_files_view_guarded_saving_is_unavailable_on_this_gateway_your =>
+      'Сохранение с проверкой версии недоступно на этом шлюзе. Ваш черновик остался здесь.';
+
+  @override
+  String
+  release_core_session_files_view_save_was_not_confirmed_your_draft_is_still(
+    String reason,
+  ) {
+    return '$reason Сохранение не подтверждено. Ваш черновик остался здесь.';
+  }
+
+  @override
+  String get release_core_session_files_view_review_current_gateway_version =>
+      'Проверить текущую версию на шлюзе';
+
+  @override
+  String get release_core_session_files_view_discard_draft_and_reload =>
+      'Удалить черновик и перезагрузить';
+
+  @override
+  String get release_core_session_files_view_keep_draft_against_this_version =>
+      'Считать эту версию основой черновика';
+
+  @override
+  String get release_core_session_files_view_discard_unsaved_edits =>
+      'Отменить несохранённые изменения?';
+
+  @override
+  String get release_core_session_files_view_keep_editing =>
+      'Продолжить редактирование';
+
+  @override
+  String get release_core_session_files_view_discard_edits =>
+      'Отменить изменения';
+
+  @override
+  String get release_core_session_files_view_remote_working_directory =>
+      'Удалённая рабочая папка';
+
+  @override
+  String get release_core_session_files_view_change_working_directory =>
+      'Изменить рабочую папку';
+
+  @override
+  String get release_core_session_files_view_show_ignored_files =>
+      'Показывать игнорируемые файлы';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_does_not_report_ignored_status =>
+      'Шлюз не сообщает, какие файлы игнорируются.';
+
+  @override
+  String get release_core_session_files_view_no_visible_entries =>
+      'Нет видимых элементов';
+
+  @override
+  String get release_core_session_files_view_changed => 'Изменён';
+
+  @override
+  String get release_core_session_files_view_ignored => 'Игнорируется';
+
+  @override
+  String release_core_session_files_view_actions_for(String name) {
+    return 'Действия для $name';
+  }
+
+  @override
+  String get release_core_session_files_view_copy_relative_path =>
+      'Скопировать относительный путь';
+
+  @override
+  String get release_core_session_files_view_copy_gateway_path =>
+      'Скопировать путь на шлюзе';
+
+  @override
+  String get release_core_session_files_view_attach_folder_reference =>
+      'Прикрепить ссылку на папку';
+
+  @override
+  String get release_core_session_files_view_attach_file_reference =>
+      'Прикрепить ссылку на файл';
+
+  @override
+  String
+  get release_core_session_files_view_preview_truncated_editing_disabled =>
+      'Предпросмотр обрезан — редактирование отключено.';
+
+  @override
+  String get release_core_session_files_view_select_lines => 'Выбрать строки';
+
+  @override
+  String get release_core_session_files_view_review_gateway_version =>
+      'Проверить версию на шлюзе';
+
+  @override
+  String get release_core_session_files_view_attach_selected_lines =>
+      'Прикрепить выбранные строки';
+
+  @override
+  String get release_core_session_files_view_binary_file_no_text_preview =>
+      'Двоичный файл — текстовый предпросмотр недоступен.';
+
+  @override
+  String get release_core_session_files_view_file_source =>
+      'Исходный текст файла';
+
+  @override
+  String get release_core_session_files_view_close_session_files =>
+      'Закрыть файлы сессии';
+
+  @override
+  String get release_core_session_files_view_back_to_tree =>
+      'Вернуться к дереву';
+
+  @override
+  String get release_core_session_files_view_session_files => 'Файлы сессии';
+
+  @override
+  String get release_core_session_files_view_git_review => 'Обзор Git';
+
+  @override
+  String get release_core_session_files_view_refresh_tree => 'Обновить дерево';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_this_connection_changed_reopen_its_chat =>
+      'Это подключение изменилось. Откройте его чат заново.';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_disconnected_reconnect_the_chat_then_refresh =>
+      'Соединение разорвано. Подключите чат заново, затем обновите.';
+
+  @override
+  String release_core_gateway_queue_screen_gateway_queue_unavailable(
+    String reason,
+  ) {
+    return 'Очередь шлюза недоступна: $reason.';
+  }
+
+  @override
+  String release_core_gateway_queue_screen_not_confirmed_nothing_was_resent(
+    String reason,
+  ) {
+    return 'Не подтверждено ($reason). Повторная отправка не выполнялась.';
+  }
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_confirmed_admission =>
+      'Шлюз подтвердил принятие запроса.';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_edited_entry_admitted_at_the_end_of_the =>
+      'Изменённая запись принята в конец очереди.';
+
+  @override
+  String get release_core_gateway_queue_screen_discard_unknown_outcome =>
+      'Отбросить запрос с неизвестным результатом?';
+
+  @override
+  String get release_core_gateway_queue_screen_remove_this_entry =>
+      'Удалить эту запись?';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_the_lost_turn_will_not_be_retried_waiting =>
+      'Потерянный ход не будет повторён. Ожидающие ходы теперь могут выполняться.';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_if_the_gateway_has_just_started_this_entry =>
+      'Если шлюз только что начал обработку этой записи, её удаление может остановить этот ход.';
+
+  @override
+  String get release_core_gateway_queue_screen_keep => 'Оставить';
+
+  @override
+  String get release_core_gateway_queue_screen_discard_and_resume =>
+      'Отбросить и возобновить';
+
+  @override
+  String get release_core_gateway_queue_screen_remove_entry => 'Удалить запись';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_lost_admission_resolved_it_was_not_resent =>
+      'Ситуация с потерянным подтверждением принятия разрешена; повторной отправки не было.';
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_acknowledged_removal =>
+      'Шлюз подтвердил удаление.';
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_queue => 'Очередь шлюза';
+
+  @override
+  String get release_core_gateway_queue_screen_refresh_queue =>
+      'Обновить очередь';
+
+  @override
+  String get release_core_gateway_queue_screen_queue_paused_unknown_outcome =>
+      'Очередь приостановлена: результат неизвестен';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_review_the_lost_admission_before_resuming_nothing_is =>
+      'Проверьте запрос с потерянным подтверждением принятия перед возобновлением. Повторная отправка не выполняется.';
+
+  @override
+  String get release_core_gateway_queue_screen_no_pending_admissions =>
+      'Нет запросов, ожидающих принятия';
+
+  @override
+  String get release_core_gateway_queue_screen_discard => 'Отбросить…';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_gateway_acknowledged_the_steering_request =>
+      'Шлюз подтвердил запрос на корректировку хода.';
+
+  @override
+  String get release_core_gateway_queue_screen_steer_running_turn =>
+      'Скорректировать текущий ход';
+
+  @override
+  String get release_core_gateway_queue_screen_remove => 'Удалить…';
+
+  @override
+  String get release_core_gateway_queue_screen_next_prompt =>
+      'Следующий промпт';
+
+  @override
+  String get release_core_gateway_queue_screen_edit_queued_prompt =>
+      'Изменить промпт в очереди';
+
+  @override
+  String get release_core_gateway_queue_screen_submit_to_gateway_queue =>
+      'Отправить в очередь шлюза';
+
+  @override
+  String get release_core_gateway_queue_screen_save_at_queue_end =>
+      'Сохранить в конце очереди';
+
+  @override
+  String get release_core_gateway_queue_screen_cancel_edit =>
+      'Отменить редактирование';
+
+  @override
+  String get release_core_git_review_pane_the_git_operation_did_not_complete =>
+      'Операция Git не была завершена.';
+
+  @override
+  String get release_core_git_review_pane_close_git_review =>
+      'Закрыть обзор Git';
+
+  @override
+  String get release_core_git_review_pane_pin_lane => 'Закрепить дорожку';
+
+  @override
+  String get release_core_git_review_pane_refresh_git_review =>
+      'Обновить обзор Git';
+
+  @override
+  String get release_core_git_review_pane_uncommitted =>
+      'Незакоммиченные изменения';
+
+  @override
+  String get release_core_git_review_pane_last_turn => 'Последний ход';
+
+  @override
+  String
+  get release_core_git_review_pane_branch_and_last_turn_views_are_read_only =>
+      'Обзоры ветки и последнего хода доступны только для чтения.';
+
+  @override
+  String get release_core_git_review_pane_mark_head_as_the_turn_baseline =>
+      'Отметить HEAD как исходное состояние хода';
+
+  @override
+  String get release_core_git_review_pane_stage_all => 'Добавить всё в индекс';
+
+  @override
+  String get release_core_git_review_pane_discard_every_uncommitted_change =>
+      'Отменить все незакоммиченные изменения?';
+
+  @override
+  String
+  get release_core_git_review_pane_tracked_files_return_to_head_and_untracked_files =>
+      'Отслеживаемые файлы вернутся к состоянию HEAD, а неотслеживаемые файлы в папке этой сессии будут удалены.';
+
+  @override
+  String get release_core_git_review_pane_discard => 'Отменить изменения';
+
+  @override
+  String get release_core_git_review_pane_discard_all => 'Отменить всё';
+
+  @override
+  String get release_core_git_review_pane_unstage => 'Убрать из индекса';
+
+  @override
+  String get release_core_git_review_pane_stage => 'Добавить в индекс';
+
+  @override
+  String get release_core_git_review_pane_discard_file =>
+      'Отменить изменения файла';
+
+  @override
+  String release_core_git_review_pane_discard_2(String path) {
+    return 'Отменить изменения в $path?';
+  }
+
+  @override
+  String
+  get release_core_git_review_pane_this_restores_the_committed_copy_or_removes_the =>
+      'Это восстановит закоммиченную копию или удалит неотслеживаемый файл.';
+
+  @override
+  String get release_core_git_review_pane_commit_message => 'Сообщение коммита';
+
+  @override
+  String get release_core_git_review_pane_nothing_in_the_diff_to_summarise =>
+      'В изменениях нечего обобщать.';
+
+  @override
+  String get release_core_git_review_pane_generate_message =>
+      'Сгенерировать сообщение';
+
+  @override
+  String get release_core_git_review_pane_commit => 'Создать коммит';
+
+  @override
+  String get release_core_git_review_pane_commit_and_push =>
+      'Создать коммит и отправить';
+
+  @override
+  String get release_core_git_review_pane_push => 'Отправить';
+
+  @override
+  String get release_core_git_review_pane_create_pull_request =>
+      'Создать запрос на слияние';
+
+  @override
+  String get release_core_git_review_pane_pull_request_ready =>
+      'Запрос на слияние готов';
+
+  @override
+  String get release_core_git_review_pane_ask_hermes_to_ship =>
+      'Попросить Hermes выпустить изменения';
+
+  @override
+  String get release_core_git_review_pane_gh_is_authenticated_on_this_gateway =>
+      'gh авторизован на этом шлюзе.';
+
+  @override
+  String
+  get release_core_git_review_pane_install_the_github_cli_gh_and_sign_in =>
+      'Установите GitHub CLI (gh) и войдите в аккаунт, чтобы открывать запросы на слияние';
+
+  @override
+  String get release_core_git_review_pane_worktrees => 'Рабочие деревья';
+
+  @override
+  String get release_core_git_review_pane_main => 'Основное';
+
+  @override
+  String release_core_git_review_pane_follow(String branch) {
+    return 'Следовать за веткой $branch?';
+  }
+
+  @override
+  String
+  get release_core_git_review_pane_the_session_working_directory_becomes_this_worktree_unless =>
+      'Рабочая папка сессии сменится на это рабочее дерево, если дорожка не закреплена.';
+
+  @override
+  String get release_core_git_review_pane_follow_2 => 'Следовать';
+
+  @override
+  String release_core_git_review_pane_remove(String branch) {
+    return 'Удалить $branch?';
+  }
+
+  @override
+  String get release_core_git_review_pane_the_worktree_directory_is_removed =>
+      'Папка рабочего дерева будет удалена.';
+
+  @override
+  String get release_core_git_review_pane_remove_2 => 'Удалить';
+
+  @override
+  String get release_core_git_review_pane_new_worktree_name =>
+      'Имя нового рабочего дерева';
+
+  @override
+  String get release_core_git_review_pane_new_branch => 'Новая ветка';
+
+  @override
+  String get release_core_git_review_pane_base_branch => 'Базовая ветка';
+
+  @override
+  String get release_core_git_review_pane_create_worktree =>
+      'Создать рабочее дерево';
+
+  @override
+  String get release_core_git_review_pane_existing_branch =>
+      'Существующая ветка';
+
+  @override
+  String get release_core_git_review_pane_convert_branch_to_worktree =>
+      'Преобразовать ветку в рабочее дерево';
+
+  @override
+  String get release_core_git_review_pane_switch_branch => 'Сменить ветку';
+
+  @override
+  String
+  get release_core_git_review_pane_this_gateway_does_not_support_that_git_operation =>
+      'Этот шлюз не поддерживает эту операцию Git.';
+
+  @override
+  String
+  get release_core_git_review_pane_git_needs_the_session_directory_on_the_local =>
+      'Для Git нужна папка сессии в локальной среде выполнения терминала.';
+
+  @override
+  String
+  get release_core_git_review_pane_the_gateway_refused_the_git_operation =>
+      'Шлюз отклонил операцию Git.';
+
+  @override
+  String
+  get release_core_git_review_pane_the_session_changed_refresh_and_try_again =>
+      'Сессия изменилась. Обновите и повторите попытку.';
+
+  @override
+  String
+  get release_core_git_review_pane_this_review_is_no_longer_the_selected_session =>
+      'Этот обзор больше не относится к выбранной сессии.';
+
+  @override
+  String
+  get release_core_git_review_pane_the_gateway_returned_an_unexpected_git_result =>
+      'Шлюз вернул неожиданный результат Git.';
+
+  @override
+  String
+  get release_core_git_review_pane_git_review_requires_the_gateway_transport =>
+      'Для обзора Git требуется транспорт шлюза.';
+
+  @override
+  String get release_core_client_held_queue_bar_resume => 'Возобновить';
+
+  @override
+  String get release_core_client_held_queue_bar_send_queued_prompt =>
+      'Отправить промпт из очереди';
+
+  @override
+  String get release_core_client_held_queue_bar_edit_unsent_prompt =>
+      'Изменить неотправленный промпт';
+
+  @override
+  String get release_core_client_held_queue_bar_remove_unsent_prompt =>
+      'Удалить неотправленный промпт';
+
+  @override
+  String get release_core_workspace_discovery_view_repository_discovery =>
+      'Поиск репозиториев';
+
+  @override
+  String get release_core_workspace_discovery_view_refresh_results =>
+      'Обновить результаты';
+
+  @override
+  String release_core_workspace_discovery_view_hide(String path) {
+    return 'Скрыть $path';
+  }
+
+  @override
+  String
+  get release_core_workspace_discovery_view_invalid_path_or_discovery_data_use_absolute_server =>
+      'Некорректный путь или данные поиска. Используйте абсолютные серверные пути без компонентов «.» и «..».';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_this_gateway_does_not_support_repository_discovery =>
+      'Этот шлюз не поддерживает поиск репозиториев.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_gateway_denied_access_to_repository_discovery =>
+      'Шлюз запретил доступ к поиску репозиториев.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_connection_changed_reopen_discovery_on_the_current =>
+      'Подключение изменилось. Откройте поиск заново на текущем шлюзе.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_displayed_settings_have_changed_refresh_before_trying =>
+      'Отображаемые настройки изменились. Обновите перед повторной попыткой.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_could_not_load_or_verify_discovery_settings_refresh =>
+      'Не удалось загрузить или проверить настройки поиска. Обновите, чтобы повторить попытку.';
+
+  @override
+  String release_core_workspace_discovery_view_repositories_shown_of(
+    int visible,
+    int total,
+  ) {
+    return 'Показано репозиториев: $visible из $total';
+  }
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_gateway_returned_no_repositories =>
+      'Шлюз не вернул ни одного репозитория.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_no_repositories_match_your_device_filters =>
+      'Ни один репозиторий не соответствует фильтрам на вашем устройстве.';
+
+  @override
+  String get release_core_workspace_discovery_view_gateway_scan_policy =>
+      'Политика сканирования шлюза';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_this_gateway_did_not_report_a_scan_policy =>
+      'Этот шлюз не сообщил политику сканирования.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_to_scan_folders_configure_repository_scanning_in_the =>
+      'Чтобы сканировать папки, настройте сканирование репозиториев в настройках Desktop профиля шлюза.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_results_can_include_cached_repositories_and_repositories_with =>
+      'Результаты могут включать кэшированные репозитории и репозитории с сессиями. Сканирование не гарантирует, что удалось проверить каждую папку.';
+
+  @override
+  String get release_core_workspace_discovery_view_scan_gateway_roots =>
+      'Сканировать корневые папки шлюза';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_filter_results_on_this_device =>
+      'Фильтровать результаты на этом устройстве';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_only_this_discovery_list_changes_not_the_gateway =>
+      'Меняется только этот список результатов, а не сканирование на шлюзе.';
+
+  @override
+  String get release_core_workspace_discovery_view_include_subtrees_empty_all =>
+      'Включить поддеревья (пусто = все)';
+
+  @override
+  String get release_core_workspace_discovery_view_exclude_subtrees =>
+      'Исключить поддеревья';
+
+  @override
+  String get release_core_workspace_discovery_view_apply_filters =>
+      'Применить фильтры';
+
+  @override
+  String release_core_workspace_discovery_view_hidden_repositories(int count) {
+    return 'Скрытые репозитории ($count)';
+  }
+
+  @override
+  String get release_core_workspace_discovery_view_undo_hide =>
+      'Отменить скрытие';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_one_absolute_server_path_per_line =>
+      'Один абсолютный серверный путь в строке';
+
+  @override
+  String get release_core_project_settings_view_project_settings =>
+      'Настройки проекта';
+
+  @override
+  String
+  get release_core_project_settings_view_the_gateway_did_not_confirm_the_selected_project =>
+      'Шлюз не подтвердил выбранный проект или изменение. Проверьте настройки перед повторной попыткой.';
+
+  @override
+  String
+  get release_core_project_settings_view_could_not_verify_these_settings_use_one_absolute =>
+      'Не удалось проверить эти настройки. Укажите по одному абсолютному пути к серверной папке в строке, без компонентов «.» и «..».';
+
+  @override
+  String get release_core_project_settings_view_set_active =>
+      'Сделать активным';
+
+  @override
+  String get release_core_project_settings_view_icon => 'Значок';
+
+  @override
+  String get release_core_project_settings_view_folder => 'Папка';
+
+  @override
+  String get release_core_project_settings_view_repository => 'Репозиторий';
+
+  @override
+  String get release_core_project_settings_view_rocket => 'Ракета';
+
+  @override
+  String get release_core_project_settings_view_star => 'Звезда';
+
+  @override
+  String get release_core_project_settings_view_book => 'Книга';
+
+  @override
+  String get release_core_project_settings_view_terminal => 'Терминал';
+
+  @override
+  String get release_core_project_settings_view_colour => 'Цвет';
+
+  @override
+  String get release_core_project_settings_view_primary_folder =>
+      'Основная папка';
+
+  @override
+  String get release_core_project_settings_view_server_folder_paths =>
+      'Пути к папкам на сервере';
+
+  @override
+  String
+  get release_core_project_settings_view_one_absolute_path_per_line_existing_folders_are =>
+      'Один абсолютный путь в строке. Существующие папки сохраняются.';
+
+  @override
+  String get release_core_project_settings_view_add_folders => 'Добавить папки';
+
+  @override
+  String release_core_project_settings_view_choose(String label) {
+    return 'Выбрать: $label';
+  }
+
+  @override
+  String
+  get release_core_prepared_image_recovery_wait_for_an_empty_draft_before_restoring =>
+      'Перед восстановлением дождитесь, пока черновик станет пустым.';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_no_unacknowledged_image_drafts_in_this_chat =>
+      'В этом чате нет черновиков изображений без подтверждения получения.';
+
+  @override
+  String get release_core_prepared_image_recovery_unacknowledged_image_drafts =>
+      'Черновики изображений без подтверждения получения';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_the_gateway_may_already_have_received_these_restore =>
+      'Возможно, шлюз уже получил их. Восстановите для проверки; ничего не будет отправлено.';
+
+  @override
+  String get release_core_prepared_image_recovery_image_draft =>
+      'Черновик изображения';
+
+  @override
+  String get release_core_prepared_image_recovery_discard_local_copy =>
+      'Удалить локальную копию';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_discard_this_local_image_draft =>
+      'Удалить этот локальный черновик изображения?';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_image_draft_recovery_is_unavailable =>
+      'Восстановление черновиков изображений недоступно.';
+
+  @override
+  String get release_core_prepared_image_recovery_recover_image_draft =>
+      'Восстановить черновик изображения…';
+
+  @override
+  String get release_core_session_search_mode_menu_could_not_save_search_mode =>
+      'Не удалось сохранить режим поиска.';
+
+  @override
+  String get release_core_projects_pane_discover_repositories =>
+      'Найти репозитории';
+
+  @override
+  String
+  get release_core_projects_pane_project_created_but_the_gateway_did_not_confirm =>
+      'Проект создан, но шлюз не подтвердил его идею.';
+
+  @override
+  String get release_core_projects_pane_project_idea_optional =>
+      'Идея проекта (необязательно)';
+
+  @override
+  String
+  get release_core_projects_pane_saved_in_the_project_description_not_a_file =>
+      'Сохраняется в описании проекта, а не в файле.';
+
+  @override
+  String get release_core_project_detail_screen_new_chat_in_this_lane =>
+      'Новый чат в этой дорожке';
+
+  @override
+  String get release_core_project_detail_screen_review_git =>
+      'Открыть обзор Git';
+
+  @override
+  String get release_core_more_pane_gateway_fleet => 'Парк шлюзов';
+
+  @override
+  String
+  get release_core_more_pane_connected_sessions_hermes_cloud_and_desktop_webapp =>
+      'Подключённые сессии, Hermes Cloud и веб-приложение Desktop';
+
+  @override
+  String get release_core_more_pane_use_dashboard_sign_in_for_a_named_profile =>
+      'Для именованного профиля используйте вход через панель управления. Этот устаревший API не может подтвердить, какому профилю принадлежит история чата.';
+
+  @override
+  String get release_core_more_pane_capabilities => 'Возможности';
+
+  @override
+  String
+  get release_core_more_pane_install_and_govern_skills_plugins_connectors_and_tool =>
+      'Установка и управление навыками, плагинами, коннекторами и средами выполнения инструментов';
+
+  @override
+  String get release_core_more_pane_browser_vault => 'Хранилище браузера';
+
+  @override
+  String
+  get release_core_more_pane_site_logins_addresses_cards_and_credential_sources =>
+      'Данные входа на сайты, адреса, карты и источники учётных данных';
+
+  @override
+  String get release_core_more_pane_agent_policy => 'Политика агента';
+
+  @override
+  String
+  get release_core_more_pane_approvals_checkpoints_browser_access_and_shared_metrics =>
+      'Разрешения, контрольные точки, доступ к браузеру и общие метрики';
+
+  @override
+  String get release_core_more_pane_remote_logs_health_maintenance_and_update =>
+      'Удалённые журналы, состояние, обслуживание и обновление';
+
+  @override
+  String get release_core_more_pane_schedules => 'Расписания';
+
+  @override
+  String get release_core_more_pane_all_profiles_blueprints_catch_up_and_stop =>
+      'Все профили, шаблоны, пропущенные запуски и остановка';
+
+  @override
+  String get release_core_more_pane_memory_graph => 'Граф памяти';
+
+  @override
+  String get release_core_more_pane_timeline_edits_and_memory_providers =>
+      'Хронология, правки и провайдеры памяти';
+
+  @override
+  String get release_core_more_pane_providers_and_routes =>
+      'Провайдеры и маршруты';
+
+  @override
+  String get release_core_more_pane_keys_endpoints_delegation_and_mixtures =>
+      'Ключи, конечные точки, делегирование и смеси моделей';
+
+  @override
+  String get release_core_more_pane_credits_and_plans => 'Кредиты и тарифы';
+
+  @override
+  String
+  get release_core_more_pane_consented_nous_billing_when_the_account_allows_it =>
+      'Управление оплатой Nous с вашего согласия, если это разрешено аккаунтом';
+
+  @override
+  String
+  get release_core_fleet_screen_this_gateway_does_not_offer_this_service =>
+      'Этот шлюз не предоставляет эту службу.';
+
+  @override
+  String
+  get release_core_fleet_screen_sign_in_or_permission_required_on_this_gateway =>
+      'На этом шлюзе требуется вход или разрешение.';
+
+  @override
+  String get release_core_fleet_screen_a_secure_gateway_address_is_required =>
+      'Требуется защищённый адрес шлюза.';
+
+  @override
+  String
+  get release_core_fleet_screen_the_owner_changed_refresh_before_continuing =>
+      'Владелец изменился. Обновите перед продолжением.';
+
+  @override
+  String
+  get release_core_fleet_screen_could_not_verify_the_operation_check_the_gateway =>
+      'Не удалось проверить выполнение операции. Проверьте шлюз и обновите.';
+
+  @override
+  String get release_core_fleet_screen_verified_ssh => 'Проверенный SSH';
+
+  @override
+  String
+  get release_core_fleet_screen_confirm_a_host_key_inspect_a_remote_service =>
+      'Подтвердить ключ хоста, проверить удалённую службу или открыть её оболочку';
+
+  @override
+  String get release_core_fleet_screen_cloud_and_desktop_webapp =>
+      'Облако и веб-приложение Desktop';
+
+  @override
+  String get release_core_fleet_screen_register_an_existing_gateway_or_webapp =>
+      'Зарегистрировать существующий шлюз или веб-приложение';
+
+  @override
+  String
+  get release_core_fleet_screen_sign_in_to_its_address_nothing_is_hosted =>
+      'Войдите по его адресу. На этом устройстве ничего не размещается.';
+
+  @override
+  String get release_core_fleet_screen_fleet_updates =>
+      'Обновления парка шлюзов';
+
+  @override
+  String get release_core_fleet_screen_refresh_roster =>
+      'Обновить список шлюзов';
+
+  @override
+  String release_core_fleet_screen_disconnect(String gateway) {
+    return 'Отключить $gateway';
+  }
+
+  @override
+  String get release_core_fleet_screen_open_this_gateway_on_launch =>
+      'Открывать этот шлюз при запуске';
+
+  @override
+  String
+  get release_core_fleet_screen_primary_for_ares_does_not_change_the_last =>
+      'Основной шлюз для Ares; не меняет последний использованный шлюз.';
+
+  @override
+  String get release_core_fleet_screen_reconnect_in_fleet_on_launch =>
+      'Переподключать в парке шлюзов при запуске';
+
+  @override
+  String get release_core_fleet_screen_no_sessions_for_this_profile =>
+      'У этого профиля нет сессий.';
+
+  @override
+  String get release_core_fleet_screen_more_sessions => 'Другие сессии';
+
+  @override
+  String get release_core_fleet_screen_this_gateway_was_disconnected =>
+      'Этот шлюз был отключён.';
+
+  @override
+  String
+  get release_core_fleet_screen_some_conversation_data_could_not_be_loaded =>
+      'Не удалось загрузить часть данных переписки.';
+
+  @override
+  String get release_core_fleet_screen_message_this_session =>
+      'Написать в эту сессию';
+
+  @override
+  String get release_core_fleet_screen_send_to_this_session =>
+      'Отправить в эту сессию';
+
+  @override
+  String get release_core_fleet_updates_screen_update_these_remote_gateways =>
+      'Обновить эти удалённые шлюзы?';
+
+  @override
+  String
+  release_core_fleet_updates_screen_this_can_restart_the_backend_and_interrupt_other(
+    String gateways,
+  ) {
+    return 'Это может перезапустить серверную часть и прервать работу других пользователей. Ares не будет обновлён.\n\n$gateways';
+  }
+
+  @override
+  String get release_core_fleet_updates_screen_update_listed_gateways =>
+      'Обновить перечисленные шлюзы';
+
+  @override
+  String
+  get release_core_fleet_updates_screen_checks_connected_gateways_cloud_is_platform_managed_entries =>
+      'Проверяются подключённые шлюзы. Облако управляется платформой; записи без подтверждённого происхождения регистрации исключены.';
+
+  @override
+  String get release_core_fleet_updates_screen_check_connected_gateways =>
+      'Проверить подключённые шлюзы';
+
+  @override
+  String get release_core_fleet_updates_screen_read_update_receipt =>
+      'Прочитать отчёт об обновлении';
+
+  @override
+  String get release_core_fleet_updates_screen_review_eligible_updates =>
+      'Проверить доступные для установки обновления';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_account_changed_reopen_this_page =>
+      'Аккаунт изменился. Откройте эту страницу заново.';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_set_the_webapp_s_primary_gateway =>
+      'Назначить основной шлюз веб-приложения?';
+
+  @override
+  String
+  release_core_fleet_webapp_screen_this_changes_the_shared_registry_not_the_last(
+    String webapp,
+    String gateway,
+    String id,
+  ) {
+    return '$webapp → $gateway ($id)\nЭто меняет общий реестр, а не последний использованный шлюз.';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_set_primary => 'Сделать основным';
+
+  @override
+  String get release_core_fleet_webapp_screen_serving_profile =>
+      'Обслуживающий профиль';
+
+  @override
+  String get release_core_fleet_webapp_screen_hermes_cloud => 'Hermes Cloud';
+
+  @override
+  String get release_core_fleet_webapp_screen_discover_signed_in_agents =>
+      'Найти агентов, вошедших в аккаунт';
+
+  @override
+  String release_core_fleet_webapp_screen_organisation(String organisation) {
+    return 'Организация: $organisation';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_no_agents_available =>
+      'Нет доступных агентов.';
+
+  @override
+  String get release_core_fleet_webapp_screen_existing_desktop_webapp =>
+      'Существующее веб-приложение Desktop';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_check_gateway_and_web_access_status =>
+      'Проверить состояние шлюза и веб-доступа';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_these_settings_belong_to_the_machine_serving_this =>
+      'Эти настройки относятся к компьютеру, обслуживающему это веб-приложение. Публикация и перезапуски не выполняются удалённо.';
+
+  @override
+  String get release_core_fleet_webapp_screen_read_webapp_gateway_registry =>
+      'Прочитать реестр шлюзов веб-приложения';
+
+  @override
+  String get release_core_fleet_webapp_screen_last_used =>
+      'Последний использованный';
+
+  @override
+  String get release_core_fleet_webapp_screen_primary => 'Основной';
+
+  @override
+  String release_core_fleet_webapp_screen_set_primary_2(String gateway) {
+    return 'Сделать основным: $gateway';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_read_shared_display_preferences =>
+      'Прочитать общие настройки отображения';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_chat_text_direction_on_this_webapp_and_desktop =>
+      'Направление текста чата в этом веб-приложении и Desktop';
+
+  @override
+  String release_core_schedule_desk_screen_created_on(
+    String job,
+    String profile,
+  ) {
+    return 'Задание $job создано в профиле $profile.';
+  }
+
+  @override
+  String
+  get release_core_schedule_desk_screen_the_list_covers_every_profile_on_this_gateway =>
+      'Список охватывает все профили этого шлюза. Команды остановки, приостановки, обработки пропущенных запусков, доставки и шаблонов отправляются профилю, которому принадлежит задание.';
+
+  @override
+  String get release_core_schedule_desk_screen_a_run_is_in_progress =>
+      'Выполняется запуск';
+
+  @override
+  String get release_core_schedule_desk_screen_no_current_run =>
+      'Нет текущего запуска';
+
+  @override
+  String release_core_schedule_desk_screen_stop_requested_for(String job) {
+    return 'Запрошена остановка задания $job.';
+  }
+
+  @override
+  String release_core_schedule_desk_screen_no_run_was_in_flight_for(
+    String job,
+  ) {
+    return 'У задания $job не было выполняющегося запуска.';
+  }
+
+  @override
+  String get release_core_schedule_desk_screen_stop_current_run =>
+      'Остановить текущий запуск';
+
+  @override
+  String get release_core_schedule_desk_screen_pause_future_runs =>
+      'Приостановить будущие запуски';
+
+  @override
+  String get release_core_schedule_desk_screen_resume_future_runs =>
+      'Возобновить будущие запуски';
+
+  @override
+  String get release_core_schedule_desk_screen_catch_up_default =>
+      'Обработка пропущенных запусков по умолчанию';
+
+  @override
+  String get release_core_schedule_desk_screen_run_one_missed =>
+      'Выполнить один пропущенный запуск';
+
+  @override
+  String get release_core_schedule_desk_screen_skip_missed =>
+      'Пропускать пропущенные запуски';
+
+  @override
+  String get release_core_schedule_desk_screen_blueprint_recipes =>
+      'Готовые шаблоны';
+
+  @override
+  String get release_core_schedule_desk_screen_profile_for_the_new_job =>
+      'Профиль для нового задания';
+
+  @override
+  String release_core_schedule_desk_screen_create(String blueprint) {
+    return 'Создать: $blueprint';
+  }
+
+  @override
+  String get release_core_schedule_desk_screen_loading_delivery_targets =>
+      'Загрузка получателей';
+
+  @override
+  String release_core_schedule_desk_screen_no_home_channel(String target) {
+    return '$target (нет основного канала)';
+  }
+
+  @override
+  String release_core_memory_graph_screen_edit(String label) {
+    return 'Изменить: $label';
+  }
+
+  @override
+  String get release_core_memory_graph_screen_content => 'Содержимое';
+
+  @override
+  String get release_core_memory_graph_screen_archive_skill =>
+      'Архивировать навык';
+
+  @override
+  String get release_core_memory_graph_screen_delete_memory =>
+      'Удалить запись памяти';
+
+  @override
+  String release_core_memory_graph_screen_archive_on_it_can_be_restored_on_the(
+    String label,
+    String profile,
+  ) {
+    return 'Архивировать $label в профиле $profile? Восстановить можно на хосте с помощью Куратора.';
+  }
+
+  @override
+  String release_core_memory_graph_screen_delete_from_this_removes_that_memory(
+    String label,
+    String profile,
+  ) {
+    return 'Удалить $label из профиля $profile? Эта запись памяти будет удалена.';
+  }
+
+  @override
+  String get release_core_memory_graph_screen_filter => 'Фильтр';
+
+  @override
+  String get release_core_memory_graph_screen_timeline => 'Хронология';
+
+  @override
+  String get release_core_memory_graph_screen_play_timeline =>
+      'Воспроизвести хронологию';
+
+  @override
+  String get release_core_memory_graph_screen_layout_code => 'Код раскладки';
+
+  @override
+  String get release_core_memory_graph_screen_external_memory_providers =>
+      'Внешние провайдеры памяти';
+
+  @override
+  String
+  get release_core_memory_graph_screen_a_value_is_stored_leave_blank_to_keep =>
+      'Значение сохранено. Оставьте поле пустым, чтобы его сохранить.';
+
+  @override
+  String get release_core_memory_graph_screen_save_provider =>
+      'Сохранить провайдера';
+
+  @override
+  String release_core_workspace_profiles_screen_applies_to(String profile) {
+    return 'Применяется к: $profile';
+  }
+
+  @override
+  String get release_core_workspace_profiles_screen_choose_another_profile =>
+      'Выбрать другой профиль';
+
+  @override
+  String
+  get release_core_workspace_profiles_screen_could_not_verify_the_selected_profile_on_this =>
+      'Не удалось проверить выбранный профиль на этом шлюзе.';
+
+  @override
+  String get release_core_workspace_profiles_screen_create_profile =>
+      'Создать профиль';
+
+  @override
+  String get release_core_workspace_profiles_screen_new_profile_id =>
+      'ID нового профиля';
+
+  @override
+  String get release_core_assets_screen_links => 'Ссылки';
+
+  @override
+  String get release_core_workspace_picker_no_matching_items =>
+      'Совпадений не найдено.';
+
+  @override
+  String get release_core_workspace_picker_save_layout => 'Сохранить раскладку';
+
+  @override
+  String get release_core_workspace_picker_layout_name => 'Название раскладки';
+
+  @override
+  String
+  get release_core_workspace_popout_this_chat_already_has_a_pop_out_window =>
+      'Для этого чата уже открыто отдельное окно.';
+
+  @override
+  String
+  get release_core_workspace_popout_could_not_open_this_saved_chat_check_the =>
+      'Не удалось открыть этот сохранённый чат. Проверьте подключение и повторите попытку.';
+
+  @override
+  String
+  get release_core_popout_bootstrap_use_the_main_window_to_change_your_connection =>
+      'Измените подключение в главном окне.';
+
+  @override
+  String get release_core_guarded_save_refused =>
+      'Шлюз не может сохранить этот файл';
+
+  @override
+  String get release_core_guarded_save_unavailable =>
+      'Сохранение с проверкой версии недоступно на этом шлюзе';
+
+  @override
+  String release_core_git_files_changed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Изменено файлов за этот ход: $count',
+      one: 'За этот ход изменён 1 файл',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String release_core_git_entries_omitted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Записей Git, пропущенных из соображений безопасности: $count.',
+      one: '1 запись Git пропущена, так как её небезопасно показывать.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get release_core_git_staged => 'В индексе';
+
+  @override
+  String get release_core_session_sort_recent => 'Недавняя активность';
+
+  @override
+  String get release_core_session_sort_created => 'Сначала недавно созданные';
+
+  @override
+  String get release_core_session_sort_status => 'Сначала выполняющиеся';
+
+  @override
+  String get release_core_session_sort_tokens => 'Больше всего токенов';
+
+  @override
+  String get release_core_session_sort_cost => 'Наибольшая стоимость';
+
+  @override
+  String get release_core_session_group_standard => 'Группировка по умолчанию';
+
+  @override
+  String get release_core_session_group_status => 'Группировать по статусу';
+
+  @override
+  String get release_core_session_group_project => 'Группировать по проекту';
+
+  @override
+  String release_core_session_tokens(int count) {
+    return 'Токенов: $count';
+  }
+
+  @override
+  String release_core_search_gateway_mode(String mode) {
+    return '$mode (шлюз)';
+  }
+
+  @override
+  String release_core_search_mode_tooltip(String label, String mode) {
+    return '$label: $mode';
+  }
+
+  @override
+  String get release_core_image_recovery_new_turn =>
+      'Отправка создаст новый ход';
+
+  @override
+  String release_core_image_recovery_metadata(int count, String date) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Изображений: $count · $date',
+      one: '1 изображение · $date',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String release_core_discovery_scanning(String state) {
+    return 'Сканирование: $state';
+  }
+
+  @override
+  String get release_core_discovery_enabled => 'включено';
+
+  @override
+  String get release_core_discovery_disabled => 'отключено';
+
+  @override
+  String get release_core_discovery_none => 'нет';
+
+  @override
+  String release_core_discovery_roots(String paths) {
+    return 'Корневые папки сканирования: $paths';
+  }
+
+  @override
+  String release_core_discovery_excluded(String paths) {
+    return 'Исключённые поддеревья: $paths';
+  }
+
+  @override
+  String release_core_discovery_repository_sessions(String path, int count) {
+    return '$path\nСессий: $count';
+  }
+
+  @override
+  String get release_core_projects_local_only =>
+      'Этот шлюз Hermes старее серверных проектов, поэтому чаты группируются только на этом устройстве. Обновите Hermes, чтобы использовать одни и те же проекты на всех устройствах.';
+
+  @override
+  String get release_core_fleet_no_address => 'Адрес шлюза ещё не задан';
+
+  @override
+  String release_core_fleet_diagnostics(String version, String access) {
+    return 'Шлюз $version · $access';
+  }
+
+  @override
+  String get release_core_schedule_builtin => 'встроенный';
+
+  @override
+  String get release_core_memory_gateway_profile => 'шлюз';
+
+  @override
+  String release_core_memory_profile_summary(String profile, String gateway) {
+    return 'Профиль $profile на шлюзе $gateway. Код для обмена хранит только масштаб, время и фильтры.';
+  }
+
+  @override
+  String release_core_memory_layers_summary(
+    int memoryBytes,
+    int userBytes,
+    String provider,
+  ) {
+    return 'Встроенная память: $memoryBytes байт, пользовательская: $userBytes байт. Активный провайдер: $provider.';
+  }
+
+  @override
+  String get release_core_memory_kind_all => 'Все';
+
+  @override
+  String get release_core_memory_kind_skill => 'Навыки';
+
+  @override
+  String get release_core_memory_kind_memory => 'Память';
+
+  @override
+  String get release_core_workspace_failure_stale => 'подключение изменилось';
+
+  @override
+  String get release_core_workspace_failure_unbound =>
+      'нет подтверждённой рабочей папки';
+
+  @override
+  String get release_core_workspace_failure_denied => 'доступ запрещён';
+
+  @override
+  String get release_core_workspace_failure_ineligible =>
+      'операция не разрешена для этого файла';
+
+  @override
+  String get release_core_workspace_failure_unsupported =>
+      'не поддерживается этим шлюзом';
+
+  @override
+  String get release_core_workspace_failure_mismatch =>
+      'удалённое состояние изменилось';
+
+  @override
+  String get release_core_workspace_failure_invalid =>
+      'некорректный ответ шлюза';
+
+  @override
+  String get release_core_workspace_failure_insecure =>
+      'требуется защищённое подключение';
+
+  @override
+  String get release_core_workspace_failure_unavailable => 'шлюз недоступен';
+
+  @override
+  String get release_core_queue_state_queued => 'В очереди';
+
+  @override
+  String get release_core_queue_state_started => 'Запущено';
+
+  @override
+  String get release_core_queue_state_unknown => 'Результат неизвестен';
+
+  @override
+  String get release_core_unknown_state => 'Неизвестно';
+
+  @override
+  String get release_core_fleet_state_idle => 'Не в сети';
+
+  @override
+  String get release_core_fleet_state_connected => 'Подключено';
+
+  @override
+  String get release_core_fleet_state_reconnecting => 'Переподключение…';
+
+  @override
+  String get release_core_fleet_state_sessionExpired => 'Выполнен выход';
+
+  @override
+  String get release_core_fleet_state_failed => 'Не удалось подключиться';
+
+  @override
+  String release_core_workspace_operation_failed(String reason) {
+    return 'Не удалось подтвердить выполнение операции на шлюзе: $reason.';
+  }
+
+  @override
+  String get release_core_workspace_invalid_data =>
+      'Не удалось проверить данные или ввод. Проверьте их и повторите попытку.';
+
+  @override
+  String
+  get release_core_parallel_workspace_layout_changed_in_this_window_but_could_not =>
+      'Раскладка изменена в этом окне, но сохранить её не удалось.';
+
+  @override
+  String get release_core_parallel_workspace_first_pane => 'Первая панель';
+
+  @override
+  String get release_core_parallel_workspace_second_pane => 'Вторая панель';
+
+  @override
+  String get release_core_parallel_workspace_unavailable_page =>
+      'Страница недоступна';
+
+  @override
+  String release_core_parallel_workspace_close_a_tab_first_maximum(
+    String maximum,
+  ) {
+    return 'Сначала закройте вкладку (максимум: $maximum).';
+  }
+
+  @override
+  String get release_core_parallel_workspace_dock_beside_current_pane =>
+      'Закрепить рядом с текущей панелью';
+
+  @override
+  String get release_core_parallel_workspace_add_chat => 'Добавить чат';
+
+  @override
+  String
+  get release_core_parallel_workspace_action_failed_check_the_connection_and_try_again =>
+      'Не удалось выполнить действие. Проверьте подключение и повторите попытку.';
+
+  @override
+  String
+  get release_core_parallel_workspace_close_a_tab_before_reopening_another =>
+      'Закройте вкладку, прежде чем открывать другую заново.';
+
+  @override
+  String release_core_parallel_workspace_replace_layout(String name) {
+    return 'Заменить раскладку «$name»?';
+  }
+
+  @override
+  String
+  get release_core_parallel_workspace_layout_limit_reached_replace_an_existing_layout =>
+      'Достигнут лимит раскладок. Замените одну из существующих.';
+
+  @override
+  String get release_core_parallel_workspace_restore_layout =>
+      'Восстановить раскладку';
+
+  @override
+  String get release_core_parallel_workspace_workspace_options =>
+      'Параметры рабочей области';
+
+  @override
+  String get release_core_parallel_workspace_dock_another_pane =>
+      'Закрепить ещё одну панель';
+
+  @override
+  String get release_core_parallel_workspace_swap_panes =>
+      'Поменять панели местами';
+
+  @override
+  String get release_core_parallel_workspace_undock_second_pane =>
+      'Открепить вторую панель';
+
+  @override
+  String get release_core_parallel_workspace_arrange_side_by_side =>
+      'Расположить рядом';
+
+  @override
+  String get release_core_parallel_workspace_arrange_top_to_bottom =>
+      'Расположить сверху вниз';
+
+  @override
+  String release_core_parallel_workspace_change_split_size(String percent) {
+    return 'Изменить пропорции разделения ($percent%)';
+  }
+
+  @override
+  String get release_core_parallel_workspace_focus_pane_full_screen =>
+      'Развернуть панель на весь экран';
+
+  @override
+  String get release_core_parallel_workspace_open_chat_in_new_window =>
+      'Открыть чат в новом окне';
+
+  @override
+  String get release_core_parallel_workspace_hide_pane_keep_running =>
+      'Скрыть панель (продолжить работу)';
+
+  @override
+  String get release_core_parallel_workspace_previous_tab =>
+      'Предыдущая вкладка';
+
+  @override
+  String get release_core_parallel_workspace_next_tab => 'Следующая вкладка';
+
+  @override
+  String get release_core_parallel_workspace_move_tab_left =>
+      'Переместить вкладку влево';
+
+  @override
+  String get release_core_parallel_workspace_move_tab_right =>
+      'Переместить вкладку вправо';
+
+  @override
+  String get release_core_parallel_workspace_reload_current_tab =>
+      'Перезагрузить текущую вкладку';
+
+  @override
+  String get release_core_parallel_workspace_close_tab => 'Закрыть вкладку';
+
+  @override
+  String get release_core_parallel_workspace_close_other_tabs =>
+      'Закрыть другие вкладки';
+
+  @override
+  String get release_core_parallel_workspace_close_tabs_to_the_right =>
+      'Закрыть вкладки справа';
+
+  @override
+  String get release_core_parallel_workspace_close_all_tabs =>
+      'Закрыть все вкладки';
+
+  @override
+  String get release_core_parallel_workspace_reopen_closed_tab =>
+      'Открыть закрытую вкладку';
+
+  @override
+  String get release_core_parallel_workspace_save_named_layout =>
+      'Сохранить именованную раскладку';
+
+  @override
+  String get release_core_parallel_workspace_restore_named_layout =>
+      'Восстановить именованную раскладку';
+
+  @override
+  String get release_core_parallel_workspace_refresh_chat_list =>
+      'Обновить список чатов';
+
+  @override
+  String get release_core_parallel_workspace_workspace_tools =>
+      'Инструменты рабочей области';
+
+  @override
+  String get release_core_parallel_workspace_choose_a_chat_for_this_pane =>
+      'Выберите чат для этой панели';
+
+  @override
+  String release_core_parallel_workspace_choose_chat_for(String pane) {
+    return 'Выбрать чат для панели «$pane»';
+  }
+
+  @override
+  String get release_core_parallel_workspace_add_a_chat_to_start_a_workspace =>
+      'Добавьте чат, чтобы создать рабочую область.';
+
+  @override
+  String get release_core_parallel_workspace_select_a_tab_to_show_its_pane =>
+      'Выберите вкладку, чтобы показать её панель.';
+
+  @override
+  String get release_core_parallel_workspace_parallel_workspace =>
+      'Параллельная рабочая область';
+
+  @override
+  String get release_core_parallel_workspace_show_workspace =>
+      'Показать рабочую область';
+
+  @override
+  String get release_core_parallel_workspace_could_not_load_chats_retry =>
+      'Не удалось загрузить чаты. Повторить';
+
+  @override
+  String release_core_parallel_workspace_close(String pane) {
+    return 'Закрыть панель «$pane»';
+  }
+
+  @override
+  String release_core_parallel_workspace_switch_pane(String pane) {
+    return 'Переключить панель: $pane';
+  }
+
+  @override
+  String get release_core_workspace_registry_session_id_copied =>
+      'ID сессии скопирован.';
+
+  @override
+  String get release_core_workspace_registry_chat_details => 'Сведения о чате';
+
+  @override
+  String get release_core_workspace_registry_server_default =>
+      'По умолчанию на сервере';
+
+  @override
+  String get release_core_workspace_registry_session_id => 'ID сессии';
+
+  @override
+  String get release_core_workspace_registry_title => 'Название';
+
+  @override
+  String get release_core_workspace_label_terminals => 'Терминалы';
+
+  @override
+  String get release_core_workspace_label_copy_id => 'Скопировать ID сессии';
+
+  @override
+  String get release_core_workspace_label_contributions => 'Дополнения';
+
+  @override
+  String get release_core_workspace_owner_inactive =>
+      'Владелец этой рабочей области больше не активен.';
+
+  @override
+  String get release_core_workspace_select_chat => 'Сначала выберите чат.';
+
+  @override
+  String get release_core_workspace_chat_unavailable =>
+      'Этот чат недоступен для этого подключения.';
+
+  @override
+  String get release_core_workspace_page_unavailable =>
+      'Эта страница недоступна для этого подключения.';
+
+  @override
+  String release_core_client_queue_count(int count) {
+    return 'В очереди: $count';
+  }
+
+  @override
+  String release_core_client_queue_paused_count(int count) {
+    return 'В очереди: $count — приостановлено';
+  }
+
+  @override
+  String release_core_git_diff_truncated(String diff) {
+    return '$diff\n… обрезано';
+  }
+
+  @override
+  String get release_core_search_no_models =>
+      'Hermes не вернул ни одной настроенной модели, доступной для выбора.';
+
+  @override
+  String get release_core_chat_archive_unavailable =>
+      'Архивация чата недоступна.';
+
+  @override
+  String get release_core_chat_pin_unconfirmed =>
+      'Состояние закрепления не подтверждено.';
+
+  @override
+  String get release_core_chat_archive_unconfirmed =>
+      'Состояние архивации не подтверждено.';
+
+  @override
+  String get release_core_chat_archive_history_unavailable =>
+      'Архивная история недоступна';
+
+  @override
+  String get release_core_quick_chat_history_unavailable =>
+      'История быстрых чатов недоступна';
+
+  @override
+  String get release_core_chat_project_ownership_unavailable =>
+      'Сведения о принадлежности проекта недоступны';
+
+  @override
+  String get release_core_chat_unknown_project => 'Неизвестный проект';
+
+  @override
+  String get release_core_chat_local_search_fallback =>
+      'Поиск по сообщениям недоступен. Показаны локальные совпадения.';
+
+  @override
+  String release_core_fleet_update_eligible(String version) {
+    return 'Подходит для обновления · $version';
+  }
+
+  @override
+  String get release_core_fleet_update_state_1 => 'Пропущено: та же установка';
+
+  @override
+  String get release_core_fleet_update_state_2 => 'Не проверено';
+
+  @override
+  String get release_core_fleet_update_state_3 =>
+      'Пропущено: управляется облаком';
+
+  @override
+  String get release_core_fleet_update_state_4 =>
+      'Пропущено: не зарегистрирован как прямой шлюз';
+
+  @override
+  String get release_core_fleet_update_state_5 =>
+      'Пропущено: отключён или занят';
+
+  @override
+  String get release_core_fleet_update_state_6 => 'Нет подходящего обновления';
+
+  @override
+  String get release_core_fleet_update_state_7 =>
+      'Не удалось проверить возможность обновления';
+
+  @override
+  String get release_core_fleet_update_state_8 =>
+      'Пропущено: данные устарели, шлюз занят или запрос уже отправлен';
+
+  @override
+  String get release_core_fleet_update_state_9 => 'Отправка запроса';
+
+  @override
+  String get release_core_fleet_update_state_10 => 'Принято; отчёт недоступен';
+
+  @override
+  String get release_core_fleet_update_state_11 => 'Принято; ожидание отчёта';
+
+  @override
+  String get release_core_fleet_update_state_12 =>
+      'Пропущено: в этой установке выполняется чат';
+
+  @override
+  String get release_core_fleet_update_state_13 =>
+      'Не подтверждено; не отправлять повторно автоматически';
+
+  @override
+  String get release_core_fleet_update_state_14 =>
+      'Подключитесь заново, чтобы проверить отчёт';
+
+  @override
+  String get release_core_fleet_update_state_15 => 'Отчёт недоступен';
+
+  @override
+  String get release_core_fleet_update_state_16 =>
+      'Ожидание соответствующего отчёта';
+
+  @override
+  String get release_core_fleet_update_state_17 =>
+      'Обновлено; требуются дальнейшие действия';
+
+  @override
+  String get release_core_fleet_update_state_19 => 'Обновлено частично';
+
+  @override
+  String get release_core_fleet_update_state_20 => 'Ошибка обновления';
+
+  @override
+  String get release_core_fleet_update_state_21 => 'Не подтверждено';
+
+  @override
+  String get release_core_cloud_status_ready => 'Готово';
+
+  @override
+  String get release_core_cloud_status_online => 'В сети';
+
+  @override
+  String get release_core_cloud_status_stopped => 'Остановлено';
+
+  @override
+  String get release_core_cloud_status_error => 'Ошибка';
+
+  @override
+  String get ng_release_more_contributions_subtitle =>
+      'Проверенные карточки ответов для этого подключения';
+
+  @override
+  String get ng_release_more_gateway_fleet => 'Парк шлюзов';
+
+  @override
+  String get ng_release_more_memory_graph => 'Граф памяти';
+
+  @override
+  String get ng_release_more_memory_graph_subtitle =>
+      'Хронология, правки и провайдеры памяти';
+
+  @override
+  String get ng_release_more_capabilities_subtitle =>
+      'Установка и управление навыками, плагинами, коннекторами и средами выполнения инструментов';
+
+  @override
+  String get ng_release_more_browser_vault => 'Хранилище браузера';
+
+  @override
+  String get ng_release_more_browser_vault_subtitle =>
+      'Данные входа на сайты, адреса, карты и источники учётных данных';
+
+  @override
+  String get ng_release_more_agent_policy => 'Политика агента';
+
+  @override
+  String get ng_release_more_agent_policy_subtitle =>
+      'Разрешения, контрольные точки, доступ к браузеру и общие метрики';
+
+  @override
+  String get ng_release_more_schedules => 'Расписания';
+
+  @override
+  String get ng_release_more_schedules_subtitle =>
+      'Все профили, шаблоны, пропущенные запуски и остановка';
+
+  @override
+  String get ng_release_more_host_subtitle =>
+      'Удалённые журналы, состояние, обслуживание и обновление';
+
+  @override
+  String get ng_release_more_providers_routes => 'Провайдеры и маршруты';
+
+  @override
+  String get ng_release_more_providers_routes_subtitle =>
+      'Ключи, конечные точки, делегирование и смеси моделей';
+
+  @override
+  String get ng_release_more_credits_plans => 'Кредиты и тарифы';
+
+  @override
+  String get ng_release_more_credits_plans_subtitle =>
+      'Управление оплатой Nous с вашего согласия, если это разрешено аккаунтом';
+
+  @override
+  String get ng_release_sign_in_or => 'или';
+
+  @override
+  String ng_release_deployment_sign_in_hint(String message) {
+    return '$message На следующем шаге вы всё ещё можете войти с токеном сессии развёртывания.';
+  }
+
+  @override
+  String get ng_release_message_search_unavailable =>
+      'Поиск по сообщениям недоступен. Показаны локальные совпадения.';
+
+  @override
+  String ng_release_insights_days(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days дн.',
+      one: '$days дн.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_release_signed_in_you => 'вы';
+
+  @override
+  String get release_chat_unsent_prompt_gone =>
+      'Этого неотправленного промпта больше нет в очереди.';
+
+  @override
+  String ng_release_attachment_not_attached(String name) {
+    return 'Шлюз не прикрепил $name.';
+  }
+
+  @override
+  String get ng_release_gateway_not_connected =>
+      'Подключение к шлюзу ещё не установлено.';
+
+  @override
+  String get ng_release_gateway_unreachable =>
+      'Не удалось связаться со шлюзом.';
+
+  @override
+  String get ng_release_projects_scope_changed =>
+      'Область проектов больше не выбрана';
+
+  @override
+  String get ng_release_missing_providers => 'Отсутствующие провайдеры';
+
+  @override
+  String get ng_release_missing_tasks => 'Отсутствующие задачи';
+
+  @override
+  String ng_release_age_minutes(int count) {
+    return '$count мин';
+  }
+
+  @override
+  String ng_release_age_hours(int count) {
+    return '$count ч';
+  }
+
+  @override
+  String ng_release_age_days(int count) {
+    return '$count дн';
+  }
+
+  @override
+  String ng_release_age_weeks(int count) {
+    return '$count нед';
+  }
+
+  @override
+  String ng_release_age_years(int count) {
+    return '$count г';
+  }
+
+  @override
+  String ng_release_compact_billions(String count) {
+    return '$count млрд';
+  }
+
+  @override
+  String ng_release_compact_millions(String count) {
+    return '$count млн';
+  }
+
+  @override
+  String ng_release_compact_thousands(String count) {
+    return '$count тыс.';
+  }
+
+  @override
+  String ng_release_token_thousands(String count) {
+    return '$count тыс.';
+  }
+
+  @override
+  String ng_release_elapsed_minutes_seconds(int minutes, int seconds) {
+    return '$minutes мин $seconds с';
+  }
+
+  @override
+  String ng_release_elapsed_seconds(int seconds) {
+    return '$seconds с';
+  }
+
+  @override
+  String get ng_release_notification_foreground => 'Ares был открыт на экране';
+
+  @override
+  String get ng_release_notification_stopped => 'ход был остановлен';
+
+  @override
+  String get ng_release_more_parallel_workspace =>
+      'Параллельная рабочая область';
+
+  @override
+  String get ng_release_more_parallel_workspace_subtitle =>
+      'Открывайте несколько чатов во вкладках или рядом друг с другом.';
+
+  @override
+  String get release_chat_unknown_model => 'неизвестно';
+
+  @override
+  String release_chat_profile_default(String model) {
+    return 'По умолчанию для профиля: $model';
+  }
+
+  @override
+  String release_chat_profile_default_provider(String model, String provider) {
+    return 'По умолчанию для профиля: $model • $provider';
+  }
+
+  @override
+  String get release_chat_choose_provider =>
+      'Эта модель доступна у нескольких провайдеров. Выберите провайдера, чтобы продолжить.';
+
+  @override
+  String get release_chat_slash_needs_gateway =>
+      'Для слеш-команд нужен шлюз Desktop';
+
+  @override
+  String get release_chat_recovering_without_resending =>
+      'Восстановление без повторной отправки';
+
+  @override
+  String get release_chat_live_request_unreachable =>
+      'Извините, не удалось связаться с Hermes для выполнения этого запроса.';
+
+  @override
+  String release_chat_live_working(String tool) {
+    return 'Hermes работает: $tool. Ещё не завершено.';
+  }
+
+  @override
+  String get release_chat_live_finished_without_spoken_result =>
+      'Hermes завершил этот запрос без озвученного результата.';
+
+  @override
+  String get release_chat_reply_language_unavailable =>
+      'Выбранный язык ответа недоступен';
+
+  @override
+  String get release_chat_reply_voice_unavailable =>
+      'Выбранный голос ответа недоступен';
+
+  @override
+  String get release_chat_reply_voice_configuration_unavailable =>
+      'Настройка голоса ответа недоступна';
+
+  @override
+  String get release_chat_notification_review_action =>
+      'Откройте чат, чтобы проверить запрошенное действие.';
+
+  @override
+  String get release_chat_notification_respond =>
+      'Откройте чат, чтобы ответить.';
+
+  @override
+  String get release_chat_start_new_main_window =>
+      'Начните новый чат в главном окне.';
+
+  @override
+  String get release_chat_no_desktop_gateway => 'Нет шлюза Desktop';
+
+  @override
+  String get release_chat_attachment_preparation_cancelled =>
+      'Подготовка вложения отменена.';
+
+  @override
+  String get release_chat_approval_authority_revoked =>
+      'Полномочия на одобрение отозваны.';
+
+  @override
+  String get release_chat_gateway_session_disconnected =>
+      'Сессия шлюза Desktop больше не подключена';
+
+  @override
+  String get release_chat_stop_requested =>
+      'Запрошена остановка. Ожидание завершения работы Hermes.';
+
+  @override
+  String release_chat_stop_request_failed(String error) {
+    return 'Не удалось запросить остановку: $error';
+  }
+
+  @override
+  String get release_chat_queued_prompt_not_sent =>
+      'Промпт из очереди не был отправлен.';
+
+  @override
+  String get release_chat_running_turn_unreachable =>
+      'Не удалось связаться с выполняющимся ходом. Переподключение без повторной отправки.';
+
+  @override
+  String get release_chat_wait_for_composer =>
+      'Дождитесь, пока поле ввода станет доступно.';
+
+  @override
+  String get release_chat_find_in_transcript => 'Поиск в переписке';
+
+  @override
+  String get release_chat_open_browser_preview =>
+      'Открыть предпросмотр браузера';
+
+  @override
+  String get release_chat_more_tools => 'Другие инструменты чата';
+
+  @override
+  String get release_chat_queue_until_finished =>
+      'В очередь до завершения этого хода';
+
+  @override
+  String get release_chat_format_bold => 'Полужирный';
+
+  @override
+  String get release_chat_format_italic => 'Курсив';
+
+  @override
+  String get ng_release_chat_gateway_queue_requirements =>
+      'Для очереди шлюза нужен подключённый чат и промпт только с текстом.';
+
+  @override
+  String get ng_release_chat_start_new_main_screen =>
+      'Начните новый чат на главном экране чатов.';
+
+  @override
+  String get ng_release_chat_image => 'изображение';
+
+  @override
+  String ng_release_chat_tool_seconds(String seconds) {
+    return '$seconds с';
+  }
+
+  @override
+  String get release_preview_chat_changed =>
+      'Чат изменился. Подключите предпросмотр заново, чтобы продолжить.';
+
+  @override
+  String get release_preview_authenticating_chat =>
+      'Проверка подлинности чата…';
+
+  @override
+  String release_preview_unavailable_reason(String reason) {
+    return 'Предпросмотр недоступен: $reason';
+  }
+
+  @override
+  String get release_preview_operation_failed =>
+      'Не удалось выполнить операцию предпросмотра.';
+
+  @override
+  String get release_preview_added_to_draft =>
+      'Добавлено в черновик. Ничего не отправлено.';
+
+  @override
+  String get release_preview_open_site_title => 'Открыть этот сайт?';
+
+  @override
+  String release_preview_open_site_body(String origin) {
+    return '$origin\n\nРежим чтения загружает только этот документ. Он не передаёт Hermes файлы cookie, данные входа или страницу.';
+  }
+
+  @override
+  String get release_preview_open_site => 'Открыть сайт';
+
+  @override
+  String get release_preview_discard_pins_title =>
+      'Отбросить пометки, не добавленные в черновик?';
+
+  @override
+  String get release_preview_keep_pins => 'Оставить пометки';
+
+  @override
+  String get release_preview_share_page_title =>
+      'Поделиться этой страницей с этим чатом?';
+
+  @override
+  String release_preview_share_page_body(String origin) {
+    return 'Hermes сможет читать отображаемый текст и список элементов с $origin, а также прокручивать эту панель. При переходе на другую страницу доступ прекращается. Формы и учётные данные не передаются.';
+  }
+
+  @override
+  String get release_preview_share_page => 'Поделиться страницей';
+
+  @override
+  String release_preview_comment_number(int number) {
+    return 'Комментарий №$number';
+  }
+
+  @override
+  String get release_preview_note => 'Заметка';
+
+  @override
+  String get release_preview_keep_pin => 'Оставить пометку';
+
+  @override
+  String get release_preview_title => 'Предпросмотр браузера';
+
+  @override
+  String get release_preview_hide => 'Скрыть предпросмотр';
+
+  @override
+  String get release_preview_close_and_forget => 'Закрыть и забыть страницу';
+
+  @override
+  String get release_preview_site_address => 'Адрес сайта';
+
+  @override
+  String get release_preview_go_to_address => 'Перейти по адресу';
+
+  @override
+  String get release_preview_forward => 'Вперёд';
+
+  @override
+  String get release_preview_reload => 'Перезагрузить';
+
+  @override
+  String get release_preview_share_with_hermes =>
+      'Поделиться страницей с Hermes';
+
+  @override
+  String get release_preview_stop_sharing => 'Прекратить доступ к странице';
+
+  @override
+  String get release_preview_annotate =>
+      'Добавить комментарий к элементу или области';
+
+  @override
+  String get release_preview_reader_console => 'Консоль режима чтения';
+
+  @override
+  String get release_preview_reconnect => 'Переподключить предпросмотр';
+
+  @override
+  String get release_preview_reader_mode_help =>
+      'Режим чтения: HTML и текст. Без скриптов, встроенных ресурсов и профиля браузера с выполненным входом.';
+
+  @override
+  String release_preview_sharing_origin(String origin) {
+    return 'Режим чтения доступен этому чату: $origin';
+  }
+
+  @override
+  String get release_preview_annotation_help =>
+      'Нажмите на элемент или выделите область перетаскиванием, чтобы добавить комментарий.';
+
+  @override
+  String get release_preview_reader_requests =>
+      'Запросы режима чтения (JavaScript отключён)';
+
+  @override
+  String release_preview_selected_requests(int count) {
+    return 'Выбрано: $count · JavaScript отключён';
+  }
+
+  @override
+  String get release_preview_copy_all => 'Скопировать всё';
+
+  @override
+  String get release_preview_copy_selected => 'Скопировать выбранное';
+
+  @override
+  String get release_preview_add_log_to_draft => 'Добавить журнал в черновик';
+
+  @override
+  String release_preview_requests_draft(String log) {
+    return 'Запросы режима чтения:\n$log';
+  }
+
+  @override
+  String release_preview_add_pins_to_draft(int count) {
+    return 'Добавить в черновик: $count';
+  }
+
+  @override
+  String release_preview_request_loaded(String origin, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Элементов режима чтения: $count',
+      one: '$count элемент режима чтения',
+    );
+    return 'HTTP 200 · $origin · $_temp0';
+  }
+
+  @override
+  String release_preview_annotation_intro(String origin) {
+    return 'Проверьте эти комментарии к предпросмотру $origin. Прикреплённые фрагменты изображений пронумерованы в том же порядке.';
+  }
+
+  @override
+  String get release_preview_reader_region => 'область режима чтения';
+
+  @override
+  String get release_preview_capture_failed =>
+      'Не удалось захватить эти пиксели.';
+
+  @override
+  String get release_preview_address_not_approved =>
+      'Этот адрес находится за пределами разрешённого источника предпросмотра.';
+
+  @override
+  String get release_preview_page_limit =>
+      'Страница превышает лимит режима чтения.';
+
+  @override
+  String get release_preview_page_unreadable =>
+      'Не удалось прочитать страницу.';
+
+  @override
+  String get release_preview_page_complex =>
+      'Эта страница слишком сложна для режима чтения.';
+
+  @override
+  String release_preview_http_failed(int statusCode) {
+    return 'HTTP $statusCode. Переходы по перенаправлениям и вход не выполнялись.';
+  }
+
+  @override
+  String get release_preview_unsupported_type =>
+      'В режиме чтения можно открывать только HTML и обычный текст.';
+
+  @override
+  String get release_preview_load_insecure =>
+      'Не удалось безопасно загрузить сайт.';
+
+  @override
+  String get release_preview_crop_limit =>
+      'Фрагмент предпросмотра превышает допустимый лимит.';
+
+  @override
+  String get release_preview_image_unreadable =>
+      'Выбранное изображение пусто или не читается.';
+
+  @override
+  String get release_preview_image_budget =>
+      'Выбранное изображение превышает лимит черновика в 64 МиБ.';
+
+  @override
+  String get release_preview_image_format =>
+      'Неподдерживаемый формат изображения. Выберите изображение JPEG, PNG или WebP.';
+
+  @override
+  String get release_preview_image_decode =>
+      'Не удалось безопасно декодировать выбранное изображение JPEG, PNG или WebP.';
+
+  @override
+  String get release_preview_image_sanitize =>
+      'Не удалось выполнить безопасную очистку изображения. Выберите корректное изображение JPEG, PNG или WebP.';
+
+  @override
+  String get release_preview_draft_budget =>
+      'Общий размер вложений в одном черновике ограничен 64 МиБ.';
+
+  @override
+  String get release_preview_generic_file_limit =>
+      'Размер каждого файла общего типа ограничен 16 МиБ.';
+
+  @override
+  String get release_preview_image_not_sanitized =>
+      'Удалённые изображения необходимо безопасно очистить перед отправкой.';
+
+  @override
+  String get release_preview_stage_failed =>
+      'Не удалось добавить материалы предпросмотра в черновик. Повторите попытку.';
+
+  @override
+  String get release_misc_find_hermes_on_lan => 'Найти Hermes в локальной сети';
+
+  @override
+  String release_misc_discovery_failed(String error) {
+    return 'Ошибка поиска: $error';
+  }
+
+  @override
+  String get release_misc_no_lan_servers =>
+      'В локальной сети не найдены серверы Hermes.';
+
+  @override
+  String release_misc_api_key_rejected(String endpoint, int statusCode) {
+    return 'Конечная точка $endpoint отклонила ключ API (HTTP $statusCode).';
+  }
+
+  @override
+  String get release_misc_api_key_required =>
+      'Серверу требуется ключ API. Введите свой API_SERVER_KEY.';
+
+  @override
+  String release_misc_gateway_not_found(String endpoint) {
+    return 'Конечная точка шлюза $endpoint вернула HTTP 404. Проверьте префикс пути шлюза и маршруты обратного прокси.';
+  }
+
+  @override
+  String release_misc_gateway_http_error(String endpoint, int statusCode) {
+    return 'Конечная точка шлюза $endpoint вернула HTTP $statusCode.';
+  }
+
+  @override
+  String release_misc_gateway_unreachable(String endpoint) {
+    return 'Не удалось связаться с конечной точкой шлюза $endpoint.';
+  }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target =>
+      'Недопустимая цель доставки';
+
+  @override
+  String get release_core_file_save_direct_only =>
+      'Можно сохранить только файл непосредственно в рабочем каталоге.';
+
+  @override
+  String get release_core_file_save_hidden =>
+      'Шлюз не может сохранять скрытые файлы.';
 }

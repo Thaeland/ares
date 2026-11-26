@@ -12,6 +12,7 @@ import 'package:hermes_android/core/services/remote_workspace.dart';
 import 'package:hermes_android/core/services/scoped_profile_owner.dart';
 import 'package:hermes_android/core/services/ws_client.dart';
 import 'package:http/http.dart' as http;
+import 'package:hermes_android/l10n/app_localizations.dart';
 import 'package:http/testing.dart';
 
 typedef _Handler = Object? Function(http.Request request);
@@ -513,7 +514,15 @@ void main() {
     await tester.tap(find.byKey(const Key('memory-node-packing')));
     await _settle(tester);
     expect(find.byKey(const Key('memory-error')), findsOneWidget);
-    expect(find.textContaining('Remote workspace:'), findsOneWidget);
+    final l10n = lookupAppLocalizations(const Locale('en'));
+    expect(
+      find.text(
+        l10n.release_core_workspace_operation_failed(
+          l10n.release_core_workspace_failure_invalid,
+        ),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets(
@@ -666,7 +675,14 @@ void main() {
     await _settle(tester);
     await tester.tap(find.widgetWithText(FilterChip, 'Local'));
     await _settle(tester);
-    expect(find.textContaining('Invalid delivery target'), findsOneWidget);
+    expect(
+      find.text(
+        lookupAppLocalizations(
+          const Locale('en'),
+        ).release_core_schedule_invalid_delivery_target,
+      ),
+      findsOneWidget,
+    );
     expect(api.calls.where((call) => call.method == 'PUT'), isEmpty);
   });
 

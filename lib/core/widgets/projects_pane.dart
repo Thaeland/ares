@@ -182,7 +182,9 @@ class _ProjectsPaneState extends State<ProjectsPane>
     final route = owner.route();
     return ListTile(
       leading: const Icon(Icons.travel_explore),
-      title: const Text('Discover repositories'),
+      title: Text(
+        context.sharedL10n.release_core_projects_pane_discover_repositories,
+      ),
       onTap: () => Navigator.of(context).push<void>(
         MaterialPageRoute(
           builder: (_) => WorkspaceDiscoveryView(owner: owner, route: route),
@@ -192,6 +194,7 @@ class _ProjectsPaneState extends State<ProjectsPane>
   }
 
   Future<void> _createProject() async {
+    final l10n = context.sharedL10n;
     final repository = widget.repository;
     final spec = await showDialog<({String name, String idea})>(
       context: context,
@@ -206,9 +209,9 @@ class _ProjectsPaneState extends State<ProjectsPane>
           spec.idea.isNotEmpty &&
           created.description != spec.idea) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-              'Project created, but the gateway did not confirm its idea.',
+              l10n.release_core_projects_pane_project_created_but_the_gateway_did_not_confirm,
             ),
           ),
         );
@@ -475,11 +478,6 @@ class _CompatibilityMode extends StatelessWidget {
 
   const _CompatibilityMode({required this.spaces, required this.onRetry});
 
-  static const _explanation =
-      'This Hermes gateway is older than server-side projects, so chats stay '
-      'grouped on this device only. Update Hermes to share the same projects '
-      'across your devices.';
-
   @override
   Widget build(BuildContext context) {
     final tokens = HermesTokens.of(context);
@@ -514,7 +512,7 @@ class _CompatibilityMode extends StatelessWidget {
                   const SizedBox(width: HermesSpacing.sm),
                   Expanded(
                     child: Text(
-                      _explanation,
+                      context.sharedL10n.release_core_projects_local_only,
                       style: tokens.typography.body.copyWith(
                         color: tokens.muted,
                       ),
@@ -873,9 +871,13 @@ class _CreateProjectDialogState extends State<_CreateProjectDialog> {
             maxLength: 2000,
             minLines: 2,
             maxLines: 4,
-            decoration: const InputDecoration(
-              labelText: 'Project idea (optional)',
-              helperText: 'Saved in the project description, not a file.',
+            decoration: InputDecoration(
+              labelText: context
+                  .sharedL10n
+                  .release_core_projects_pane_project_idea_optional,
+              helperText: context
+                  .sharedL10n
+                  .release_core_projects_pane_saved_in_the_project_description_not_a_file,
             ),
             onChanged: (value) => _idea = value,
           ),

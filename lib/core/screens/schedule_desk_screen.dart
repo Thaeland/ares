@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
+import '../l10n/workspace_strings.dart';
+
 import '../services/connection_manager.dart';
 import '../services/remote_workspace.dart';
 import '../services/scoped_profile_owner.dart';
@@ -26,8 +29,8 @@ class _ScheduleDeskScreenState extends State<ScheduleDeskScreen> {
   WorkspacePane? _pane;
   WorkspaceTarget? _catalog;
   var _busy = false;
-  String? _error;
-  String _output = '';
+  Object? _error;
+  String Function(AppLocalizations)? _output;
   List<RemoteCronJob> _jobs = const [];
   List<RemoteBlueprint> _blueprints = const [];
   String? _blueprintProfile;
@@ -71,7 +74,7 @@ class _ScheduleDeskScreenState extends State<ScheduleDeskScreen> {
       if (!mounted) return;
       setState(() => _jobs = jobs);
     } catch (error) {
-      if (mounted) setState(() => _error = '$error');
+      if (mounted) setState(() => _error = error);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -79,7 +82,7 @@ class _ScheduleDeskScreenState extends State<ScheduleDeskScreen> {
       try {
         await _loadBlueprints(profile);
       } on WorkspaceException catch (error) {
-        if (mounted) setState(() => _error = '$error');
+        if (mounted) setState(() => _error = error);
       }
     }
   }
@@ -112,7 +115,7 @@ class _ScheduleDeskScreenState extends State<ScheduleDeskScreen> {
       if (!mounted) return;
       setState(() => _jobs = jobs);
     } on WorkspaceException catch (error) {
-      if (mounted) setState(() => _error = '$error');
+      if (mounted) setState(() => _error = error);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -134,10 +137,16 @@ class _ScheduleDeskScreenState extends State<ScheduleDeskScreen> {
         (target) => target.instantiateBlueprint(blueprint.key, values),
       );
       if (!mounted) return;
-      setState(() => _output = 'Created ${job.name} on ${job.profile}.');
+      setState(
+        () => _output = (l10n) =>
+            l10n.release_core_schedule_desk_screen_created_on(
+              (job.name).toString(),
+              (job.profile).toString(),
+            ),
+      );
       await _open();
     } on WorkspaceException catch (error) {
-      if (mounted) setState(() => _error = '$error');
+      if (mounted) setState(() => _error = error);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -151,10 +160,10 @@ class _ScheduleDeskScreenState extends State<ScheduleDeskScreen> {
     }.toList();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Schedules'),
+        title: Text(context.sharedL10n.release_core_more_pane_schedules),
         actions: [
           IconButton(
-            tooltip: 'Refresh',
+            tooltip: context.sharedL10n.refresh,
             onPressed: _busy ? null : _open,
             icon: const Icon(Icons.refresh),
           ),
@@ -163,11 +172,20 @@ class _ScheduleDeskScreenState extends State<ScheduleDeskScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const Text(
-            'The list covers every profile on this gateway. Stop, pause, catch-up, delivery and blueprints are sent to the job\'s owning profile.',
+          Text(
+            context
+                .sharedL10n
+                .release_core_schedule_desk_screen_the_list_covers_every_profile_on_this_gateway,
           ),
-          if (_error != null) Text(_error!, key: const Key('schedule-error')),
-          Text(_output, key: const Key('schedule-output')),
+          if (_error != null)
+            Text(
+              workspaceErrorText(context.sharedL10n, _error!),
+              key: const Key('schedule-error'),
+            ),
+          Text(
+            _output?.call(context.sharedL10n) ?? '',
+            key: const Key('schedule-output'),
+          ),
           for (final job in _jobs)
             Card(
               key: ValueKey('${job.profile}/${job.id}'),
@@ -182,8 +200,12 @@ class _ScheduleDeskScreenState extends State<ScheduleDeskScreen> {
                     ),
                     Text(
                       job.runInFlight
-                          ? 'A run is in progress'
-                          : 'No current run',
+                          ? context
+                                .sharedL10n
+                                .release_core_schedule_desk_screen_a_run_is_in_progress
+                          : context
+                                .sharedL10n
+                                .release_core_schedule_desk_screen_no_current_run,
                     ),
                     Wrap(
                       spacing: 8,
@@ -196,11 +218,19 @@ class _ScheduleDeskScreenState extends State<ScheduleDeskScreen> {
                                 : () => _onOwner(job, (target) async {
                                     final cancelled = await target
                                         .stopCurrentRun(job);
-                                    _output = cancelled
-                                        ? 'Stop requested for ${job.name}.'
-                                        : 'No run was in flight for ${job.name}.';
+                                    _output = (l10n) => cancelled
+                                        ? l10n.release_core_schedule_desk_screen_stop_requested_for(
+                                            (job.name).toString(),
+                                          )
+                                        : l10n.release_core_schedule_desk_screen_no_run_was_in_flight_for(
+                                            (job.name).toString(),
+                                          );
                                   }),
-                            child: const Text('Stop current run'),
+                            child: Text(
+                              context
+                                  .sharedL10n
+                                  .release_core_schedule_desk_screen_stop_current_run,
+                            ),
                           ),
                         OutlinedButton(
                           key: Key('schedule-pause-${job.profile}-${job.id}'),
@@ -215,8 +245,12 @@ class _ScheduleDeskScreenState extends State<ScheduleDeskScreen> {
                                 ),
                           child: Text(
                             job.enabled
-                                ? 'Pause future runs'
-                                : 'Resume future runs',
+                                ? context
+                                      .sharedL10n
+                                      .release_core_schedule_desk_screen_pause_future_runs
+                                : context
+                                      .sharedL10n
+                                      .release_core_schedule_desk_screen_resume_future_runs,
                           ),
                         ),
                       ],
@@ -228,18 +262,30 @@ class _ScheduleDeskScreenState extends State<ScheduleDeskScreen> {
                         false => 'skip',
                         null => 'default',
                       },
-                      items: const [
+                      items: [
                         DropdownMenuItem(
                           value: 'default',
-                          child: Text('Catch-up default'),
+                          child: Text(
+                            context
+                                .sharedL10n
+                                .release_core_schedule_desk_screen_catch_up_default,
+                          ),
                         ),
                         DropdownMenuItem(
                           value: 'run',
-                          child: Text('Run one missed'),
+                          child: Text(
+                            context
+                                .sharedL10n
+                                .release_core_schedule_desk_screen_run_one_missed,
+                          ),
                         ),
                         DropdownMenuItem(
                           value: 'skip',
-                          child: Text('Skip missed'),
+                          child: Text(
+                            context
+                                .sharedL10n
+                                .release_core_schedule_desk_screen_skip_missed,
+                          ),
                         ),
                       ],
                       onChanged: _busy
@@ -271,13 +317,21 @@ class _ScheduleDeskScreenState extends State<ScheduleDeskScreen> {
               ),
             ),
           const SizedBox(height: 16),
-          const Text('Blueprint recipes'),
+          Text(
+            context
+                .sharedL10n
+                .release_core_schedule_desk_screen_blueprint_recipes,
+          ),
           DropdownButton<String>(
             key: const Key('schedule-blueprint-profile'),
             value: profiles.contains(_blueprintProfile)
                 ? _blueprintProfile
                 : null,
-            hint: const Text('Profile for the new job'),
+            hint: Text(
+              context
+                  .sharedL10n
+                  .release_core_schedule_desk_screen_profile_for_the_new_job,
+            ),
             items: [
               for (final profile in profiles)
                 DropdownMenuItem(value: profile, child: Text(profile)),
@@ -289,7 +343,9 @@ class _ScheduleDeskScreenState extends State<ScheduleDeskScreen> {
                   },
           ),
           for (final blueprint in _blueprints) ...[
-            Text('${blueprint.title} (${blueprint.source ?? 'builtin'})'),
+            Text(
+              '${blueprint.title} (${blueprint.source ?? context.sharedL10n.release_core_schedule_builtin})',
+            ),
             Text(blueprint.description),
             for (final field in blueprint.fields)
               TextField(
@@ -306,7 +362,11 @@ class _ScheduleDeskScreenState extends State<ScheduleDeskScreen> {
             FilledButton(
               key: Key('blueprint-create-${blueprint.key}'),
               onPressed: _busy ? null : () => _create(blueprint),
-              child: Text('Create ${blueprint.title}'),
+              child: Text(
+                context.sharedL10n.release_core_schedule_desk_screen_create(
+                  (blueprint.title).toString(),
+                ),
+              ),
             ),
           ],
         ],
@@ -335,7 +395,7 @@ class _DeliveryEditor extends StatefulWidget {
 
 class _DeliveryEditorState extends State<_DeliveryEditor> {
   List<RemoteDeliveryTarget>? _targets;
-  String? _error;
+  Object? _error;
 
   @override
   void initState() {
@@ -363,15 +423,23 @@ class _DeliveryEditorState extends State<_DeliveryEditor> {
       );
       if (mounted) setState(() => _targets = targets);
     } on WorkspaceException catch (error) {
-      if (mounted) setState(() => _error = '$error');
+      if (mounted) setState(() => _error = error);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final targets = _targets;
-    if (_error != null) return Text(_error!);
-    if (targets == null) return const Text('Loading delivery targets');
+    if (_error != null) {
+      return Text(workspaceErrorText(context.sharedL10n, _error!));
+    }
+    if (targets == null) {
+      return Text(
+        context
+            .sharedL10n
+            .release_core_schedule_desk_screen_loading_delivery_targets,
+      );
+    }
     final selected = widget.job.deliver.split(',').toSet();
     return Wrap(
       children: [
@@ -380,7 +448,10 @@ class _DeliveryEditorState extends State<_DeliveryEditor> {
             label: Text(
               target.homeTargetSet
                   ? target.name
-                  : '${target.name} (no home channel)',
+                  : context.sharedL10n
+                        .release_core_schedule_desk_screen_no_home_channel(
+                          (target.name).toString(),
+                        ),
             ),
             selected: selected.contains(target.id),
             onSelected: widget.busy
@@ -391,7 +462,7 @@ class _DeliveryEditorState extends State<_DeliveryEditor> {
                         toggleDeliveryTarget(widget.job.deliver, target.id),
                       );
                     } on FormatException catch (error) {
-                      setState(() => _error = error.message);
+                      setState(() => _error = error);
                     }
                   },
           ),

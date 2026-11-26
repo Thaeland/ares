@@ -6,8 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:hermes_android/core/l10n/l10n.dart';
-
 import '../../core/models/session.dart';
 import '../../core/models/session_search_hit.dart';
 import '../../core/services/session_search_projection.dart';
@@ -67,7 +65,7 @@ class NgSessionsModel extends ChangeNotifier {
   NgScope get scope => _scope;
   set scope(NgScope value) {
     if (identical(value.gateway, _scope.gateway) &&
-        value.connection.id == _scope.connection.id) {
+        sessionSearchIdentity(value.connection) == searchAccess.identity) {
       _scope = value;
       return;
     }
@@ -285,6 +283,12 @@ class NgSessionsModel extends ChangeNotifier {
     final generation = ++_generation;
     _removedDuringRead = {};
     final api = scope.gateway.api;
+    final access = searchAccess;
+    bool maySearch() =>
+        generation == _generation &&
+        identical(access, searchAccess) &&
+        access.isActive &&
+        access.value;
     final browsingCrons = _browsingCrons;
     loading = true;
     error = null;
@@ -300,9 +304,9 @@ class NgSessionsModel extends ChangeNotifier {
         final page = await api.getSessionsPage(
           limit: _pageSize,
           title: query,
-          maySendSearch: () => generation == _generation && searchAccess.value,
+          maySendSearch: maySearch,
         );
-        if (generation != _generation) return;
+        if (!maySearch()) return;
         _projectSearch([
           for (final row in page.sessions)
             if (!_removed(row))
@@ -369,7 +373,7 @@ class NgSessionsModel extends ChangeNotifier {
           ? '$e'.replaceFirst('Exception: ', '')
           : e is SessionSearchException
           ? e.message
-          : 'Message search unavailable. Showing local matches.';
+          : ngL.ng_release_message_search_unavailable;
     } finally {
       if (generation == _generation) {
         _removedDuringRead = null;
@@ -547,6 +551,7 @@ class NgSessionsSidebar extends StatefulWidget {
 class NgSessionsSidebarState extends State<NgSessionsSidebar> {
   void focusSearch() => _searchFocus.requestFocus();
   final _search = TextEditingController();
+  late SessionSearchAccess _searchOwner;
   final _searchFocus = FocusNode();
   final _scroll = ScrollController();
   NgSidebarFilter _filter = NgSidebarFilter.all;
@@ -554,6 +559,7 @@ class NgSessionsSidebarState extends State<NgSessionsSidebar> {
   @override
   void initState() {
     super.initState();
+    _searchOwner = widget.model.searchAccess;
     _search.text = widget.model.query;
     // The model and its server cursor outlive the drawer. Reopening it must
     // not show All while still paging the unfiltered Crons authority.
@@ -563,6 +569,28 @@ class NgSessionsSidebarState extends State<NgSessionsSidebar> {
     _scroll.addListener(() {
       if (_scroll.position.extentAfter < 400) widget.model.loadMore();
     });
+  }
+
+  void _syncSearchOwner() {
+    final owner = widget.model.searchAccess;
+    if (identical(owner, _searchOwner)) return;
+    _searchOwner = owner;
+    // The retained field must not keep a departed profile's query while the
+    // model has already cleared it. Re-entering the same text must be a real
+    // edit for the newly scoped browser, not an ignored identical value.
+    _search.text = widget.model.query;
+  }
+
+  @override
+  void didUpdateWidget(covariant NgSessionsSidebar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _syncSearchOwner();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _syncSearchOwner();
   }
 
   @override
@@ -831,9 +859,7 @@ class NgSessionsSidebarState extends State<NgSessionsSidebar> {
                         ? null
                         : IconButton(
                             key: const Key('ng-clear-search'),
-                            tooltip:
-                                AppLocalizations.of(context)?.clear_search ??
-                                'Clear search',
+                            tooltip: ngL.clear_search,
                             icon: const Icon(Icons.clear, size: 18),
                             color: c.text3,
                             constraints: const BoxConstraints.tightFor(
@@ -923,10 +949,7 @@ class NgSessionsSidebarState extends State<NgSessionsSidebar> {
                               NgSidebarFilter.needsYou =>
                                 ngL.ng_nothing_is_waiting_on_you,
                               NgSidebarFilter.crons =>
-                                AppLocalizations.of(
-                                      context,
-                                    )?.cron_conversations_empty ??
-                                    'Conversations from scheduled jobs appear here, including older runs.',
+                                ngL.cron_conversations_empty,
                             },
                             textAlign: TextAlign.center,
                             style: NgType.bodySmall.copyWith(color: c.text3),
@@ -939,7 +962,7 @@ class NgSessionsSidebarState extends State<NgSessionsSidebar> {
                               ? ngL.ng_needs_you_2
                               : s.isActive
                               ? ngL.ng_running
-                              : 'Idle',
+                              : ngL.status_idle,
                         ).entries) ...[
                           NgSectionLabel(g.key),
                           for (final s in g.value) _tile(c, s, needsYou),
@@ -958,10 +981,7 @@ class NgSessionsSidebarState extends State<NgSessionsSidebar> {
                               key: const Key('ng-sessions-load-more'),
                               onPressed: widget.model.loadMore,
                               icon: const Icon(Icons.expand_more, size: 18),
-                              label: Text(
-                                AppLocalizations.of(context)?.load_more ??
-                                    'Load more…',
-                              ),
+                              label: Text(ngL.load_more),
                             ),
                           ),
                         ),
@@ -1097,10 +1117,7 @@ class NgSessionsSidebarState extends State<NgSessionsSidebar> {
             NgSidebarFilter.needsYou,
             waiting > 0 ? ngL.ng_needs_you(waiting) : ngL.ng_needs_you_2,
           ),
-          chip(
-            NgSidebarFilter.crons,
-            AppLocalizations.of(context)?.crons ?? 'Crons',
-          ),
+          chip(NgSidebarFilter.crons, ngL.crons),
         ],
       ),
     );

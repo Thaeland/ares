@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
+import '../l10n/l10n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/connection.dart';
@@ -200,22 +202,28 @@ class _WorkspaceState extends State<ParallelWorkspace> {
     String key,
     String value,
   ) async {
+    final l10n = context.sharedL10n;
     try {
       if (await prefs.setString(key, value)) return;
     } catch (_) {
       /* Show a local-only failure. */
     }
     if (_current) {
-      _message('Layout changed in this window but could not be saved.');
+      _message(
+        l10n.release_core_parallel_workspace_layout_changed_in_this_window_but_could_not,
+      );
     }
   }
 
   String _title(PaneRef ref) {
     if (isWorkspaceSlot(ref)) {
-      return ref == firstWorkspaceSlot ? 'First pane' : 'Second pane';
+      return ref == firstWorkspaceSlot
+          ? context.sharedL10n.release_core_parallel_workspace_first_pane
+          : context.sharedL10n.release_core_parallel_workspace_second_pane;
     }
     if (ref.page.isNotEmpty) {
-      return _registry.page(ref.page)?.label ?? 'Unavailable page';
+      return _registry.page(ref.page)?.localizedLabel(context.sharedL10n) ??
+          context.sharedL10n.release_core_parallel_workspace_unavailable_page;
     }
     final title = _roster[ref.sessionId]?.title;
     return title == null || title.isEmpty ? ref.sessionId : title;
@@ -223,7 +231,12 @@ class _WorkspaceState extends State<ParallelWorkspace> {
 
   void _open(PaneRef ref, {bool split = false}) => _edit(() {
     if (!_layout.open(ref, split: split)) {
-      _message('Close a tab first (maximum ${WorkspaceLayout.maxTabs}).');
+      _message(
+        context.sharedL10n
+            .release_core_parallel_workspace_close_a_tab_first_maximum(
+              (WorkspaceLayout.maxTabs).toString(),
+            ),
+      );
     }
   });
 
@@ -247,7 +260,11 @@ class _WorkspaceState extends State<ParallelWorkspace> {
     }..removeWhere((r) => split && r == _primary);
     final ref = await pickWorkspaceItem(
       context,
-      split ? 'Dock beside current pane' : 'Add chat',
+      split
+          ? context
+                .sharedL10n
+                .release_core_parallel_workspace_dock_beside_current_pane
+          : context.sharedL10n.release_core_parallel_workspace_add_chat,
       [
         for (final ref in items)
           (value: ref, label: _title(ref), detail: ref.sessionId),
@@ -288,14 +305,19 @@ class _WorkspaceState extends State<ParallelWorkspace> {
         try {
           await item.run(context, target);
         } catch (_) {
-          if (_current) {
-            _message('Action failed. Check the connection and try again.');
+          if (mounted && _current) {
+            _message(
+              context
+                  .sharedL10n
+                  .release_core_parallel_workspace_action_failed_check_the_connection_and_try_again,
+            );
           }
         }
     }
   }
 
   Future<void> _command(_Command command) async {
+    final l10n = context.sharedL10n;
     final p = _primary;
     switch (command) {
       case _Command.split:
@@ -346,7 +368,9 @@ class _WorkspaceState extends State<ParallelWorkspace> {
       case _Command.reopen:
         _edit(() {
           if (!_layout.reopen()) {
-            _message('Close a tab before reopening another.');
+            _message(
+              l10n.release_core_parallel_workspace_close_a_tab_before_reopening_another,
+            );
           }
         });
       case _Command.save:
@@ -357,15 +381,19 @@ class _WorkspaceState extends State<ParallelWorkspace> {
             context: context,
             useRootNavigator: false,
             builder: (context) => AlertDialog(
-              title: Text('Replace layout “$name”?'),
+              title: Text(
+                l10n.release_core_parallel_workspace_replace_layout(
+                  (name).toString(),
+                ),
+              ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context, false),
-                  child: const Text('Cancel'),
+                  child: Text(l10n.cancel),
                 ),
                 FilledButton(
                   onPressed: () => Navigator.pop(context, true),
-                  child: const Text('Replace'),
+                  child: Text(l10n.replace),
                 ),
               ],
             ),
@@ -374,14 +402,20 @@ class _WorkspaceState extends State<ParallelWorkspace> {
         }
         _edit(() {
           if (!_layout.save(name)) {
-            _message('Layout limit reached. Replace an existing layout.');
+            _message(
+              l10n.release_core_parallel_workspace_layout_limit_reached_replace_an_existing_layout,
+            );
           }
         });
       case _Command.restore:
-        final name = await pickWorkspaceItem(context, 'Restore layout', [
-          for (final name in _layout.saved.keys)
-            (value: name, label: name, detail: ''),
-        ]);
+        final name = await pickWorkspaceItem(
+          context,
+          l10n.release_core_parallel_workspace_restore_layout,
+          [
+            for (final name in _layout.saved.keys)
+              (value: name, label: name, detail: ''),
+          ],
+        );
         if (_current && name != null) _edit(() => _layout.restore(name));
       case _Command.refresh:
         _refresh();
@@ -406,55 +440,134 @@ class _WorkspaceState extends State<ParallelWorkspace> {
       bool enabled = true,
     ]) => PopupMenuItem(value: cmd, enabled: enabled, child: Text(label));
     return PopupMenuButton<_Command>(
-      tooltip: 'Workspace options',
+      tooltip:
+          context.sharedL10n.release_core_parallel_workspace_workspace_options,
       onSelected: _command,
       itemBuilder: (_) => [
-        item(_Command.split, 'Dock another pane', p != null),
-        item(_Command.swap, 'Swap panes', pair),
-        item(_Command.undock, 'Undock second pane', pair),
         item(
-          _Command.stack,
-          _layout.stacked ? 'Arrange side by side' : 'Arrange top to bottom',
+          _Command.split,
+          context.sharedL10n.release_core_parallel_workspace_dock_another_pane,
+          p != null,
+        ),
+        item(
+          _Command.swap,
+          context.sharedL10n.release_core_parallel_workspace_swap_panes,
           pair,
         ),
-        item(_Command.ratio, 'Change split size (${_layout.percent}%)', pair),
-        item(_Command.focus, 'Focus pane full screen', p != null),
+        item(
+          _Command.undock,
+          context.sharedL10n.release_core_parallel_workspace_undock_second_pane,
+          pair,
+        ),
+        item(
+          _Command.stack,
+          _layout.stacked
+              ? context
+                    .sharedL10n
+                    .release_core_parallel_workspace_arrange_side_by_side
+              : context
+                    .sharedL10n
+                    .release_core_parallel_workspace_arrange_top_to_bottom,
+          pair,
+        ),
+        item(
+          _Command.ratio,
+          context.sharedL10n.release_core_parallel_workspace_change_split_size(
+            (_layout.percent).toString(),
+          ),
+          pair,
+        ),
+        item(
+          _Command.focus,
+          context
+              .sharedL10n
+              .release_core_parallel_workspace_focus_pane_full_screen,
+          p != null,
+        ),
         if (supportsWorkspacePopout)
           item(
             _Command.popout,
-            'Open chat in new window',
+            context
+                .sharedL10n
+                .release_core_parallel_workspace_open_chat_in_new_window,
             p != null && p.page.isEmpty && _roster.containsKey(p.sessionId),
           ),
-        item(_Command.hide, 'Hide pane (keep running)', p != null),
-        item(_Command.previous, 'Previous tab', tabs.length > 1),
-        item(_Command.next, 'Next tab', tabs.length > 1),
+        item(
+          _Command.hide,
+          context
+              .sharedL10n
+              .release_core_parallel_workspace_hide_pane_keep_running,
+          p != null,
+        ),
+        item(
+          _Command.previous,
+          context.sharedL10n.release_core_parallel_workspace_previous_tab,
+          tabs.length > 1,
+        ),
+        item(
+          _Command.next,
+          context.sharedL10n.release_core_parallel_workspace_next_tab,
+          tabs.length > 1,
+        ),
         item(
           _Command.moveLeft,
-          'Move tab left',
+          context.sharedL10n.release_core_parallel_workspace_move_tab_left,
           p != null && tabs.indexOf(p) > 0,
         ),
         item(
           _Command.moveRight,
-          'Move tab right',
+          context.sharedL10n.release_core_parallel_workspace_move_tab_right,
           p != null && tabs.indexOf(p) < tabs.length - 1,
         ),
-        item(_Command.reload, 'Reload current tab', p != null),
-        item(_Command.close, 'Close tab', p != null),
-        item(_Command.others, 'Close other tabs', p != null && tabs.length > 1),
+        item(
+          _Command.reload,
+          context.sharedL10n.release_core_parallel_workspace_reload_current_tab,
+          p != null,
+        ),
+        item(
+          _Command.close,
+          context.sharedL10n.release_core_parallel_workspace_close_tab,
+          p != null,
+        ),
+        item(
+          _Command.others,
+          context.sharedL10n.release_core_parallel_workspace_close_other_tabs,
+          p != null && tabs.length > 1,
+        ),
         item(
           _Command.right,
-          'Close tabs to the right',
+          context
+              .sharedL10n
+              .release_core_parallel_workspace_close_tabs_to_the_right,
           p != null && tabs.indexOf(p) < tabs.length - 1,
         ),
-        item(_Command.all, 'Close all tabs', tabs.isNotEmpty),
-        item(_Command.reopen, 'Reopen closed tab', _layout.closed.isNotEmpty),
-        item(_Command.save, 'Save named layout', _prefs != null),
+        item(
+          _Command.all,
+          context.sharedL10n.release_core_parallel_workspace_close_all_tabs,
+          tabs.isNotEmpty,
+        ),
+        item(
+          _Command.reopen,
+          context.sharedL10n.release_core_parallel_workspace_reopen_closed_tab,
+          _layout.closed.isNotEmpty,
+        ),
+        item(
+          _Command.save,
+          context.sharedL10n.release_core_parallel_workspace_save_named_layout,
+          _prefs != null,
+        ),
         item(
           _Command.restore,
-          'Restore named layout',
+          context
+              .sharedL10n
+              .release_core_parallel_workspace_restore_named_layout,
           _layout.saved.isNotEmpty,
         ),
-        item(_Command.refresh, 'Refresh chat list', !_loading),
+        item(
+          _Command.refresh,
+          context.sharedL10n.release_core_parallel_workspace_refresh_chat_list,
+          !_loading,
+        ),
       ],
     );
   }
@@ -462,7 +575,8 @@ class _WorkspaceState extends State<ParallelWorkspace> {
   Widget _tools() {
     final target = _target(_primary?.sessionId ?? '', owner: _primary);
     return PopupMenuButton<WorkspaceContribution>(
-      tooltip: 'Workspace tools',
+      tooltip:
+          context.sharedL10n.release_core_parallel_workspace_workspace_tools,
       icon: const Icon(Icons.extension_outlined),
       onSelected: (c) => _run(c, target),
       itemBuilder: (_) => [
@@ -472,7 +586,7 @@ class _WorkspaceState extends State<ParallelWorkspace> {
             enabled: c.reason(target) == null,
             child: ListTile(
               leading: Icon(c.icon),
-              title: Text(c.label),
+              title: Text(c.localizedLabel(context.sharedL10n)),
               subtitle: c.reason(target) == null
                   ? null
                   : Text(c.reason(target)!),
@@ -490,7 +604,9 @@ class _WorkspaceState extends State<ParallelWorkspace> {
     };
     final selected = await pickWorkspaceItem(
       context,
-      'Choose a chat for this pane',
+      context
+          .sharedL10n
+          .release_core_parallel_workspace_choose_a_chat_for_this_pane,
       [
         for (final r in rows.values)
           (value: r.id, label: r.title, detail: r.id),
@@ -511,7 +627,11 @@ class _WorkspaceState extends State<ParallelWorkspace> {
         child: TextButton.icon(
           onPressed: () => _chooseForSlot(ref),
           icon: const Icon(Icons.add_comment_outlined),
-          label: Text('Choose chat for ${_title(ref).toLowerCase()}'),
+          label: Text(
+            context.sharedL10n.release_core_parallel_workspace_choose_chat_for(
+              _title(ref),
+            ),
+          ),
         ),
       );
     }
@@ -532,7 +652,9 @@ class _WorkspaceState extends State<ParallelWorkspace> {
     }
     return Center(
       child: Text(
-        'This ${ref.page.isEmpty ? 'chat' : 'page'} is not available for this connection.',
+        ref.page.isEmpty
+            ? context.sharedL10n.release_core_workspace_chat_unavailable
+            : context.sharedL10n.release_core_workspace_page_unavailable,
       ),
     );
   }
@@ -561,8 +683,12 @@ class _WorkspaceState extends State<ParallelWorkspace> {
           Center(
             child: Text(
               _layout.tabs.isEmpty
-                  ? 'Add a chat to start a workspace.'
-                  : 'Select a tab to show its pane.',
+                  ? context
+                        .sharedL10n
+                        .release_core_parallel_workspace_add_a_chat_to_start_a_workspace
+                  : context
+                        .sharedL10n
+                        .release_core_parallel_workspace_select_a_tab_to_show_its_pane,
             ),
           ),
         for (final ref in _layout.tabs)
@@ -640,13 +766,19 @@ class _WorkspaceState extends State<ParallelWorkspace> {
           ? null
           : AppBar(
               title: Text(
-                _focus && p != null ? _title(p) : 'Parallel workspace',
+                _focus && p != null
+                    ? _title(p)
+                    : context
+                          .sharedL10n
+                          .release_core_parallel_workspace_parallel_workspace,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
               leading: _focus
                   ? IconButton(
-                      tooltip: 'Show workspace',
+                      tooltip: context
+                          .sharedL10n
+                          .release_core_parallel_workspace_show_workspace,
                       icon: const Icon(Icons.fullscreen_exit),
                       onPressed: () => setState(() => _focus = false),
                     )
@@ -655,7 +787,9 @@ class _WorkspaceState extends State<ParallelWorkspace> {
                   ? null
                   : [
                       IconButton(
-                        tooltip: 'Add chat',
+                        tooltip: context
+                            .sharedL10n
+                            .release_core_parallel_workspace_add_chat,
                         icon: const Icon(Icons.add_comment_outlined),
                         onPressed: _prefs == null ? null : () => _pick(),
                       ),
@@ -673,7 +807,11 @@ class _WorkspaceState extends State<ParallelWorkspace> {
               TextButton.icon(
                 onPressed: _refresh,
                 icon: const Icon(Icons.refresh),
-                label: const Text('Could not load chats. Retry'),
+                label: Text(
+                  context
+                      .sharedL10n
+                      .release_core_parallel_workspace_could_not_load_chats_retry,
+                ),
               ),
             if (!_focus && !foldStrip && _layout.tabs.isNotEmpty)
               SizedBox(
@@ -698,7 +836,10 @@ class _WorkspaceState extends State<ParallelWorkspace> {
                               : null,
                           onPressed: () => _open(ref),
                           onDeleted: () => _close(ref),
-                          deleteButtonTooltipMessage: 'Close ${_title(ref)}',
+                          deleteButtonTooltipMessage: context.sharedL10n
+                              .release_core_parallel_workspace_close(
+                                (_title(ref)).toString(),
+                              ),
                         ),
                       ),
                   ],
@@ -711,7 +852,10 @@ class _WorkspaceState extends State<ParallelWorkspace> {
                   onPressed: () => _open(s),
                   icon: const Icon(Icons.swap_horiz),
                   label: Text(
-                    'Switch pane: ${_title(s)}',
+                    context.sharedL10n
+                        .release_core_parallel_workspace_switch_pane(
+                          (_title(s)).toString(),
+                        ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

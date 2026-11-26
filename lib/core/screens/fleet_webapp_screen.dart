@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
+import '../l10n/workspace_strings.dart';
+
 import '../services/connection_mutation_barrier.dart';
 import '../services/gateway_fleet.dart';
 import '../services/remote_workspace.dart';
@@ -25,7 +28,7 @@ class _FleetWebappScreenState extends State<FleetWebappScreen> {
     widget.owner.connectionId,
   );
   WorkspaceTarget? target;
-  String? message;
+  String Function(AppLocalizations)? message;
   CloudInventory? cloud;
   WebappRegistry? registry;
   WebappDirection? direction;
@@ -48,7 +51,8 @@ class _FleetWebappScreenState extends State<FleetWebappScreen> {
           target = null;
           registry = null;
           direction = null;
-          message = 'Account changed. Reopen this page.';
+          message = (l10n) => l10n
+              .release_core_fleet_webapp_screen_account_changed_reopen_this_page;
         });
       }
     }
@@ -85,7 +89,7 @@ class _FleetWebappScreenState extends State<FleetWebappScreen> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          message = fleetError(e);
+          message = (l10n) => fleetError(e, l10n);
           if (target?.isCurrent != true) {
             cloud = null;
             registry = null;
@@ -103,18 +107,29 @@ class _FleetWebappScreenState extends State<FleetWebappScreen> {
     final yes = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Set the Webapp’s primary gateway?'),
+        title: Text(
+          context
+              .sharedL10n
+              .release_core_fleet_webapp_screen_set_the_webapp_s_primary_gateway,
+        ),
         content: Text(
-          '${widget.label} → ${row.label} (${row.id})\nThis changes the shared registry, not the last-used gateway.',
+          context.sharedL10n
+              .release_core_fleet_webapp_screen_this_changes_the_shared_registry_not_the_last(
+                (widget.label).toString(),
+                (row.label).toString(),
+                (row.id).toString(),
+              ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+            child: Text(context.sharedL10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Set primary'),
+            child: Text(
+              context.sharedL10n.release_core_fleet_webapp_screen_set_primary,
+            ),
           ),
         ],
       ),
@@ -126,26 +141,46 @@ class _FleetWebappScreenState extends State<FleetWebappScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Cloud and Desktop Webapp')),
+    appBar: AppBar(
+      title: Text(
+        context.sharedL10n.release_core_fleet_screen_cloud_and_desktop_webapp,
+      ),
+    ),
     body: ListView(
       padding: const EdgeInsets.all(16),
       children: [
         ListTile(
           title: Text(widget.label),
-          subtitle: Text(widget.owner.profile ?? 'Serving profile'),
+          subtitle: Text(
+            widget.owner.profile ??
+                context
+                    .sharedL10n
+                    .release_core_fleet_webapp_screen_serving_profile,
+          ),
         ),
-        const Text('Hermes Cloud'),
+        Text(context.sharedL10n.release_core_fleet_webapp_screen_hermes_cloud),
         TextButton(
           onPressed: busy
               ? null
               : () => run((t) async {
                   cloud = await t.discoverCloud();
                 }, fresh: true),
-          child: const Text('Discover signed-in agents'),
+          child: Text(
+            context
+                .sharedL10n
+                .release_core_fleet_webapp_screen_discover_signed_in_agents,
+          ),
         ),
         if (cloud case final c?) ...[
           if (c.org case final org?)
-            ListTile(title: Text('Organisation: ${org.name}')),
+            ListTile(
+              title: Text(
+                context.sharedL10n
+                    .release_core_fleet_webapp_screen_organisation(
+                      (org.name).toString(),
+                    ),
+              ),
+            ),
           for (final o in c.choices)
             ListTile(
               leading: const Icon(Icons.groups_outlined),
@@ -162,7 +197,11 @@ class _FleetWebappScreenState extends State<FleetWebappScreen> {
             ListTile(
               title: Text(a.name),
               subtitle: Text(
-                '${a.status} · ${a.address?.toString() ?? 'No gateway address yet'}',
+                [
+                  cloudAgentStatusLabel(context.sharedL10n, a.status),
+                  a.address?.toString() ??
+                      context.sharedL10n.release_core_fleet_no_address,
+                ].join(' · '),
               ),
               onTap: a.address == null || busy
                   ? null
@@ -186,22 +225,37 @@ class _FleetWebappScreenState extends State<FleetWebappScreen> {
                     }),
             ),
           if (c.agents.isEmpty && c.choices.isEmpty)
-            const Text('No agents available.'),
+            Text(
+              context
+                  .sharedL10n
+                  .release_core_fleet_webapp_screen_no_agents_available,
+            ),
         ],
         const Divider(),
-        const Text('Existing Desktop Webapp'),
+        Text(
+          context
+              .sharedL10n
+              .release_core_fleet_webapp_screen_existing_desktop_webapp,
+        ),
         TextButton(
           onPressed: busy
               ? null
               : () => run((t) async {
                   final d = await t.fleetDiagnostics();
                   t.checkCurrent();
-                  message = 'Gateway ${d.version} · ${d.access}';
+                  message = (l10n) =>
+                      l10n.release_core_fleet_diagnostics(d.version, d.access);
                 }, fresh: true),
-          child: const Text('Check gateway and Web Access status'),
+          child: Text(
+            context
+                .sharedL10n
+                .release_core_fleet_webapp_screen_check_gateway_and_web_access_status,
+          ),
         ),
-        const Text(
-          'These settings belong to the machine serving this Webapp. Publishing and restarts are not remote actions.',
+        Text(
+          context
+              .sharedL10n
+              .release_core_fleet_webapp_screen_these_settings_belong_to_the_machine_serving_this,
         ),
         TextButton(
           onPressed: busy
@@ -209,7 +263,11 @@ class _FleetWebappScreenState extends State<FleetWebappScreen> {
               : () => run((t) async {
                   registry = await t.webappRegistry();
                 }, fresh: true),
-          child: const Text('Read Webapp gateway registry'),
+          child: Text(
+            context
+                .sharedL10n
+                .release_core_fleet_webapp_screen_read_webapp_gateway_registry,
+          ),
         ),
         if (registry case final r?)
           for (final entry in r.entries)
@@ -219,12 +277,19 @@ class _FleetWebappScreenState extends State<FleetWebappScreen> {
                 [
                   entry.kind,
                   entry.id,
-                  if (r.lastUsed == entry.id) 'Last used',
-                  if (r.primary == entry.id) 'Primary',
+                  if (r.lastUsed == entry.id)
+                    context
+                        .sharedL10n
+                        .release_core_fleet_webapp_screen_last_used,
+                  if (r.primary == entry.id)
+                    context.sharedL10n.release_core_fleet_webapp_screen_primary,
                 ].join(' · '),
               ),
               trailing: IconButton(
-                tooltip: 'Set primary: ${entry.label}',
+                tooltip: context.sharedL10n
+                    .release_core_fleet_webapp_screen_set_primary_2(
+                      (entry.label).toString(),
+                    ),
                 icon: Icon(
                   r.primary == entry.id ? Icons.star : Icons.star_border,
                 ),
@@ -239,18 +304,30 @@ class _FleetWebappScreenState extends State<FleetWebappScreen> {
               : () => run((t) async {
                   direction = await t.webappDirection();
                 }, fresh: true),
-          child: const Text('Read shared display preferences'),
+          child: Text(
+            context
+                .sharedL10n
+                .release_core_fleet_webapp_screen_read_shared_display_preferences,
+          ),
         ),
         if (direction case final value?)
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Chat text direction on this Webapp and Desktop'),
+              Text(
+                context
+                    .sharedL10n
+                    .release_core_fleet_webapp_screen_chat_text_direction_on_this_webapp_and_desktop,
+              ),
               Wrap(
                 children: [
                   for (final d in WebappDirection.values)
                     ChoiceChip(
-                      label: Text(d.name.toUpperCase()),
+                      label: Text(
+                        d.name == 'auto'
+                            ? context.sharedL10n.appearance_automatic
+                            : d.name.toUpperCase(),
+                      ),
                       selected: value == d,
                       onSelected: busy || d == value
                           ? null
@@ -263,7 +340,7 @@ class _FleetWebappScreenState extends State<FleetWebappScreen> {
             ],
           ),
         if (busy) const LinearProgressIndicator(),
-        if (message case final msg?) Text(msg),
+        if (message case final msg?) Text(msg(context.sharedL10n)),
       ],
     ),
   );

@@ -418,7 +418,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
         actions: [
           if (widget.workspace case final owner?)
             IconButton(
-              tooltip: 'Project settings',
+              tooltip: context
+                  .sharedL10n
+                  .release_core_project_settings_view_project_settings,
               icon: const Icon(Icons.tune),
               onPressed: () async {
                 final route = owner.route();
@@ -947,7 +949,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                         status: session.isActive
                             ? HermesStatus.running
                             : HermesStatus.completed,
-                        label: session.isActive ? 'Running' : 'Done',
+                        label: session.isActive
+                            ? context.sharedL10n.status_running
+                            : context.sharedL10n.status_done,
                       ),
                     ],
                   ),
@@ -1117,14 +1121,22 @@ class _RepoCard extends StatelessWidget {
                         isSafeWorkspacePath(lane.path!))
                       ListTile(
                         leading: const Icon(Icons.add_comment_outlined),
-                        title: const Text('New chat in this lane'),
+                        title: Text(
+                          context
+                              .sharedL10n
+                              .release_core_project_detail_screen_new_chat_in_this_lane,
+                        ),
                         onTap: () => onNew!(lane.path!),
                       ),
                     if (onReview != null && lane.sessions.isNotEmpty)
                       ListTile(
                         key: Key('review-git-${lane.id}'),
                         leading: const Icon(Icons.difference_outlined),
-                        title: const Text('Review Git'),
+                        title: Text(
+                          context
+                              .sharedL10n
+                              .release_core_project_detail_screen_review_git,
+                        ),
                         onTap: () => onReview!(lane.sessions.first, lane.path),
                       ),
                     for (final session in lane.sessions)

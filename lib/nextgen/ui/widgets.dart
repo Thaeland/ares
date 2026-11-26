@@ -657,18 +657,24 @@ Future<bool> ngConfirm(
 String ngAgo(DateTime? time) {
   if (time == null) return '';
   final d = DateTime.now().difference(time);
-  if (d.inSeconds < 60) return 'now';
-  if (d.inMinutes < 60) return '${d.inMinutes}m';
-  if (d.inHours < 24) return '${d.inHours}h';
-  if (d.inDays < 7) return '${d.inDays}d';
-  if (d.inDays < 365) return '${(d.inDays / 7).floor()}w';
-  return '${(d.inDays / 365).floor()}y';
+  if (d.inSeconds < 60) return ngL.now_label;
+  if (d.inMinutes < 60) return ngL.ng_release_age_minutes(d.inMinutes);
+  if (d.inHours < 24) return ngL.ng_release_age_hours(d.inHours);
+  if (d.inDays < 7) return ngL.ng_release_age_days(d.inDays);
+  if (d.inDays < 365) return ngL.ng_release_age_weeks((d.inDays / 7).floor());
+  return ngL.ng_release_age_years((d.inDays / 365).floor());
 }
 
 String ngCompactNumber(num n) {
-  if (n >= 1e9) return '${(n / 1e9).toStringAsFixed(1)}B';
-  if (n >= 1e6) return '${(n / 1e6).toStringAsFixed(1)}M';
-  if (n >= 1e3) return '${(n / 1e3).toStringAsFixed(1)}k';
+  if (n >= 1e9) {
+    return ngL.ng_release_compact_billions((n / 1e9).toStringAsFixed(1));
+  }
+  if (n >= 1e6) {
+    return ngL.ng_release_compact_millions((n / 1e6).toStringAsFixed(1));
+  }
+  if (n >= 1e3) {
+    return ngL.ng_release_compact_thousands((n / 1e3).toStringAsFixed(1));
+  }
   return n.toStringAsFixed(n is int ? 0 : 0);
 }
 

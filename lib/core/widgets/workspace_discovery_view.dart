@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import '../l10n/l10n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/connection_mutation_barrier.dart';
@@ -270,10 +272,16 @@ class _DiscoveryPaneState extends State<_DiscoveryPane> {
     final failure = stale ? WorkspaceFailure.stale : _failure;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Repository discovery'),
+        title: Text(
+          context
+              .sharedL10n
+              .release_core_workspace_discovery_view_repository_discovery,
+        ),
         actions: [
           IconButton(
-            tooltip: 'Refresh results',
+            tooltip: context
+                .sharedL10n
+                .release_core_workspace_discovery_view_refresh_results,
             icon: const Icon(Icons.refresh),
             onPressed: _busy ? null : () => _load(),
           ),
@@ -289,9 +297,17 @@ class _DiscoveryPaneState extends State<_DiscoveryPane> {
               return ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(repo.label.isEmpty ? repo.root : repo.label),
-                subtitle: Text('${repo.root}\nSessions: ${repo.sessions}'),
+                subtitle: Text(
+                  context.sharedL10n.release_core_discovery_repository_sessions(
+                    repo.root,
+                    repo.sessions,
+                  ),
+                ),
                 trailing: IconButton(
-                  tooltip: 'Hide ${repo.root}',
+                  tooltip: context.sharedL10n
+                      .release_core_workspace_discovery_view_hide(
+                        (repo.root).toString(),
+                      ),
                   icon: const Icon(Icons.visibility_off_outlined),
                   onPressed: _busy
                       ? null
@@ -312,17 +328,29 @@ class _DiscoveryPaneState extends State<_DiscoveryPane> {
                     liveRegion: true,
                     child: Text(switch (failure) {
                       WorkspaceFailure.invalid =>
-                        'Invalid path or discovery data. Use absolute server paths without . or .. components.',
+                        context
+                            .sharedL10n
+                            .release_core_workspace_discovery_view_invalid_path_or_discovery_data_use_absolute_server,
                       WorkspaceFailure.unsupported =>
-                        'This gateway does not support repository discovery.',
+                        context
+                            .sharedL10n
+                            .release_core_workspace_discovery_view_this_gateway_does_not_support_repository_discovery,
                       WorkspaceFailure.denied =>
-                        'The gateway denied access to repository discovery.',
+                        context
+                            .sharedL10n
+                            .release_core_workspace_discovery_view_the_gateway_denied_access_to_repository_discovery,
                       WorkspaceFailure.stale =>
-                        'The connection changed. Reopen discovery on the current gateway.',
+                        context
+                            .sharedL10n
+                            .release_core_workspace_discovery_view_the_connection_changed_reopen_discovery_on_the_current,
                       WorkspaceFailure.mismatch =>
-                        'The displayed settings have changed. Refresh before trying again.',
+                        context
+                            .sharedL10n
+                            .release_core_workspace_discovery_view_the_displayed_settings_have_changed_refresh_before_trying,
                       _ =>
-                        'Could not load or verify discovery settings. Refresh to try again.',
+                        context
+                            .sharedL10n
+                            .release_core_workspace_discovery_view_could_not_load_or_verify_discovery_settings_refresh,
                     }),
                   ),
                 if (snapshot != null && target != null && filters != null) ...[
@@ -330,13 +358,25 @@ class _DiscoveryPaneState extends State<_DiscoveryPane> {
                   _localSettings(filters, target),
                   const Divider(),
                   Text(
-                    'Repositories shown: ${repos.length} of ${snapshot.repos.length}',
+                    context.sharedL10n
+                        .release_core_workspace_discovery_view_repositories_shown_of(
+                          repos.length,
+                          snapshot.repos.length,
+                        ),
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   if (snapshot.repos.isEmpty)
-                    const Text('The gateway returned no repositories.')
+                    Text(
+                      context
+                          .sharedL10n
+                          .release_core_workspace_discovery_view_the_gateway_returned_no_repositories,
+                    )
                   else if (repos.isEmpty)
-                    const Text('No repositories match your device filters.'),
+                    Text(
+                      context
+                          .sharedL10n
+                          .release_core_workspace_discovery_view_no_repositories_match_your_device_filters,
+                    ),
                 ],
               ],
             );
@@ -352,29 +392,49 @@ class _DiscoveryPaneState extends State<_DiscoveryPane> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Gateway scan policy',
+          context
+              .sharedL10n
+              .release_core_workspace_discovery_view_gateway_scan_policy,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         Text(
           policy == null
-              ? 'This gateway did not report a scan policy.'
-              : 'Scanning: ${policy.enabled ? 'enabled' : 'disabled'}',
+              ? context
+                    .sharedL10n
+                    .release_core_workspace_discovery_view_this_gateway_did_not_report_a_scan_policy
+              : context.sharedL10n.release_core_discovery_scanning(
+                  policy.enabled
+                      ? context.sharedL10n.release_core_discovery_enabled
+                      : context.sharedL10n.release_core_discovery_disabled,
+                ),
         ),
         if (policy != null) ...[
           Text(
-            'Scan roots: ${policy.roots.isEmpty ? 'none' : policy.roots.join('\n')}',
+            context.sharedL10n.release_core_discovery_roots(
+              policy.roots.isEmpty
+                  ? context.sharedL10n.release_core_discovery_none
+                  : policy.roots.join('\n'),
+            ),
           ),
           Text(
-            'Excluded subtrees: ${policy.excludedSubtrees.isEmpty ? 'none' : policy.excludedSubtrees.join('\n')}',
+            context.sharedL10n.release_core_discovery_excluded(
+              policy.excludedSubtrees.isEmpty
+                  ? context.sharedL10n.release_core_discovery_none
+                  : policy.excludedSubtrees.join('\n'),
+            ),
           ),
           if (policy.roots.isEmpty || !policy.enabled)
-            const Text(
-              'To scan folders, configure repository scanning in the gateway profile’s Desktop settings.',
+            Text(
+              context
+                  .sharedL10n
+                  .release_core_workspace_discovery_view_to_scan_folders_configure_repository_scanning_in_the,
             ),
         ],
         const SizedBox(height: 8),
-        const Text(
-          'Results can include cached repositories and repositories with sessions. A scan does not guarantee that every folder was reached.',
+        Text(
+          context
+              .sharedL10n
+              .release_core_workspace_discovery_view_results_can_include_cached_repositories_and_repositories_with,
         ),
         OutlinedButton.icon(
           onPressed:
@@ -384,65 +444,100 @@ class _DiscoveryPaneState extends State<_DiscoveryPane> {
                   if (_snapshot == snapshot) _load(scanTarget: target);
                 },
           icon: const Icon(Icons.search),
-          label: const Text('Scan gateway roots'),
+          label: Text(
+            context
+                .sharedL10n
+                .release_core_workspace_discovery_view_scan_gateway_roots,
+          ),
         ),
       ],
     );
   }
 
-  Widget _localSettings(WorkspaceRepoFilters filters, WorkspaceTarget target) =>
-      Column(
+  Widget _localSettings(
+    WorkspaceRepoFilters filters,
+    WorkspaceTarget target,
+  ) => Column(
+    children: [
+      ExpansionTile(
+        tilePadding: EdgeInsets.zero,
+        title: Text(
+          context
+              .sharedL10n
+              .release_core_workspace_discovery_view_filter_results_on_this_device,
+        ),
+        subtitle: Text(
+          context
+              .sharedL10n
+              .release_core_workspace_discovery_view_only_this_discovery_list_changes_not_the_gateway,
+        ),
         children: [
-          ExpansionTile(
-            tilePadding: EdgeInsets.zero,
-            title: const Text('Filter results on this device'),
-            subtitle: const Text(
-              'Only this discovery list changes, not the gateway scan.',
-            ),
-            children: [
-              _pathField(_roots, 'Include subtrees (empty = all)'),
-              _pathField(_exclusions, 'Exclude subtrees'),
-              TextButton(
-                onPressed: _busy
-                    ? null
-                    : () => _edit(
-                        target,
-                        filters,
-                        (store) => store.setSubtrees(
-                          filters,
-                          _lines(_roots),
-                          _lines(_exclusions),
-                        ),
-                        updateFields: true,
-                      ),
-                child: const Text('Apply filters'),
-              ),
-            ],
+          _pathField(
+            _roots,
+            context
+                .sharedL10n
+                .release_core_workspace_discovery_view_include_subtrees_empty_all,
           ),
-          if (filters.hidden.isNotEmpty)
-            ExpansionTile(
-              tilePadding: EdgeInsets.zero,
-              title: Text('Hidden repositories (${filters.hidden.length})'),
-              children: [
-                for (final path in filters.hidden)
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(path),
-                    trailing: TextButton(
-                      onPressed: _busy
-                          ? null
-                          : () => _edit(
-                              target,
-                              filters,
-                              (store) => store.setHidden(path, false),
-                            ),
-                      child: const Text('Undo hide'),
+          _pathField(
+            _exclusions,
+            context
+                .sharedL10n
+                .release_core_workspace_discovery_view_exclude_subtrees,
+          ),
+          TextButton(
+            onPressed: _busy
+                ? null
+                : () => _edit(
+                    target,
+                    filters,
+                    (store) => store.setSubtrees(
+                      filters,
+                      _lines(_roots),
+                      _lines(_exclusions),
                     ),
+                    updateFields: true,
                   ),
-              ],
+            child: Text(
+              context
+                  .sharedL10n
+                  .release_core_workspace_discovery_view_apply_filters,
             ),
+          ),
         ],
-      );
+      ),
+      if (filters.hidden.isNotEmpty)
+        ExpansionTile(
+          tilePadding: EdgeInsets.zero,
+          title: Text(
+            context.sharedL10n
+                .release_core_workspace_discovery_view_hidden_repositories(
+                  filters.hidden.length,
+                ),
+          ),
+          children: [
+            for (final path in filters.hidden)
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(path),
+                trailing: TextButton(
+                  onPressed: _busy
+                      ? null
+                      : () => _edit(
+                          target,
+                          filters,
+                          (store) => store.setHidden(path, false),
+                        ),
+                  child: Text(
+                    context
+                        .sharedL10n
+                        .release_core_workspace_discovery_view_undo_hide,
+                  ),
+                ),
+              ),
+          ],
+        ),
+    ],
+  );
 
   Widget _pathField(TextEditingController controller, String label) => Padding(
     padding: const EdgeInsets.symmetric(vertical: 6),
@@ -456,7 +551,9 @@ class _DiscoveryPaneState extends State<_DiscoveryPane> {
       keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
         labelText: label,
-        helperText: 'One absolute server path per line',
+        helperText: context
+            .sharedL10n
+            .release_core_workspace_discovery_view_one_absolute_server_path_per_line,
         border: const OutlineInputBorder(),
       ),
     ),

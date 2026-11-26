@@ -777,7 +777,7 @@ class _NgChatViewState extends State<NgChatView>
       _liveTurnObserved = true;
       if (runningTool != null) {
         engine.think(
-          'Hermes is working: $runningTool. Not done yet.',
+          context.sharedL10n.release_chat_live_working(runningTool),
           delegationId: delegationId,
         );
       }
@@ -802,7 +802,7 @@ class _NgChatViewState extends State<NgChatView>
     if (_liveTurnObserved || graceExpired) {
       if (engine.spokenCursor == 0) {
         engine.think(
-          'Hermes finished that request without a spoken result.',
+          context.sharedL10n.release_chat_live_finished_without_spoken_result,
           delegationId: delegationId,
         );
       }
@@ -966,6 +966,7 @@ class _NgChatViewState extends State<NgChatView>
     required bool Function() stillOwned,
   }) async {
     if (!stillOwned()) return;
+    final l10n = context.sharedL10n;
     if (ownerChat.running) {
       try {
         await ownerChat.stop(parkLocalQueue: false);
@@ -995,7 +996,7 @@ class _NgChatViewState extends State<NgChatView>
     if (!sent && stillOwned() && _liveDelegationId == delegationId) {
       _stopLiveReplyFeed();
       ownerEngine.speak(
-        'Sorry, I could not reach Hermes for that request.',
+        l10n.release_chat_live_request_unreachable,
         delegationId: delegationId,
         flush: true,
       );
@@ -1424,6 +1425,7 @@ class _NgChatViewState extends State<NgChatView>
 
   Future<void> _send() async {
     if (_decidingCommand) return;
+    final l10n = context.sharedL10n;
     final text = _input.text.trim();
     if (text.isEmpty && _drafts.isEmpty) {
       // Empty Enter delivers the client-held head. While idle it drains;
@@ -1499,10 +1501,7 @@ class _NgChatViewState extends State<NgChatView>
       }
       if (choice == 'queue' && source.gateway.sessionAuthority) {
         if (stored == null || _drafts.isNotEmpty) {
-          ngToast(
-            context,
-            'The gateway queue needs an attached chat and a text-only prompt.',
-          );
+          ngToast(context, l10n.ng_release_chat_gateway_queue_requirements);
           return;
         }
         _openGatewayQueue(source, stored);
@@ -1937,7 +1936,10 @@ class _NgChatViewState extends State<NgChatView>
       path = await stageComposerImageBytes(bytes, mimeType: mimeType);
     } catch (_) {
       if (mounted) {
-        ngToast(context, ngL.ng_couldn_t_prepare_that_file('image'));
+        ngToast(
+          context,
+          ngL.ng_couldn_t_prepare_that_file(ngL.ng_release_chat_image),
+        );
       }
       return;
     }
@@ -1961,7 +1963,7 @@ class _NgChatViewState extends State<NgChatView>
     switch (command.name) {
       case 'new' || 'reset':
         if (widget.onNewChat == null) {
-          ngToast(context, 'Start a new chat from the main chat screen.');
+          ngToast(context, ngL.ng_release_chat_start_new_main_screen);
           return true;
         }
         _input.clear();
@@ -2226,7 +2228,7 @@ class _NgChatViewState extends State<NgChatView>
       return [
         ngL.ng_working,
         if (step != null && step.isNotEmpty) step,
-        if (secs > 0) '${secs}s',
+        if (secs > 0) ngL.ng_release_elapsed_seconds(secs),
       ].join(' · ');
     }
     return chat.model ?? ngL.ng_ready;
@@ -2271,8 +2273,8 @@ class _NgChatViewState extends State<NgChatView>
       update: setState,
       commit: (text, crops) {
         if (_preparing || chat.running) {
-          throw const AttachmentDraftException(
-            'Wait for the composer to become available.',
+          throw AttachmentDraftException(
+            context.sharedL10n.release_chat_wait_for_composer,
           );
         }
         // A drop or paste may have staged drafts while the crops prepared.
@@ -2393,13 +2395,16 @@ class _NgChatViewState extends State<NgChatView>
                   ),
                   if (chat.items.isNotEmpty)
                     IconButton(
-                      tooltip: 'Find in transcript',
+                      tooltip:
+                          context.sharedL10n.release_chat_find_in_transcript,
                       icon: const Icon(Icons.find_in_page_outlined),
                       onPressed: () => _reader.currentState?.open(),
                     ),
                   if (fileId != null && fileOwner != null && !_showSessionFiles)
                     IconButton(
-                      tooltip: 'Session files',
+                      tooltip: context
+                          .sharedL10n
+                          .release_core_session_files_view_session_files,
                       icon: const Icon(Icons.account_tree_outlined),
                       onPressed: () => setState(() => _showSessionFiles = true),
                     ),
@@ -2431,7 +2436,9 @@ class _NgChatViewState extends State<NgChatView>
                       ),
                     if (chat.storedId case final id?)
                       IconButton(
-                        tooltip: 'Open browser preview',
+                        tooltip: context
+                            .sharedL10n
+                            .release_chat_open_browser_preview,
                         icon: const Icon(Icons.web_asset),
                         onPressed: () => setState(
                           () => _preview.open(chat.gateway.workspace, id),
@@ -2439,7 +2446,9 @@ class _NgChatViewState extends State<NgChatView>
                       ),
                     if (showQueue)
                       IconButton(
-                        tooltip: 'Gateway queue',
+                        tooltip: context
+                            .sharedL10n
+                            .release_core_gateway_queue_screen_gateway_queue,
                         icon: const Icon(Icons.queue),
                         onPressed: () => _openGatewayQueue(chat, parentId!),
                       ),
@@ -2464,7 +2473,7 @@ class _NgChatViewState extends State<NgChatView>
                       listenable: Listenable.merge([_wake, _voiceMode]),
                       builder: (context, _) => PopupMenuButton<String>(
                         key: const ValueKey('chat-tools-menu'),
-                        tooltip: 'More chat tools',
+                        tooltip: context.sharedL10n.release_chat_more_tools,
                         icon: const Icon(Icons.widgets_outlined),
                         onSelected: (tool) async {
                           if (tool == 'app-command-palette') {
@@ -2526,19 +2535,27 @@ class _NgChatViewState extends State<NgChatView>
                           if (_voiceMode.hasStatus)
                             voiceEngineToolItem(context, _voiceMode),
                           if (chat.storedId != null)
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: 'browser',
                               child: ListTile(
-                                leading: Icon(Icons.web_asset),
-                                title: Text('Open browser preview'),
+                                leading: const Icon(Icons.web_asset),
+                                title: Text(
+                                  context
+                                      .sharedL10n
+                                      .release_chat_open_browser_preview,
+                                ),
                               ),
                             ),
                           if (showQueue)
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: 'queue',
                               child: ListTile(
-                                leading: Icon(Icons.queue),
-                                title: Text('Gateway queue'),
+                                leading: const Icon(Icons.queue),
+                                title: Text(
+                                  context
+                                      .sharedL10n
+                                      .release_core_gateway_queue_screen_gateway_queue,
+                                ),
                               ),
                             ),
                           if (workers != null)
@@ -2991,7 +3008,11 @@ class _NgChatViewState extends State<NgChatView>
       final result = await showDialog<String>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Edit unsent prompt'),
+          title: Text(
+            context
+                .sharedL10n
+                .release_core_client_held_queue_bar_edit_unsent_prompt,
+          ),
           content: TextFormField(
             initialValue: draft,
             onChanged: (v) => draft = v,
@@ -3000,11 +3021,11 @@ class _NgChatViewState extends State<NgChatView>
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: Text(context.sharedL10n.cancel),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(context, draft),
-              child: const Text('Save'),
+              child: Text(context.sharedL10n.save),
             ),
           ],
         ),
@@ -4494,7 +4515,9 @@ class _AssistantBlockState extends State<_AssistantBlock> {
                       Padding(
                         padding: const EdgeInsets.only(left: 6),
                         child: Text(
-                          '${ngCompactNumber(item.outputTokens!)} tokens',
+                          ngL.ng_models_token_count(
+                            ngCompactNumber(item.outputTokens!),
+                          ),
                           style: NgType.caption.copyWith(color: c.textMuted),
                         ),
                       ),
@@ -4694,7 +4717,9 @@ class _ToolRowState extends State<_ToolRow> {
                   Padding(
                     padding: const EdgeInsets.only(left: 6),
                     child: Text(
-                      '${t.durationSeconds!.toStringAsFixed(1)}s',
+                      ngL.ng_release_chat_tool_seconds(
+                        t.durationSeconds!.toStringAsFixed(1),
+                      ),
                       style: NgType.caption.copyWith(color: c.textMuted),
                     ),
                   )
@@ -4704,7 +4729,11 @@ class _ToolRowState extends State<_ToolRow> {
                   Padding(
                     padding: const EdgeInsets.only(left: 6),
                     child: Text(
-                      '${(t.finishedAt!.difference(t.startedAt!).inMilliseconds / 1000).toStringAsFixed(1)}s',
+                      ngL.ng_release_chat_tool_seconds(
+                        (t.finishedAt!.difference(t.startedAt!).inMilliseconds /
+                                1000)
+                            .toStringAsFixed(1),
+                      ),
                       style: NgType.caption.copyWith(color: c.textMuted),
                     ),
                   ),

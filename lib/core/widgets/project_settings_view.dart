@@ -182,7 +182,7 @@ class _ProjectSettingsViewState extends State<ProjectSettingsView> {
 
   @override
   Widget build(BuildContext context) {
-    final l = context.l10n;
+    final l = context.sharedL10n;
     final pane = _pane;
     final target = _target;
     final settings = target?.isCurrent == true ? _settings : null;
@@ -191,7 +191,11 @@ class _ProjectSettingsViewState extends State<ProjectSettingsView> {
         : _failure;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Project settings'),
+        title: Text(
+          context
+              .sharedL10n
+              .release_core_project_settings_view_project_settings,
+        ),
         actions: [
           IconButton(
             tooltip: l.refresh,
@@ -214,9 +218,13 @@ class _ProjectSettingsViewState extends State<ProjectSettingsView> {
                   WorkspaceFailure.denied => l.ng_notify_permission_denied,
                   WorkspaceFailure.unsupported => l.ng_unsupported,
                   WorkspaceFailure.mismatch =>
-                    'The gateway did not confirm the selected project or change. Review the settings before trying again.',
+                    context
+                        .sharedL10n
+                        .release_core_project_settings_view_the_gateway_did_not_confirm_the_selected_project,
                   WorkspaceFailure.invalid =>
-                    'Could not verify these settings. Use one absolute server folder path per line, without . or .. components.',
+                    context
+                        .sharedL10n
+                        .release_core_project_settings_view_could_not_verify_these_settings_use_one_absolute,
                   _ => l.check_the_connection_and_try_again,
                 }),
               ),
@@ -235,7 +243,11 @@ class _ProjectSettingsViewState extends State<ProjectSettingsView> {
                                 settings,
                                 () => target.setProjectActive(settings.id),
                               ),
-                        child: const Text('Set active'),
+                        child: Text(
+                          context
+                              .sharedL10n
+                              .release_core_project_settings_view_set_active,
+                        ),
                       ),
               ),
               const Divider(),
@@ -244,18 +256,31 @@ class _ProjectSettingsViewState extends State<ProjectSettingsView> {
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               _picker(
-                label: 'Icon',
+                label:
+                    context.sharedL10n.release_core_project_settings_view_icon,
                 current: settings.icon,
                 mark: (key) =>
                     Icon(_projectGlyphs[key] ?? Icons.folder_outlined),
                 choices: {
                   '': l.ng_default,
-                  'folder-library': 'Folder',
-                  'repo': 'Repository',
-                  'rocket': 'Rocket',
-                  'star-full': 'Star',
-                  'book': 'Book',
-                  'terminal': 'Terminal',
+                  'folder-library': context
+                      .sharedL10n
+                      .release_core_project_settings_view_folder,
+                  'repo': context
+                      .sharedL10n
+                      .release_core_project_settings_view_repository,
+                  'rocket': context
+                      .sharedL10n
+                      .release_core_project_settings_view_rocket,
+                  'star-full': context
+                      .sharedL10n
+                      .release_core_project_settings_view_star,
+                  'book': context
+                      .sharedL10n
+                      .release_core_project_settings_view_book,
+                  'terminal': context
+                      .sharedL10n
+                      .release_core_project_settings_view_terminal,
                 },
                 onSelected: (icon) => _change(
                   target,
@@ -264,7 +289,9 @@ class _ProjectSettingsViewState extends State<ProjectSettingsView> {
                 ),
               ),
               _picker(
-                label: 'Colour',
+                label: context
+                    .sharedL10n
+                    .release_core_project_settings_view_colour,
                 current: settings.color,
                 mark: (key) => Icon(Icons.circle, color: _swatchColors[key]),
                 choices: {
@@ -289,7 +316,11 @@ class _ProjectSettingsViewState extends State<ProjectSettingsView> {
                     folder.isPrimary
                         ? Icons.folder_special_outlined
                         : Icons.folder_outlined,
-                    semanticLabel: folder.isPrimary ? 'Primary folder' : null,
+                    semanticLabel: folder.isPrimary
+                        ? context
+                              .sharedL10n
+                              .release_core_project_settings_view_primary_folder
+                        : null,
                   ),
                   title: Text(folder.path),
                   subtitle: folder.label == null ? null : Text(folder.label!),
@@ -303,11 +334,14 @@ class _ProjectSettingsViewState extends State<ProjectSettingsView> {
                 autocorrect: false,
                 enableSuggestions: false,
                 keyboardType: TextInputType.multiline,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Server folder paths',
-                  helperText:
-                      'One absolute path per line. Existing folders are kept.',
+                  labelText: context
+                      .sharedL10n
+                      .release_core_project_settings_view_server_folder_paths,
+                  helperText: context
+                      .sharedL10n
+                      .release_core_project_settings_view_one_absolute_path_per_line_existing_folders_are,
                   helperMaxLines: 2,
                 ),
               ),
@@ -318,7 +352,11 @@ class _ProjectSettingsViewState extends State<ProjectSettingsView> {
                   valueListenable: _paths,
                   builder: (context, value, _) => FilledButton.icon(
                     icon: const Icon(Icons.create_new_folder_outlined),
-                    label: const Text('Add folders'),
+                    label: Text(
+                      context
+                          .sharedL10n
+                          .release_core_project_settings_view_add_folders,
+                    ),
                     onPressed: _busy || value.text.trim().isEmpty
                         ? null
                         : () {
@@ -361,7 +399,9 @@ class _ProjectSettingsViewState extends State<ProjectSettingsView> {
         // menu closes. Don't let an open menu borrow a later target/row.
         key: ValueKey((_target, _settings, label)),
         enabled: !_busy,
-        tooltip: 'Choose ${label.toLowerCase()}',
+        tooltip: context.sharedL10n.release_core_project_settings_view_choose(
+          label,
+        ),
         icon: const Icon(Icons.edit_outlined),
         initialValue: selected,
         onSelected: onSelected,

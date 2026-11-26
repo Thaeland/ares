@@ -161,6 +161,8 @@ import '../widgets/slash_command_notice_card.dart';
 import '../widgets/voice_composer_controls.dart';
 
 import 'package:hermes_android/core/l10n/l10n.dart';
+import '../l10n/service_strings.dart';
+import '../l10n/ui_message_exception.dart';
 import '../widgets/desktop_shortcuts.dart';
 import '../widgets/composer_prompt_recall.dart';
 import '../composer/composer_commands.dart';
@@ -319,15 +321,32 @@ class _ChatModelPickerSheetState extends State<_ChatModelPickerSheet> {
                               context.l10n.model_and_thinking_for_this_chat,
                             ),
                             subtitle: Text(
-                              'Profile default: ${widget.modelInfo['model'] ?? 'unknown'}'
-                              '${widget.modelInfo['provider'] == null ? '' : ' • ${widget.modelInfo['provider']}'}',
+                              widget.modelInfo['provider'] == null
+                                  ? context.sharedL10n
+                                        .release_chat_profile_default(
+                                          (widget.modelInfo['model'] ??
+                                                  context
+                                                      .sharedL10n
+                                                      .release_chat_unknown_model)
+                                              .toString(),
+                                        )
+                                  : context.sharedL10n
+                                        .release_chat_profile_default_provider(
+                                          (widget.modelInfo['model'] ??
+                                                  context
+                                                      .sharedL10n
+                                                      .release_chat_unknown_model)
+                                              .toString(),
+                                          widget.modelInfo['provider']
+                                              .toString(),
+                                        ),
                             ),
                           ),
                           if (widget.providerChoiceRequired)
-                            const Padding(
-                              padding: EdgeInsets.fromLTRB(16, 0, 16, 12),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
                               child: Text(
-                                'This model is available from multiple providers. Choose a provider to continue.',
+                                context.sharedL10n.release_chat_choose_provider,
                               ),
                             ),
                           Padding(
@@ -1292,7 +1311,9 @@ class _ChatScreenState extends State<ChatScreen>
       loadCatalog: () async {
         final gateway = _slashGateway;
         if (gateway == null) {
-          throw StateError('Slash commands need the Desktop gateway');
+          throw UiMessageException(
+            serviceStrings.release_chat_slash_needs_gateway,
+          );
         }
         return gateway.fetchSlashCommands(sessionId: widget.session.id);
       },
@@ -1698,9 +1719,10 @@ class _ChatScreenState extends State<ChatScreen>
           ? _ResponseTransport.desktop
           : _ResponseTransport.none;
       _gatewayTurnStatus = snapshot.reconciling
-          ? const GatewayTurnStatus(
+          ? GatewayTurnStatus(
               kind: 'recovery',
-              text: 'Recovering without resending',
+              // Subscription replay can happen while attaching in initState.
+              text: serviceStrings.release_chat_recovering_without_resending,
             )
           : snapshot.status;
       if (hydrateHistory) {
@@ -2692,6 +2714,7 @@ class _ChatScreenState extends State<ChatScreen>
     required bool Function() stillOwned,
   }) async {
     if (!stillOwned()) return;
+    final l10n = context.sharedL10n;
     if (_streaming || _normalChat?.snapshot.hasActiveTurn == true) {
       if (!_stopResponseInFlight) {
         try {
@@ -2728,7 +2751,7 @@ class _ChatScreenState extends State<ChatScreen>
         _liveDelegatedTurnId = null;
         _liveTurnObserved = false;
         ownerEngine.speak(
-          'Sorry, I could not reach Hermes for that request.',
+          l10n.release_chat_live_request_unreachable,
           delegationId: delegationId,
           flush: true,
         );
@@ -2766,7 +2789,7 @@ class _ChatScreenState extends State<ChatScreen>
           status.kind == 'tool' &&
           status.text.trim().isNotEmpty) {
         engine.think(
-          'Hermes is working: ${status.text.trim()}. Not done yet.',
+          context.sharedL10n.release_chat_live_working(status.text.trim()),
           delegationId: delegationId,
         );
       }
@@ -2786,7 +2809,7 @@ class _ChatScreenState extends State<ChatScreen>
       engine.speak(terminalText, delegationId: delegationId, flush: true);
     } else if (engine.spokenCursor == 0) {
       engine.think(
-        'Hermes finished that request without a spoken result.',
+        context.sharedL10n.release_chat_live_finished_without_spoken_result,
         delegationId: delegationId,
       );
     }
@@ -4061,6 +4084,8 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   Future<void> _initVoice({bool requestSpeechPermission = false}) async {
+    // Also called from initState, before inherited lookups are safe.
+    final l10n = serviceStrings;
     try {
       final prefs = await SharedPreferences.getInstance();
       final voiceName = prefs.getString('voice_name');
@@ -4081,7 +4106,9 @@ class _ChatScreenState extends State<ChatScreen>
         if (voiceName != null && voiceName.isNotEmpty) {
           if (voiceName == voiceLocale) {
             if (await _flutterTts.setLanguage(voiceName) != 1) {
-              throw StateError('Selected reply language is unavailable');
+              throw UiMessageException(
+                l10n.release_chat_reply_language_unavailable,
+              );
             }
           } else {
             if (await _flutterTts.setVoice({
@@ -4089,7 +4116,9 @@ class _ChatScreenState extends State<ChatScreen>
                   'locale': voiceLocale ?? '',
                 }) !=
                 1) {
-              throw StateError('Selected reply voice is unavailable');
+              throw UiMessageException(
+                l10n.release_chat_reply_voice_unavailable,
+              );
             }
           }
           _sttLocaleId = voiceLocale?.replaceAll('-', '_');
@@ -4099,7 +4128,9 @@ class _ChatScreenState extends State<ChatScreen>
         if (await _flutterTts.setSpeechRate(0.48) != 1 ||
             await _flutterTts.setVolume(1.0) != 1 ||
             await _flutterTts.setPitch(1.0) != 1) {
-          throw StateError('Reply voice configuration is unavailable');
+          throw UiMessageException(
+            l10n.release_chat_reply_voice_configuration_unavailable,
+          );
         }
       } else {
         _sttLocaleId = voiceLocale?.replaceAll('-', '_');
@@ -4372,7 +4403,7 @@ class _ChatScreenState extends State<ChatScreen>
     if (_normalSession != null && _normalChat?.snapshot.turnId != null) return;
     if (!_appInBackground || serverRequestId == null) return;
     // Match the normal owner: request details stay inside the authenticated UI.
-    const body = 'Open the chat to review the requested action.';
+    final body = context.sharedL10n.release_chat_notification_review_action;
     unawaited(
       _turnNotifications.showKind(
         origin: widget.connection,
@@ -4402,7 +4433,7 @@ class _ChatScreenState extends State<ChatScreen>
     if (_normalSession != null && _normalChat?.snapshot.turnId != null) return;
     if (!_appInBackground) return;
     // Prompt content is only displayed after returning to the authenticated UI.
-    const noticeBody = 'Open the chat to respond.';
+    final noticeBody = context.sharedL10n.release_chat_notification_respond;
     unawaited(
       _turnNotifications.showKind(
         origin: widget.connection,
@@ -6125,6 +6156,7 @@ class _ChatScreenState extends State<ChatScreen>
     bool Function()? canOpen,
   }) async {
     if (_pendingReattachResync || _loadingModelOptions) return;
+    final l10n = context.sharedL10n;
     setState(() => _loadingModelOptions = true);
     try {
       await _sessionModelRestore;
@@ -6168,8 +6200,8 @@ class _ChatScreenState extends State<ChatScreen>
           : modelOptions;
       final choices = _parseModelChoices(modelOptions);
       if (choices.isEmpty) {
-        throw StateError(
-          'The active profile did not return any selectable models.',
+        throw UiMessageException(
+          l10n.the_active_profile_did_not_return_any_selectable_models,
         );
       }
 
@@ -6750,7 +6782,11 @@ class _ChatScreenState extends State<ChatScreen>
     if (_localNewSessionNames.contains(bareName)) {
       if (widget.singleSession) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Start a new chat in the main window.')),
+          SnackBar(
+            content: Text(
+              context.sharedL10n.release_chat_start_new_main_window,
+            ),
+          ),
         );
         return '';
       }
@@ -7115,7 +7151,11 @@ class _ChatScreenState extends State<ChatScreen>
     Map<String, dynamic> params,
   ) {
     final gateway = _composerGateway;
-    if (gateway == null) throw StateError('No Desktop gateway');
+    if (gateway == null) {
+      throw UiMessageException(
+        context.sharedL10n.release_chat_no_desktop_gateway,
+      );
+    }
     if (gateway.hasLiveSession(widget.session.id)) {
       return gateway.requestSessionRpc(method, {
         ...params,
@@ -7928,6 +7968,7 @@ class _ChatScreenState extends State<ChatScreen>
     bool heldUntilAccepted = false,
     Map<String, Object?> promptParams = const {},
   }) async {
+    final l10n = context.sharedL10n;
     final keepComposer = preserveComposer || voiceBinding != null;
     final chat = _normalChat;
     if (chat == null) return;
@@ -8001,7 +8042,9 @@ class _ChatScreenState extends State<ChatScreen>
         retainUploadedFiles: capture != null,
         upload: ({required draft, required dataUrl}) async {
           if (!mounted || responseGeneration != _responseGeneration) {
-            throw StateError('Attachment preparation was cancelled.');
+            throw UiMessageException(
+              l10n.release_chat_attachment_preparation_cancelled,
+            );
           }
           if (desktopGateway == null) {
             final upload = widget.testRemoteAttachmentUpload;
@@ -8803,6 +8846,7 @@ class _ChatScreenState extends State<ChatScreen>
     bool canonicalControl = false,
     bool Function()? isCurrent,
   }) async {
+    final l10n = context.sharedL10n;
     final normal = _normalSession;
     final recovery = _turnApplicationSession;
     final gateway = _desktopGateway;
@@ -8810,7 +8854,7 @@ class _ChatScreenState extends State<ChatScreen>
     final localSessionId = _normalLocalSessionKey;
     void check() {
       if (isCurrent != null && !isCurrent()) {
-        throw StateError('Approval authority was revoked.');
+        throw UiMessageException(l10n.release_chat_approval_authority_revoked);
       }
     }
 
@@ -8853,7 +8897,7 @@ class _ChatScreenState extends State<ChatScreen>
       );
       return;
     }
-    throw StateError('The Desktop gateway session is no longer connected');
+    throw UiMessageException(l10n.release_chat_gateway_session_disconnected);
   }
 
   /// Answers approvals that notification actions left pending for this
@@ -9133,6 +9177,7 @@ class _ChatScreenState extends State<ChatScreen>
     required String answer,
     String? questionId,
   }) async {
+    final l10n = context.sharedL10n;
     final handled =
         await _turnApplicationSession?.tryRespondToClarify(
           requestId: requestId,
@@ -9143,7 +9188,7 @@ class _ChatScreenState extends State<ChatScreen>
     if (handled) return;
     final gateway = _desktopGateway;
     if (gateway == null) {
-      throw StateError('The Desktop gateway session is no longer connected');
+      throw UiMessageException(l10n.release_chat_gateway_session_disconnected);
     }
     await gateway.respondToClarify(
       requestId: requestId,
@@ -9156,6 +9201,7 @@ class _ChatScreenState extends State<ChatScreen>
     required String requestId,
     required String password,
   }) async {
+    final l10n = context.sharedL10n;
     final handled =
         await _turnApplicationSession?.tryRespondToSudo(
           requestId: requestId,
@@ -9165,7 +9211,7 @@ class _ChatScreenState extends State<ChatScreen>
     if (handled) return;
     final gateway = _desktopGateway;
     if (gateway == null) {
-      throw StateError('The Desktop gateway session is no longer connected');
+      throw UiMessageException(l10n.release_chat_gateway_session_disconnected);
     }
     await gateway.respondToSudo(requestId: requestId, password: password);
     _normalSession?.forgetAnsweredInput(requestId);
@@ -9175,6 +9221,7 @@ class _ChatScreenState extends State<ChatScreen>
     required String requestId,
     required String value,
   }) async {
+    final l10n = context.sharedL10n;
     final handled =
         await _turnApplicationSession?.tryRespondToSecret(
           requestId: requestId,
@@ -9184,7 +9231,7 @@ class _ChatScreenState extends State<ChatScreen>
     if (handled) return;
     final gateway = _desktopGateway;
     if (gateway == null) {
-      throw StateError('The Desktop gateway session is no longer connected');
+      throw UiMessageException(l10n.release_chat_gateway_session_disconnected);
     }
     await gateway.respondToSecret(requestId: requestId, value: value);
     _normalSession?.forgetAnsweredInput(requestId);
@@ -9655,6 +9702,7 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   Future<bool> _stopRecoverableGatewayResponse() async {
+    final l10n = context.sharedL10n;
     final turnSession = _turnApplicationSession!;
     final responseGeneration = _responseGeneration;
     final pendingSubmission = _recoverableSubmissionState;
@@ -9680,9 +9728,7 @@ class _ChatScreenState extends State<ChatScreen>
       final stopped = state.isTerminal && !state.isFailClosed && !_streaming;
       if (!stopped && _activeClientTurnId == clientTurnId) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Stop requested. Waiting for Hermes to finish.'),
-          ),
+          SnackBar(content: Text(l10n.release_chat_stop_requested)),
         );
       }
       // Stop is an intent, not lifecycle settlement. A nonterminal reconcile
@@ -9692,7 +9738,11 @@ class _ChatScreenState extends State<ChatScreen>
     } catch (error) {
       if (mounted && responseGeneration == _responseGeneration) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not request stop: $error')),
+          SnackBar(
+            content: Text(
+              l10n.release_chat_stop_request_failed(error.toString()),
+            ),
+          ),
         );
       }
       return false;
@@ -9744,7 +9794,7 @@ class _ChatScreenState extends State<ChatScreen>
     if (!mounted) return;
     setState(() {
       _terminalTurnNotice ??= context.l10n.send_failed(
-        'The queued prompt was not sent.',
+        context.sharedL10n.release_chat_queued_prompt_not_sent,
       );
     });
   }
@@ -9828,7 +9878,11 @@ class _ChatScreenState extends State<ChatScreen>
     final result = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Edit unsent prompt'),
+        title: Text(
+          context
+              .sharedL10n
+              .release_core_client_held_queue_bar_edit_unsent_prompt,
+        ),
         content: TextFormField(
           initialValue: draft,
           onChanged: (value) => draft = value,
@@ -9837,11 +9891,11 @@ class _ChatScreenState extends State<ChatScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(context.sharedL10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, draft),
-            child: const Text('Save'),
+            child: Text(context.sharedL10n.save),
           ),
         ],
       ),
@@ -9864,12 +9918,15 @@ class _ChatScreenState extends State<ChatScreen>
 
   void _reportMissingHeldEdit() {
     if (!mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text(heldPromptMissingMessage)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(context.sharedL10n.release_chat_unsent_prompt_gone),
+      ),
+    );
   }
 
   Future<bool> _stopResponse() async {
+    final l10n = context.sharedL10n;
     final parkHeld = _parkHeldOnStop;
     _parkHeldOnStop = true;
     // A row send unparks even when Stop is already in flight. Returning
@@ -9903,8 +9960,8 @@ class _ChatScreenState extends State<ChatScreen>
           SnackBar(
             content: Text(
               requested
-                  ? 'Stop requested. Waiting for Hermes to finish.'
-                  : 'The running turn could not be reached. Reconnecting without resending.',
+                  ? l10n.release_chat_stop_requested
+                  : l10n.release_chat_running_turn_unreachable,
             ),
           ),
         );
@@ -9912,7 +9969,11 @@ class _ChatScreenState extends State<ChatScreen>
       } catch (error) {
         if (mounted && turn == normal.turnId) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Could not request stop: $error')),
+            SnackBar(
+              content: Text(
+                l10n.release_chat_stop_request_failed(error.toString()),
+              ),
+            ),
           );
         }
       } finally {
@@ -10148,8 +10209,8 @@ class _ChatScreenState extends State<ChatScreen>
       update: setState,
       commit: (text, crops) {
         if (_sending || _preparingSend || _pendingReattachResync) {
-          throw const AttachmentDraftException(
-            'Wait for the composer to become available.',
+          throw AttachmentDraftException(
+            context.sharedL10n.release_chat_wait_for_composer,
           );
         }
         // A drop or paste may have staged drafts while the crops prepared.
@@ -10313,13 +10374,15 @@ class _ChatScreenState extends State<ChatScreen>
             },
           ),
           IconButton(
-            tooltip: 'Find in transcript',
+            tooltip: context.sharedL10n.release_chat_find_in_transcript,
             icon: const Icon(Icons.find_in_page_outlined),
             onPressed: () => _reader.currentState?.open(),
           ),
           if (fileOwner != null && fileId != null && !_showSessionFiles)
             IconButton(
-              tooltip: 'Session files',
+              tooltip: context
+                  .sharedL10n
+                  .release_core_session_files_view_session_files,
               icon: const Icon(Icons.account_tree_outlined),
               onPressed: () => setState(() => _showSessionFiles = true),
             ),
@@ -10357,13 +10420,15 @@ class _ChatScreenState extends State<ChatScreen>
               ),
             if (_desktopGateway != null)
               IconButton(
-                tooltip: 'Open browser preview',
+                tooltip: context.sharedL10n.release_chat_open_browser_preview,
                 icon: const Icon(Icons.web_asset),
                 onPressed: openBrowserPreview,
               ),
             if (showQueue)
               IconButton(
-                tooltip: 'Gateway queue',
+                tooltip: context
+                    .sharedL10n
+                    .release_core_gateway_queue_screen_gateway_queue,
                 icon: const Icon(Icons.queue),
                 onPressed: openGatewayQueue,
               ),
@@ -10385,7 +10450,7 @@ class _ChatScreenState extends State<ChatScreen>
             // the composer row.
             PopupMenuButton<String>(
               key: const ValueKey('chat-tools-menu'),
-              tooltip: 'More chat tools',
+              tooltip: context.sharedL10n.release_chat_more_tools,
               icon: const Icon(Icons.widgets_outlined),
               onSelected: (tool) {
                 if (tool == wakeWordToolValue) {
@@ -10441,19 +10506,25 @@ class _ChatScreenState extends State<ChatScreen>
                     ),
                   ),
                 if (_desktopGateway != null)
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: 'browser',
                     child: ListTile(
-                      leading: Icon(Icons.web_asset),
-                      title: Text('Open browser preview'),
+                      leading: const Icon(Icons.web_asset),
+                      title: Text(
+                        context.sharedL10n.release_chat_open_browser_preview,
+                      ),
                     ),
                   ),
                 if (showQueue)
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: 'queue',
                     child: ListTile(
-                      leading: Icon(Icons.queue),
-                      title: Text('Gateway queue'),
+                      leading: const Icon(Icons.queue),
+                      title: Text(
+                        context
+                            .sharedL10n
+                            .release_core_gateway_queue_screen_gateway_queue,
+                      ),
                     ),
                   ),
                 if (workers != null)
@@ -11386,8 +11457,10 @@ class _ChatScreenState extends State<ChatScreen>
                         if (showQueueHeld)
                           _buildComposerAction(
                             key: const Key('chat-queue-held'),
-                            label: 'Queue',
-                            tooltip: 'Queue until this turn finishes',
+                            label: context.sharedL10n.ng_queue,
+                            tooltip: context
+                                .sharedL10n
+                                .release_chat_queue_until_finished,
                             icon: Icons.queue,
                             onPressed: _queueHeldFromComposer,
                           ),
@@ -11614,12 +11687,12 @@ class _ChatScreenState extends State<ChatScreen>
             onPressed: () => _insertFormatting('```\n', '\n```'),
           ),
           _composerFormatButton(
-            tooltip: 'Bold',
+            tooltip: context.sharedL10n.release_chat_format_bold,
             icon: Icons.format_bold,
             onPressed: () => _insertFormatting('**', '**'),
           ),
           _composerFormatButton(
-            tooltip: 'Italic',
+            tooltip: context.sharedL10n.release_chat_format_italic,
             icon: Icons.format_italic,
             onPressed: () => _insertFormatting('*', '*'),
           ),
@@ -13089,7 +13162,9 @@ class MessageBubble extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(bottom: density.senderLabelGap),
                 child: Text(
-                  isUser ? 'You' : 'Hermes',
+                  isUser
+                      ? context.sharedL10n.history_role_user
+                      : context.sharedL10n.history_role_assistant,
                   style: theme.textTheme.labelSmall?.copyWith(
                     color: isUser ? tokens.onAccent : tokens.muted,
                     fontWeight: FontWeight.w700,
@@ -13176,7 +13251,9 @@ class MessageBubble extends StatelessWidget {
                 ? bubble
                 : Semantics(
                     container: true,
-                    label: isUser ? 'You' : 'Hermes',
+                    label: isUser
+                        ? context.sharedL10n.history_role_user
+                        : context.sharedL10n.history_role_assistant,
                     child: bubble,
                   ),
             MessageReaction(messageId: _reactionId),

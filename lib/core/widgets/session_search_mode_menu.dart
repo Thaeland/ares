@@ -9,12 +9,14 @@ class SessionSearchModeMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final local = l?.on_device ?? 'On-device';
-    final gateway = '${l?.full_text ?? 'Full-text'} (gateway)';
+    final l = context.sharedL10n;
+    final local = l.on_device;
+    final gateway = l.release_core_search_gateway_mode(l.full_text);
     return PopupMenuButton<bool>(
-      tooltip:
-          '${l?.search_mode ?? 'Search mode'}: ${access.value ? gateway : local}',
+      tooltip: l.release_core_search_mode_tooltip(
+        l.search_mode,
+        access.value ? gateway : local,
+      ),
       icon: Icon(access.value ? Icons.manage_search : Icons.phone_android),
       itemBuilder: (_) => [
         CheckedPopupMenuItem(
@@ -34,7 +36,11 @@ class SessionSearchModeMenu extends StatelessWidget {
         } catch (_) {
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Could not save search mode.')),
+              SnackBar(
+                content: Text(
+                  l.release_core_session_search_mode_menu_could_not_save_search_mode,
+                ),
+              ),
             );
           }
         }

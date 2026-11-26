@@ -15924,6 +15924,3757 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show or hide {name}'**
   String ng_bots_section_toggle(String name);
+
+  /// Shared transcript reader user interface: This passage is no longer in the loaded window.
+  ///
+  /// In en, this message translates to:
+  /// **'This passage is no longer in the loaded window.'**
+  String
+  get release_core_transcript_reader_this_passage_is_no_longer_in_the_loaded;
+
+  /// Shared transcript reader user interface: Loaded prompts
+  ///
+  /// In en, this message translates to:
+  /// **'Loaded prompts'**
+  String get release_core_transcript_reader_loaded_prompts;
+
+  /// Shared transcript reader user interface: Jump to latest
+  ///
+  /// In en, this message translates to:
+  /// **'Jump to latest'**
+  String get release_core_transcript_reader_jump_to_latest;
+
+  /// Shared transcript reader user interface: No prompts loaded
+  ///
+  /// In en, this message translates to:
+  /// **'No prompts loaded'**
+  String get release_core_transcript_reader_no_prompts_loaded;
+
+  /// Shared transcript reader user interface: Find in loaded messages
+  ///
+  /// In en, this message translates to:
+  /// **'Find in loaded messages'**
+  String get release_core_transcript_reader_find_in_loaded_messages;
+
+  /// Shared transcript reader user interface: Previous match
+  ///
+  /// In en, this message translates to:
+  /// **'Previous match'**
+  String get release_core_transcript_reader_previous_match;
+
+  /// Shared transcript reader user interface: Next match
+  ///
+  /// In en, this message translates to:
+  /// **'Next match'**
+  String get release_core_transcript_reader_next_match;
+
+  /// Shared transcript reader user interface: Prompt timeline
+  ///
+  /// In en, this message translates to:
+  /// **'Prompt timeline'**
+  String get release_core_transcript_reader_prompt_timeline;
+
+  /// Shared transcript reader user interface: Close find
+  ///
+  /// In en, this message translates to:
+  /// **'Close find'**
+  String get release_core_transcript_reader_close_find;
+
+  /// Shared session organisation user interface: Organise chats
+  ///
+  /// In en, this message translates to:
+  /// **'Organise chats'**
+  String get release_core_session_organisation_organise_chats;
+
+  /// Shared session organisation user interface: Show model and usage
+  ///
+  /// In en, this message translates to:
+  /// **'Show model and usage'**
+  String get release_core_session_organisation_show_model_and_usage;
+
+  /// Shared session files view user interface: Connection changed. Reopen files on the new connection.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection changed. Reopen files on the new connection.'**
+  String
+  get release_core_session_files_view_connection_changed_reopen_files_on_the_new_connection;
+
+  /// Shared session files view user interface: The connection or session changed. Reopen this pane.
+  ///
+  /// In en, this message translates to:
+  /// **'The connection or session changed. Reopen this pane.'**
+  String
+  get release_core_session_files_view_the_connection_or_session_changed_reopen_this_pane;
+
+  /// Shared session files view user interface: No verified host working directory for this session.
+  ///
+  /// In en, this message translates to:
+  /// **'No verified host working directory for this session.'**
+  String
+  get release_core_session_files_view_no_verified_host_working_directory_for_this_session;
+
+  /// Shared session files view user interface: The gateway denied this operation.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway denied this operation.'**
+  String get release_core_session_files_view_the_gateway_denied_this_operation;
+
+  /// Shared session files view user interface: This gateway does not support this operation.
+  ///
+  /// In en, this message translates to:
+  /// **'This gateway does not support this operation.'**
+  String
+  get release_core_session_files_view_this_gateway_does_not_support_this_operation;
+
+  /// Shared session files view user interface: The file, owner or working directory changed. Reload and review.
+  ///
+  /// In en, this message translates to:
+  /// **'The file, owner or working directory changed. Reload and review.'**
+  String
+  get release_core_session_files_view_the_file_owner_or_working_directory_changed_reload;
+
+  /// Shared session files view user interface: The gateway returned an unsafe path or invalid file response.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway returned an unsafe path or invalid file response.'**
+  String
+  get release_core_session_files_view_the_gateway_returned_an_unsafe_path_or_invalid;
+
+  /// Shared session files view user interface: Workspace access requires a secure gateway connection.
+  ///
+  /// In en, this message translates to:
+  /// **'Workspace access requires a secure gateway connection.'**
+  String
+  get release_core_session_files_view_workspace_access_requires_a_secure_gateway_connection;
+
+  /// Shared session files view user interface: Gateway unavailable. Refresh to check the current state.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway unavailable. Refresh to check the current state.'**
+  String
+  get release_core_session_files_view_gateway_unavailable_refresh_to_check_the_current_state;
+
+  /// Shared session files view user interface: Gateway operation could not be confirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway operation could not be confirmed.'**
+  String
+  get release_core_session_files_view_gateway_operation_could_not_be_confirmed;
+
+  /// Shared session files view user interface: Git status unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Git status unavailable.'**
+  String get release_core_session_files_view_git_status_unavailable;
+
+  /// Shared session files view user interface: Change this chat’s working directory?
+  ///
+  /// In en, this message translates to:
+  /// **'Change this chat’s working directory?'**
+  String
+  get release_core_session_files_view_change_this_chat_s_working_directory;
+
+  /// Shared session files view user interface: Absolute gateway directory
+  ///
+  /// In en, this message translates to:
+  /// **'Absolute gateway directory'**
+  String get release_core_session_files_view_absolute_gateway_directory;
+
+  /// Shared session files view user interface: Change directory
+  ///
+  /// In en, this message translates to:
+  /// **'Change directory'**
+  String get release_core_session_files_view_change_directory;
+
+  /// Shared session files view user interface: Replace gateway file?
+  ///
+  /// In en, this message translates to:
+  /// **'Replace gateway file?'**
+  String get release_core_session_files_view_replace_gateway_file;
+
+  /// Shared session files view user interface: {value1}
+  ///
+  /// Only if the file still matches the version you reviewed. A compatible host retains the displaced file for recovery.
+  ///
+  /// In en, this message translates to:
+  /// **'{path}\n\nOnly if the file still matches the version you reviewed. A compatible host retains the displaced file for recovery.'**
+  String
+  release_core_session_files_view_only_if_the_file_still_matches_the_version(
+    String path,
+  );
+
+  /// Shared session files view user interface: Save changes
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get release_core_session_files_view_save_changes;
+
+  /// Shared session files view user interface: Saved and verified on the gateway.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved and verified on the gateway.'**
+  String get release_core_session_files_view_saved_and_verified_on_the_gateway;
+
+  /// Shared session files view user interface: Guarded saving is unavailable on this gateway. Your draft is still here.
+  ///
+  /// In en, this message translates to:
+  /// **'Guarded saving is unavailable on this gateway. Your draft is still here.'**
+  String
+  get release_core_session_files_view_guarded_saving_is_unavailable_on_this_gateway_your;
+
+  /// Shared session files view user interface: {value1} Save was not confirmed. Your draft is still here.
+  ///
+  /// In en, this message translates to:
+  /// **'{reason} Save was not confirmed. Your draft is still here.'**
+  String
+  release_core_session_files_view_save_was_not_confirmed_your_draft_is_still(
+    String reason,
+  );
+
+  /// Shared session files view user interface: Review current gateway version
+  ///
+  /// In en, this message translates to:
+  /// **'Review current gateway version'**
+  String get release_core_session_files_view_review_current_gateway_version;
+
+  /// Shared session files view user interface: Discard draft and reload
+  ///
+  /// In en, this message translates to:
+  /// **'Discard draft and reload'**
+  String get release_core_session_files_view_discard_draft_and_reload;
+
+  /// Shared session files view user interface: Keep draft against this version
+  ///
+  /// In en, this message translates to:
+  /// **'Keep draft against this version'**
+  String get release_core_session_files_view_keep_draft_against_this_version;
+
+  /// Shared session files view user interface: Discard unsaved edits?
+  ///
+  /// In en, this message translates to:
+  /// **'Discard unsaved edits?'**
+  String get release_core_session_files_view_discard_unsaved_edits;
+
+  /// Shared session files view user interface: Keep editing
+  ///
+  /// In en, this message translates to:
+  /// **'Keep editing'**
+  String get release_core_session_files_view_keep_editing;
+
+  /// Shared session files view user interface: Discard edits
+  ///
+  /// In en, this message translates to:
+  /// **'Discard edits'**
+  String get release_core_session_files_view_discard_edits;
+
+  /// Shared session files view user interface: Remote working directory
+  ///
+  /// In en, this message translates to:
+  /// **'Remote working directory'**
+  String get release_core_session_files_view_remote_working_directory;
+
+  /// Shared session files view user interface: Change working directory
+  ///
+  /// In en, this message translates to:
+  /// **'Change working directory'**
+  String get release_core_session_files_view_change_working_directory;
+
+  /// Shared session files view user interface: Show ignored files
+  ///
+  /// In en, this message translates to:
+  /// **'Show ignored files'**
+  String get release_core_session_files_view_show_ignored_files;
+
+  /// Shared session files view user interface: Gateway does not report ignored status.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway does not report ignored status.'**
+  String
+  get release_core_session_files_view_gateway_does_not_report_ignored_status;
+
+  /// Shared session files view user interface: No visible entries
+  ///
+  /// In en, this message translates to:
+  /// **'No visible entries'**
+  String get release_core_session_files_view_no_visible_entries;
+
+  /// Shared session files view user interface: Changed
+  ///
+  /// In en, this message translates to:
+  /// **'Changed'**
+  String get release_core_session_files_view_changed;
+
+  /// Shared session files view user interface: Ignored
+  ///
+  /// In en, this message translates to:
+  /// **'Ignored'**
+  String get release_core_session_files_view_ignored;
+
+  /// Shared session files view user interface: Actions for {value1}
+  ///
+  /// In en, this message translates to:
+  /// **'Actions for {name}'**
+  String release_core_session_files_view_actions_for(String name);
+
+  /// Shared session files view user interface: Copy relative path
+  ///
+  /// In en, this message translates to:
+  /// **'Copy relative path'**
+  String get release_core_session_files_view_copy_relative_path;
+
+  /// Shared session files view user interface: Copy gateway path
+  ///
+  /// In en, this message translates to:
+  /// **'Copy gateway path'**
+  String get release_core_session_files_view_copy_gateway_path;
+
+  /// Shared session files view user interface: Attach folder reference
+  ///
+  /// In en, this message translates to:
+  /// **'Attach folder reference'**
+  String get release_core_session_files_view_attach_folder_reference;
+
+  /// Shared session files view user interface: Attach file reference
+  ///
+  /// In en, this message translates to:
+  /// **'Attach file reference'**
+  String get release_core_session_files_view_attach_file_reference;
+
+  /// Shared session files view user interface: Preview truncated — editing disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview truncated — editing disabled.'**
+  String get release_core_session_files_view_preview_truncated_editing_disabled;
+
+  /// Shared session files view user interface: Select lines
+  ///
+  /// In en, this message translates to:
+  /// **'Select lines'**
+  String get release_core_session_files_view_select_lines;
+
+  /// Shared session files view user interface: Review gateway version
+  ///
+  /// In en, this message translates to:
+  /// **'Review gateway version'**
+  String get release_core_session_files_view_review_gateway_version;
+
+  /// Shared session files view user interface: Attach selected lines
+  ///
+  /// In en, this message translates to:
+  /// **'Attach selected lines'**
+  String get release_core_session_files_view_attach_selected_lines;
+
+  /// Shared session files view user interface: Binary file — no text preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Binary file — no text preview.'**
+  String get release_core_session_files_view_binary_file_no_text_preview;
+
+  /// Shared session files view user interface: File source
+  ///
+  /// In en, this message translates to:
+  /// **'File source'**
+  String get release_core_session_files_view_file_source;
+
+  /// Shared session files view user interface: Close session files
+  ///
+  /// In en, this message translates to:
+  /// **'Close session files'**
+  String get release_core_session_files_view_close_session_files;
+
+  /// Shared session files view user interface: Back to tree
+  ///
+  /// In en, this message translates to:
+  /// **'Back to tree'**
+  String get release_core_session_files_view_back_to_tree;
+
+  /// Shared session files view user interface: Session files
+  ///
+  /// In en, this message translates to:
+  /// **'Session files'**
+  String get release_core_session_files_view_session_files;
+
+  /// Shared session files view user interface: Git review
+  ///
+  /// In en, this message translates to:
+  /// **'Git review'**
+  String get release_core_session_files_view_git_review;
+
+  /// Shared session files view user interface: Refresh tree
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh tree'**
+  String get release_core_session_files_view_refresh_tree;
+
+  /// Shared gateway queue screen user interface: This connection changed. Reopen its chat.
+  ///
+  /// In en, this message translates to:
+  /// **'This connection changed. Reopen its chat.'**
+  String
+  get release_core_gateway_queue_screen_this_connection_changed_reopen_its_chat;
+
+  /// Shared gateway queue screen user interface: Disconnected. Reconnect the chat, then refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnected. Reconnect the chat, then refresh.'**
+  String
+  get release_core_gateway_queue_screen_disconnected_reconnect_the_chat_then_refresh;
+
+  /// Shared gateway queue screen user interface: Gateway queue unavailable: {value1}.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway queue unavailable: {reason}.'**
+  String release_core_gateway_queue_screen_gateway_queue_unavailable(
+    String reason,
+  );
+
+  /// Shared gateway queue screen user interface: Not confirmed ({value1}). Nothing was resent.
+  ///
+  /// In en, this message translates to:
+  /// **'Not confirmed ({reason}). Nothing was resent.'**
+  String release_core_gateway_queue_screen_not_confirmed_nothing_was_resent(
+    String reason,
+  );
+
+  /// Shared gateway queue screen user interface: Gateway confirmed admission.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway confirmed admission.'**
+  String get release_core_gateway_queue_screen_gateway_confirmed_admission;
+
+  /// Shared gateway queue screen user interface: Edited entry admitted at the end of the queue.
+  ///
+  /// In en, this message translates to:
+  /// **'Edited entry admitted at the end of the queue.'**
+  String
+  get release_core_gateway_queue_screen_edited_entry_admitted_at_the_end_of_the;
+
+  /// Shared gateway queue screen user interface: Discard unknown outcome?
+  ///
+  /// In en, this message translates to:
+  /// **'Discard unknown outcome?'**
+  String get release_core_gateway_queue_screen_discard_unknown_outcome;
+
+  /// Shared gateway queue screen user interface: Remove this entry?
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this entry?'**
+  String get release_core_gateway_queue_screen_remove_this_entry;
+
+  /// Shared gateway queue screen user interface: The lost turn will not be retried. Waiting turns may now run.
+  ///
+  /// In en, this message translates to:
+  /// **'The lost turn will not be retried. Waiting turns may now run.'**
+  String
+  get release_core_gateway_queue_screen_the_lost_turn_will_not_be_retried_waiting;
+
+  /// Shared gateway queue screen user interface: If the gateway has just started this entry, removing it can stop that turn.
+  ///
+  /// In en, this message translates to:
+  /// **'If the gateway has just started this entry, removing it can stop that turn.'**
+  String
+  get release_core_gateway_queue_screen_if_the_gateway_has_just_started_this_entry;
+
+  /// Shared gateway queue screen user interface: Keep
+  ///
+  /// In en, this message translates to:
+  /// **'Keep'**
+  String get release_core_gateway_queue_screen_keep;
+
+  /// Shared gateway queue screen user interface: Discard and resume
+  ///
+  /// In en, this message translates to:
+  /// **'Discard and resume'**
+  String get release_core_gateway_queue_screen_discard_and_resume;
+
+  /// Shared gateway queue screen user interface: Remove entry
+  ///
+  /// In en, this message translates to:
+  /// **'Remove entry'**
+  String get release_core_gateway_queue_screen_remove_entry;
+
+  /// Shared gateway queue screen user interface: Lost admission resolved; it was not resent.
+  ///
+  /// In en, this message translates to:
+  /// **'Lost admission resolved; it was not resent.'**
+  String
+  get release_core_gateway_queue_screen_lost_admission_resolved_it_was_not_resent;
+
+  /// Shared gateway queue screen user interface: Gateway acknowledged removal.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway acknowledged removal.'**
+  String get release_core_gateway_queue_screen_gateway_acknowledged_removal;
+
+  /// Shared gateway queue screen user interface: Gateway queue
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway queue'**
+  String get release_core_gateway_queue_screen_gateway_queue;
+
+  /// Shared gateway queue screen user interface: Refresh queue
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh queue'**
+  String get release_core_gateway_queue_screen_refresh_queue;
+
+  /// Shared gateway queue screen user interface: Queue paused: unknown outcome
+  ///
+  /// In en, this message translates to:
+  /// **'Queue paused: unknown outcome'**
+  String get release_core_gateway_queue_screen_queue_paused_unknown_outcome;
+
+  /// Shared gateway queue screen user interface: Review the lost admission before resuming. Nothing is sent again.
+  ///
+  /// In en, this message translates to:
+  /// **'Review the lost admission before resuming. Nothing is sent again.'**
+  String
+  get release_core_gateway_queue_screen_review_the_lost_admission_before_resuming_nothing_is;
+
+  /// Shared gateway queue screen user interface: No pending admissions
+  ///
+  /// In en, this message translates to:
+  /// **'No pending admissions'**
+  String get release_core_gateway_queue_screen_no_pending_admissions;
+
+  /// Shared gateway queue screen user interface: Discard…
+  ///
+  /// In en, this message translates to:
+  /// **'Discard…'**
+  String get release_core_gateway_queue_screen_discard;
+
+  /// Shared gateway queue screen user interface: Gateway acknowledged the steering request.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway acknowledged the steering request.'**
+  String
+  get release_core_gateway_queue_screen_gateway_acknowledged_the_steering_request;
+
+  /// Shared gateway queue screen user interface: Steer running turn
+  ///
+  /// In en, this message translates to:
+  /// **'Steer running turn'**
+  String get release_core_gateway_queue_screen_steer_running_turn;
+
+  /// Shared gateway queue screen user interface: Remove…
+  ///
+  /// In en, this message translates to:
+  /// **'Remove…'**
+  String get release_core_gateway_queue_screen_remove;
+
+  /// Shared gateway queue screen user interface: Next prompt
+  ///
+  /// In en, this message translates to:
+  /// **'Next prompt'**
+  String get release_core_gateway_queue_screen_next_prompt;
+
+  /// Shared gateway queue screen user interface: Edit queued prompt
+  ///
+  /// In en, this message translates to:
+  /// **'Edit queued prompt'**
+  String get release_core_gateway_queue_screen_edit_queued_prompt;
+
+  /// Shared gateway queue screen user interface: Submit to gateway queue
+  ///
+  /// In en, this message translates to:
+  /// **'Submit to gateway queue'**
+  String get release_core_gateway_queue_screen_submit_to_gateway_queue;
+
+  /// Shared gateway queue screen user interface: Save at queue end
+  ///
+  /// In en, this message translates to:
+  /// **'Save at queue end'**
+  String get release_core_gateway_queue_screen_save_at_queue_end;
+
+  /// Shared gateway queue screen user interface: Cancel edit
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel edit'**
+  String get release_core_gateway_queue_screen_cancel_edit;
+
+  /// Shared git review pane user interface: The Git operation did not complete.
+  ///
+  /// In en, this message translates to:
+  /// **'The Git operation did not complete.'**
+  String get release_core_git_review_pane_the_git_operation_did_not_complete;
+
+  /// Shared git review pane user interface: Close Git review
+  ///
+  /// In en, this message translates to:
+  /// **'Close Git review'**
+  String get release_core_git_review_pane_close_git_review;
+
+  /// Shared git review pane user interface: Pin lane
+  ///
+  /// In en, this message translates to:
+  /// **'Pin lane'**
+  String get release_core_git_review_pane_pin_lane;
+
+  /// Shared git review pane user interface: Refresh Git review
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Git review'**
+  String get release_core_git_review_pane_refresh_git_review;
+
+  /// Shared git review pane user interface: Uncommitted
+  ///
+  /// In en, this message translates to:
+  /// **'Uncommitted'**
+  String get release_core_git_review_pane_uncommitted;
+
+  /// Shared git review pane user interface: Last turn
+  ///
+  /// In en, this message translates to:
+  /// **'Last turn'**
+  String get release_core_git_review_pane_last_turn;
+
+  /// Shared git review pane user interface: Branch and last-turn views are read-only.
+  ///
+  /// In en, this message translates to:
+  /// **'Branch and last-turn views are read-only.'**
+  String
+  get release_core_git_review_pane_branch_and_last_turn_views_are_read_only;
+
+  /// Shared git review pane user interface: Mark HEAD as the turn baseline
+  ///
+  /// In en, this message translates to:
+  /// **'Mark HEAD as the turn baseline'**
+  String get release_core_git_review_pane_mark_head_as_the_turn_baseline;
+
+  /// Shared git review pane user interface: Stage all
+  ///
+  /// In en, this message translates to:
+  /// **'Stage all'**
+  String get release_core_git_review_pane_stage_all;
+
+  /// Shared git review pane user interface: Discard every uncommitted change?
+  ///
+  /// In en, this message translates to:
+  /// **'Discard every uncommitted change?'**
+  String get release_core_git_review_pane_discard_every_uncommitted_change;
+
+  /// Shared git review pane user interface: Tracked files return to HEAD and untracked files in this session directory are removed.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracked files return to HEAD and untracked files in this session directory are removed.'**
+  String
+  get release_core_git_review_pane_tracked_files_return_to_head_and_untracked_files;
+
+  /// Shared git review pane user interface: Discard
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get release_core_git_review_pane_discard;
+
+  /// Shared git review pane user interface: Discard all
+  ///
+  /// In en, this message translates to:
+  /// **'Discard all'**
+  String get release_core_git_review_pane_discard_all;
+
+  /// Shared git review pane user interface: Unstage
+  ///
+  /// In en, this message translates to:
+  /// **'Unstage'**
+  String get release_core_git_review_pane_unstage;
+
+  /// Shared git review pane user interface: Stage
+  ///
+  /// In en, this message translates to:
+  /// **'Stage'**
+  String get release_core_git_review_pane_stage;
+
+  /// Shared git review pane user interface: Discard file
+  ///
+  /// In en, this message translates to:
+  /// **'Discard file'**
+  String get release_core_git_review_pane_discard_file;
+
+  /// Shared git review pane user interface: Discard {value1}?
+  ///
+  /// In en, this message translates to:
+  /// **'Discard {path}?'**
+  String release_core_git_review_pane_discard_2(String path);
+
+  /// Shared git review pane user interface: This restores the committed copy or removes the untracked file.
+  ///
+  /// In en, this message translates to:
+  /// **'This restores the committed copy or removes the untracked file.'**
+  String
+  get release_core_git_review_pane_this_restores_the_committed_copy_or_removes_the;
+
+  /// Shared git review pane user interface: Commit message
+  ///
+  /// In en, this message translates to:
+  /// **'Commit message'**
+  String get release_core_git_review_pane_commit_message;
+
+  /// Shared git review pane user interface: Nothing in the diff to summarise.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing in the diff to summarise.'**
+  String get release_core_git_review_pane_nothing_in_the_diff_to_summarise;
+
+  /// Shared git review pane user interface: Generate message
+  ///
+  /// In en, this message translates to:
+  /// **'Generate message'**
+  String get release_core_git_review_pane_generate_message;
+
+  /// Shared git review pane user interface: Commit
+  ///
+  /// In en, this message translates to:
+  /// **'Commit'**
+  String get release_core_git_review_pane_commit;
+
+  /// Shared git review pane user interface: Commit and push
+  ///
+  /// In en, this message translates to:
+  /// **'Commit and push'**
+  String get release_core_git_review_pane_commit_and_push;
+
+  /// Shared git review pane user interface: Push
+  ///
+  /// In en, this message translates to:
+  /// **'Push'**
+  String get release_core_git_review_pane_push;
+
+  /// Shared git review pane user interface: Create pull request
+  ///
+  /// In en, this message translates to:
+  /// **'Create pull request'**
+  String get release_core_git_review_pane_create_pull_request;
+
+  /// Shared git review pane user interface: Pull request ready
+  ///
+  /// In en, this message translates to:
+  /// **'Pull request ready'**
+  String get release_core_git_review_pane_pull_request_ready;
+
+  /// Shared git review pane user interface: Ask Hermes to ship
+  ///
+  /// In en, this message translates to:
+  /// **'Ask Hermes to ship'**
+  String get release_core_git_review_pane_ask_hermes_to_ship;
+
+  /// Shared git review pane user interface: gh is authenticated on this gateway.
+  ///
+  /// In en, this message translates to:
+  /// **'gh is authenticated on this gateway.'**
+  String get release_core_git_review_pane_gh_is_authenticated_on_this_gateway;
+
+  /// Shared git review pane user interface: Install the GitHub CLI (gh) and sign in to open PRs
+  ///
+  /// In en, this message translates to:
+  /// **'Install the GitHub CLI (gh) and sign in to open PRs'**
+  String get release_core_git_review_pane_install_the_github_cli_gh_and_sign_in;
+
+  /// Shared git review pane user interface: Worktrees
+  ///
+  /// In en, this message translates to:
+  /// **'Worktrees'**
+  String get release_core_git_review_pane_worktrees;
+
+  /// Shared git review pane user interface: Main
+  ///
+  /// In en, this message translates to:
+  /// **'Main'**
+  String get release_core_git_review_pane_main;
+
+  /// Shared git review pane user interface: Follow {value1}?
+  ///
+  /// In en, this message translates to:
+  /// **'Follow {branch}?'**
+  String release_core_git_review_pane_follow(String branch);
+
+  /// Shared git review pane user interface: The session working directory becomes this worktree unless the lane is pinned.
+  ///
+  /// In en, this message translates to:
+  /// **'The session working directory becomes this worktree unless the lane is pinned.'**
+  String
+  get release_core_git_review_pane_the_session_working_directory_becomes_this_worktree_unless;
+
+  /// Shared git review pane user interface: Follow
+  ///
+  /// In en, this message translates to:
+  /// **'Follow'**
+  String get release_core_git_review_pane_follow_2;
+
+  /// Shared git review pane user interface: Remove {value1}?
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {branch}?'**
+  String release_core_git_review_pane_remove(String branch);
+
+  /// Shared git review pane user interface: The worktree directory is removed.
+  ///
+  /// In en, this message translates to:
+  /// **'The worktree directory is removed.'**
+  String get release_core_git_review_pane_the_worktree_directory_is_removed;
+
+  /// Shared git review pane user interface: Remove
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get release_core_git_review_pane_remove_2;
+
+  /// Shared git review pane user interface: New worktree name
+  ///
+  /// In en, this message translates to:
+  /// **'New worktree name'**
+  String get release_core_git_review_pane_new_worktree_name;
+
+  /// Shared git review pane user interface: New branch
+  ///
+  /// In en, this message translates to:
+  /// **'New branch'**
+  String get release_core_git_review_pane_new_branch;
+
+  /// Shared git review pane user interface: Base branch
+  ///
+  /// In en, this message translates to:
+  /// **'Base branch'**
+  String get release_core_git_review_pane_base_branch;
+
+  /// Shared git review pane user interface: Create worktree
+  ///
+  /// In en, this message translates to:
+  /// **'Create worktree'**
+  String get release_core_git_review_pane_create_worktree;
+
+  /// Shared git review pane user interface: Existing branch
+  ///
+  /// In en, this message translates to:
+  /// **'Existing branch'**
+  String get release_core_git_review_pane_existing_branch;
+
+  /// Shared git review pane user interface: Convert branch to worktree
+  ///
+  /// In en, this message translates to:
+  /// **'Convert branch to worktree'**
+  String get release_core_git_review_pane_convert_branch_to_worktree;
+
+  /// Shared git review pane user interface: Switch branch
+  ///
+  /// In en, this message translates to:
+  /// **'Switch branch'**
+  String get release_core_git_review_pane_switch_branch;
+
+  /// Shared git review pane user interface: This gateway does not support that Git operation.
+  ///
+  /// In en, this message translates to:
+  /// **'This gateway does not support that Git operation.'**
+  String
+  get release_core_git_review_pane_this_gateway_does_not_support_that_git_operation;
+
+  /// Shared git review pane user interface: Git needs the session directory on the local terminal backend.
+  ///
+  /// In en, this message translates to:
+  /// **'Git needs the session directory on the local terminal backend.'**
+  String
+  get release_core_git_review_pane_git_needs_the_session_directory_on_the_local;
+
+  /// Shared git review pane user interface: The gateway refused the Git operation.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway refused the Git operation.'**
+  String get release_core_git_review_pane_the_gateway_refused_the_git_operation;
+
+  /// Shared git review pane user interface: The session changed. Refresh and try again.
+  ///
+  /// In en, this message translates to:
+  /// **'The session changed. Refresh and try again.'**
+  String
+  get release_core_git_review_pane_the_session_changed_refresh_and_try_again;
+
+  /// Shared git review pane user interface: This review is no longer the selected session.
+  ///
+  /// In en, this message translates to:
+  /// **'This review is no longer the selected session.'**
+  String
+  get release_core_git_review_pane_this_review_is_no_longer_the_selected_session;
+
+  /// Shared git review pane user interface: The gateway returned an unexpected Git result.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway returned an unexpected Git result.'**
+  String
+  get release_core_git_review_pane_the_gateway_returned_an_unexpected_git_result;
+
+  /// Shared git review pane user interface: Git review requires the gateway transport.
+  ///
+  /// In en, this message translates to:
+  /// **'Git review requires the gateway transport.'**
+  String
+  get release_core_git_review_pane_git_review_requires_the_gateway_transport;
+
+  /// Shared client held queue bar user interface: Resume
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get release_core_client_held_queue_bar_resume;
+
+  /// Shared client held queue bar user interface: Send queued prompt
+  ///
+  /// In en, this message translates to:
+  /// **'Send queued prompt'**
+  String get release_core_client_held_queue_bar_send_queued_prompt;
+
+  /// Shared client held queue bar user interface: Edit unsent prompt
+  ///
+  /// In en, this message translates to:
+  /// **'Edit unsent prompt'**
+  String get release_core_client_held_queue_bar_edit_unsent_prompt;
+
+  /// Shared client held queue bar user interface: Remove unsent prompt
+  ///
+  /// In en, this message translates to:
+  /// **'Remove unsent prompt'**
+  String get release_core_client_held_queue_bar_remove_unsent_prompt;
+
+  /// Shared workspace discovery view user interface: Repository discovery
+  ///
+  /// In en, this message translates to:
+  /// **'Repository discovery'**
+  String get release_core_workspace_discovery_view_repository_discovery;
+
+  /// Shared workspace discovery view user interface: Refresh results
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh results'**
+  String get release_core_workspace_discovery_view_refresh_results;
+
+  /// Shared workspace discovery view user interface: Hide {value1}
+  ///
+  /// In en, this message translates to:
+  /// **'Hide {path}'**
+  String release_core_workspace_discovery_view_hide(String path);
+
+  /// Shared workspace discovery view user interface: Invalid path or discovery data. Use absolute server paths without . or .. components.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid path or discovery data. Use absolute server paths without . or .. components.'**
+  String
+  get release_core_workspace_discovery_view_invalid_path_or_discovery_data_use_absolute_server;
+
+  /// Shared workspace discovery view user interface: This gateway does not support repository discovery.
+  ///
+  /// In en, this message translates to:
+  /// **'This gateway does not support repository discovery.'**
+  String
+  get release_core_workspace_discovery_view_this_gateway_does_not_support_repository_discovery;
+
+  /// Shared workspace discovery view user interface: The gateway denied access to repository discovery.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway denied access to repository discovery.'**
+  String
+  get release_core_workspace_discovery_view_the_gateway_denied_access_to_repository_discovery;
+
+  /// Shared workspace discovery view user interface: The connection changed. Reopen discovery on the current gateway.
+  ///
+  /// In en, this message translates to:
+  /// **'The connection changed. Reopen discovery on the current gateway.'**
+  String
+  get release_core_workspace_discovery_view_the_connection_changed_reopen_discovery_on_the_current;
+
+  /// Shared workspace discovery view user interface: The displayed settings have changed. Refresh before trying again.
+  ///
+  /// In en, this message translates to:
+  /// **'The displayed settings have changed. Refresh before trying again.'**
+  String
+  get release_core_workspace_discovery_view_the_displayed_settings_have_changed_refresh_before_trying;
+
+  /// Shared workspace discovery view user interface: Could not load or verify discovery settings. Refresh to try again.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load or verify discovery settings. Refresh to try again.'**
+  String
+  get release_core_workspace_discovery_view_could_not_load_or_verify_discovery_settings_refresh;
+
+  /// Shared workspace discovery view user interface: Repositories shown: {count1} of {count2}
+  ///
+  /// In en, this message translates to:
+  /// **'Repositories shown: {visible} of {total}'**
+  String release_core_workspace_discovery_view_repositories_shown_of(
+    int visible,
+    int total,
+  );
+
+  /// Shared workspace discovery view user interface: The gateway returned no repositories.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway returned no repositories.'**
+  String
+  get release_core_workspace_discovery_view_the_gateway_returned_no_repositories;
+
+  /// Shared workspace discovery view user interface: No repositories match your device filters.
+  ///
+  /// In en, this message translates to:
+  /// **'No repositories match your device filters.'**
+  String
+  get release_core_workspace_discovery_view_no_repositories_match_your_device_filters;
+
+  /// Shared workspace discovery view user interface: Gateway scan policy
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway scan policy'**
+  String get release_core_workspace_discovery_view_gateway_scan_policy;
+
+  /// Shared workspace discovery view user interface: This gateway did not report a scan policy.
+  ///
+  /// In en, this message translates to:
+  /// **'This gateway did not report a scan policy.'**
+  String
+  get release_core_workspace_discovery_view_this_gateway_did_not_report_a_scan_policy;
+
+  /// Shared workspace discovery view user interface: To scan folders, configure repository scanning in the gateway profile’s Desktop settings.
+  ///
+  /// In en, this message translates to:
+  /// **'To scan folders, configure repository scanning in the gateway profile’s Desktop settings.'**
+  String
+  get release_core_workspace_discovery_view_to_scan_folders_configure_repository_scanning_in_the;
+
+  /// Shared workspace discovery view user interface: Results can include cached repositories and repositories with sessions. A scan does not guarantee that every folder was reached.
+  ///
+  /// In en, this message translates to:
+  /// **'Results can include cached repositories and repositories with sessions. A scan does not guarantee that every folder was reached.'**
+  String
+  get release_core_workspace_discovery_view_results_can_include_cached_repositories_and_repositories_with;
+
+  /// Shared workspace discovery view user interface: Scan gateway roots
+  ///
+  /// In en, this message translates to:
+  /// **'Scan gateway roots'**
+  String get release_core_workspace_discovery_view_scan_gateway_roots;
+
+  /// Shared workspace discovery view user interface: Filter results on this device
+  ///
+  /// In en, this message translates to:
+  /// **'Filter results on this device'**
+  String
+  get release_core_workspace_discovery_view_filter_results_on_this_device;
+
+  /// Shared workspace discovery view user interface: Only this discovery list changes, not the gateway scan.
+  ///
+  /// In en, this message translates to:
+  /// **'Only this discovery list changes, not the gateway scan.'**
+  String
+  get release_core_workspace_discovery_view_only_this_discovery_list_changes_not_the_gateway;
+
+  /// Shared workspace discovery view user interface: Include subtrees (empty = all)
+  ///
+  /// In en, this message translates to:
+  /// **'Include subtrees (empty = all)'**
+  String get release_core_workspace_discovery_view_include_subtrees_empty_all;
+
+  /// Shared workspace discovery view user interface: Exclude subtrees
+  ///
+  /// In en, this message translates to:
+  /// **'Exclude subtrees'**
+  String get release_core_workspace_discovery_view_exclude_subtrees;
+
+  /// Shared workspace discovery view user interface: Apply filters
+  ///
+  /// In en, this message translates to:
+  /// **'Apply filters'**
+  String get release_core_workspace_discovery_view_apply_filters;
+
+  /// Shared workspace discovery view user interface: Hidden repositories ({count1})
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden repositories ({count})'**
+  String release_core_workspace_discovery_view_hidden_repositories(int count);
+
+  /// Shared workspace discovery view user interface: Undo hide
+  ///
+  /// In en, this message translates to:
+  /// **'Undo hide'**
+  String get release_core_workspace_discovery_view_undo_hide;
+
+  /// Shared workspace discovery view user interface: One absolute server path per line
+  ///
+  /// In en, this message translates to:
+  /// **'One absolute server path per line'**
+  String
+  get release_core_workspace_discovery_view_one_absolute_server_path_per_line;
+
+  /// Shared project settings view user interface: Project settings
+  ///
+  /// In en, this message translates to:
+  /// **'Project settings'**
+  String get release_core_project_settings_view_project_settings;
+
+  /// Shared project settings view user interface: The gateway did not confirm the selected project or change. Review the settings before trying again.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway did not confirm the selected project or change. Review the settings before trying again.'**
+  String
+  get release_core_project_settings_view_the_gateway_did_not_confirm_the_selected_project;
+
+  /// Shared project settings view user interface: Could not verify these settings. Use one absolute server folder path per line, without . or .. components.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not verify these settings. Use one absolute server folder path per line, without . or .. components.'**
+  String
+  get release_core_project_settings_view_could_not_verify_these_settings_use_one_absolute;
+
+  /// Shared project settings view user interface: Set active
+  ///
+  /// In en, this message translates to:
+  /// **'Set active'**
+  String get release_core_project_settings_view_set_active;
+
+  /// Shared project settings view user interface: Icon
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get release_core_project_settings_view_icon;
+
+  /// Shared project settings view user interface: Folder
+  ///
+  /// In en, this message translates to:
+  /// **'Folder'**
+  String get release_core_project_settings_view_folder;
+
+  /// Shared project settings view user interface: Repository
+  ///
+  /// In en, this message translates to:
+  /// **'Repository'**
+  String get release_core_project_settings_view_repository;
+
+  /// Shared project settings view user interface: Rocket
+  ///
+  /// In en, this message translates to:
+  /// **'Rocket'**
+  String get release_core_project_settings_view_rocket;
+
+  /// Shared project settings view user interface: Star
+  ///
+  /// In en, this message translates to:
+  /// **'Star'**
+  String get release_core_project_settings_view_star;
+
+  /// Shared project settings view user interface: Book
+  ///
+  /// In en, this message translates to:
+  /// **'Book'**
+  String get release_core_project_settings_view_book;
+
+  /// Shared project settings view user interface: Terminal
+  ///
+  /// In en, this message translates to:
+  /// **'Terminal'**
+  String get release_core_project_settings_view_terminal;
+
+  /// Shared project settings view user interface: Colour
+  ///
+  /// In en, this message translates to:
+  /// **'Colour'**
+  String get release_core_project_settings_view_colour;
+
+  /// Shared project settings view user interface: Primary folder
+  ///
+  /// In en, this message translates to:
+  /// **'Primary folder'**
+  String get release_core_project_settings_view_primary_folder;
+
+  /// Shared project settings view user interface: Server folder paths
+  ///
+  /// In en, this message translates to:
+  /// **'Server folder paths'**
+  String get release_core_project_settings_view_server_folder_paths;
+
+  /// Shared project settings view user interface: One absolute path per line. Existing folders are kept.
+  ///
+  /// In en, this message translates to:
+  /// **'One absolute path per line. Existing folders are kept.'**
+  String
+  get release_core_project_settings_view_one_absolute_path_per_line_existing_folders_are;
+
+  /// Shared project settings view user interface: Add folders
+  ///
+  /// In en, this message translates to:
+  /// **'Add folders'**
+  String get release_core_project_settings_view_add_folders;
+
+  /// Shared project settings view user interface: Choose {value1}
+  ///
+  /// In en, this message translates to:
+  /// **'Choose {label}'**
+  String release_core_project_settings_view_choose(String label);
+
+  /// Shared prepared image recovery user interface: Wait for an empty draft before restoring.
+  ///
+  /// In en, this message translates to:
+  /// **'Wait for an empty draft before restoring.'**
+  String
+  get release_core_prepared_image_recovery_wait_for_an_empty_draft_before_restoring;
+
+  /// Shared prepared image recovery user interface: No unacknowledged image drafts in this chat.
+  ///
+  /// In en, this message translates to:
+  /// **'No unacknowledged image drafts in this chat.'**
+  String
+  get release_core_prepared_image_recovery_no_unacknowledged_image_drafts_in_this_chat;
+
+  /// Shared prepared image recovery user interface: Unacknowledged image drafts
+  ///
+  /// In en, this message translates to:
+  /// **'Unacknowledged image drafts'**
+  String get release_core_prepared_image_recovery_unacknowledged_image_drafts;
+
+  /// Shared prepared image recovery user interface: The gateway may already have received these. Restore to review; nothing is sent.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway may already have received these. Restore to review; nothing is sent.'**
+  String
+  get release_core_prepared_image_recovery_the_gateway_may_already_have_received_these_restore;
+
+  /// Shared prepared image recovery user interface: Image draft
+  ///
+  /// In en, this message translates to:
+  /// **'Image draft'**
+  String get release_core_prepared_image_recovery_image_draft;
+
+  /// Shared prepared image recovery user interface: Discard local copy
+  ///
+  /// In en, this message translates to:
+  /// **'Discard local copy'**
+  String get release_core_prepared_image_recovery_discard_local_copy;
+
+  /// Shared prepared image recovery user interface: Discard this local image draft?
+  ///
+  /// In en, this message translates to:
+  /// **'Discard this local image draft?'**
+  String
+  get release_core_prepared_image_recovery_discard_this_local_image_draft;
+
+  /// Shared prepared image recovery user interface: Image draft recovery is unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Image draft recovery is unavailable.'**
+  String
+  get release_core_prepared_image_recovery_image_draft_recovery_is_unavailable;
+
+  /// Shared prepared image recovery user interface: Recover image draft…
+  ///
+  /// In en, this message translates to:
+  /// **'Recover image draft…'**
+  String get release_core_prepared_image_recovery_recover_image_draft;
+
+  /// Shared session search mode menu user interface: Could not save search mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save search mode.'**
+  String get release_core_session_search_mode_menu_could_not_save_search_mode;
+
+  /// Shared projects pane user interface: Discover repositories
+  ///
+  /// In en, this message translates to:
+  /// **'Discover repositories'**
+  String get release_core_projects_pane_discover_repositories;
+
+  /// Shared projects pane user interface: Project created, but the gateway did not confirm its idea.
+  ///
+  /// In en, this message translates to:
+  /// **'Project created, but the gateway did not confirm its idea.'**
+  String
+  get release_core_projects_pane_project_created_but_the_gateway_did_not_confirm;
+
+  /// Shared projects pane user interface: Project idea (optional)
+  ///
+  /// In en, this message translates to:
+  /// **'Project idea (optional)'**
+  String get release_core_projects_pane_project_idea_optional;
+
+  /// Shared projects pane user interface: Saved in the project description, not a file.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved in the project description, not a file.'**
+  String
+  get release_core_projects_pane_saved_in_the_project_description_not_a_file;
+
+  /// Shared project detail screen user interface: New chat in this lane
+  ///
+  /// In en, this message translates to:
+  /// **'New chat in this lane'**
+  String get release_core_project_detail_screen_new_chat_in_this_lane;
+
+  /// Shared project detail screen user interface: Review Git
+  ///
+  /// In en, this message translates to:
+  /// **'Review Git'**
+  String get release_core_project_detail_screen_review_git;
+
+  /// Shared more pane user interface: Gateway fleet
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway fleet'**
+  String get release_core_more_pane_gateway_fleet;
+
+  /// Shared more pane user interface: Connected sessions, Hermes Cloud and Desktop Webapp
+  ///
+  /// In en, this message translates to:
+  /// **'Connected sessions, Hermes Cloud and Desktop Webapp'**
+  String
+  get release_core_more_pane_connected_sessions_hermes_cloud_and_desktop_webapp;
+
+  /// Shared more pane user interface: Use dashboard sign-in for a named profile. This legacy API cannot confirm which profile owns chat history.
+  ///
+  /// In en, this message translates to:
+  /// **'Use dashboard sign-in for a named profile. This legacy API cannot confirm which profile owns chat history.'**
+  String get release_core_more_pane_use_dashboard_sign_in_for_a_named_profile;
+
+  /// Shared more pane user interface: Capabilities
+  ///
+  /// In en, this message translates to:
+  /// **'Capabilities'**
+  String get release_core_more_pane_capabilities;
+
+  /// Shared more pane user interface: Install and govern skills, plugins, connectors and tool backends
+  ///
+  /// In en, this message translates to:
+  /// **'Install and govern skills, plugins, connectors and tool backends'**
+  String
+  get release_core_more_pane_install_and_govern_skills_plugins_connectors_and_tool;
+
+  /// Shared more pane user interface: Browser vault
+  ///
+  /// In en, this message translates to:
+  /// **'Browser vault'**
+  String get release_core_more_pane_browser_vault;
+
+  /// Shared more pane user interface: Site logins, addresses, cards and credential sources
+  ///
+  /// In en, this message translates to:
+  /// **'Site logins, addresses, cards and credential sources'**
+  String
+  get release_core_more_pane_site_logins_addresses_cards_and_credential_sources;
+
+  /// Shared more pane user interface: Agent policy
+  ///
+  /// In en, this message translates to:
+  /// **'Agent policy'**
+  String get release_core_more_pane_agent_policy;
+
+  /// Shared more pane user interface: Approvals, checkpoints, browser access and shared metrics
+  ///
+  /// In en, this message translates to:
+  /// **'Approvals, checkpoints, browser access and shared metrics'**
+  String
+  get release_core_more_pane_approvals_checkpoints_browser_access_and_shared_metrics;
+
+  /// Shared more pane user interface: Remote logs, health, maintenance and update
+  ///
+  /// In en, this message translates to:
+  /// **'Remote logs, health, maintenance and update'**
+  String get release_core_more_pane_remote_logs_health_maintenance_and_update;
+
+  /// Shared more pane user interface: Schedules
+  ///
+  /// In en, this message translates to:
+  /// **'Schedules'**
+  String get release_core_more_pane_schedules;
+
+  /// Shared more pane user interface: All profiles, blueprints, catch-up and stop
+  ///
+  /// In en, this message translates to:
+  /// **'All profiles, blueprints, catch-up and stop'**
+  String get release_core_more_pane_all_profiles_blueprints_catch_up_and_stop;
+
+  /// Shared more pane user interface: Memory graph
+  ///
+  /// In en, this message translates to:
+  /// **'Memory graph'**
+  String get release_core_more_pane_memory_graph;
+
+  /// Shared more pane user interface: Timeline, edits and memory providers
+  ///
+  /// In en, this message translates to:
+  /// **'Timeline, edits and memory providers'**
+  String get release_core_more_pane_timeline_edits_and_memory_providers;
+
+  /// Shared more pane user interface: Providers and routes
+  ///
+  /// In en, this message translates to:
+  /// **'Providers and routes'**
+  String get release_core_more_pane_providers_and_routes;
+
+  /// Shared more pane user interface: Keys, endpoints, delegation and mixtures
+  ///
+  /// In en, this message translates to:
+  /// **'Keys, endpoints, delegation and mixtures'**
+  String get release_core_more_pane_keys_endpoints_delegation_and_mixtures;
+
+  /// Shared more pane user interface: Credits and plans
+  ///
+  /// In en, this message translates to:
+  /// **'Credits and plans'**
+  String get release_core_more_pane_credits_and_plans;
+
+  /// Shared more pane user interface: Consented Nous billing when the account allows it
+  ///
+  /// In en, this message translates to:
+  /// **'Consented Nous billing when the account allows it'**
+  String
+  get release_core_more_pane_consented_nous_billing_when_the_account_allows_it;
+
+  /// Shared fleet screen user interface: This gateway does not offer this service.
+  ///
+  /// In en, this message translates to:
+  /// **'This gateway does not offer this service.'**
+  String get release_core_fleet_screen_this_gateway_does_not_offer_this_service;
+
+  /// Shared fleet screen user interface: Sign-in or permission required on this gateway.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in or permission required on this gateway.'**
+  String
+  get release_core_fleet_screen_sign_in_or_permission_required_on_this_gateway;
+
+  /// Shared fleet screen user interface: A secure gateway address is required.
+  ///
+  /// In en, this message translates to:
+  /// **'A secure gateway address is required.'**
+  String get release_core_fleet_screen_a_secure_gateway_address_is_required;
+
+  /// Shared fleet screen user interface: The owner changed. Refresh before continuing.
+  ///
+  /// In en, this message translates to:
+  /// **'The owner changed. Refresh before continuing.'**
+  String
+  get release_core_fleet_screen_the_owner_changed_refresh_before_continuing;
+
+  /// Shared fleet screen user interface: Could not verify the operation. Check the gateway and refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not verify the operation. Check the gateway and refresh.'**
+  String
+  get release_core_fleet_screen_could_not_verify_the_operation_check_the_gateway;
+
+  /// Shared fleet screen user interface: Verified SSH
+  ///
+  /// In en, this message translates to:
+  /// **'Verified SSH'**
+  String get release_core_fleet_screen_verified_ssh;
+
+  /// Shared fleet screen user interface: Confirm a host key, inspect a remote service or open its shell
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm a host key, inspect a remote service or open its shell'**
+  String
+  get release_core_fleet_screen_confirm_a_host_key_inspect_a_remote_service;
+
+  /// Shared fleet screen user interface: Cloud and Desktop Webapp
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud and Desktop Webapp'**
+  String get release_core_fleet_screen_cloud_and_desktop_webapp;
+
+  /// Shared fleet screen user interface: Register an existing gateway or Webapp
+  ///
+  /// In en, this message translates to:
+  /// **'Register an existing gateway or Webapp'**
+  String get release_core_fleet_screen_register_an_existing_gateway_or_webapp;
+
+  /// Shared fleet screen user interface: Sign in to its address. Nothing is hosted on this device.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to its address. Nothing is hosted on this device.'**
+  String get release_core_fleet_screen_sign_in_to_its_address_nothing_is_hosted;
+
+  /// Shared fleet screen user interface: Fleet updates
+  ///
+  /// In en, this message translates to:
+  /// **'Fleet updates'**
+  String get release_core_fleet_screen_fleet_updates;
+
+  /// Shared fleet screen user interface: Refresh roster
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh roster'**
+  String get release_core_fleet_screen_refresh_roster;
+
+  /// Shared fleet screen user interface: Disconnect {value1}
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect {gateway}'**
+  String release_core_fleet_screen_disconnect(String gateway);
+
+  /// Shared fleet screen user interface: Open this gateway on launch
+  ///
+  /// In en, this message translates to:
+  /// **'Open this gateway on launch'**
+  String get release_core_fleet_screen_open_this_gateway_on_launch;
+
+  /// Shared fleet screen user interface: Primary for Ares; does not change the last-used gateway.
+  ///
+  /// In en, this message translates to:
+  /// **'Primary for Ares; does not change the last-used gateway.'**
+  String
+  get release_core_fleet_screen_primary_for_ares_does_not_change_the_last;
+
+  /// Shared fleet screen user interface: Reconnect in fleet on launch
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect in fleet on launch'**
+  String get release_core_fleet_screen_reconnect_in_fleet_on_launch;
+
+  /// Shared fleet screen user interface: No sessions for this profile.
+  ///
+  /// In en, this message translates to:
+  /// **'No sessions for this profile.'**
+  String get release_core_fleet_screen_no_sessions_for_this_profile;
+
+  /// Shared fleet screen user interface: More sessions
+  ///
+  /// In en, this message translates to:
+  /// **'More sessions'**
+  String get release_core_fleet_screen_more_sessions;
+
+  /// Shared fleet screen user interface: This gateway was disconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'This gateway was disconnected.'**
+  String get release_core_fleet_screen_this_gateway_was_disconnected;
+
+  /// Shared fleet screen user interface: Some conversation data could not be loaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Some conversation data could not be loaded.'**
+  String
+  get release_core_fleet_screen_some_conversation_data_could_not_be_loaded;
+
+  /// Shared fleet screen user interface: Message this session
+  ///
+  /// In en, this message translates to:
+  /// **'Message this session'**
+  String get release_core_fleet_screen_message_this_session;
+
+  /// Shared fleet screen user interface: Send to this session
+  ///
+  /// In en, this message translates to:
+  /// **'Send to this session'**
+  String get release_core_fleet_screen_send_to_this_session;
+
+  /// Shared fleet updates screen user interface: Update these remote gateways?
+  ///
+  /// In en, this message translates to:
+  /// **'Update these remote gateways?'**
+  String get release_core_fleet_updates_screen_update_these_remote_gateways;
+
+  /// Shared fleet updates screen user interface: This can restart the backend and interrupt other users. It will not update Ares.
+  ///
+  /// {value1}
+  ///
+  /// In en, this message translates to:
+  /// **'This can restart the backend and interrupt other users. It will not update Ares.\n\n{gateways}'**
+  String
+  release_core_fleet_updates_screen_this_can_restart_the_backend_and_interrupt_other(
+    String gateways,
+  );
+
+  /// Shared fleet updates screen user interface: Update listed gateways
+  ///
+  /// In en, this message translates to:
+  /// **'Update listed gateways'**
+  String get release_core_fleet_updates_screen_update_listed_gateways;
+
+  /// Shared fleet updates screen user interface: Checks connected gateways. Cloud is platform-managed; entries without enrollment provenance are excluded.
+  ///
+  /// In en, this message translates to:
+  /// **'Checks connected gateways. Cloud is platform-managed; entries without enrollment provenance are excluded.'**
+  String
+  get release_core_fleet_updates_screen_checks_connected_gateways_cloud_is_platform_managed_entries;
+
+  /// Shared fleet updates screen user interface: Check connected gateways
+  ///
+  /// In en, this message translates to:
+  /// **'Check connected gateways'**
+  String get release_core_fleet_updates_screen_check_connected_gateways;
+
+  /// Shared fleet updates screen user interface: Read update receipt
+  ///
+  /// In en, this message translates to:
+  /// **'Read update receipt'**
+  String get release_core_fleet_updates_screen_read_update_receipt;
+
+  /// Shared fleet updates screen user interface: Review eligible updates
+  ///
+  /// In en, this message translates to:
+  /// **'Review eligible updates'**
+  String get release_core_fleet_updates_screen_review_eligible_updates;
+
+  /// Shared fleet webapp screen user interface: Account changed. Reopen this page.
+  ///
+  /// In en, this message translates to:
+  /// **'Account changed. Reopen this page.'**
+  String get release_core_fleet_webapp_screen_account_changed_reopen_this_page;
+
+  /// Shared fleet webapp screen user interface: Set the Webapp’s primary gateway?
+  ///
+  /// In en, this message translates to:
+  /// **'Set the Webapp’s primary gateway?'**
+  String get release_core_fleet_webapp_screen_set_the_webapp_s_primary_gateway;
+
+  /// Shared fleet webapp screen user interface: {value1} → {value2} ({value3})
+  /// This changes the shared registry, not the last-used gateway.
+  ///
+  /// In en, this message translates to:
+  /// **'{webapp} → {gateway} ({id})\nThis changes the shared registry, not the last-used gateway.'**
+  String
+  release_core_fleet_webapp_screen_this_changes_the_shared_registry_not_the_last(
+    String webapp,
+    String gateway,
+    String id,
+  );
+
+  /// Shared fleet webapp screen user interface: Set primary
+  ///
+  /// In en, this message translates to:
+  /// **'Set primary'**
+  String get release_core_fleet_webapp_screen_set_primary;
+
+  /// Shared fleet webapp screen user interface: Serving profile
+  ///
+  /// In en, this message translates to:
+  /// **'Serving profile'**
+  String get release_core_fleet_webapp_screen_serving_profile;
+
+  /// Shared fleet webapp screen user interface: Hermes Cloud
+  ///
+  /// In en, this message translates to:
+  /// **'Hermes Cloud'**
+  String get release_core_fleet_webapp_screen_hermes_cloud;
+
+  /// Shared fleet webapp screen user interface: Discover signed-in agents
+  ///
+  /// In en, this message translates to:
+  /// **'Discover signed-in agents'**
+  String get release_core_fleet_webapp_screen_discover_signed_in_agents;
+
+  /// Shared fleet webapp screen user interface: Organisation: {value1}
+  ///
+  /// In en, this message translates to:
+  /// **'Organisation: {organisation}'**
+  String release_core_fleet_webapp_screen_organisation(String organisation);
+
+  /// Shared fleet webapp screen user interface: No agents available.
+  ///
+  /// In en, this message translates to:
+  /// **'No agents available.'**
+  String get release_core_fleet_webapp_screen_no_agents_available;
+
+  /// Shared fleet webapp screen user interface: Existing Desktop Webapp
+  ///
+  /// In en, this message translates to:
+  /// **'Existing Desktop Webapp'**
+  String get release_core_fleet_webapp_screen_existing_desktop_webapp;
+
+  /// Shared fleet webapp screen user interface: Check gateway and Web Access status
+  ///
+  /// In en, this message translates to:
+  /// **'Check gateway and Web Access status'**
+  String
+  get release_core_fleet_webapp_screen_check_gateway_and_web_access_status;
+
+  /// Shared fleet webapp screen user interface: These settings belong to the machine serving this Webapp. Publishing and restarts are not remote actions.
+  ///
+  /// In en, this message translates to:
+  /// **'These settings belong to the machine serving this Webapp. Publishing and restarts are not remote actions.'**
+  String
+  get release_core_fleet_webapp_screen_these_settings_belong_to_the_machine_serving_this;
+
+  /// Shared fleet webapp screen user interface: Read Webapp gateway registry
+  ///
+  /// In en, this message translates to:
+  /// **'Read Webapp gateway registry'**
+  String get release_core_fleet_webapp_screen_read_webapp_gateway_registry;
+
+  /// Shared fleet webapp screen user interface: Last used
+  ///
+  /// In en, this message translates to:
+  /// **'Last used'**
+  String get release_core_fleet_webapp_screen_last_used;
+
+  /// Shared fleet webapp screen user interface: Primary
+  ///
+  /// In en, this message translates to:
+  /// **'Primary'**
+  String get release_core_fleet_webapp_screen_primary;
+
+  /// Shared fleet webapp screen user interface: Set primary: {value1}
+  ///
+  /// In en, this message translates to:
+  /// **'Set primary: {gateway}'**
+  String release_core_fleet_webapp_screen_set_primary_2(String gateway);
+
+  /// Shared fleet webapp screen user interface: Read shared display preferences
+  ///
+  /// In en, this message translates to:
+  /// **'Read shared display preferences'**
+  String get release_core_fleet_webapp_screen_read_shared_display_preferences;
+
+  /// Shared fleet webapp screen user interface: Chat text direction on this Webapp and Desktop
+  ///
+  /// In en, this message translates to:
+  /// **'Chat text direction on this Webapp and Desktop'**
+  String
+  get release_core_fleet_webapp_screen_chat_text_direction_on_this_webapp_and_desktop;
+
+  /// Shared schedule desk screen user interface: Created {value1} on {value2}.
+  ///
+  /// In en, this message translates to:
+  /// **'Created {job} on {profile}.'**
+  String release_core_schedule_desk_screen_created_on(
+    String job,
+    String profile,
+  );
+
+  /// Shared schedule desk screen user interface: The list covers every profile on this gateway. Stop, pause, catch-up, delivery and blueprints are sent to the job's owning profile.
+  ///
+  /// In en, this message translates to:
+  /// **'The list covers every profile on this gateway. Stop, pause, catch-up, delivery and blueprints are sent to the job\'s owning profile.'**
+  String
+  get release_core_schedule_desk_screen_the_list_covers_every_profile_on_this_gateway;
+
+  /// Shared schedule desk screen user interface: A run is in progress
+  ///
+  /// In en, this message translates to:
+  /// **'A run is in progress'**
+  String get release_core_schedule_desk_screen_a_run_is_in_progress;
+
+  /// Shared schedule desk screen user interface: No current run
+  ///
+  /// In en, this message translates to:
+  /// **'No current run'**
+  String get release_core_schedule_desk_screen_no_current_run;
+
+  /// Shared schedule desk screen user interface: Stop requested for {value1}.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop requested for {job}.'**
+  String release_core_schedule_desk_screen_stop_requested_for(String job);
+
+  /// Shared schedule desk screen user interface: No run was in flight for {value1}.
+  ///
+  /// In en, this message translates to:
+  /// **'No run was in flight for {job}.'**
+  String release_core_schedule_desk_screen_no_run_was_in_flight_for(String job);
+
+  /// Shared schedule desk screen user interface: Stop current run
+  ///
+  /// In en, this message translates to:
+  /// **'Stop current run'**
+  String get release_core_schedule_desk_screen_stop_current_run;
+
+  /// Shared schedule desk screen user interface: Pause future runs
+  ///
+  /// In en, this message translates to:
+  /// **'Pause future runs'**
+  String get release_core_schedule_desk_screen_pause_future_runs;
+
+  /// Shared schedule desk screen user interface: Resume future runs
+  ///
+  /// In en, this message translates to:
+  /// **'Resume future runs'**
+  String get release_core_schedule_desk_screen_resume_future_runs;
+
+  /// Shared schedule desk screen user interface: Catch-up default
+  ///
+  /// In en, this message translates to:
+  /// **'Catch-up default'**
+  String get release_core_schedule_desk_screen_catch_up_default;
+
+  /// Shared schedule desk screen user interface: Run one missed
+  ///
+  /// In en, this message translates to:
+  /// **'Run one missed'**
+  String get release_core_schedule_desk_screen_run_one_missed;
+
+  /// Shared schedule desk screen user interface: Skip missed
+  ///
+  /// In en, this message translates to:
+  /// **'Skip missed'**
+  String get release_core_schedule_desk_screen_skip_missed;
+
+  /// Shared schedule desk screen user interface: Blueprint recipes
+  ///
+  /// In en, this message translates to:
+  /// **'Blueprint recipes'**
+  String get release_core_schedule_desk_screen_blueprint_recipes;
+
+  /// Shared schedule desk screen user interface: Profile for the new job
+  ///
+  /// In en, this message translates to:
+  /// **'Profile for the new job'**
+  String get release_core_schedule_desk_screen_profile_for_the_new_job;
+
+  /// Shared schedule desk screen user interface: Create {value1}
+  ///
+  /// In en, this message translates to:
+  /// **'Create {blueprint}'**
+  String release_core_schedule_desk_screen_create(String blueprint);
+
+  /// Shared schedule desk screen user interface: Loading delivery targets
+  ///
+  /// In en, this message translates to:
+  /// **'Loading delivery targets'**
+  String get release_core_schedule_desk_screen_loading_delivery_targets;
+
+  /// Shared schedule desk screen user interface: {value1} (no home channel)
+  ///
+  /// In en, this message translates to:
+  /// **'{target} (no home channel)'**
+  String release_core_schedule_desk_screen_no_home_channel(String target);
+
+  /// Shared memory graph screen user interface: Edit {value1}
+  ///
+  /// In en, this message translates to:
+  /// **'Edit {label}'**
+  String release_core_memory_graph_screen_edit(String label);
+
+  /// Shared memory graph screen user interface: Content
+  ///
+  /// In en, this message translates to:
+  /// **'Content'**
+  String get release_core_memory_graph_screen_content;
+
+  /// Shared memory graph screen user interface: Archive skill
+  ///
+  /// In en, this message translates to:
+  /// **'Archive skill'**
+  String get release_core_memory_graph_screen_archive_skill;
+
+  /// Shared memory graph screen user interface: Delete memory
+  ///
+  /// In en, this message translates to:
+  /// **'Delete memory'**
+  String get release_core_memory_graph_screen_delete_memory;
+
+  /// Shared memory graph screen user interface: Archive {value1} on {value2}? It can be restored on the host with the Curator.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive {label} on {profile}? It can be restored on the host with the Curator.'**
+  String release_core_memory_graph_screen_archive_on_it_can_be_restored_on_the(
+    String label,
+    String profile,
+  );
+
+  /// Shared memory graph screen user interface: Delete {value1} from {value2}? This removes that memory.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {label} from {profile}? This removes that memory.'**
+  String release_core_memory_graph_screen_delete_from_this_removes_that_memory(
+    String label,
+    String profile,
+  );
+
+  /// Shared memory graph screen user interface: Filter
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get release_core_memory_graph_screen_filter;
+
+  /// Shared memory graph screen user interface: Timeline
+  ///
+  /// In en, this message translates to:
+  /// **'Timeline'**
+  String get release_core_memory_graph_screen_timeline;
+
+  /// Shared memory graph screen user interface: Play timeline
+  ///
+  /// In en, this message translates to:
+  /// **'Play timeline'**
+  String get release_core_memory_graph_screen_play_timeline;
+
+  /// Shared memory graph screen user interface: Layout code
+  ///
+  /// In en, this message translates to:
+  /// **'Layout code'**
+  String get release_core_memory_graph_screen_layout_code;
+
+  /// Shared memory graph screen user interface: External memory providers
+  ///
+  /// In en, this message translates to:
+  /// **'External memory providers'**
+  String get release_core_memory_graph_screen_external_memory_providers;
+
+  /// Shared memory graph screen user interface: A value is stored. Leave blank to keep it.
+  ///
+  /// In en, this message translates to:
+  /// **'A value is stored. Leave blank to keep it.'**
+  String
+  get release_core_memory_graph_screen_a_value_is_stored_leave_blank_to_keep;
+
+  /// Shared memory graph screen user interface: Save provider
+  ///
+  /// In en, this message translates to:
+  /// **'Save provider'**
+  String get release_core_memory_graph_screen_save_provider;
+
+  /// Shared workspace profiles screen user interface: Applies to: {value1}
+  ///
+  /// In en, this message translates to:
+  /// **'Applies to: {profile}'**
+  String release_core_workspace_profiles_screen_applies_to(String profile);
+
+  /// Shared workspace profiles screen user interface: Choose another profile
+  ///
+  /// In en, this message translates to:
+  /// **'Choose another profile'**
+  String get release_core_workspace_profiles_screen_choose_another_profile;
+
+  /// Shared workspace profiles screen user interface: Could not verify the selected profile on this gateway.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not verify the selected profile on this gateway.'**
+  String
+  get release_core_workspace_profiles_screen_could_not_verify_the_selected_profile_on_this;
+
+  /// Shared workspace profiles screen user interface: Create profile
+  ///
+  /// In en, this message translates to:
+  /// **'Create profile'**
+  String get release_core_workspace_profiles_screen_create_profile;
+
+  /// Shared workspace profiles screen user interface: New profile ID
+  ///
+  /// In en, this message translates to:
+  /// **'New profile ID'**
+  String get release_core_workspace_profiles_screen_new_profile_id;
+
+  /// Shared assets screen user interface: Links
+  ///
+  /// In en, this message translates to:
+  /// **'Links'**
+  String get release_core_assets_screen_links;
+
+  /// Shared workspace picker user interface: No matching items.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching items.'**
+  String get release_core_workspace_picker_no_matching_items;
+
+  /// Shared workspace picker user interface: Save layout
+  ///
+  /// In en, this message translates to:
+  /// **'Save layout'**
+  String get release_core_workspace_picker_save_layout;
+
+  /// Shared workspace picker user interface: Layout name
+  ///
+  /// In en, this message translates to:
+  /// **'Layout name'**
+  String get release_core_workspace_picker_layout_name;
+
+  /// Shared workspace popout user interface: This chat already has a pop-out window.
+  ///
+  /// In en, this message translates to:
+  /// **'This chat already has a pop-out window.'**
+  String
+  get release_core_workspace_popout_this_chat_already_has_a_pop_out_window;
+
+  /// Shared workspace popout user interface: Could not open this saved chat. Check the connection and try again.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open this saved chat. Check the connection and try again.'**
+  String
+  get release_core_workspace_popout_could_not_open_this_saved_chat_check_the;
+
+  /// Shared popout bootstrap user interface: Use the main window to change your connection.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the main window to change your connection.'**
+  String
+  get release_core_popout_bootstrap_use_the_main_window_to_change_your_connection;
+
+  /// Guarded file-save refusal; retain the draft.
+  ///
+  /// In en, this message translates to:
+  /// **'This file can\'t be saved by the gateway'**
+  String get release_core_guarded_save_refused;
+
+  /// Host does not support safe guarded file writes.
+  ///
+  /// In en, this message translates to:
+  /// **'Guarded saving isn\'t available on this gateway'**
+  String get release_core_guarded_save_unavailable;
+
+  /// Number of files changed in the current turn.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 file changed this turn} other{{count} files changed this turn}}'**
+  String release_core_git_files_changed(int count);
+
+  /// Number of unsafe Git entries withheld from display.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 Git entry was left out because it was not safe to show.} other{{count} Git entries were left out because they were not safe to show.}}'**
+  String release_core_git_entries_omitted(int count);
+
+  /// Git file state for an entry in the index.
+  ///
+  /// In en, this message translates to:
+  /// **'Staged'**
+  String get release_core_git_staged;
+
+  /// Chat list sort order.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent activity'**
+  String get release_core_session_sort_recent;
+
+  /// Chat list sort order.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest created'**
+  String get release_core_session_sort_created;
+
+  /// Chat list sort order.
+  ///
+  /// In en, this message translates to:
+  /// **'Running first'**
+  String get release_core_session_sort_status;
+
+  /// Chat list sort order.
+  ///
+  /// In en, this message translates to:
+  /// **'Most tokens'**
+  String get release_core_session_sort_tokens;
+
+  /// Chat list sort order.
+  ///
+  /// In en, this message translates to:
+  /// **'Highest cost'**
+  String get release_core_session_sort_cost;
+
+  /// Chat list grouping mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Default grouping'**
+  String get release_core_session_group_standard;
+
+  /// Chat list grouping mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Group by status'**
+  String get release_core_session_group_status;
+
+  /// Chat list grouping mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Group by project'**
+  String get release_core_session_group_project;
+
+  /// Token count in the optional model and usage summary.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} tokens'**
+  String release_core_session_tokens(int count);
+
+  /// Search mode served by the gateway.
+  ///
+  /// In en, this message translates to:
+  /// **'{mode} (gateway)'**
+  String release_core_search_gateway_mode(String mode);
+
+  /// Search mode menu tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'{label}: {mode}'**
+  String release_core_search_mode_tooltip(String label, String mode);
+
+  /// Warning that a recovered image copy starts a new turn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending creates a new turn'**
+  String get release_core_image_recovery_new_turn;
+
+  /// Recovered image draft image count and creation date.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 image · {date}} other{{count} images · {date}}}'**
+  String release_core_image_recovery_metadata(int count, String date);
+
+  /// Gateway repository scanning policy state.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning: {state}'**
+  String release_core_discovery_scanning(String state);
+
+  /// State of the gateway repository scanning policy.
+  ///
+  /// In en, this message translates to:
+  /// **'enabled'**
+  String get release_core_discovery_enabled;
+
+  /// State of the gateway repository scanning policy.
+  ///
+  /// In en, this message translates to:
+  /// **'disabled'**
+  String get release_core_discovery_disabled;
+
+  /// No paths are configured in the gateway repository scan policy.
+  ///
+  /// In en, this message translates to:
+  /// **'none'**
+  String get release_core_discovery_none;
+
+  /// Newline-separated server paths scanned for repositories.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan roots: {paths}'**
+  String release_core_discovery_roots(String paths);
+
+  /// Newline-separated server subtrees omitted from scans.
+  ///
+  /// In en, this message translates to:
+  /// **'Excluded subtrees: {paths}'**
+  String release_core_discovery_excluded(String paths);
+
+  /// Repository root and number of its sessions.
+  ///
+  /// In en, this message translates to:
+  /// **'{path}\nSessions: {count}'**
+  String release_core_discovery_repository_sessions(String path, int count);
+
+  /// Projects compatibility notice for a host without server-side projects.
+  ///
+  /// In en, this message translates to:
+  /// **'This Hermes gateway is older than server-side projects, so chats stay grouped on this device only. Update Hermes to share the same projects across your devices.'**
+  String get release_core_projects_local_only;
+
+  /// A discovered Cloud agent does not have an address yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No gateway address yet'**
+  String get release_core_fleet_no_address;
+
+  /// Gateway version and web-access diagnostic state.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway {version} · {access}'**
+  String release_core_fleet_diagnostics(String version, String access);
+
+  /// Origin of a built-in schedule blueprint.
+  ///
+  /// In en, this message translates to:
+  /// **'built-in'**
+  String get release_core_schedule_builtin;
+
+  /// Gateway default profile used in the memory graph header.
+  ///
+  /// In en, this message translates to:
+  /// **'gateway'**
+  String get release_core_memory_gateway_profile;
+
+  /// Bound memory graph owner and explanation of non-sensitive layout sharing.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile {profile} on {gateway}. The share code stores zoom, time and filters only.'**
+  String release_core_memory_profile_summary(String profile, String gateway);
+
+  /// Memory layer storage sizes and selected provider.
+  ///
+  /// In en, this message translates to:
+  /// **'Built-in memory {memoryBytes} bytes, user {userBytes} bytes. Active provider {provider}.'**
+  String release_core_memory_layers_summary(
+    int memoryBytes,
+    int userBytes,
+    String provider,
+  );
+
+  /// Memory graph node kind filter.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get release_core_memory_kind_all;
+
+  /// Memory graph node kind filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Skills'**
+  String get release_core_memory_kind_skill;
+
+  /// Memory graph node kind filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory'**
+  String get release_core_memory_kind_memory;
+
+  /// Reason why a gateway workspace or queue operation could not be confirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'connection changed'**
+  String get release_core_workspace_failure_stale;
+
+  /// Reason why a gateway workspace or queue operation could not be confirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'no verified working directory'**
+  String get release_core_workspace_failure_unbound;
+
+  /// Reason why a gateway workspace or queue operation could not be confirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'permission denied'**
+  String get release_core_workspace_failure_denied;
+
+  /// Reason why a gateway workspace or queue operation could not be confirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'operation not allowed for this file'**
+  String get release_core_workspace_failure_ineligible;
+
+  /// Reason why a gateway workspace or queue operation could not be confirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'not supported by this gateway'**
+  String get release_core_workspace_failure_unsupported;
+
+  /// Reason why a gateway workspace or queue operation could not be confirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'remote state changed'**
+  String get release_core_workspace_failure_mismatch;
+
+  /// Reason why a gateway workspace or queue operation could not be confirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'invalid gateway response'**
+  String get release_core_workspace_failure_invalid;
+
+  /// Reason why a gateway workspace or queue operation could not be confirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'secure connection required'**
+  String get release_core_workspace_failure_insecure;
+
+  /// Reason why a gateway workspace or queue operation could not be confirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'gateway unavailable'**
+  String get release_core_workspace_failure_unavailable;
+
+  /// State of a prompt admitted to the server-owned gateway queue.
+  ///
+  /// In en, this message translates to:
+  /// **'Queued'**
+  String get release_core_queue_state_queued;
+
+  /// State of a prompt admitted to the server-owned gateway queue.
+  ///
+  /// In en, this message translates to:
+  /// **'Started'**
+  String get release_core_queue_state_started;
+
+  /// State of a prompt admitted to the server-owned gateway queue.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown outcome'**
+  String get release_core_queue_state_unknown;
+
+  /// Fallback for a gateway state not understood by this client.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get release_core_unknown_state;
+
+  /// Connection phase shown in the gateway fleet roster.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get release_core_fleet_state_idle;
+
+  /// Connection phase shown in the gateway fleet roster.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get release_core_fleet_state_connected;
+
+  /// Connection phase shown in the gateway fleet roster.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnecting…'**
+  String get release_core_fleet_state_reconnecting;
+
+  /// Connection phase shown in the gateway fleet roster.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed out'**
+  String get release_core_fleet_state_sessionExpired;
+
+  /// Connection phase shown in the gateway fleet roster.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection failed'**
+  String get release_core_fleet_state_failed;
+
+  /// Workspace operation failed without a confirmed remote result.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway operation could not be confirmed: {reason}.'**
+  String release_core_workspace_operation_failed(String reason);
+
+  /// Safe localized replacement for a parser or validation exception.
+  ///
+  /// In en, this message translates to:
+  /// **'The data or input could not be verified. Review it and try again.'**
+  String get release_core_workspace_invalid_data;
+
+  /// Shared parallel workspace user interface: Layout changed in this window but could not be saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Layout changed in this window but could not be saved.'**
+  String
+  get release_core_parallel_workspace_layout_changed_in_this_window_but_could_not;
+
+  /// Shared parallel workspace user interface: First pane
+  ///
+  /// In en, this message translates to:
+  /// **'First pane'**
+  String get release_core_parallel_workspace_first_pane;
+
+  /// Shared parallel workspace user interface: Second pane
+  ///
+  /// In en, this message translates to:
+  /// **'Second pane'**
+  String get release_core_parallel_workspace_second_pane;
+
+  /// Shared parallel workspace user interface: Unavailable page
+  ///
+  /// In en, this message translates to:
+  /// **'Unavailable page'**
+  String get release_core_parallel_workspace_unavailable_page;
+
+  /// Shared parallel workspace user interface: Close a tab first (maximum {value1}).
+  ///
+  /// In en, this message translates to:
+  /// **'Close a tab first (maximum {maximum}).'**
+  String release_core_parallel_workspace_close_a_tab_first_maximum(
+    String maximum,
+  );
+
+  /// Shared parallel workspace user interface: Dock beside current pane
+  ///
+  /// In en, this message translates to:
+  /// **'Dock beside current pane'**
+  String get release_core_parallel_workspace_dock_beside_current_pane;
+
+  /// Shared parallel workspace user interface: Add chat
+  ///
+  /// In en, this message translates to:
+  /// **'Add chat'**
+  String get release_core_parallel_workspace_add_chat;
+
+  /// Shared parallel workspace user interface: Action failed. Check the connection and try again.
+  ///
+  /// In en, this message translates to:
+  /// **'Action failed. Check the connection and try again.'**
+  String
+  get release_core_parallel_workspace_action_failed_check_the_connection_and_try_again;
+
+  /// Shared parallel workspace user interface: Close a tab before reopening another.
+  ///
+  /// In en, this message translates to:
+  /// **'Close a tab before reopening another.'**
+  String
+  get release_core_parallel_workspace_close_a_tab_before_reopening_another;
+
+  /// Shared parallel workspace user interface: Replace layout “{value1}”?
+  ///
+  /// In en, this message translates to:
+  /// **'Replace layout “{name}”?'**
+  String release_core_parallel_workspace_replace_layout(String name);
+
+  /// Shared parallel workspace user interface: Layout limit reached. Replace an existing layout.
+  ///
+  /// In en, this message translates to:
+  /// **'Layout limit reached. Replace an existing layout.'**
+  String
+  get release_core_parallel_workspace_layout_limit_reached_replace_an_existing_layout;
+
+  /// Shared parallel workspace user interface: Restore layout
+  ///
+  /// In en, this message translates to:
+  /// **'Restore layout'**
+  String get release_core_parallel_workspace_restore_layout;
+
+  /// Shared parallel workspace user interface: Workspace options
+  ///
+  /// In en, this message translates to:
+  /// **'Workspace options'**
+  String get release_core_parallel_workspace_workspace_options;
+
+  /// Shared parallel workspace user interface: Dock another pane
+  ///
+  /// In en, this message translates to:
+  /// **'Dock another pane'**
+  String get release_core_parallel_workspace_dock_another_pane;
+
+  /// Shared parallel workspace user interface: Swap panes
+  ///
+  /// In en, this message translates to:
+  /// **'Swap panes'**
+  String get release_core_parallel_workspace_swap_panes;
+
+  /// Shared parallel workspace user interface: Undock second pane
+  ///
+  /// In en, this message translates to:
+  /// **'Undock second pane'**
+  String get release_core_parallel_workspace_undock_second_pane;
+
+  /// Shared parallel workspace user interface: Arrange side by side
+  ///
+  /// In en, this message translates to:
+  /// **'Arrange side by side'**
+  String get release_core_parallel_workspace_arrange_side_by_side;
+
+  /// Shared parallel workspace user interface: Arrange top to bottom
+  ///
+  /// In en, this message translates to:
+  /// **'Arrange top to bottom'**
+  String get release_core_parallel_workspace_arrange_top_to_bottom;
+
+  /// Shared parallel workspace user interface: Change split size ({value1}%)
+  ///
+  /// In en, this message translates to:
+  /// **'Change split size ({percent}%)'**
+  String release_core_parallel_workspace_change_split_size(String percent);
+
+  /// Shared parallel workspace user interface: Focus pane full screen
+  ///
+  /// In en, this message translates to:
+  /// **'Focus pane full screen'**
+  String get release_core_parallel_workspace_focus_pane_full_screen;
+
+  /// Shared parallel workspace user interface: Open chat in new window
+  ///
+  /// In en, this message translates to:
+  /// **'Open chat in new window'**
+  String get release_core_parallel_workspace_open_chat_in_new_window;
+
+  /// Shared parallel workspace user interface: Hide pane (keep running)
+  ///
+  /// In en, this message translates to:
+  /// **'Hide pane (keep running)'**
+  String get release_core_parallel_workspace_hide_pane_keep_running;
+
+  /// Shared parallel workspace user interface: Previous tab
+  ///
+  /// In en, this message translates to:
+  /// **'Previous tab'**
+  String get release_core_parallel_workspace_previous_tab;
+
+  /// Shared parallel workspace user interface: Next tab
+  ///
+  /// In en, this message translates to:
+  /// **'Next tab'**
+  String get release_core_parallel_workspace_next_tab;
+
+  /// Shared parallel workspace user interface: Move tab left
+  ///
+  /// In en, this message translates to:
+  /// **'Move tab left'**
+  String get release_core_parallel_workspace_move_tab_left;
+
+  /// Shared parallel workspace user interface: Move tab right
+  ///
+  /// In en, this message translates to:
+  /// **'Move tab right'**
+  String get release_core_parallel_workspace_move_tab_right;
+
+  /// Shared parallel workspace user interface: Reload current tab
+  ///
+  /// In en, this message translates to:
+  /// **'Reload current tab'**
+  String get release_core_parallel_workspace_reload_current_tab;
+
+  /// Shared parallel workspace user interface: Close tab
+  ///
+  /// In en, this message translates to:
+  /// **'Close tab'**
+  String get release_core_parallel_workspace_close_tab;
+
+  /// Shared parallel workspace user interface: Close other tabs
+  ///
+  /// In en, this message translates to:
+  /// **'Close other tabs'**
+  String get release_core_parallel_workspace_close_other_tabs;
+
+  /// Shared parallel workspace user interface: Close tabs to the right
+  ///
+  /// In en, this message translates to:
+  /// **'Close tabs to the right'**
+  String get release_core_parallel_workspace_close_tabs_to_the_right;
+
+  /// Shared parallel workspace user interface: Close all tabs
+  ///
+  /// In en, this message translates to:
+  /// **'Close all tabs'**
+  String get release_core_parallel_workspace_close_all_tabs;
+
+  /// Shared parallel workspace user interface: Reopen closed tab
+  ///
+  /// In en, this message translates to:
+  /// **'Reopen closed tab'**
+  String get release_core_parallel_workspace_reopen_closed_tab;
+
+  /// Shared parallel workspace user interface: Save named layout
+  ///
+  /// In en, this message translates to:
+  /// **'Save named layout'**
+  String get release_core_parallel_workspace_save_named_layout;
+
+  /// Shared parallel workspace user interface: Restore named layout
+  ///
+  /// In en, this message translates to:
+  /// **'Restore named layout'**
+  String get release_core_parallel_workspace_restore_named_layout;
+
+  /// Shared parallel workspace user interface: Refresh chat list
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh chat list'**
+  String get release_core_parallel_workspace_refresh_chat_list;
+
+  /// Shared parallel workspace user interface: Workspace tools
+  ///
+  /// In en, this message translates to:
+  /// **'Workspace tools'**
+  String get release_core_parallel_workspace_workspace_tools;
+
+  /// Shared parallel workspace user interface: Choose a chat for this pane
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a chat for this pane'**
+  String get release_core_parallel_workspace_choose_a_chat_for_this_pane;
+
+  /// Shared parallel workspace user interface: Choose chat for {value1}
+  ///
+  /// In en, this message translates to:
+  /// **'Choose chat for {pane}'**
+  String release_core_parallel_workspace_choose_chat_for(String pane);
+
+  /// Shared parallel workspace user interface: Add a chat to start a workspace.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a chat to start a workspace.'**
+  String get release_core_parallel_workspace_add_a_chat_to_start_a_workspace;
+
+  /// Shared parallel workspace user interface: Select a tab to show its pane.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a tab to show its pane.'**
+  String get release_core_parallel_workspace_select_a_tab_to_show_its_pane;
+
+  /// Shared parallel workspace user interface: Parallel workspace
+  ///
+  /// In en, this message translates to:
+  /// **'Parallel workspace'**
+  String get release_core_parallel_workspace_parallel_workspace;
+
+  /// Shared parallel workspace user interface: Show workspace
+  ///
+  /// In en, this message translates to:
+  /// **'Show workspace'**
+  String get release_core_parallel_workspace_show_workspace;
+
+  /// Shared parallel workspace user interface: Could not load chats. Retry
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load chats. Retry'**
+  String get release_core_parallel_workspace_could_not_load_chats_retry;
+
+  /// Shared parallel workspace user interface: Close {value1}
+  ///
+  /// In en, this message translates to:
+  /// **'Close {pane}'**
+  String release_core_parallel_workspace_close(String pane);
+
+  /// Shared parallel workspace user interface: Switch pane: {value1}
+  ///
+  /// In en, this message translates to:
+  /// **'Switch pane: {pane}'**
+  String release_core_parallel_workspace_switch_pane(String pane);
+
+  /// Shared workspace registry user interface: Session ID copied.
+  ///
+  /// In en, this message translates to:
+  /// **'Session ID copied.'**
+  String get release_core_workspace_registry_session_id_copied;
+
+  /// Shared workspace registry user interface: Chat details
+  ///
+  /// In en, this message translates to:
+  /// **'Chat details'**
+  String get release_core_workspace_registry_chat_details;
+
+  /// Shared workspace registry user interface: Server default
+  ///
+  /// In en, this message translates to:
+  /// **'Server default'**
+  String get release_core_workspace_registry_server_default;
+
+  /// Shared workspace registry user interface: Session ID
+  ///
+  /// In en, this message translates to:
+  /// **'Session ID'**
+  String get release_core_workspace_registry_session_id;
+
+  /// Shared workspace registry user interface: Title
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get release_core_workspace_registry_title;
+
+  /// Built-in parallel workspace page or action name.
+  ///
+  /// In en, this message translates to:
+  /// **'Terminals'**
+  String get release_core_workspace_label_terminals;
+
+  /// Built-in parallel workspace page or action name.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy session ID'**
+  String get release_core_workspace_label_copy_id;
+
+  /// Built-in parallel workspace page or action name.
+  ///
+  /// In en, this message translates to:
+  /// **'Contributions'**
+  String get release_core_workspace_label_contributions;
+
+  /// Reason workspace actions are disabled after the owner changes.
+  ///
+  /// In en, this message translates to:
+  /// **'This workspace owner is no longer active.'**
+  String get release_core_workspace_owner_inactive;
+
+  /// Reason a workspace contribution requiring a session is disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a chat first.'**
+  String get release_core_workspace_select_chat;
+
+  /// Unavailable chat pane in a retained workspace.
+  ///
+  /// In en, this message translates to:
+  /// **'This chat is not available for this connection.'**
+  String get release_core_workspace_chat_unavailable;
+
+  /// Unavailable contribution page in a retained workspace.
+  ///
+  /// In en, this message translates to:
+  /// **'This page is not available for this connection.'**
+  String get release_core_workspace_page_unavailable;
+
+  /// Number of unsent prompts held on the client.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} queued'**
+  String release_core_client_queue_count(int count);
+
+  /// Number of unsent client-held prompts while local draining is parked.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} queued — paused'**
+  String release_core_client_queue_paused_count(int count);
+
+  /// A long Git diff preview has been shortened on this device.
+  ///
+  /// In en, this message translates to:
+  /// **'{diff}\n… truncated'**
+  String release_core_git_diff_truncated(String diff);
+
+  /// Search model picker cannot open because the host returned no selectable models.
+  ///
+  /// In en, this message translates to:
+  /// **'Hermes returned no configured selectable models.'**
+  String get release_core_search_no_models;
+
+  /// A chat archive mutation cannot start for this row or owner.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat archive action is unavailable.'**
+  String get release_core_chat_archive_unavailable;
+
+  /// A server chat pin update did not match the requested state.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin state was not confirmed.'**
+  String get release_core_chat_pin_unconfirmed;
+
+  /// A server chat archive update did not match the requested state.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive state was not confirmed.'**
+  String get release_core_chat_archive_unconfirmed;
+
+  /// Archived conversation data has not been verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived history unavailable'**
+  String get release_core_chat_archive_history_unavailable;
+
+  /// Quick Chat history has not been verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Chat history unavailable'**
+  String get release_core_quick_chat_history_unavailable;
+
+  /// Project ownership cannot be verified for the conversation browser.
+  ///
+  /// In en, this message translates to:
+  /// **'Project ownership unavailable'**
+  String get release_core_chat_project_ownership_unavailable;
+
+  /// Conversation group whose server project ownership is not known.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown project'**
+  String get release_core_chat_unknown_project;
+
+  /// Search failed; local matches remain visible.
+  ///
+  /// In en, this message translates to:
+  /// **'Message search unavailable. Showing local matches.'**
+  String get release_core_chat_local_search_fallback;
+
+  /// An eligible remote gateway update and its version.
+  ///
+  /// In en, this message translates to:
+  /// **'Eligible · {version}'**
+  String release_core_fleet_update_eligible(String version);
+
+  /// Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped: same installation'**
+  String get release_core_fleet_update_state_1;
+
+  /// Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Not checked'**
+  String get release_core_fleet_update_state_2;
+
+  /// Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped: Cloud-managed'**
+  String get release_core_fleet_update_state_3;
+
+  /// Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped: not enrolled as a direct gateway'**
+  String get release_core_fleet_update_state_4;
+
+  /// Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped: disconnected or busy'**
+  String get release_core_fleet_update_state_5;
+
+  /// Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'No applicable update'**
+  String get release_core_fleet_update_state_6;
+
+  /// Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not verify eligibility'**
+  String get release_core_fleet_update_state_7;
+
+  /// Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped: stale, busy or already requested'**
+  String get release_core_fleet_update_state_8;
+
+  /// Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Requesting'**
+  String get release_core_fleet_update_state_9;
+
+  /// Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted; receipt unavailable'**
+  String get release_core_fleet_update_state_10;
+
+  /// Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted; awaiting receipt'**
+  String get release_core_fleet_update_state_11;
+
+  /// Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped: a chat on this installation is running'**
+  String get release_core_fleet_update_state_12;
+
+  /// Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Not confirmed; do not resend automatically'**
+  String get release_core_fleet_update_state_13;
+
+  /// Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect to check receipt'**
+  String get release_core_fleet_update_state_14;
+
+  /// Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt unavailable'**
+  String get release_core_fleet_update_state_15;
+
+  /// Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Awaiting matching receipt'**
+  String get release_core_fleet_update_state_16;
+
+  /// Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated; follow-up required'**
+  String get release_core_fleet_update_state_17;
+
+  /// Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Partially updated'**
+  String get release_core_fleet_update_state_19;
+
+  /// Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Update failed'**
+  String get release_core_fleet_update_state_20;
+
+  /// Remote gateway fleet update state or receipt outcome; do not imply an unverified update succeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Not confirmed'**
+  String get release_core_fleet_update_state_21;
+
+  /// Known server-reported Cloud agent status in the gateway fleet list.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready'**
+  String get release_core_cloud_status_ready;
+
+  /// Known server-reported Cloud agent status in the gateway fleet list.
+  ///
+  /// In en, this message translates to:
+  /// **'Online'**
+  String get release_core_cloud_status_online;
+
+  /// Known server-reported Cloud agent status in the gateway fleet list.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopped'**
+  String get release_core_cloud_status_stopped;
+
+  /// Known server-reported Cloud agent status in the gateway fleet list.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get release_core_cloud_status_error;
+
+  /// NextGen More menu subtitle for reviewed reply-card contributions.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewed reply cards for this connection'**
+  String get ng_release_more_contributions_subtitle;
+
+  /// NextGen More menu entry for the fleet of gateways.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway fleet'**
+  String get ng_release_more_gateway_fleet;
+
+  /// NextGen More menu entry for the memory graph.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory graph'**
+  String get ng_release_more_memory_graph;
+
+  /// NextGen More menu subtitle for memory history and providers.
+  ///
+  /// In en, this message translates to:
+  /// **'Timeline, edits and memory providers'**
+  String get ng_release_more_memory_graph_subtitle;
+
+  /// NextGen More menu subtitle for capability administration.
+  ///
+  /// In en, this message translates to:
+  /// **'Install and govern skills, plugins, connectors and tool backends'**
+  String get ng_release_more_capabilities_subtitle;
+
+  /// NextGen More menu entry for browser credentials and saved details.
+  ///
+  /// In en, this message translates to:
+  /// **'Browser vault'**
+  String get ng_release_more_browser_vault;
+
+  /// NextGen More menu subtitle for browser vault administration.
+  ///
+  /// In en, this message translates to:
+  /// **'Site logins, addresses, cards and credential sources'**
+  String get ng_release_more_browser_vault_subtitle;
+
+  /// NextGen More menu entry for agent policy administration.
+  ///
+  /// In en, this message translates to:
+  /// **'Agent policy'**
+  String get ng_release_more_agent_policy;
+
+  /// NextGen More menu subtitle for agent policies. Navigation copy only; does not grant consent.
+  ///
+  /// In en, this message translates to:
+  /// **'Approvals, checkpoints, browser access and shared metrics'**
+  String get ng_release_more_agent_policy_subtitle;
+
+  /// NextGen More menu entry for the cross-profile schedule desk.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedules'**
+  String get ng_release_more_schedules;
+
+  /// NextGen More menu subtitle describing schedule management.
+  ///
+  /// In en, this message translates to:
+  /// **'All profiles, blueprints, catch-up and stop'**
+  String get ng_release_more_schedules_subtitle;
+
+  /// NextGen More menu subtitle for host operations.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote logs, health, maintenance and update'**
+  String get ng_release_more_host_subtitle;
+
+  /// NextGen More menu entry for model providers and routing.
+  ///
+  /// In en, this message translates to:
+  /// **'Providers and routes'**
+  String get ng_release_more_providers_routes;
+
+  /// NextGen More menu subtitle for provider configuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Keys, endpoints, delegation and mixtures'**
+  String get ng_release_more_providers_routes_subtitle;
+
+  /// NextGen More menu entry for billing and plans.
+  ///
+  /// In en, this message translates to:
+  /// **'Credits and plans'**
+  String get ng_release_more_credits_plans;
+
+  /// NextGen More menu billing subtitle. Describes existing account-gated, consented billing; does not authorize it.
+  ///
+  /// In en, this message translates to:
+  /// **'Consented Nous billing when the account allows it'**
+  String get ng_release_more_credits_plans_subtitle;
+
+  /// Separator between password and browser sign-in options in NextGen.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get ng_release_sign_in_or;
+
+  /// NextGen unsupported-provider notice with an already-localized explanation as its verbatim prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'{message} You can still sign in with a deployment session token on the next step.'**
+  String ng_release_deployment_sign_in_hint(String message);
+
+  /// NextGen sidebar fallback when remote message search fails; locally cached matches remain visible.
+  ///
+  /// In en, this message translates to:
+  /// **'Message search unavailable. Showing local matches.'**
+  String get ng_release_message_search_unavailable;
+
+  /// NextGen Insights reporting-period selector. Currently offers 7, 30 and 90 days.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, one{{days} day} other{{days} days}}'**
+  String ng_release_insights_days(int days);
+
+  /// Fallback person name in NextGen’s “Signed in as {name}.” connection check when the response has no user object.
+  ///
+  /// In en, this message translates to:
+  /// **'you'**
+  String get ng_release_signed_in_you;
+
+  /// NextGen error when a queued, unsent prompt was removed before its edit could be saved.
+  ///
+  /// In en, this message translates to:
+  /// **'That unsent prompt is no longer in the queue.'**
+  String get release_chat_unsent_prompt_gone;
+
+  /// NextGen attachment error when the gateway does not confirm attaching the selected file.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway did not attach {name}.'**
+  String ng_release_attachment_not_attached(String name);
+
+  /// NextGen error when an action needs a live gateway connection.
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected to the gateway yet.'**
+  String get ng_release_gateway_not_connected;
+
+  /// NextGen timeout fallback when no more specific gateway connection reason is available.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach the gateway.'**
+  String get ng_release_gateway_unreachable;
+
+  /// NextGen project-operation error when the selected connection or profile changed.
+  ///
+  /// In en, this message translates to:
+  /// **'Projects scope is no longer selected'**
+  String get ng_release_projects_scope_changed;
+
+  /// NextGen model catalogue error when the gateway omits its provider list.
+  ///
+  /// In en, this message translates to:
+  /// **'Missing providers'**
+  String get ng_release_missing_providers;
+
+  /// NextGen auxiliary-model catalogue error when the gateway omits its helper-task list.
+  ///
+  /// In en, this message translates to:
+  /// **'Missing tasks'**
+  String get ng_release_missing_tasks;
+
+  /// Compact NextGen sidebar chat age in minutes. Keep it short; no “ago” suffix.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}m'**
+  String ng_release_age_minutes(int count);
+
+  /// Compact NextGen sidebar chat age in hours. Keep it short; no “ago” suffix.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}h'**
+  String ng_release_age_hours(int count);
+
+  /// Compact NextGen sidebar chat age in days. Keep it short; no “ago” suffix.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}d'**
+  String ng_release_age_days(int count);
+
+  /// Compact NextGen sidebar chat age in whole weeks. Keep it short; no “ago” suffix.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}w'**
+  String ng_release_age_weeks(int count);
+
+  /// Compact NextGen sidebar chat age in whole years. Keep it short; no “ago” suffix.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}y'**
+  String ng_release_age_years(int count);
+
+  /// Compact NextGen number in billions. The count is already scaled and formatted; translate the magnitude suffix.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}B'**
+  String ng_release_compact_billions(String count);
+
+  /// Compact NextGen number in millions. The count is already scaled and formatted; translate the magnitude suffix.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}M'**
+  String ng_release_compact_millions(String count);
+
+  /// Compact NextGen number in thousands. The count is already scaled and formatted; translate the magnitude suffix.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}k'**
+  String ng_release_compact_thousands(String count);
+
+  /// Compact NextGen model context/output size in thousands of tokens. Count is already scaled; preserve the uppercase K in English.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}K'**
+  String ng_release_token_thousands(String count);
+
+  /// Compact elapsed time for a NextGen subagent, with whole minutes and remaining seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes}m {seconds}s'**
+  String ng_release_elapsed_minutes_seconds(int minutes, int seconds);
+
+  /// Compact elapsed time for a NextGen subagent that has run for less than one minute.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds}s'**
+  String ng_release_elapsed_seconds(int seconds);
+
+  /// NextGen recent-notification diagnostic explaining why a foreground reply did not notify.
+  ///
+  /// In en, this message translates to:
+  /// **'Ares was on screen'**
+  String get ng_release_notification_foreground;
+
+  /// NextGen recent-notification diagnostic explaining why an interrupted turn did not notify.
+  ///
+  /// In en, this message translates to:
+  /// **'the turn was stopped'**
+  String get ng_release_notification_stopped;
+
+  /// NextGen More menu entry for opening several chats in one workspace.
+  ///
+  /// In en, this message translates to:
+  /// **'Parallel workspace'**
+  String get ng_release_more_parallel_workspace;
+
+  /// NextGen More menu subtitle for the parallel chat workspace.
+  ///
+  /// In en, this message translates to:
+  /// **'Open multiple chats in tabs or side by side.'**
+  String get ng_release_more_parallel_workspace_subtitle;
+
+  /// Fallback model name in the chat model picker's profile-default summary.
+  ///
+  /// In en, this message translates to:
+  /// **'unknown'**
+  String get release_chat_unknown_model;
+
+  /// Chat model picker summary when the profile does not report a provider.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile default: {model}'**
+  String release_chat_profile_default(String model);
+
+  /// Chat model picker summary showing the profile's default model and provider.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile default: {model} • {provider}'**
+  String release_chat_profile_default_provider(String model, String provider);
+
+  /// Chat model picker notice requiring an explicit provider for an ambiguous model.
+  ///
+  /// In en, this message translates to:
+  /// **'This model is available from multiple providers. Choose a provider to continue.'**
+  String get release_chat_choose_provider;
+
+  /// Classic chat slash-command catalogue error when there is no Desktop gateway.
+  ///
+  /// In en, this message translates to:
+  /// **'Slash commands need the Desktop gateway'**
+  String get release_chat_slash_needs_gateway;
+
+  /// Classic chat activity status during reconciliation; the prompt is not sent again.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovering without resending'**
+  String get release_chat_recovering_without_resending;
+
+  /// Spoken live-voice failure notice in both chat layouts when the delegated request cannot reach Hermes.
+  ///
+  /// In en, this message translates to:
+  /// **'Sorry, I could not reach Hermes for that request.'**
+  String get release_chat_live_request_unreachable;
+
+  /// Live-voice progress announcement in both chat layouts. The tool is a server-supplied tool name or status.
+  ///
+  /// In en, this message translates to:
+  /// **'Hermes is working: {tool}. Not done yet.'**
+  String release_chat_live_working(String tool);
+
+  /// Live-voice announcement in both chat layouts when the completed request has no spoken reply.
+  ///
+  /// In en, this message translates to:
+  /// **'Hermes finished that request without a spoken result.'**
+  String get release_chat_live_finished_without_spoken_result;
+
+  /// Classic chat voice-setup error detail when the selected reply language cannot be configured.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected reply language is unavailable'**
+  String get release_chat_reply_language_unavailable;
+
+  /// Classic chat voice-setup error detail when the selected reply voice cannot be configured.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected reply voice is unavailable'**
+  String get release_chat_reply_voice_unavailable;
+
+  /// Classic chat voice-setup error detail when rate, volume or pitch configuration fails.
+  ///
+  /// In en, this message translates to:
+  /// **'Reply voice configuration is unavailable'**
+  String get release_chat_reply_voice_configuration_unavailable;
+
+  /// Privacy-preserving native approval notification body; action details remain inside the authenticated chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the chat to review the requested action.'**
+  String get release_chat_notification_review_action;
+
+  /// Privacy-preserving native question or secret-input notification body; prompt content remains inside the chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the chat to respond.'**
+  String get release_chat_notification_respond;
+
+  /// Classic single-session window notice when a new-chat slash command needs the main window.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a new chat in the main window.'**
+  String get release_chat_start_new_main_window;
+
+  /// Classic composer RPC error detail when no Desktop gateway is available.
+  ///
+  /// In en, this message translates to:
+  /// **'No Desktop gateway'**
+  String get release_chat_no_desktop_gateway;
+
+  /// Classic chat upload error when the attachment's owning response generation has been cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Attachment preparation was cancelled.'**
+  String get release_chat_attachment_preparation_cancelled;
+
+  /// Classic approval refusal detail when the original approval authority is no longer current.
+  ///
+  /// In en, this message translates to:
+  /// **'Approval authority was revoked.'**
+  String get release_chat_approval_authority_revoked;
+
+  /// Classic approval, question, sudo or secret response error when its Desktop gateway session has disconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'The Desktop gateway session is no longer connected'**
+  String get release_chat_gateway_session_disconnected;
+
+  /// Classic chat notice after requesting interruption without yet observing terminal settlement.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop requested. Waiting for Hermes to finish.'**
+  String get release_chat_stop_requested;
+
+  /// Classic chat interruption failure notice, preserving the reported error detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not request stop: {error}'**
+  String release_chat_stop_request_failed(String error);
+
+  /// Classic chat refusal detail inside the existing send-failed notice for a client-held prompt.
+  ///
+  /// In en, this message translates to:
+  /// **'The queued prompt was not sent.'**
+  String get release_chat_queued_prompt_not_sent;
+
+  /// Classic chat stop notice when the running turn is unreachable; reconnection does not resend the prompt.
+  ///
+  /// In en, this message translates to:
+  /// **'The running turn could not be reached. Reconnecting without resending.'**
+  String get release_chat_running_turn_unreachable;
+
+  /// Browser-preview attachment refusal in both chat layouts while the composer is busy.
+  ///
+  /// In en, this message translates to:
+  /// **'Wait for the composer to become available.'**
+  String get release_chat_wait_for_composer;
+
+  /// Toolbar tooltip in both chat layouts opening search in the currently loaded transcript.
+  ///
+  /// In en, this message translates to:
+  /// **'Find in transcript'**
+  String get release_chat_find_in_transcript;
+
+  /// Toolbar tooltip and compact chat-tools menu entry opening the browser preview in both chat layouts.
+  ///
+  /// In en, this message translates to:
+  /// **'Open browser preview'**
+  String get release_chat_open_browser_preview;
+
+  /// Compact toolbar overflow-menu tooltip in both chat layouts.
+  ///
+  /// In en, this message translates to:
+  /// **'More chat tools'**
+  String get release_chat_more_tools;
+
+  /// Classic composer tooltip for holding a prompt locally until the running turn finishes.
+  ///
+  /// In en, this message translates to:
+  /// **'Queue until this turn finishes'**
+  String get release_chat_queue_until_finished;
+
+  /// Classic composer formatting-button tooltip and accessibility label for bold Markdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Bold'**
+  String get release_chat_format_bold;
+
+  /// Classic composer formatting-button tooltip and accessibility label for italic Markdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Italic'**
+  String get release_chat_format_italic;
+
+  /// NextGen refusal when the gateway queue lacks an attached stored chat or the draft has attachments.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway queue needs an attached chat and a text-only prompt.'**
+  String get ng_release_chat_gateway_queue_requirements;
+
+  /// NextGen new-chat command notice in a pane with no new-chat callback.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a new chat from the main chat screen.'**
+  String get ng_release_chat_start_new_main_screen;
+
+  /// NextGen fallback item name inside the could-not-prepare-that-file message after a captured image cannot be staged.
+  ///
+  /// In en, this message translates to:
+  /// **'image'**
+  String get ng_release_chat_image;
+
+  /// NextGen tool elapsed duration, with seconds already formatted to one decimal place.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds}s'**
+  String ng_release_chat_tool_seconds(String seconds);
+
+  /// Preview notice after its owning chat changes.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat changed. Reconnect the preview to continue.'**
+  String get release_preview_chat_changed;
+
+  /// Preview progress while verifying the owning chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Authenticating chat…'**
+  String get release_preview_authenticating_chat;
+
+  /// Preview refusal with an already localized workspace failure reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview unavailable: {reason}'**
+  String release_preview_unavailable_reason(String reason);
+
+  /// Safe fallback for an unexpected preview operation failure.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview operation failed.'**
+  String get release_preview_operation_failed;
+
+  /// Preview evidence was staged in the composer, not submitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to draft. Nothing sent.'**
+  String get release_preview_added_to_draft;
+
+  /// Confirmation before loading a new preview origin.
+  ///
+  /// In en, this message translates to:
+  /// **'Open this site?'**
+  String get release_preview_open_site_title;
+
+  /// Preview origin approval explanation. The origin is a URL origin, not translated.
+  ///
+  /// In en, this message translates to:
+  /// **'{origin}\n\nReader mode loads only this document. It does not share cookies, sign-in details or the page with Hermes.'**
+  String release_preview_open_site_body(String origin);
+
+  /// Confirm loading the approved preview origin.
+  ///
+  /// In en, this message translates to:
+  /// **'Open site'**
+  String get release_preview_open_site;
+
+  /// Confirmation before navigation drops annotation pins not yet staged.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard unstaged pins?'**
+  String get release_preview_discard_pins_title;
+
+  /// Cancel navigation and retain the preview annotation pins.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep pins'**
+  String get release_preview_keep_pins;
+
+  /// Consent title before enabling reader access for the owning chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this page with this chat?'**
+  String get release_preview_share_page_title;
+
+  /// Exact reader-sharing scope disclosure. Keep navigation revocation and form/credential exclusions explicit.
+  ///
+  /// In en, this message translates to:
+  /// **'Hermes can read the displayed text and element list from {origin}, and scroll this pane. Navigation ends sharing. Forms and credentials are not shared.'**
+  String release_preview_share_page_body(String origin);
+
+  /// Confirm reader sharing with the current chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Share page'**
+  String get release_preview_share_page;
+
+  /// Title of the annotation comment dialog, with the pin number.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment #{number}'**
+  String release_preview_comment_number(int number);
+
+  /// Label of the preview annotation comment text field.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get release_preview_note;
+
+  /// Save the current preview annotation pin locally.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep pin'**
+  String get release_preview_keep_pin;
+
+  /// Title of the isolated browser reader pane.
+  ///
+  /// In en, this message translates to:
+  /// **'Browser preview'**
+  String get release_preview_title;
+
+  /// Tooltip: hide the preview without forgetting its document.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide preview'**
+  String get release_preview_hide;
+
+  /// Tooltip: close the preview and forget its document.
+  ///
+  /// In en, this message translates to:
+  /// **'Close and forget page'**
+  String get release_preview_close_and_forget;
+
+  /// Label of the preview URL field.
+  ///
+  /// In en, this message translates to:
+  /// **'Site address'**
+  String get release_preview_site_address;
+
+  /// Tooltip: navigate the preview to the entered URL.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to address'**
+  String get release_preview_go_to_address;
+
+  /// Tooltip: advance through preview navigation history.
+  ///
+  /// In en, this message translates to:
+  /// **'Forward'**
+  String get release_preview_forward;
+
+  /// Tooltip: reload the current preview document.
+  ///
+  /// In en, this message translates to:
+  /// **'Reload'**
+  String get release_preview_reload;
+
+  /// Tooltip: request consent to share the preview reader with Hermes.
+  ///
+  /// In en, this message translates to:
+  /// **'Share page with Hermes'**
+  String get release_preview_share_with_hermes;
+
+  /// Tooltip: revoke the current reader-sharing grant.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop sharing page'**
+  String get release_preview_stop_sharing;
+
+  /// Tooltip: toggle preview annotation mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Annotate element or region'**
+  String get release_preview_annotate;
+
+  /// Tooltip: toggle the credential-free reader request log.
+  ///
+  /// In en, this message translates to:
+  /// **'Reader console'**
+  String get release_preview_reader_console;
+
+  /// Action to rebind a preview to its current chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect preview'**
+  String get release_preview_reconnect;
+
+  /// Preview empty-state description of its reader-only limitations.
+  ///
+  /// In en, this message translates to:
+  /// **'Reader mode: HTML and text. No scripts, embedded resources or signed-in browser profile.'**
+  String get release_preview_reader_mode_help;
+
+  /// Persistent notice while this preview reader is shared with the owning chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Sharing reader with this chat: {origin}'**
+  String release_preview_sharing_origin(String origin);
+
+  /// Instruction shown in preview annotation mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap an element or drag a region to comment.'**
+  String get release_preview_annotation_help;
+
+  /// Reader console heading when no log rows are selected.
+  ///
+  /// In en, this message translates to:
+  /// **'Reader requests (JavaScript is off)'**
+  String get release_preview_reader_requests;
+
+  /// Reader console heading with the selected log-row count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} selected · JavaScript is off'**
+  String release_preview_selected_requests(int count);
+
+  /// Copy every retained reader request log row.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy all'**
+  String get release_preview_copy_all;
+
+  /// Copy only the selected reader request log rows.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy selected'**
+  String get release_preview_copy_selected;
+
+  /// Stage the reader request log in the composer without sending.
+  ///
+  /// In en, this message translates to:
+  /// **'Add log to draft'**
+  String get release_preview_add_log_to_draft;
+
+  /// Heading and request log staged visibly in the composer. Preserve log line breaks.
+  ///
+  /// In en, this message translates to:
+  /// **'Reader requests:\n{log}'**
+  String release_preview_requests_draft(String log);
+
+  /// Stage the current preview annotation pins in the composer without sending.
+  ///
+  /// In en, this message translates to:
+  /// **'Add {count} to draft'**
+  String release_preview_add_pins_to_draft(int count);
+
+  /// A successful reader fetch log row; retain HTTP 200 and the untranslated URL origin.
+  ///
+  /// In en, this message translates to:
+  /// **'HTTP 200 · {origin} · {count, plural, one{{count} reader element} other{{count} reader elements}}'**
+  String release_preview_request_loaded(String origin, int count);
+
+  /// Introduction to annotation evidence staged visibly in the composer, followed by technical coordinates and user notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Review these comments on the preview of {origin}. The attached crops are numbered in the same order.'**
+  String release_preview_annotation_intro(String origin);
+
+  /// Label for a user-drawn reader region in staged annotation evidence.
+  ///
+  /// In en, this message translates to:
+  /// **'reader region'**
+  String get release_preview_reader_region;
+
+  /// Preview failure when an annotation crop cannot be captured.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not capture these pixels.'**
+  String get release_preview_capture_failed;
+
+  /// Preview address-policy refusal. Do not imply that navigation was approved.
+  ///
+  /// In en, this message translates to:
+  /// **'This address is outside the approved preview origin.'**
+  String get release_preview_address_not_approved;
+
+  /// Preview page exceeds the reader byte or source length budget.
+  ///
+  /// In en, this message translates to:
+  /// **'Page exceeds the reader limit.'**
+  String get release_preview_page_limit;
+
+  /// Preview HTML parse failed or the worker returned invalid data.
+  ///
+  /// In en, this message translates to:
+  /// **'The page could not be read.'**
+  String get release_preview_page_unreadable;
+
+  /// Preview background parsing exceeded its time budget.
+  ///
+  /// In en, this message translates to:
+  /// **'This page is too complex for reader mode.'**
+  String get release_preview_page_complex;
+
+  /// Reader HTTP failure with the response status. Retain the no-redirect and no-sign-in guarantees.
+  ///
+  /// In en, this message translates to:
+  /// **'HTTP {statusCode}. No redirect or sign-in was followed.'**
+  String release_preview_http_failed(int statusCode);
+
+  /// Preview MIME type is not supported.
+  ///
+  /// In en, this message translates to:
+  /// **'Only HTML and plain text can open in reader mode.'**
+  String get release_preview_unsupported_type;
+
+  /// Credential-free preview fetch failed.
+  ///
+  /// In en, this message translates to:
+  /// **'The site could not be loaded securely.'**
+  String get release_preview_load_insecure;
+
+  /// Attachment preparation rejected the preview crop byte budget.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview crop exceeds its limit.'**
+  String get release_preview_crop_limit;
+
+  /// Preview crop preparation found an empty or unreadable image.
+  ///
+  /// In en, this message translates to:
+  /// **'The selected image is empty or unreadable.'**
+  String get release_preview_image_unreadable;
+
+  /// Preview crop preparation rejected the per-image draft byte budget.
+  ///
+  /// In en, this message translates to:
+  /// **'The selected image exceeds the 64 MiB draft budget.'**
+  String get release_preview_image_budget;
+
+  /// Preview crop preparation rejected an unsupported image format.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported image format. Choose a JPEG, PNG, or WebP image.'**
+  String get release_preview_image_format;
+
+  /// Preview crop preparation could not safely decode the image.
+  ///
+  /// In en, this message translates to:
+  /// **'The selected JPEG, PNG, or WebP image could not be decoded safely.'**
+  String get release_preview_image_decode;
+
+  /// Preview crop preparation could not scrub image metadata safely.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to sanitize this image. Choose a valid JPEG, PNG, or WebP image.'**
+  String get release_preview_image_sanitize;
+
+  /// Preview evidence would exceed the total attachment byte budget.
+  ///
+  /// In en, this message translates to:
+  /// **'Attachments are limited to 64 MiB total per draft.'**
+  String get release_preview_draft_budget;
+
+  /// An existing generic attachment exceeds the limit checked while staging preview evidence.
+  ///
+  /// In en, this message translates to:
+  /// **'Generic files are limited to 16 MiB each.'**
+  String get release_preview_generic_file_limit;
+
+  /// An existing image fails the safety check while staging preview evidence.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote images must be sanitized before upload.'**
+  String get release_preview_image_not_sanitized;
+
+  /// Safe localized fallback for an unknown attachment preparation failure; never show raw service diagnostics.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not add preview evidence to the draft. Try again.'**
+  String get release_preview_stage_failed;
+
+  /// Button and sheet title for finding Hermes servers on the local area network. Hermes is a product name; LAN means local area network.
+  ///
+  /// In en, this message translates to:
+  /// **'Find Hermes on LAN'**
+  String get release_misc_find_hermes_on_lan;
+
+  /// Failure notice when local-network server discovery fails. The diagnostic error text is shown verbatim after a translated label.
+  ///
+  /// In en, this message translates to:
+  /// **'Discovery failed: {error}'**
+  String release_misc_discovery_failed(String error);
+
+  /// Empty result message after the local-network Hermes server scan completes.
+  ///
+  /// In en, this message translates to:
+  /// **'No Hermes servers found on the local network.'**
+  String get release_misc_no_lan_servers;
+
+  /// Connection health-check failure after the server rejects a supplied API key.
+  ///
+  /// In en, this message translates to:
+  /// **'API key was rejected by {endpoint} (HTTP {statusCode}).'**
+  String release_misc_api_key_rejected(String endpoint, int statusCode);
+
+  /// Connection health-check failure when the server requires an API key and none was supplied. Keep the configuration identifier API_SERVER_KEY unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Server requires an API key. Enter your API_SERVER_KEY.'**
+  String get release_misc_api_key_required;
+
+  /// Connection health-check failure for a missing gateway endpoint, including configuration checks rather than assuming the service identity.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway endpoint {endpoint} returned HTTP 404. Check the Gateway path prefix and reverse-proxy routes.'**
+  String release_misc_gateway_not_found(String endpoint);
+
+  /// Connection health-check failure for an HTTP status other than an authentication refusal or a missing endpoint.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway endpoint {endpoint} returned HTTP {statusCode}.'**
+  String release_misc_gateway_http_error(String endpoint, int statusCode);
+
+  /// Connection health-check network failure without an HTTP response.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot reach Gateway endpoint {endpoint}.'**
+  String release_misc_gateway_unreachable(String endpoint);
+
+  /// Shared validation refusal; preserve the specific delivery target or file-saving reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid delivery target'**
+  String get release_core_schedule_invalid_delivery_target;
+
+  /// Shared validation refusal; preserve the specific delivery target or file-saving reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Only a file directly in the working directory can be saved.'**
+  String get release_core_file_save_direct_only;
+
+  /// Shared validation refusal; preserve the specific delivery target or file-saving reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden files can\'t be saved by the gateway.'**
+  String get release_core_file_save_hidden;
 }
 
 class _AppLocalizationsDelegate

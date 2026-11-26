@@ -311,17 +311,17 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String message_time_recorded(String time) {
-    return 'Recorded by server: $time (local time)';
+    return '서버 기록 시각: $time (현지 시각)';
   }
 
   @override
   String message_time_sent(String time) {
-    return 'Send observed on this device: $time (local time)';
+    return '이 기기에서 전송 감지: $time (현지 시각)';
   }
 
   @override
   String message_time_received(String time) {
-    return 'First received on this device: $time (local time)';
+    return '이 기기에서 처음 수신한 시각: $time (현지 시각)';
   }
 
   @override
@@ -437,28 +437,27 @@ class AppLocalizationsKo extends AppLocalizations {
   String get attachment_retry => '다시 시도';
 
   @override
-  String get saved_history_heading => 'Saved history';
+  String get saved_history_heading => '저장된 기록';
 
   @override
-  String get received_output_heading =>
-      'Received output — match to saved history unconfirmed';
+  String get received_output_heading => '수신한 출력 — 저장된 기록과의 일치 여부 미확인';
 
   @override
-  String get received_output_details => 'About received output';
+  String get received_output_details => '수신한 출력 정보';
 
   @override
   String get received_output_explanation =>
-      'This may also appear in saved history. The app cannot confirm a match.';
+      '저장된 기록에도 포함되어 있을 수 있습니다. 앱에서는 일치 여부를 확인할 수 없습니다.';
 
   @override
-  String get local_prompt_context => 'Local prompt context';
+  String get local_prompt_context => '로컬 프롬프트 컨텍스트';
 
   @override
-  String get received_output_badge => 'Received · match unconfirmed';
+  String get received_output_badge => '수신됨 · 일치 여부 미확인';
 
   @override
   String get received_output_lifetime =>
-      'Received output is kept temporarily in this app session and may be shortened or removed as limits are reached. It may not be available after the app or connection is closed.';
+      '수신한 출력은 이 앱 세션 동안 임시로 보관되며, 한도에 도달하면 줄어들거나 삭제될 수 있습니다. 앱이나 연결을 종료하면 사용할 수 없을 수도 있습니다.';
 
   @override
   String get theme_palette => '색상 테마';
@@ -655,15 +654,13 @@ class AppLocalizationsKo extends AppLocalizations {
       '이 Hermes 세션이 끝날 때까지 일치하는 명령을 허용합니다.';
 
   @override
-  String get allow_folder_until_sandbox_off =>
-      'Allow this folder until the sandbox is switched off.';
+  String get allow_folder_until_sandbox_off => '샌드박스가 꺼질 때까지 이 폴더를 허용합니다.';
 
   @override
   String get allow_once => '한 번 허용';
 
   @override
-  String get allow_website_until_sandbox_off =>
-      'Allow this website until the sandbox is switched off.';
+  String get allow_website_until_sandbox_off => '샌드박스가 꺼질 때까지 이 웹사이트를 허용합니다.';
 
   @override
   String get always_allow => '항상 허용';
@@ -891,7 +888,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get code_copied => '코드가 복사되었습니다';
 
   @override
-  String get code_format => 'Code';
+  String get code_format => '코드';
 
   @override
   String get coming_next => '예정된 기능';
@@ -900,25 +897,25 @@ class AppLocalizationsKo extends AppLocalizations {
   String get command => '명령';
 
   @override
-  String get command_palette => 'Command palette';
+  String get command_palette => '명령 팔레트';
 
   @override
-  String get command_palette_hint => 'Type a command';
+  String get command_palette_hint => '명령 입력';
 
   @override
-  String get command_palette_no_results => 'No commands found';
+  String get command_palette_no_results => '명령을 찾을 수 없습니다';
 
   @override
-  String get command_palette_new_chat => 'New chat';
+  String get command_palette_new_chat => '새 채팅';
 
   @override
-  String get command_palette_search_chats => 'Search chats';
+  String get command_palette_search_chats => '채팅 검색';
 
   @override
-  String get command_palette_toggle_theme => 'Toggle theme';
+  String get command_palette_toggle_theme => '테마 전환';
 
   @override
-  String get command_palette_copy_last_code => 'Copy last code block';
+  String get command_palette_copy_last_code => '마지막 코드 블록 복사';
 
   @override
   String get command_line_chats => '명령줄 채팅';
@@ -1106,14 +1103,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get cron => 'Cron';
 
   @override
-  String get crons => 'Crons';
+  String get crons => 'Cron 작업';
 
   @override
-  String get cron_conversations_empty =>
-      'Conversations from scheduled jobs appear here, including older runs.';
+  String get cron_conversations_empty => '이전 실행을 포함한 예약 작업의 대화가 여기에 표시됩니다.';
 
   @override
-  String get search_cron_conversations => 'Search cron conversations';
+  String get search_cron_conversations => 'Cron 대화 검색';
 
   @override
   String get cron_jobs => 'Cron 작업';
@@ -1887,51 +1883,50 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get windows_notifications_blocked =>
-      'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.';
+      '알림을 사용할 수 없습니다. 설치된 Ares 앱을 사용하고 Windows의 설정 → 시스템 → 알림을 확인하세요.';
 
   @override
-  String get windows_notification_diagnostics =>
-      'What Ares submitted to Windows';
+  String get windows_notification_diagnostics => 'Ares가 Windows에 전달한 내용';
 
   @override
-  String get chat_activity_share => 'Share chat activity';
+  String get chat_activity_share => '채팅 활동 공유';
 
   @override
   String get chat_activity_share_hint =>
-      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+      '이 채팅을 사용 중임을 호환되는 연결된 게이트웨이에 알려 휴대전화 알림 플러그인의 중복 알림을 방지합니다. 키나 메시지 본문은 전송되지 않습니다.';
 
   @override
-  String get completion_sound => 'Completion sound';
+  String get completion_sound => '완료 소리';
 
   @override
-  String get completion_sound_system => 'System default';
+  String get completion_sound_system => '시스템 기본값';
 
   @override
-  String get completion_sound_mail => 'Mail';
+  String get completion_sound_mail => '메일';
 
   @override
-  String get completion_sound_reminder => 'Reminder';
+  String get completion_sound_reminder => '미리 알림';
 
   @override
-  String get completion_sound_silent => 'Silent';
+  String get completion_sound_silent => '무음';
 
   @override
   String get completion_sound_scope =>
-      'Plays for finished replies, the test notification and inside the app. Approvals and other alerts keep their usual sound.';
+      '응답 완료, 테스트 알림 및 앱 내에서 재생됩니다. 승인 및 기타 알림은 기존 소리를 유지합니다.';
 
   @override
   String get completion_sound_scope_android =>
-      'Plays for finished replies, the test notification and inside the app. Approvals, other alerts, background notifications from the server and Android Auto messages keep their usual sound.';
+      '응답 완료, 테스트 알림 및 앱 내에서 재생됩니다. 승인, 기타 알림, 서버의 백그라운드 알림 및 Android Auto 메시지는 기존 소리를 유지합니다.';
 
   @override
-  String get notification_open_action => 'Open';
+  String get notification_open_action => '열기';
 
   @override
-  String get app_sounds_mute => 'Mute app sounds';
+  String get app_sounds_mute => '앱 소리 음소거';
 
   @override
   String get app_sounds_mute_hint =>
-      'Stops the completion sound Ares plays while it is open. Notifications keep their own sound.';
+      'Ares가 열려 있는 동안 재생하는 완료 소리를 끕니다. 알림은 각각의 소리를 유지합니다.';
 
   @override
   String get notifications_permission_denied =>
@@ -2408,10 +2403,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get starting_hermes => 'Hermes 시작 중…';
 
   @override
-  String get media_card_download => 'Download file';
+  String get media_card_download => '파일 다운로드';
 
   @override
-  String get media_card_tap_to_download => 'Tap to download';
+  String get media_card_tap_to_download => '탭하여 다운로드';
 
   @override
   String get still_loading_your_projects => '프로젝트를 불러오는 중입니다.';
@@ -2708,7 +2703,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get verbose_mode => '상세 모드';
 
   @override
-  String get message_metadata => 'Message details';
+  String get message_metadata => '메시지 세부 정보';
 
   @override
   String get voice => '음성';
@@ -3286,45 +3281,43 @@ class AppLocalizationsKo extends AppLocalizations {
       '컴팩트는 You 및 Hermes 라벨을 없애고 말풍선 여백, 간격, 좌우 여백을 줄입니다.';
 
   @override
-  String get client_certificate_mtls => 'Client certificate (mTLS)';
+  String get client_certificate_mtls => '클라이언트 인증서 (mTLS)';
 
   @override
   String get client_certificate_mtls_description =>
-      'Present a certificate when an HTTPS proxy requires mutual TLS.';
+      'HTTPS 프록시에서 상호 TLS를 요구할 때 인증서를 제시합니다.';
 
   @override
-  String get client_certificate_https_only =>
-      'Client certificates are only used for HTTPS connections.';
+  String get client_certificate_https_only => '클라이언트 인증서는 HTTPS 연결에서만 사용됩니다.';
 
   @override
-  String get choose_certificate => 'Choose certificate';
+  String get choose_certificate => '인증서 선택';
 
   @override
-  String get certificate_password => 'Certificate password';
+  String get certificate_password => '인증서 비밀번호';
 
   @override
   String get this_certificate_is_password_protected =>
-      'This certificate is password-protected. It opens as you type.';
+      '이 인증서는 비밀번호로 보호되어 있습니다. 입력하면 열립니다.';
 
   @override
   String get enter_the_certificate_password_to_finish_loading_it =>
-      'Enter the certificate password to finish loading the certificate you chose.';
+      '선택한 인증서를 모두 불러오려면 인증서 비밀번호를 입력하세요.';
 
   @override
   String get client_certificate_required =>
-      'Load a client certificate or turn off the client certificate option.';
+      '클라이언트 인증서를 불러오거나 클라이언트 인증서 옵션을 끄세요.';
 
   @override
   String client_certificate_loaded(String label) {
-    return 'Loaded: $label';
+    return '불러옴: $label';
   }
 
   @override
-  String get remove_certificate => 'Remove certificate';
+  String get remove_certificate => '인증서 제거';
 
   @override
-  String get certificate_import_failed =>
-      'That certificate could not be loaded.';
+  String get certificate_import_failed => '해당 인증서를 불러올 수 없습니다.';
 
   @override
   String get background_work => '백그라운드 작업';
@@ -3785,73 +3778,71 @@ class AppLocalizationsKo extends AppLocalizations {
   String get provider_oauth_account_status_unknown => '호스트 계정 상태를 확인할 수 없습니다.';
 
   @override
-  String get app_language => 'App language';
+  String get app_language => '앱 언어';
 
   @override
-  String get app_language_system => 'Same as phone';
+  String get app_language_system => '휴대전화와 동일';
 
   @override
-  String get auto_archives_after_72_hours => 'Auto-archives after 72 hours';
+  String get auto_archives_after_72_hours => '72시간 후 자동 보관';
 
   @override
-  String get automation => 'Automation';
+  String get automation => '자동화';
 
   @override
-  String get voice_recording_start => 'Record voice message';
+  String get voice_recording_start => '음성 메시지 녹음';
 
   @override
-  String get voice_recording_pause => 'Pause recording';
+  String get voice_recording_pause => '녹음 일시 정지';
 
   @override
-  String get voice_recording_preview => 'Play recording';
+  String get voice_recording_preview => '녹음 재생';
 
   @override
-  String get voice_recording_resume => 'Continue recording';
+  String get voice_recording_resume => '녹음 계속하기';
 
   @override
-  String get voice_recording_send => 'Send voice message';
+  String get voice_recording_send => '음성 메시지 보내기';
 
   @override
-  String get voice_recording_discard => 'Discard recording';
+  String get voice_recording_discard => '녹음 폐기';
 
   @override
-  String get voice_recording_processing => 'Preparing voice message…';
+  String get voice_recording_processing => '음성 메시지 준비 중…';
 
   @override
   String voice_recording_elapsed(String time) {
-    return 'Recording $time';
+    return '녹음 중 $time';
   }
 
   @override
   String voice_recording_draft(String time) {
-    return 'Voice message $time';
+    return '음성 메시지 $time';
   }
 
   @override
-  String get voice_recording_permission =>
-      'Allow microphone access to record a voice message.';
+  String get voice_recording_permission => '음성 메시지를 녹음하려면 마이크 접근을 허용하세요.';
 
   @override
-  String get voice_recording_limit =>
-      'This recording has reached the ten-minute limit.';
+  String get voice_recording_limit => '녹음이 최대 길이인 10분에 도달했습니다.';
 
   @override
-  String get voice_recording_empty => 'No audio was recorded. Try again.';
+  String get voice_recording_empty => '녹음된 소리가 없습니다. 다시 시도하세요.';
 
   @override
   String get voice_recording_failed =>
-      'Could not process the recording. Any saved fragments have been kept.';
+      '녹음을 처리할 수 없습니다. 저장된 녹음 조각은 모두 보관되어 있습니다.';
 
   @override
   String get voice_recording_unconfirmed =>
-      'Delivery was not confirmed. Your recording is saved. Check the chat before trying again.';
+      '전달 여부가 확인되지 않았습니다. 녹음은 저장되어 있습니다. 다시 시도하기 전에 채팅을 확인하세요.';
 
   @override
   String get voice_recording_submit_failed =>
-      'Could not send the voice message. Your recording is saved. Check the connection, Dashboard access and server transcription settings.';
+      '음성 메시지를 보낼 수 없습니다. 녹음은 저장되어 있습니다. 연결, 대시보드 접근 및 서버의 음성 텍스트 변환 설정을 확인하세요.';
 
   @override
-  String get voice_recording_pause_playback => 'Pause playback';
+  String get voice_recording_pause_playback => '재생 일시 정지';
 
   @override
   String get projects_root_title => '서버의 프로젝트 폴더';
@@ -3996,178 +3987,173 @@ class AppLocalizationsKo extends AppLocalizations {
   String get slash_sessions_inline => '세션 목록을 열어 채팅을 선택하세요. 초안은 보관되었습니다.';
 
   @override
-  String get composer_snippets => 'Prompt snippets';
+  String get composer_snippets => '프롬프트 스니펫';
 
   @override
-  String get composer_snippets_description =>
-      'Pick a starter prompt to drop into the composer.';
+  String get composer_snippets_description => '입력란에 넣을 시작 프롬프트를 선택하세요.';
 
   @override
-  String get composer_snippet_review => 'Code review';
+  String get composer_snippet_review => '코드 검토';
 
   @override
   String get composer_snippet_review_body =>
-      'Audit the current change for regressions, dropped edge cases and missing tests.';
+      '현재 변경 사항에 회귀 오류, 놓친 경계 사례 및 누락된 테스트가 있는지 점검합니다.';
 
   @override
   String get composer_snippet_review_text =>
-      'Please review this for bugs, regressions and missing tests.';
+      '버그, 회귀 오류 및 누락된 테스트가 있는지 검토해 주세요.';
 
   @override
-  String get composer_snippet_plan => 'Implementation plan';
+  String get composer_snippet_plan => '구현 계획';
 
   @override
   String get composer_snippet_plan_body =>
-      'Outline an approach before touching code so the diff stays focused.';
+      '변경 범위를 집중시키도록 코드를 수정하기 전에 접근 방식을 정리합니다.';
 
   @override
-  String get composer_snippet_plan_text =>
-      'Please make a concise implementation plan before changing code.';
+  String get composer_snippet_plan_text => '코드를 변경하기 전에 간결한 구현 계획을 세워 주세요.';
 
   @override
-  String get composer_snippet_explain => 'Explain this';
+  String get composer_snippet_explain => '설명 요청';
 
   @override
   String get composer_snippet_explain_body =>
-      'Walk through how the selected code works and point to the key files.';
+      '선택한 코드가 어떻게 동작하는지 차례로 설명하고 핵심 파일을 알려 줍니다.';
 
   @override
   String get composer_snippet_explain_text =>
-      'Please explain how this works and point me to the key files.';
+      '이것이 어떻게 동작하는지 설명하고 핵심 파일을 알려 주세요.';
 
   @override
-  String get composer_status => 'Status';
+  String get composer_status => '상태';
 
   @override
-  String get composer_status_context => 'Context';
+  String get composer_status_context => '컨텍스트';
 
   @override
-  String get composer_status_cache => 'Cache hit';
+  String get composer_status_cache => '캐시 적중';
 
   @override
-  String get composer_status_throughput => 'Output tokens/sec';
+  String get composer_status_throughput => '초당 출력 토큰';
 
   @override
-  String get composer_status_running => 'Running';
+  String get composer_status_running => '실행 중';
 
   @override
-  String get composer_status_session => 'Session';
+  String get composer_status_session => '세션';
 
   @override
-  String get composer_status_not_reported => 'Not reported';
+  String get composer_status_not_reported => '보고되지 않음';
 
   @override
-  String get composer_status_empty => 'No context breakdown was reported.';
+  String get composer_status_empty => '컨텍스트 세부 내역이 보고되지 않았습니다.';
 
   @override
-  String get composer_status_loading => 'Loading context breakdown';
+  String get composer_status_loading => '컨텍스트 세부 내역 불러오는 중';
 
   @override
-  String get composer_status_reset => 'Reset status bar';
+  String get composer_status_reset => '상태 표시줄 초기화';
 
   @override
-  String get composer_resume_title => 'Resume a chat';
+  String get composer_resume_title => '채팅 재개';
 
   @override
-  String get composer_resume_search => 'Search titles and ids';
+  String get composer_resume_search => '제목 및 ID 검색';
 
   @override
-  String get composer_resume_empty => 'No chats match.';
+  String get composer_resume_empty => '일치하는 채팅이 없습니다.';
 
   @override
-  String get composer_resume_unavailable =>
-      'This pane has no chat list to search.';
+  String get composer_resume_unavailable => '이 창에는 검색할 채팅 목록이 없습니다.';
 
   @override
-  String get composer_failure_retry => 'Retry';
+  String get composer_failure_retry => '다시 시도';
 
   @override
   String composer_failure_retry_at(String time) {
-    return 'Retry at $time';
+    return '$time에 다시 시도';
   }
 
   @override
-  String get composer_failure_compress => 'Compress';
+  String get composer_failure_compress => '압축';
 
   @override
-  String get composer_failure_switch_model => 'Switch model';
+  String get composer_failure_switch_model => '모델 전환';
 
   @override
   String composer_failure_switch_to(String model) {
-    return 'Switch to $model';
+    return '$model(으)로 전환';
   }
 
   @override
-  String get composer_failure_new_chat => 'New chat';
+  String get composer_failure_new_chat => '새 채팅';
 
   @override
-  String get composer_failure_edit => 'Edit message';
+  String get composer_failure_edit => '메시지 편집';
 
   @override
-  String get composer_failure_details => 'Details';
+  String get composer_failure_details => '세부 정보';
 
   @override
-  String get composer_failure_hide_details => 'Hide details';
+  String get composer_failure_hide_details => '세부 정보 숨기기';
 
   @override
-  String get composer_failure_copy => 'Copy diagnostics';
+  String get composer_failure_copy => '진단 정보 복사';
 
   @override
   String get composer_failure_account =>
-      'The other fix is on the gateway account. This chat cannot do it.';
+      '다른 해결 방법은 게이트웨이 계정에서 조치하는 것입니다. 이 채팅에서는 처리할 수 없습니다.';
 
   @override
   String get composer_failure_account_only =>
-      'This has to be fixed on the gateway account. This chat cannot do it.';
+      '게이트웨이 계정에서 해결해야 합니다. 이 채팅에서는 처리할 수 없습니다.';
 
   @override
   String get composer_failure_confirm_compress =>
-      'Compress this chat? The gateway will shorten the transcript.';
+      '이 채팅을 압축할까요? 게이트웨이가 대화 기록을 줄입니다.';
 
   @override
   String composer_failure_confirm_model(String model) {
-    return 'Switch this chat to $model?';
+    return '이 채팅을 $model(으)로 전환할까요?';
   }
 
   @override
-  String get composer_drop_attach => 'Drop to attach';
+  String get composer_drop_attach => '놓아서 첨부';
 
   @override
-  String get composer_drop_folder_unsupported =>
-      'Folders can\'t be attached. Drop the files instead.';
+  String get composer_drop_folder_unsupported => '폴더는 첨부할 수 없습니다. 대신 파일을 놓으세요.';
 
   @override
-  String get composer_drop_reference => 'Drop to reference';
+  String get composer_drop_reference => '놓아서 참조 추가';
 
   @override
-  String get composer_reference_copy => 'Copy reference';
+  String get composer_reference_copy => '참조 복사';
 
   @override
-  String get composer_reference_remove => 'Remove reference';
+  String get composer_reference_remove => '참조 제거';
 
   @override
   String get composer_btw_usage =>
-      'Usage: /btw <question> — answered from a snapshot of this conversation without interrupting it.';
+      '사용법: /btw <question> — 이 대화를 중단하지 않고 대화의 스냅샷을 바탕으로 답합니다.';
 
   @override
   String get composer_background_usage =>
-      'Usage: /background <prompt> — the task runs separately and the result comes back here.';
+      '사용법: /background <prompt> — 작업을 별도로 실행하고 결과를 여기로 돌려줍니다.';
 
   @override
   String get composer_handoff_usage =>
-      'Usage: /handoff <platform> — transfer this chat to that messaging platform.';
+      '사용법: /handoff <platform> — 이 채팅을 해당 메시징 플랫폼으로 넘깁니다.';
 
   @override
-  String get composer_command_needs_session =>
-      'This command needs an open chat.';
+  String get composer_command_needs_session => '이 명령에는 열려 있는 채팅이 필요합니다.';
 
   @override
   String get composer_retry_not_found =>
-      'This turn is not in the saved history, so Retry cannot replace it. Nothing was sent again. Edit the message and send it for another try.';
+      '이 턴은 저장된 기록에 없어 다시 시도로 대체할 수 없습니다. 아무것도 재전송되지 않았습니다. 다시 시도하려면 메시지를 편집하여 보내세요.';
 
   @override
   String get composer_retry_unavailable =>
-      'Retry cannot replace a turn on this connection, so nothing was sent again. Edit the message and send it for another try.';
+      '이 연결에서는 다시 시도로 턴을 대체할 수 없어 아무것도 재전송되지 않았습니다. 다시 시도하려면 메시지를 편집하여 보내세요.';
 
   @override
   String get composer_failure_switch_no_retry =>
@@ -4175,52 +4161,50 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get composer_command_needs_gateway_session =>
-      'This chat has no gateway session yet. Send a message first, then run the command again.';
+      '이 채팅에는 아직 게이트웨이 세션이 없습니다. 먼저 메시지를 보낸 다음 명령을 다시 실행하세요.';
 
   @override
-  String get composer_side_question =>
-      'btw — answering from a conversation snapshot';
+  String get composer_side_question => 'btw — 대화 스냅샷을 바탕으로 답변 중';
 
   @override
   String composer_side_question_id(String id) {
-    return 'btw $id — answering from a conversation snapshot';
+    return 'btw $id — 대화 스냅샷을 바탕으로 답변 중';
   }
 
   @override
   String get composer_background_started =>
-      'Background task started. You can keep chatting. The result will appear here.';
+      '백그라운드 작업이 시작되었습니다. 채팅을 계속할 수 있습니다. 결과가 여기에 표시됩니다.';
 
   @override
   String composer_background_started_id(String id) {
-    return 'Background task $id started. You can keep chatting. The result will appear here.';
+    return '백그라운드 작업 $id이(가) 시작되었습니다. 채팅을 계속할 수 있습니다. 결과가 여기에 표시됩니다.';
   }
 
   @override
   String composer_handoff_requested(String platform) {
-    return 'Handoff to $platform requested.';
+    return '$platform(으)로 넘기기를 요청했습니다.';
   }
 
   @override
   String composer_handoff_done(String platform) {
-    return 'Handed this chat to $platform.';
+    return '이 채팅을 $platform(으)로 넘겼습니다.';
   }
 
   @override
-  String get composer_handoff_failed => 'Handoff failed.';
+  String get composer_handoff_failed => '넘기기에 실패했습니다.';
 
   @override
   String get composer_handoff_timeout =>
-      'Handoff did not finish. It may still be running on the gateway.';
+      '넘기기가 완료되지 않았습니다. 게이트웨이에서 아직 실행 중일 수 있습니다.';
 
   @override
-  String get composer_compress_done => 'Compressed this chat.';
+  String get composer_compress_done => '이 채팅을 압축했습니다.';
 
   @override
-  String get composer_file_missing => 'That file is not on this device.';
+  String get composer_file_missing => '해당 파일이 이 기기에 없습니다.';
 
   @override
-  String get composer_attach_busy =>
-      'Attachments can be added when this reply finishes.';
+  String get composer_attach_busy => '이 응답이 완료되면 첨부 파일을 추가할 수 있습니다.';
 
   @override
   String get nextgen_toggle => 'NextGen 인터페이스';
@@ -6303,74 +6287,74 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ng_aux_curator_hint => '스킬 사용 현황을 검토합니다';
 
   @override
-  String get appearance_save_failed => 'Could not save this change.';
+  String get appearance_save_failed => '이 변경 사항을 저장할 수 없습니다.';
 
   @override
-  String get appearance_keep_which_theme => 'Keep which theme?';
+  String get appearance_keep_which_theme => '어떤 테마를 유지할까요?';
 
   @override
-  String get appearance_tour_back => 'Back';
+  String get appearance_tour_back => '뒤로';
 
   @override
-  String get appearance_tour_finish => 'Finish';
+  String get appearance_tour_finish => '완료';
 
   @override
-  String get appearance_tour_next => 'Next';
+  String get appearance_tour_next => '다음';
 
   @override
-  String get appearance_tour_close => 'Close tour';
+  String get appearance_tour_close => '둘러보기 닫기';
 
   @override
-  String get appearance_dismiss_tip => 'Dismiss tip';
+  String get appearance_dismiss_tip => '팁 닫기';
 
   @override
-  String get appearance_search_settings => 'Search settings';
+  String get appearance_search_settings => '설정 검색';
 
   @override
-  String get appearance_search_show => 'Show';
+  String get appearance_search_show => '표시';
 
   @override
-  String get appearance_no_matching_setting => 'No matching setting.';
+  String get appearance_no_matching_setting => '일치하는 설정이 없습니다.';
 
   @override
-  String get appearance_replay_tour => 'Replay tour';
+  String get appearance_replay_tour => '둘러보기 다시 시작';
 
   @override
-  String get appearance_show_tips_again => 'Show tips again';
+  String get appearance_show_tips_again => '팁 다시 표시';
 
   @override
   String get appearance_window_translucency_unavailable =>
-      'Window translucency is not available on this host. Linux cannot provide it, and the Apple and Windows runners paint an opaque Flutter view.';
+      '이 호스트에서는 창 반투명 효과를 사용할 수 없습니다. Linux에서는 지원하지 않으며, Apple 및 Windows 러너는 불투명한 Flutter 뷰를 그립니다.';
 
   @override
-  String get appearance_imported_themes => 'Imported themes';
+  String get appearance_imported_themes => '가져온 테마';
 
   @override
-  String get appearance_import_theme_file => 'Import theme file';
+  String get appearance_import_theme_file => '테마 파일 가져오기';
 
   @override
-  String get appearance_remove_theme => 'Remove theme';
+  String get appearance_remove_theme => '테마 제거';
 
   @override
-  String get appearance_chat_font => 'Chat font';
+  String get appearance_chat_font => '채팅 글꼴';
 
   @override
-  String get appearance_terminal_font => 'Terminal font';
+  String get appearance_terminal_font => '터미널 글꼴';
 
   @override
-  String get appearance_font_platform => 'Platform';
+  String get appearance_font_platform => '플랫폼';
 
   @override
-  String get appearance_automatic => 'Automatic';
+  String get appearance_automatic => '자동';
 
   @override
-  String get appearance_force_left_to_right => 'Force left to right';
+  String get appearance_force_left_to_right => '왼쪽에서 오른쪽으로 고정';
 
   @override
-  String get appearance_force_right_to_left => 'Force right to left';
+  String get appearance_force_right_to_left => '오른쪽에서 왼쪽으로 고정';
 
   @override
-  String get appearance_user_bubble_opacity => 'User bubble opacity';
+  String get appearance_user_bubble_opacity => '사용자 말풍선 불투명도';
 
   @override
   String get appearance_inline_embeds => '인라인 임베드';
@@ -6419,17 +6403,17 @@ class AppLocalizationsKo extends AppLocalizations {
   String get appearance_embed_preview_unavailable => '미리보기를 사용할 수 없음';
 
   @override
-  String get appearance_emoji_reactions => 'Emoji reactions';
+  String get appearance_emoji_reactions => '이모지 반응';
 
   @override
-  String get appearance_celebration_hearts => 'Celebration hearts';
+  String get appearance_celebration_hearts => '축하 하트';
 
   @override
   String get appearance_celebration_hearts_hint =>
-      'A heart plays when a reply arrives while you were away.';
+      '자리를 비운 동안 응답이 도착하면 하트 애니메이션이 재생됩니다.';
 
   @override
-  String get appearance_pop_out_companion => 'Pop out companion';
+  String get appearance_pop_out_companion => '친구를 별도 창으로 열기';
 
   @override
   String get appearance_mosskip => 'Mosskip';
@@ -6441,212 +6425,207 @@ class AppLocalizationsKo extends AppLocalizations {
   String get appearance_tideling => 'Tideling';
 
   @override
-  String get appearance_my_hatchling => 'My hatchling';
+  String get appearance_my_hatchling => '내 아기 펫';
 
   @override
-  String get appearance_at_rest => 'At rest';
+  String get appearance_at_rest => '쉬는 중';
 
   @override
-  String get appearance_working => 'Working';
+  String get appearance_working => '작업 중';
 
   @override
-  String get appearance_thinking => 'Thinking';
+  String get appearance_thinking => '생각 중';
 
   @override
-  String get appearance_waiting_for_you => 'Waiting for you';
+  String get appearance_waiting_for_you => '기다리고 있어요';
 
   @override
-  String get appearance_reply_ready => 'Reply ready';
+  String get appearance_reply_ready => '응답 준비 완료';
 
   @override
-  String get appearance_turn_failed => 'Turn failed';
+  String get appearance_turn_failed => '턴 실패';
 
   @override
-  String get appearance_small => 'Small';
+  String get appearance_small => '작게';
 
   @override
-  String get appearance_medium => 'Medium';
+  String get appearance_medium => '중간';
 
   @override
-  String get appearance_large => 'Large';
+  String get appearance_large => '크게';
 
   @override
-  String get appearance_hello => 'Hello!';
+  String get appearance_hello => '안녕하세요!';
 
   @override
-  String get appearance_unread_reply => 'Unread reply';
+  String get appearance_unread_reply => '읽지 않은 응답';
 
   @override
-  String get appearance_compose => 'Compose';
+  String get appearance_compose => '작성';
 
   @override
-  String get appearance_say_hello => 'Say hello';
+  String get appearance_say_hello => '인사하기';
 
   @override
   String get appearance_pet_image_failed =>
-      'Could not open that image. Choose a smaller PNG or JPEG.';
+      '해당 이미지를 열 수 없습니다. 더 작은 PNG 또는 JPEG를 선택하세요.';
 
   @override
-  String get appearance_pet_companion => 'Pet companion';
+  String get appearance_pet_companion => '펫 친구';
 
   @override
-  String get appearance_pet_companion_hint =>
-      'Show a companion while you chat.';
+  String get appearance_pet_companion_hint => '채팅하는 동안 친구를 표시합니다.';
 
   @override
-  String get appearance_adopt_a_companion => 'Adopt a companion';
+  String get appearance_adopt_a_companion => '친구 입양하기';
 
   @override
-  String get appearance_roam_when_idle => 'Roam when idle';
+  String get appearance_roam_when_idle => '대기 중 돌아다니기';
 
   @override
-  String get appearance_pet_size => 'Pet size';
+  String get appearance_pet_size => '펫 크기';
 
   @override
-  String get appearance_hatch_from_a_local_picture =>
-      'Hatch from a local picture';
+  String get appearance_hatch_from_a_local_picture => '기기의 사진에서 부화시키기';
 
   @override
   String get appearance_pet_image_limits =>
-      'Choose a PNG or JPEG (up to 4 MiB, 4096 px per side and 8 MP). Preview it first. Hatching saves one 24 × 24 pixel portrait and replaces your previous hatchling.';
+      'PNG 또는 JPEG를 선택하세요(최대 4 MiB, 한 변 4096 px, 8 MP). 먼저 미리 보세요. 부화시키면 24 × 24픽셀 초상화 한 장을 저장하고 이전 아기 펫을 대체합니다.';
 
   @override
-  String get appearance_choose_picture => 'Choose picture';
+  String get appearance_choose_picture => '사진 선택';
 
   @override
-  String get appearance_hatchling_preview => 'Hatchling preview';
+  String get appearance_hatchling_preview => '아기 펫 미리보기';
 
   @override
-  String get appearance_hatch_and_adopt => 'Hatch and adopt';
+  String get appearance_hatch_and_adopt => '부화시켜 입양하기';
 
   @override
-  String get appearance_discard_draft => 'Discard draft';
+  String get appearance_discard_draft => '초안 폐기';
 
   @override
-  String get appearance_forget_saved_hatchling => 'Forget saved hatchling';
+  String get appearance_forget_saved_hatchling => '저장된 아기 펫 삭제';
 
   @override
-  String get appearance_radio => 'Radio';
+  String get appearance_radio => '라디오';
 
   @override
   String appearance_radio_hint(String stations) {
-    return 'Streams come straight from $stations and start only when you press Play. Station search stays on this device.';
+    return '스트림은 $stations에서 직접 전달되며 재생을 눌러야 시작됩니다. 방송국 검색은 이 기기 안에서만 이루어집니다.';
   }
 
   @override
-  String get appearance_radio_save_failed =>
-      'Radio settings could not be saved.';
+  String get appearance_radio_save_failed => '라디오 설정을 저장할 수 없습니다.';
 
   @override
-  String get appearance_choose_a_station => 'Choose a station';
+  String get appearance_choose_a_station => '방송국 선택';
 
   @override
-  String get appearance_pause_radio => 'Pause radio';
+  String get appearance_pause_radio => '라디오 일시 정지';
 
   @override
-  String get appearance_play_radio => 'Play radio';
+  String get appearance_play_radio => '라디오 재생';
 
   @override
-  String get appearance_next_station => 'Next station';
+  String get appearance_next_station => '다음 방송국';
 
   @override
   String get appearance_radio_trace_semantics =>
-      'Stream activity. Audio levels are unavailable, so this line stays flat.';
+      '스트림 활동. 오디오 레벨을 알 수 없어 이 선은 평평하게 유지됩니다.';
 
   @override
-  String get appearance_radio_is_off => 'Radio is off';
+  String get appearance_radio_is_off => '라디오가 꺼져 있습니다';
 
   @override
-  String get appearance_paused => 'Paused';
+  String get appearance_paused => '일시 정지됨';
 
   @override
-  String get appearance_connecting => 'Connecting…';
+  String get appearance_connecting => '연결 중…';
 
   @override
-  String get appearance_live => 'Live';
+  String get appearance_live => '실시간';
 
   @override
-  String get appearance_stream_unavailable => 'Stream unavailable';
+  String get appearance_stream_unavailable => '스트림을 사용할 수 없습니다';
 
   @override
   String appearance_now_playing(String credit) {
-    return 'Now playing: $credit';
+    return '현재 재생 중: $credit';
   }
 
   @override
-  String get appearance_audio_only_waveform_unavailable =>
-      'Audio only · waveform unavailable';
+  String get appearance_audio_only_waveform_unavailable => '오디오만 제공 · 파형 사용 불가';
 
   @override
-  String get appearance_volume => 'Volume';
+  String get appearance_volume => '음량';
 
   @override
-  String get appearance_search_presets => 'Search presets';
+  String get appearance_search_presets => '프리셋 검색';
 
   @override
-  String get appearance_no_stations_found => 'No stations found';
+  String get appearance_no_stations_found => '방송국을 찾을 수 없습니다';
 
   @override
   String appearance_unpin_station(String station) {
-    return 'Unpin station: $station';
+    return '방송국 고정 해제: $station';
   }
 
   @override
   String appearance_pin_station(String station) {
-    return 'Pin station: $station';
+    return '방송국 고정: $station';
   }
 
   @override
   String get appearance_radio_picker_metadata_notice =>
-      'While this picker is open, playing stations may share track details directly from the broadcaster.';
+      '이 선택 창이 열려 있는 동안 재생 중인 방송국에서 곡 정보를 직접 제공할 수 있습니다.';
 
   @override
-  String get appearance_message_from_your_companion =>
-      'Message from your companion';
+  String get appearance_message_from_your_companion => '친구가 보내는 메시지';
 
   @override
-  String get appearance_send_to_the_open_chat => 'Send to the open chat';
+  String get appearance_send_to_the_open_chat => '열려 있는 채팅으로 보내기';
 
   @override
   String get appearance_tour_theme_body =>
-      'Import a VS Code colour theme from a file on this device, then choose which variant to keep.';
+      '이 기기의 파일에서 VS Code 색 테마를 가져온 다음 유지할 변형을 선택하세요.';
 
   @override
-  String get appearance_tour_fonts_title => 'Reading fonts';
+  String get appearance_tour_fonts_title => '읽기용 글꼴';
 
   @override
   String get appearance_tour_fonts_body =>
-      'Chat prose and terminal code use separate faces shipped with Ares.';
+      '채팅의 본문과 터미널의 코드는 Ares에 포함된 서로 다른 글꼴을 사용합니다.';
 
   @override
-  String get appearance_tour_direction_title => 'Transcript direction';
+  String get appearance_tour_direction_title => '대화 기록 방향';
 
   @override
   String get appearance_tour_direction_body =>
-      'Leave this on automatic, or force the transcript left to right or right to left.';
+      '자동으로 두거나 대화 기록을 왼쪽에서 오른쪽 또는 오른쪽에서 왼쪽으로 고정하세요.';
 
   @override
-  String get appearance_tour_pet_title => 'Companion';
+  String get appearance_tour_pet_title => '친구';
 
   @override
   String get appearance_tour_pet_body =>
-      'The companion is off until you adopt one. Pop-out adds a small composer.';
+      '친구는 입양하기 전까지 꺼져 있습니다. 별도 창으로 열면 작은 입력란이 추가됩니다.';
 
   @override
   String get appearance_tour_radio_body =>
-      'Radio stays off until you enable it. Play is what opens a stream.';
+      '라디오는 활성화하기 전까지 꺼져 있습니다. 재생을 눌러야 스트림이 열립니다.';
 
   @override
   String get appearance_tip_theme =>
-      'Imported themes replace the built-in palette until you clear the selection. Only the colours are kept.';
+      '선택을 해제할 때까지 가져온 테마가 기본 팔레트를 대체합니다. 색상만 유지됩니다.';
 
   @override
   String get appearance_tip_pet =>
-      'The companion stores one small portrait on this device. It does not upload the picture you hatch from.';
+      '친구는 이 기기에 작은 초상화 한 장을 저장합니다. 부화에 사용한 사진은 업로드하지 않습니다.';
 
   @override
   String get appearance_theme_import_failed =>
-      'Could not import that theme. Choose a VS Code colour theme saved as a .vsix, .json or .jsonc file.';
+      '해당 테마를 가져올 수 없습니다. .vsix, .json 또는 .jsonc 파일로 저장된 VS Code 색 테마를 선택하세요.';
 
   @override
   String get render_widget_file_truncated =>
@@ -9372,4 +9351,2371 @@ class AppLocalizationsKo extends AppLocalizations {
   String ng_bots_section_toggle(String name) {
     return '$name 표시 또는 숨기기';
   }
+
+  @override
+  String
+  get release_core_transcript_reader_this_passage_is_no_longer_in_the_loaded =>
+      '이 구절은 더 이상 불러온 범위에 포함되어 있지 않습니다.';
+
+  @override
+  String get release_core_transcript_reader_loaded_prompts => '불러온 프롬프트';
+
+  @override
+  String get release_core_transcript_reader_jump_to_latest => '최신으로 이동';
+
+  @override
+  String get release_core_transcript_reader_no_prompts_loaded =>
+      '불러온 프롬프트가 없습니다';
+
+  @override
+  String get release_core_transcript_reader_find_in_loaded_messages =>
+      '불러온 메시지에서 찾기';
+
+  @override
+  String get release_core_transcript_reader_previous_match => '이전 일치 항목';
+
+  @override
+  String get release_core_transcript_reader_next_match => '다음 일치 항목';
+
+  @override
+  String get release_core_transcript_reader_prompt_timeline => '프롬프트 타임라인';
+
+  @override
+  String get release_core_transcript_reader_close_find => '찾기 닫기';
+
+  @override
+  String get release_core_session_organisation_organise_chats => '채팅 정리';
+
+  @override
+  String get release_core_session_organisation_show_model_and_usage =>
+      '모델 및 사용량 표시';
+
+  @override
+  String
+  get release_core_session_files_view_connection_changed_reopen_files_on_the_new_connection =>
+      '연결이 변경되었습니다. 새 연결에서 파일을 다시 여세요.';
+
+  @override
+  String
+  get release_core_session_files_view_the_connection_or_session_changed_reopen_this_pane =>
+      '연결 또는 세션이 변경되었습니다. 이 패널을 다시 여세요.';
+
+  @override
+  String
+  get release_core_session_files_view_no_verified_host_working_directory_for_this_session =>
+      '이 세션에 대해 확인된 호스트 작업 디렉터리가 없습니다.';
+
+  @override
+  String
+  get release_core_session_files_view_the_gateway_denied_this_operation =>
+      '게이트웨이가 이 작업을 거부했습니다.';
+
+  @override
+  String
+  get release_core_session_files_view_this_gateway_does_not_support_this_operation =>
+      '이 게이트웨이는 이 작업을 지원하지 않습니다.';
+
+  @override
+  String
+  get release_core_session_files_view_the_file_owner_or_working_directory_changed_reload =>
+      '파일, 소유자 또는 작업 디렉터리가 변경되었습니다. 다시 불러와 검토하세요.';
+
+  @override
+  String
+  get release_core_session_files_view_the_gateway_returned_an_unsafe_path_or_invalid =>
+      '게이트웨이가 안전하지 않은 경로 또는 잘못된 파일 응답을 반환했습니다.';
+
+  @override
+  String
+  get release_core_session_files_view_workspace_access_requires_a_secure_gateway_connection =>
+      '워크스페이스에 액세스하려면 보안 게이트웨이 연결이 필요합니다.';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_unavailable_refresh_to_check_the_current_state =>
+      '게이트웨이를 사용할 수 없습니다. 새로고침하여 현재 상태를 확인하세요.';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_operation_could_not_be_confirmed =>
+      '게이트웨이 작업을 확인할 수 없습니다.';
+
+  @override
+  String get release_core_session_files_view_git_status_unavailable =>
+      'Git 상태를 확인할 수 없습니다.';
+
+  @override
+  String
+  get release_core_session_files_view_change_this_chat_s_working_directory =>
+      '이 채팅의 작업 디렉터리를 변경하시겠습니까?';
+
+  @override
+  String get release_core_session_files_view_absolute_gateway_directory =>
+      '게이트웨이 디렉터리의 절대 경로';
+
+  @override
+  String get release_core_session_files_view_change_directory => '디렉터리 변경';
+
+  @override
+  String get release_core_session_files_view_replace_gateway_file =>
+      '게이트웨이 파일을 교체하시겠습니까?';
+
+  @override
+  String
+  release_core_session_files_view_only_if_the_file_still_matches_the_version(
+    String path,
+  ) {
+    return '$path\n\n파일이 검토한 버전과 여전히 일치할 때만 교체합니다. 호환되는 호스트는 교체 전 파일을 복구용으로 보관합니다.';
+  }
+
+  @override
+  String get release_core_session_files_view_save_changes => '변경 사항 저장';
+
+  @override
+  String
+  get release_core_session_files_view_saved_and_verified_on_the_gateway =>
+      '게이트웨이에 저장하고 확인했습니다.';
+
+  @override
+  String
+  get release_core_session_files_view_guarded_saving_is_unavailable_on_this_gateway_your =>
+      '이 게이트웨이에서는 충돌 방지 저장을 사용할 수 없습니다. 초안은 여전히 여기에 있습니다.';
+
+  @override
+  String
+  release_core_session_files_view_save_was_not_confirmed_your_draft_is_still(
+    String reason,
+  ) {
+    return '$reason 저장을 확인할 수 없습니다. 초안은 여전히 여기에 있습니다.';
+  }
+
+  @override
+  String get release_core_session_files_view_review_current_gateway_version =>
+      '현재 게이트웨이 버전 검토';
+
+  @override
+  String get release_core_session_files_view_discard_draft_and_reload =>
+      '초안 버리고 다시 불러오기';
+
+  @override
+  String get release_core_session_files_view_keep_draft_against_this_version =>
+      '이 버전을 기준으로 초안 유지';
+
+  @override
+  String get release_core_session_files_view_discard_unsaved_edits =>
+      '저장하지 않은 편집 내용을 버리시겠습니까?';
+
+  @override
+  String get release_core_session_files_view_keep_editing => '계속 편집';
+
+  @override
+  String get release_core_session_files_view_discard_edits => '편집 내용 버리기';
+
+  @override
+  String get release_core_session_files_view_remote_working_directory =>
+      '원격 작업 디렉터리';
+
+  @override
+  String get release_core_session_files_view_change_working_directory =>
+      '작업 디렉터리 변경';
+
+  @override
+  String get release_core_session_files_view_show_ignored_files => '무시된 파일 표시';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_does_not_report_ignored_status =>
+      '게이트웨이가 무시 상태를 보고하지 않습니다.';
+
+  @override
+  String get release_core_session_files_view_no_visible_entries =>
+      '표시할 항목이 없습니다';
+
+  @override
+  String get release_core_session_files_view_changed => '변경됨';
+
+  @override
+  String get release_core_session_files_view_ignored => '무시됨';
+
+  @override
+  String release_core_session_files_view_actions_for(String name) {
+    return '$name 작업';
+  }
+
+  @override
+  String get release_core_session_files_view_copy_relative_path => '상대 경로 복사';
+
+  @override
+  String get release_core_session_files_view_copy_gateway_path => '게이트웨이 경로 복사';
+
+  @override
+  String get release_core_session_files_view_attach_folder_reference =>
+      '폴더 참조 첨부';
+
+  @override
+  String get release_core_session_files_view_attach_file_reference =>
+      '파일 참조 첨부';
+
+  @override
+  String
+  get release_core_session_files_view_preview_truncated_editing_disabled =>
+      '미리보기가 잘려 편집할 수 없습니다.';
+
+  @override
+  String get release_core_session_files_view_select_lines => '줄 선택';
+
+  @override
+  String get release_core_session_files_view_review_gateway_version =>
+      '게이트웨이 버전 검토';
+
+  @override
+  String get release_core_session_files_view_attach_selected_lines =>
+      '선택한 줄 첨부';
+
+  @override
+  String get release_core_session_files_view_binary_file_no_text_preview =>
+      '바이너리 파일이므로 텍스트 미리보기가 없습니다.';
+
+  @override
+  String get release_core_session_files_view_file_source => '파일 소스';
+
+  @override
+  String get release_core_session_files_view_close_session_files => '세션 파일 닫기';
+
+  @override
+  String get release_core_session_files_view_back_to_tree => '트리로 돌아가기';
+
+  @override
+  String get release_core_session_files_view_session_files => '세션 파일';
+
+  @override
+  String get release_core_session_files_view_git_review => 'Git 검토';
+
+  @override
+  String get release_core_session_files_view_refresh_tree => '트리 새로고침';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_this_connection_changed_reopen_its_chat =>
+      '이 연결이 변경되었습니다. 해당 채팅을 다시 여세요.';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_disconnected_reconnect_the_chat_then_refresh =>
+      '연결이 끊어졌습니다. 채팅에 다시 연결한 후 새로고침하세요.';
+
+  @override
+  String release_core_gateway_queue_screen_gateway_queue_unavailable(
+    String reason,
+  ) {
+    return '게이트웨이 대기열을 사용할 수 없습니다: $reason.';
+  }
+
+  @override
+  String release_core_gateway_queue_screen_not_confirmed_nothing_was_resent(
+    String reason,
+  ) {
+    return '확인되지 않았습니다($reason). 아무것도 다시 보내지 않았습니다.';
+  }
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_confirmed_admission =>
+      '게이트웨이가 접수를 확인했습니다.';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_edited_entry_admitted_at_the_end_of_the =>
+      '편집한 항목이 대기열 끝에 접수되었습니다.';
+
+  @override
+  String get release_core_gateway_queue_screen_discard_unknown_outcome =>
+      '결과를 알 수 없는 항목을 버리시겠습니까?';
+
+  @override
+  String get release_core_gateway_queue_screen_remove_this_entry =>
+      '이 항목을 제거하시겠습니까?';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_the_lost_turn_will_not_be_retried_waiting =>
+      '결과를 확인하지 못한 턴은 재시도하지 않습니다. 이제 대기 중인 턴이 실행될 수 있습니다.';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_if_the_gateway_has_just_started_this_entry =>
+      '게이트웨이가 이 항목을 막 시작했다면 항목을 제거할 때 해당 턴이 중지될 수 있습니다.';
+
+  @override
+  String get release_core_gateway_queue_screen_keep => '유지';
+
+  @override
+  String get release_core_gateway_queue_screen_discard_and_resume => '버리고 재개';
+
+  @override
+  String get release_core_gateway_queue_screen_remove_entry => '항목 제거';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_lost_admission_resolved_it_was_not_resent =>
+      '접수 결과가 불명확했던 항목이 해결되었습니다. 다시 보내지 않았습니다.';
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_acknowledged_removal =>
+      '게이트웨이가 제거 요청을 수락했습니다.';
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_queue => '게이트웨이 대기열';
+
+  @override
+  String get release_core_gateway_queue_screen_refresh_queue => '대기열 새로고침';
+
+  @override
+  String get release_core_gateway_queue_screen_queue_paused_unknown_outcome =>
+      '대기열 일시 중지: 결과 알 수 없음';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_review_the_lost_admission_before_resuming_nothing_is =>
+      '재개하기 전에 접수 결과가 불명확한 항목을 검토하세요. 아무것도 다시 보내지 않습니다.';
+
+  @override
+  String get release_core_gateway_queue_screen_no_pending_admissions =>
+      '접수 대기 중인 항목이 없습니다';
+
+  @override
+  String get release_core_gateway_queue_screen_discard => '버리기…';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_gateway_acknowledged_the_steering_request =>
+      '게이트웨이가 추가 지시 요청을 수락했습니다.';
+
+  @override
+  String get release_core_gateway_queue_screen_steer_running_turn =>
+      '실행 중인 턴에 추가 지시';
+
+  @override
+  String get release_core_gateway_queue_screen_remove => '제거…';
+
+  @override
+  String get release_core_gateway_queue_screen_next_prompt => '다음 프롬프트';
+
+  @override
+  String get release_core_gateway_queue_screen_edit_queued_prompt =>
+      '대기 중인 프롬프트 편집';
+
+  @override
+  String get release_core_gateway_queue_screen_submit_to_gateway_queue =>
+      '게이트웨이 대기열에 제출';
+
+  @override
+  String get release_core_gateway_queue_screen_save_at_queue_end => '대기열 끝에 저장';
+
+  @override
+  String get release_core_gateway_queue_screen_cancel_edit => '편집 취소';
+
+  @override
+  String get release_core_git_review_pane_the_git_operation_did_not_complete =>
+      'Git 작업이 완료되지 않았습니다.';
+
+  @override
+  String get release_core_git_review_pane_close_git_review => 'Git 검토 닫기';
+
+  @override
+  String get release_core_git_review_pane_pin_lane => '레인 고정';
+
+  @override
+  String get release_core_git_review_pane_refresh_git_review => 'Git 검토 새로고침';
+
+  @override
+  String get release_core_git_review_pane_uncommitted => '커밋되지 않음';
+
+  @override
+  String get release_core_git_review_pane_last_turn => '마지막 턴';
+
+  @override
+  String
+  get release_core_git_review_pane_branch_and_last_turn_views_are_read_only =>
+      '브랜치 및 마지막 턴 보기는 읽기 전용입니다.';
+
+  @override
+  String get release_core_git_review_pane_mark_head_as_the_turn_baseline =>
+      'HEAD를 턴 기준점으로 설정';
+
+  @override
+  String get release_core_git_review_pane_stage_all => '모두 스테이징';
+
+  @override
+  String get release_core_git_review_pane_discard_every_uncommitted_change =>
+      '커밋하지 않은 변경 사항을 모두 버리시겠습니까?';
+
+  @override
+  String
+  get release_core_git_review_pane_tracked_files_return_to_head_and_untracked_files =>
+      '추적 중인 파일을 HEAD로 되돌리고 이 세션 디렉터리의 추적되지 않은 파일을 제거합니다.';
+
+  @override
+  String get release_core_git_review_pane_discard => '버리기';
+
+  @override
+  String get release_core_git_review_pane_discard_all => '모두 버리기';
+
+  @override
+  String get release_core_git_review_pane_unstage => '스테이징 해제';
+
+  @override
+  String get release_core_git_review_pane_stage => '스테이징';
+
+  @override
+  String get release_core_git_review_pane_discard_file => '파일 변경 사항 버리기';
+
+  @override
+  String release_core_git_review_pane_discard_2(String path) {
+    return '$path의 변경 사항을 버리시겠습니까?';
+  }
+
+  @override
+  String
+  get release_core_git_review_pane_this_restores_the_committed_copy_or_removes_the =>
+      '커밋된 사본을 복원하거나 추적되지 않은 파일을 제거합니다.';
+
+  @override
+  String get release_core_git_review_pane_commit_message => '커밋 메시지';
+
+  @override
+  String get release_core_git_review_pane_nothing_in_the_diff_to_summarise =>
+      '차이 내역에 요약할 내용이 없습니다.';
+
+  @override
+  String get release_core_git_review_pane_generate_message => '메시지 생성';
+
+  @override
+  String get release_core_git_review_pane_commit => '커밋';
+
+  @override
+  String get release_core_git_review_pane_commit_and_push => '커밋 후 푸시';
+
+  @override
+  String get release_core_git_review_pane_push => '푸시';
+
+  @override
+  String get release_core_git_review_pane_create_pull_request => '풀 리퀘스트 만들기';
+
+  @override
+  String get release_core_git_review_pane_pull_request_ready => '풀 리퀘스트 준비 완료';
+
+  @override
+  String get release_core_git_review_pane_ask_hermes_to_ship => 'Hermes에 배포 요청';
+
+  @override
+  String get release_core_git_review_pane_gh_is_authenticated_on_this_gateway =>
+      '이 게이트웨이에서 gh가 인증되어 있습니다.';
+
+  @override
+  String
+  get release_core_git_review_pane_install_the_github_cli_gh_and_sign_in =>
+      'PR을 열려면 GitHub CLI(gh)를 설치하고 로그인하세요';
+
+  @override
+  String get release_core_git_review_pane_worktrees => '워크트리';
+
+  @override
+  String get release_core_git_review_pane_main => '메인';
+
+  @override
+  String release_core_git_review_pane_follow(String branch) {
+    return '$branch을(를) 따라가시겠습니까?';
+  }
+
+  @override
+  String
+  get release_core_git_review_pane_the_session_working_directory_becomes_this_worktree_unless =>
+      '레인이 고정되어 있지 않으면 세션 작업 디렉터리가 이 워크트리로 바뀝니다.';
+
+  @override
+  String get release_core_git_review_pane_follow_2 => '따라가기';
+
+  @override
+  String release_core_git_review_pane_remove(String branch) {
+    return '$branch을(를) 제거하시겠습니까?';
+  }
+
+  @override
+  String get release_core_git_review_pane_the_worktree_directory_is_removed =>
+      '워크트리 디렉터리가 제거됩니다.';
+
+  @override
+  String get release_core_git_review_pane_remove_2 => '제거';
+
+  @override
+  String get release_core_git_review_pane_new_worktree_name => '새 워크트리 이름';
+
+  @override
+  String get release_core_git_review_pane_new_branch => '새 브랜치';
+
+  @override
+  String get release_core_git_review_pane_base_branch => '기준 브랜치';
+
+  @override
+  String get release_core_git_review_pane_create_worktree => '워크트리 만들기';
+
+  @override
+  String get release_core_git_review_pane_existing_branch => '기존 브랜치';
+
+  @override
+  String get release_core_git_review_pane_convert_branch_to_worktree =>
+      '브랜치를 워크트리로 변환';
+
+  @override
+  String get release_core_git_review_pane_switch_branch => '브랜치 전환';
+
+  @override
+  String
+  get release_core_git_review_pane_this_gateway_does_not_support_that_git_operation =>
+      '이 게이트웨이는 해당 Git 작업을 지원하지 않습니다.';
+
+  @override
+  String
+  get release_core_git_review_pane_git_needs_the_session_directory_on_the_local =>
+      'Git을 사용하려면 로컬 터미널 백엔드에 세션 디렉터리가 있어야 합니다.';
+
+  @override
+  String
+  get release_core_git_review_pane_the_gateway_refused_the_git_operation =>
+      '게이트웨이가 Git 작업을 거부했습니다.';
+
+  @override
+  String
+  get release_core_git_review_pane_the_session_changed_refresh_and_try_again =>
+      '세션이 변경되었습니다. 새로고침한 후 다시 시도하세요.';
+
+  @override
+  String
+  get release_core_git_review_pane_this_review_is_no_longer_the_selected_session =>
+      '이 검토는 더 이상 선택된 세션의 검토가 아닙니다.';
+
+  @override
+  String
+  get release_core_git_review_pane_the_gateway_returned_an_unexpected_git_result =>
+      '게이트웨이가 예상하지 못한 Git 결과를 반환했습니다.';
+
+  @override
+  String
+  get release_core_git_review_pane_git_review_requires_the_gateway_transport =>
+      'Git 검토에는 게이트웨이 전송 방식이 필요합니다.';
+
+  @override
+  String get release_core_client_held_queue_bar_resume => '재개';
+
+  @override
+  String get release_core_client_held_queue_bar_send_queued_prompt =>
+      '대기 중인 프롬프트 보내기';
+
+  @override
+  String get release_core_client_held_queue_bar_edit_unsent_prompt =>
+      '보내지 않은 프롬프트 편집';
+
+  @override
+  String get release_core_client_held_queue_bar_remove_unsent_prompt =>
+      '보내지 않은 프롬프트 제거';
+
+  @override
+  String get release_core_workspace_discovery_view_repository_discovery =>
+      '저장소 검색';
+
+  @override
+  String get release_core_workspace_discovery_view_refresh_results => '결과 새로고침';
+
+  @override
+  String release_core_workspace_discovery_view_hide(String path) {
+    return '$path 숨기기';
+  }
+
+  @override
+  String
+  get release_core_workspace_discovery_view_invalid_path_or_discovery_data_use_absolute_server =>
+      '경로 또는 검색 데이터가 잘못되었습니다. . 또는 .. 구성 요소가 없는 서버 절대 경로를 사용하세요.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_this_gateway_does_not_support_repository_discovery =>
+      '이 게이트웨이는 저장소 검색을 지원하지 않습니다.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_gateway_denied_access_to_repository_discovery =>
+      '게이트웨이가 저장소 검색에 대한 액세스를 거부했습니다.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_connection_changed_reopen_discovery_on_the_current =>
+      '연결이 변경되었습니다. 현재 게이트웨이에서 검색 화면을 다시 여세요.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_displayed_settings_have_changed_refresh_before_trying =>
+      '표시된 설정이 변경되었습니다. 다시 시도하기 전에 새로고침하세요.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_could_not_load_or_verify_discovery_settings_refresh =>
+      '검색 설정을 불러오거나 확인할 수 없습니다. 새로고침하여 다시 시도하세요.';
+
+  @override
+  String release_core_workspace_discovery_view_repositories_shown_of(
+    int visible,
+    int total,
+  ) {
+    return '표시된 저장소: $total개 중 $visible개';
+  }
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_gateway_returned_no_repositories =>
+      '게이트웨이가 저장소를 반환하지 않았습니다.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_no_repositories_match_your_device_filters =>
+      '기기 필터와 일치하는 저장소가 없습니다.';
+
+  @override
+  String get release_core_workspace_discovery_view_gateway_scan_policy =>
+      '게이트웨이 스캔 정책';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_this_gateway_did_not_report_a_scan_policy =>
+      '이 게이트웨이가 스캔 정책을 보고하지 않았습니다.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_to_scan_folders_configure_repository_scanning_in_the =>
+      '폴더를 스캔하려면 게이트웨이 프로필의 Desktop 설정에서 저장소 스캔을 구성하세요.';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_results_can_include_cached_repositories_and_repositories_with =>
+      '결과에는 캐시된 저장소와 세션이 있는 저장소가 포함될 수 있습니다. 스캔이 모든 폴더에 도달했음을 보장하지는 않습니다.';
+
+  @override
+  String get release_core_workspace_discovery_view_scan_gateway_roots =>
+      '게이트웨이 루트 스캔';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_filter_results_on_this_device =>
+      '이 기기에서 결과 필터링';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_only_this_discovery_list_changes_not_the_gateway =>
+      '이 검색 목록만 변경되며 게이트웨이 스캔은 변경되지 않습니다.';
+
+  @override
+  String get release_core_workspace_discovery_view_include_subtrees_empty_all =>
+      '포함할 하위 트리(비워 두면 모두 포함)';
+
+  @override
+  String get release_core_workspace_discovery_view_exclude_subtrees =>
+      '제외할 하위 트리';
+
+  @override
+  String get release_core_workspace_discovery_view_apply_filters => '필터 적용';
+
+  @override
+  String release_core_workspace_discovery_view_hidden_repositories(int count) {
+    return '숨긴 저장소($count)';
+  }
+
+  @override
+  String get release_core_workspace_discovery_view_undo_hide => '숨기기 취소';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_one_absolute_server_path_per_line =>
+      '한 줄에 서버 절대 경로 하나씩 입력';
+
+  @override
+  String get release_core_project_settings_view_project_settings => '프로젝트 설정';
+
+  @override
+  String
+  get release_core_project_settings_view_the_gateway_did_not_confirm_the_selected_project =>
+      '게이트웨이가 선택한 프로젝트 또는 변경 사항을 확인하지 않았습니다. 다시 시도하기 전에 설정을 검토하세요.';
+
+  @override
+  String
+  get release_core_project_settings_view_could_not_verify_these_settings_use_one_absolute =>
+      '이 설정을 확인할 수 없습니다. . 또는 .. 구성 요소가 없는 서버 폴더 절대 경로를 한 줄에 하나씩 입력하세요.';
+
+  @override
+  String get release_core_project_settings_view_set_active => '활성으로 설정';
+
+  @override
+  String get release_core_project_settings_view_icon => '아이콘';
+
+  @override
+  String get release_core_project_settings_view_folder => '폴더';
+
+  @override
+  String get release_core_project_settings_view_repository => '저장소';
+
+  @override
+  String get release_core_project_settings_view_rocket => '로켓';
+
+  @override
+  String get release_core_project_settings_view_star => '별';
+
+  @override
+  String get release_core_project_settings_view_book => '책';
+
+  @override
+  String get release_core_project_settings_view_terminal => '터미널';
+
+  @override
+  String get release_core_project_settings_view_colour => '색상';
+
+  @override
+  String get release_core_project_settings_view_primary_folder => '기본 폴더';
+
+  @override
+  String get release_core_project_settings_view_server_folder_paths =>
+      '서버 폴더 경로';
+
+  @override
+  String
+  get release_core_project_settings_view_one_absolute_path_per_line_existing_folders_are =>
+      '한 줄에 절대 경로 하나씩 입력하세요. 기존 폴더는 유지됩니다.';
+
+  @override
+  String get release_core_project_settings_view_add_folders => '폴더 추가';
+
+  @override
+  String release_core_project_settings_view_choose(String label) {
+    return '$label 선택';
+  }
+
+  @override
+  String
+  get release_core_prepared_image_recovery_wait_for_an_empty_draft_before_restoring =>
+      '초안이 비워진 후 복원하세요.';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_no_unacknowledged_image_drafts_in_this_chat =>
+      '이 채팅에는 수신이 확인되지 않은 이미지 초안이 없습니다.';
+
+  @override
+  String get release_core_prepared_image_recovery_unacknowledged_image_drafts =>
+      '수신이 확인되지 않은 이미지 초안';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_the_gateway_may_already_have_received_these_restore =>
+      '게이트웨이가 이미 수신했을 수 있습니다. 복원하여 검토하세요. 아무것도 전송되지 않습니다.';
+
+  @override
+  String get release_core_prepared_image_recovery_image_draft => '이미지 초안';
+
+  @override
+  String get release_core_prepared_image_recovery_discard_local_copy =>
+      '로컬 사본 버리기';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_discard_this_local_image_draft =>
+      '이 로컬 이미지 초안을 버리시겠습니까?';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_image_draft_recovery_is_unavailable =>
+      '이미지 초안 복구를 사용할 수 없습니다.';
+
+  @override
+  String get release_core_prepared_image_recovery_recover_image_draft =>
+      '이미지 초안 복구…';
+
+  @override
+  String get release_core_session_search_mode_menu_could_not_save_search_mode =>
+      '검색 모드를 저장할 수 없습니다.';
+
+  @override
+  String get release_core_projects_pane_discover_repositories => '저장소 검색';
+
+  @override
+  String
+  get release_core_projects_pane_project_created_but_the_gateway_did_not_confirm =>
+      '프로젝트가 생성되었지만 게이트웨이가 프로젝트 아이디어를 확인하지 않았습니다.';
+
+  @override
+  String get release_core_projects_pane_project_idea_optional =>
+      '프로젝트 아이디어(선택 사항)';
+
+  @override
+  String
+  get release_core_projects_pane_saved_in_the_project_description_not_a_file =>
+      '파일이 아닌 프로젝트 설명에 저장됩니다.';
+
+  @override
+  String get release_core_project_detail_screen_new_chat_in_this_lane =>
+      '이 레인에서 새 채팅';
+
+  @override
+  String get release_core_project_detail_screen_review_git => 'Git 검토';
+
+  @override
+  String get release_core_more_pane_gateway_fleet => '게이트웨이 플릿';
+
+  @override
+  String
+  get release_core_more_pane_connected_sessions_hermes_cloud_and_desktop_webapp =>
+      '연결된 세션, Hermes Cloud 및 Desktop 웹 앱';
+
+  @override
+  String get release_core_more_pane_use_dashboard_sign_in_for_a_named_profile =>
+      '이름이 지정된 프로필에는 대시보드 로그인을 사용하세요. 이 레거시 API는 어떤 프로필이 채팅 기록을 소유하는지 확인할 수 없습니다.';
+
+  @override
+  String get release_core_more_pane_capabilities => '기능';
+
+  @override
+  String
+  get release_core_more_pane_install_and_govern_skills_plugins_connectors_and_tool =>
+      '스킬, 플러그인, 커넥터 및 도구 백엔드 설치와 관리';
+
+  @override
+  String get release_core_more_pane_browser_vault => '브라우저 보관함';
+
+  @override
+  String
+  get release_core_more_pane_site_logins_addresses_cards_and_credential_sources =>
+      '사이트 로그인, 주소, 카드 및 자격 증명 소스';
+
+  @override
+  String get release_core_more_pane_agent_policy => '에이전트 정책';
+
+  @override
+  String
+  get release_core_more_pane_approvals_checkpoints_browser_access_and_shared_metrics =>
+      '승인, 체크포인트, 브라우저 액세스 및 공유 지표';
+
+  @override
+  String get release_core_more_pane_remote_logs_health_maintenance_and_update =>
+      '원격 로그, 상태, 유지보수 및 업데이트';
+
+  @override
+  String get release_core_more_pane_schedules => '일정';
+
+  @override
+  String get release_core_more_pane_all_profiles_blueprints_catch_up_and_stop =>
+      '모든 프로필, 블루프린트, 누락 실행 및 중지';
+
+  @override
+  String get release_core_more_pane_memory_graph => '메모리 그래프';
+
+  @override
+  String get release_core_more_pane_timeline_edits_and_memory_providers =>
+      '타임라인, 편집 및 메모리 제공업체';
+
+  @override
+  String get release_core_more_pane_providers_and_routes => '제공업체 및 경로';
+
+  @override
+  String get release_core_more_pane_keys_endpoints_delegation_and_mixtures =>
+      '키, 엔드포인트, 위임 및 모델 조합';
+
+  @override
+  String get release_core_more_pane_credits_and_plans => '크레딧 및 요금제';
+
+  @override
+  String
+  get release_core_more_pane_consented_nous_billing_when_the_account_allows_it =>
+      '계정이 허용하는 경우 동의에 따른 Nous 결제';
+
+  @override
+  String
+  get release_core_fleet_screen_this_gateway_does_not_offer_this_service =>
+      '이 게이트웨이는 이 서비스를 제공하지 않습니다.';
+
+  @override
+  String
+  get release_core_fleet_screen_sign_in_or_permission_required_on_this_gateway =>
+      '이 게이트웨이에서 로그인 또는 권한이 필요합니다.';
+
+  @override
+  String get release_core_fleet_screen_a_secure_gateway_address_is_required =>
+      '보안 게이트웨이 주소가 필요합니다.';
+
+  @override
+  String
+  get release_core_fleet_screen_the_owner_changed_refresh_before_continuing =>
+      '소유자가 변경되었습니다. 계속하기 전에 새로고침하세요.';
+
+  @override
+  String
+  get release_core_fleet_screen_could_not_verify_the_operation_check_the_gateway =>
+      '작업을 확인할 수 없습니다. 게이트웨이를 확인하고 새로고침하세요.';
+
+  @override
+  String get release_core_fleet_screen_verified_ssh => '검증된 SSH';
+
+  @override
+  String
+  get release_core_fleet_screen_confirm_a_host_key_inspect_a_remote_service =>
+      '호스트 키 확인, 원격 서비스 점검 또는 셸 열기';
+
+  @override
+  String get release_core_fleet_screen_cloud_and_desktop_webapp =>
+      '클라우드 및 Desktop 웹 앱';
+
+  @override
+  String get release_core_fleet_screen_register_an_existing_gateway_or_webapp =>
+      '기존 게이트웨이 또는 웹 앱 등록';
+
+  @override
+  String
+  get release_core_fleet_screen_sign_in_to_its_address_nothing_is_hosted =>
+      '해당 주소에 로그인하세요. 이 기기에서는 아무것도 호스팅하지 않습니다.';
+
+  @override
+  String get release_core_fleet_screen_fleet_updates => '플릿 업데이트';
+
+  @override
+  String get release_core_fleet_screen_refresh_roster => '등록 목록 새로고침';
+
+  @override
+  String release_core_fleet_screen_disconnect(String gateway) {
+    return '$gateway 연결 해제';
+  }
+
+  @override
+  String get release_core_fleet_screen_open_this_gateway_on_launch =>
+      '시작 시 이 게이트웨이 열기';
+
+  @override
+  String
+  get release_core_fleet_screen_primary_for_ares_does_not_change_the_last =>
+      'Ares의 기본 게이트웨이로 사용하며, 마지막으로 사용한 게이트웨이는 변경하지 않습니다.';
+
+  @override
+  String get release_core_fleet_screen_reconnect_in_fleet_on_launch =>
+      '시작 시 플릿에서 다시 연결';
+
+  @override
+  String get release_core_fleet_screen_no_sessions_for_this_profile =>
+      '이 프로필에 세션이 없습니다.';
+
+  @override
+  String get release_core_fleet_screen_more_sessions => '세션 더 보기';
+
+  @override
+  String get release_core_fleet_screen_this_gateway_was_disconnected =>
+      '이 게이트웨이의 연결이 해제되었습니다.';
+
+  @override
+  String
+  get release_core_fleet_screen_some_conversation_data_could_not_be_loaded =>
+      '일부 대화 데이터를 불러올 수 없습니다.';
+
+  @override
+  String get release_core_fleet_screen_message_this_session => '이 세션에 메시지 보내기';
+
+  @override
+  String get release_core_fleet_screen_send_to_this_session => '이 세션으로 보내기';
+
+  @override
+  String get release_core_fleet_updates_screen_update_these_remote_gateways =>
+      '이 원격 게이트웨이들을 업데이트하시겠습니까?';
+
+  @override
+  String
+  release_core_fleet_updates_screen_this_can_restart_the_backend_and_interrupt_other(
+    String gateways,
+  ) {
+    return '백엔드가 다시 시작되어 다른 사용자의 작업이 중단될 수 있습니다. Ares는 업데이트되지 않습니다.\n\n$gateways';
+  }
+
+  @override
+  String get release_core_fleet_updates_screen_update_listed_gateways =>
+      '나열된 게이트웨이 업데이트';
+
+  @override
+  String
+  get release_core_fleet_updates_screen_checks_connected_gateways_cloud_is_platform_managed_entries =>
+      '연결된 게이트웨이를 확인합니다. 클라우드는 플랫폼에서 관리하며, 등록 출처를 확인할 수 없는 항목은 제외됩니다.';
+
+  @override
+  String get release_core_fleet_updates_screen_check_connected_gateways =>
+      '연결된 게이트웨이 확인';
+
+  @override
+  String get release_core_fleet_updates_screen_read_update_receipt =>
+      '업데이트 처리 기록 읽기';
+
+  @override
+  String get release_core_fleet_updates_screen_review_eligible_updates =>
+      '업데이트 가능한 항목 검토';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_account_changed_reopen_this_page =>
+      '계정이 변경되었습니다. 이 페이지를 다시 여세요.';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_set_the_webapp_s_primary_gateway =>
+      '웹 앱의 기본 게이트웨이를 설정하시겠습니까?';
+
+  @override
+  String
+  release_core_fleet_webapp_screen_this_changes_the_shared_registry_not_the_last(
+    String webapp,
+    String gateway,
+    String id,
+  ) {
+    return '$webapp → $gateway ($id)\n공유 레지스트리가 변경되며, 마지막으로 사용한 게이트웨이는 변경되지 않습니다.';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_set_primary => '기본으로 설정';
+
+  @override
+  String get release_core_fleet_webapp_screen_serving_profile => '서비스 중인 프로필';
+
+  @override
+  String get release_core_fleet_webapp_screen_hermes_cloud => 'Hermes Cloud';
+
+  @override
+  String get release_core_fleet_webapp_screen_discover_signed_in_agents =>
+      '로그인한 에이전트 검색';
+
+  @override
+  String release_core_fleet_webapp_screen_organisation(String organisation) {
+    return '조직: $organisation';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_no_agents_available =>
+      '사용 가능한 에이전트가 없습니다.';
+
+  @override
+  String get release_core_fleet_webapp_screen_existing_desktop_webapp =>
+      '기존 Desktop 웹 앱';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_check_gateway_and_web_access_status =>
+      '게이트웨이 및 웹 액세스 상태 확인';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_these_settings_belong_to_the_machine_serving_this =>
+      '이 설정은 이 웹 앱을 제공하는 컴퓨터의 설정입니다. 게시 및 다시 시작은 원격 작업이 아닙니다.';
+
+  @override
+  String get release_core_fleet_webapp_screen_read_webapp_gateway_registry =>
+      '웹 앱 게이트웨이 레지스트리 읽기';
+
+  @override
+  String get release_core_fleet_webapp_screen_last_used => '마지막 사용';
+
+  @override
+  String get release_core_fleet_webapp_screen_primary => '기본';
+
+  @override
+  String release_core_fleet_webapp_screen_set_primary_2(String gateway) {
+    return '기본으로 설정: $gateway';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_read_shared_display_preferences =>
+      '공유 표시 환경설정 읽기';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_chat_text_direction_on_this_webapp_and_desktop =>
+      '이 웹 앱 및 Desktop의 채팅 텍스트 방향';
+
+  @override
+  String release_core_schedule_desk_screen_created_on(
+    String job,
+    String profile,
+  ) {
+    return '$profile에 $job을(를) 만들었습니다.';
+  }
+
+  @override
+  String
+  get release_core_schedule_desk_screen_the_list_covers_every_profile_on_this_gateway =>
+      '목록에는 이 게이트웨이의 모든 프로필이 포함됩니다. 중지, 일시 중지, 누락 실행, 전달 및 블루프린트 작업은 해당 작업을 소유한 프로필로 전송됩니다.';
+
+  @override
+  String get release_core_schedule_desk_screen_a_run_is_in_progress =>
+      '실행 중입니다';
+
+  @override
+  String get release_core_schedule_desk_screen_no_current_run =>
+      '현재 실행 중인 항목이 없습니다';
+
+  @override
+  String release_core_schedule_desk_screen_stop_requested_for(String job) {
+    return '$job의 중지를 요청했습니다.';
+  }
+
+  @override
+  String release_core_schedule_desk_screen_no_run_was_in_flight_for(
+    String job,
+  ) {
+    return '$job에 진행 중인 실행이 없었습니다.';
+  }
+
+  @override
+  String get release_core_schedule_desk_screen_stop_current_run => '현재 실행 중지';
+
+  @override
+  String get release_core_schedule_desk_screen_pause_future_runs =>
+      '향후 실행 일시 중지';
+
+  @override
+  String get release_core_schedule_desk_screen_resume_future_runs => '향후 실행 재개';
+
+  @override
+  String get release_core_schedule_desk_screen_catch_up_default => '누락 실행 기본값';
+
+  @override
+  String get release_core_schedule_desk_screen_run_one_missed =>
+      '누락된 실행 한 번 수행';
+
+  @override
+  String get release_core_schedule_desk_screen_skip_missed => '누락된 실행 건너뛰기';
+
+  @override
+  String get release_core_schedule_desk_screen_blueprint_recipes => '블루프린트 레시피';
+
+  @override
+  String get release_core_schedule_desk_screen_profile_for_the_new_job =>
+      '새 작업의 프로필';
+
+  @override
+  String release_core_schedule_desk_screen_create(String blueprint) {
+    return '$blueprint 만들기';
+  }
+
+  @override
+  String get release_core_schedule_desk_screen_loading_delivery_targets =>
+      '전달 대상 불러오는 중';
+
+  @override
+  String release_core_schedule_desk_screen_no_home_channel(String target) {
+    return '$target(홈 채널 없음)';
+  }
+
+  @override
+  String release_core_memory_graph_screen_edit(String label) {
+    return '$label 편집';
+  }
+
+  @override
+  String get release_core_memory_graph_screen_content => '내용';
+
+  @override
+  String get release_core_memory_graph_screen_archive_skill => '스킬 보관';
+
+  @override
+  String get release_core_memory_graph_screen_delete_memory => '메모리 삭제';
+
+  @override
+  String release_core_memory_graph_screen_archive_on_it_can_be_restored_on_the(
+    String label,
+    String profile,
+  ) {
+    return '$profile의 $label을(를) 보관하시겠습니까? 호스트의 Curator로 복원할 수 있습니다.';
+  }
+
+  @override
+  String release_core_memory_graph_screen_delete_from_this_removes_that_memory(
+    String label,
+    String profile,
+  ) {
+    return '$profile에서 $label을(를) 삭제하시겠습니까? 해당 메모리가 제거됩니다.';
+  }
+
+  @override
+  String get release_core_memory_graph_screen_filter => '필터';
+
+  @override
+  String get release_core_memory_graph_screen_timeline => '타임라인';
+
+  @override
+  String get release_core_memory_graph_screen_play_timeline => '타임라인 재생';
+
+  @override
+  String get release_core_memory_graph_screen_layout_code => '레이아웃 코드';
+
+  @override
+  String get release_core_memory_graph_screen_external_memory_providers =>
+      '외부 메모리 제공업체';
+
+  @override
+  String
+  get release_core_memory_graph_screen_a_value_is_stored_leave_blank_to_keep =>
+      '저장된 값이 있습니다. 유지하려면 비워 두세요.';
+
+  @override
+  String get release_core_memory_graph_screen_save_provider => '제공업체 저장';
+
+  @override
+  String release_core_workspace_profiles_screen_applies_to(String profile) {
+    return '적용 대상: $profile';
+  }
+
+  @override
+  String get release_core_workspace_profiles_screen_choose_another_profile =>
+      '다른 프로필 선택';
+
+  @override
+  String
+  get release_core_workspace_profiles_screen_could_not_verify_the_selected_profile_on_this =>
+      '이 게이트웨이에서 선택한 프로필을 확인할 수 없습니다.';
+
+  @override
+  String get release_core_workspace_profiles_screen_create_profile => '프로필 만들기';
+
+  @override
+  String get release_core_workspace_profiles_screen_new_profile_id =>
+      '새 프로필 ID';
+
+  @override
+  String get release_core_assets_screen_links => '링크';
+
+  @override
+  String get release_core_workspace_picker_no_matching_items =>
+      '일치하는 항목이 없습니다.';
+
+  @override
+  String get release_core_workspace_picker_save_layout => '레이아웃 저장';
+
+  @override
+  String get release_core_workspace_picker_layout_name => '레이아웃 이름';
+
+  @override
+  String
+  get release_core_workspace_popout_this_chat_already_has_a_pop_out_window =>
+      '이 채팅에는 이미 팝아웃 창이 있습니다.';
+
+  @override
+  String
+  get release_core_workspace_popout_could_not_open_this_saved_chat_check_the =>
+      '이 저장된 채팅을 열 수 없습니다. 연결을 확인하고 다시 시도하세요.';
+
+  @override
+  String
+  get release_core_popout_bootstrap_use_the_main_window_to_change_your_connection =>
+      '연결을 변경하려면 기본 창을 사용하세요.';
+
+  @override
+  String get release_core_guarded_save_refused => '이 파일은 게이트웨이에서 저장할 수 없습니다';
+
+  @override
+  String get release_core_guarded_save_unavailable =>
+      '이 게이트웨이에서는 충돌 방지 저장을 사용할 수 없습니다';
+
+  @override
+  String release_core_git_files_changed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '이 턴에서 파일 $count개 변경됨',
+      one: '이 턴에서 파일 1개 변경됨',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String release_core_git_entries_omitted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '안전하게 표시할 수 없어 Git 항목 $count개를 제외했습니다.',
+      one: '안전하게 표시할 수 없어 Git 항목 1개를 제외했습니다.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get release_core_git_staged => '스테이징됨';
+
+  @override
+  String get release_core_session_sort_recent => '최근 활동';
+
+  @override
+  String get release_core_session_sort_created => '최근 생성순';
+
+  @override
+  String get release_core_session_sort_status => '실행 중인 항목 우선';
+
+  @override
+  String get release_core_session_sort_tokens => '토큰 수 많은 순';
+
+  @override
+  String get release_core_session_sort_cost => '비용 높은 순';
+
+  @override
+  String get release_core_session_group_standard => '기본 그룹화';
+
+  @override
+  String get release_core_session_group_status => '상태별 그룹화';
+
+  @override
+  String get release_core_session_group_project => '프로젝트별 그룹화';
+
+  @override
+  String release_core_session_tokens(int count) {
+    return '토큰 $count개';
+  }
+
+  @override
+  String release_core_search_gateway_mode(String mode) {
+    return '$mode(게이트웨이)';
+  }
+
+  @override
+  String release_core_search_mode_tooltip(String label, String mode) {
+    return '$label: $mode';
+  }
+
+  @override
+  String get release_core_image_recovery_new_turn => '보내면 새 턴이 생성됩니다';
+
+  @override
+  String release_core_image_recovery_metadata(int count, String date) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '이미지 $count개 · $date',
+      one: '이미지 1개 · $date',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String release_core_discovery_scanning(String state) {
+    return '스캔: $state';
+  }
+
+  @override
+  String get release_core_discovery_enabled => '활성화됨';
+
+  @override
+  String get release_core_discovery_disabled => '비활성화됨';
+
+  @override
+  String get release_core_discovery_none => '없음';
+
+  @override
+  String release_core_discovery_roots(String paths) {
+    return '스캔 루트: $paths';
+  }
+
+  @override
+  String release_core_discovery_excluded(String paths) {
+    return '제외할 하위 트리: $paths';
+  }
+
+  @override
+  String release_core_discovery_repository_sessions(String path, int count) {
+    return '$path\n세션: $count';
+  }
+
+  @override
+  String get release_core_projects_local_only =>
+      '이 Hermes 게이트웨이는 서버 측 프로젝트보다 구버전이므로 채팅 그룹화가 이 기기에만 유지됩니다. 기기 간에 동일한 프로젝트를 공유하려면 Hermes를 업데이트하세요.';
+
+  @override
+  String get release_core_fleet_no_address => '아직 게이트웨이 주소가 없습니다';
+
+  @override
+  String release_core_fleet_diagnostics(String version, String access) {
+    return '게이트웨이 $version · $access';
+  }
+
+  @override
+  String get release_core_schedule_builtin => '기본 제공';
+
+  @override
+  String get release_core_memory_gateway_profile => '게이트웨이';
+
+  @override
+  String release_core_memory_profile_summary(String profile, String gateway) {
+    return '$gateway의 프로필 $profile. 공유 코드에는 확대/축소, 시간 및 필터만 저장됩니다.';
+  }
+
+  @override
+  String release_core_memory_layers_summary(
+    int memoryBytes,
+    int userBytes,
+    String provider,
+  ) {
+    return '기본 제공 메모리 $memoryBytes바이트, 사용자 메모리 $userBytes바이트. 활성 제공업체: $provider.';
+  }
+
+  @override
+  String get release_core_memory_kind_all => '모두';
+
+  @override
+  String get release_core_memory_kind_skill => '스킬';
+
+  @override
+  String get release_core_memory_kind_memory => '메모리';
+
+  @override
+  String get release_core_workspace_failure_stale => '연결 변경됨';
+
+  @override
+  String get release_core_workspace_failure_unbound => '확인된 작업 디렉터리 없음';
+
+  @override
+  String get release_core_workspace_failure_denied => '권한 거부됨';
+
+  @override
+  String get release_core_workspace_failure_ineligible => '이 파일에 허용되지 않는 작업';
+
+  @override
+  String get release_core_workspace_failure_unsupported => '이 게이트웨이에서 지원하지 않음';
+
+  @override
+  String get release_core_workspace_failure_mismatch => '원격 상태 변경됨';
+
+  @override
+  String get release_core_workspace_failure_invalid => '잘못된 게이트웨이 응답';
+
+  @override
+  String get release_core_workspace_failure_insecure => '보안 연결 필요';
+
+  @override
+  String get release_core_workspace_failure_unavailable => '게이트웨이 사용 불가';
+
+  @override
+  String get release_core_queue_state_queued => '대기 중';
+
+  @override
+  String get release_core_queue_state_started => '시작됨';
+
+  @override
+  String get release_core_queue_state_unknown => '결과 알 수 없음';
+
+  @override
+  String get release_core_unknown_state => '알 수 없음';
+
+  @override
+  String get release_core_fleet_state_idle => '오프라인';
+
+  @override
+  String get release_core_fleet_state_connected => '연결됨';
+
+  @override
+  String get release_core_fleet_state_reconnecting => '다시 연결 중…';
+
+  @override
+  String get release_core_fleet_state_sessionExpired => '로그아웃됨';
+
+  @override
+  String get release_core_fleet_state_failed => '연결 실패';
+
+  @override
+  String release_core_workspace_operation_failed(String reason) {
+    return '게이트웨이 작업을 확인할 수 없습니다: $reason.';
+  }
+
+  @override
+  String get release_core_workspace_invalid_data =>
+      '데이터 또는 입력을 확인할 수 없습니다. 검토한 후 다시 시도하세요.';
+
+  @override
+  String
+  get release_core_parallel_workspace_layout_changed_in_this_window_but_could_not =>
+      '이 창의 레이아웃이 변경되었지만 저장할 수 없습니다.';
+
+  @override
+  String get release_core_parallel_workspace_first_pane => '첫 번째 패널';
+
+  @override
+  String get release_core_parallel_workspace_second_pane => '두 번째 패널';
+
+  @override
+  String get release_core_parallel_workspace_unavailable_page => '사용할 수 없는 페이지';
+
+  @override
+  String release_core_parallel_workspace_close_a_tab_first_maximum(
+    String maximum,
+  ) {
+    return '먼저 탭을 닫으세요(최대 $maximum개).';
+  }
+
+  @override
+  String get release_core_parallel_workspace_dock_beside_current_pane =>
+      '현재 패널 옆에 도킹';
+
+  @override
+  String get release_core_parallel_workspace_add_chat => '채팅 추가';
+
+  @override
+  String
+  get release_core_parallel_workspace_action_failed_check_the_connection_and_try_again =>
+      '작업에 실패했습니다. 연결을 확인하고 다시 시도하세요.';
+
+  @override
+  String
+  get release_core_parallel_workspace_close_a_tab_before_reopening_another =>
+      '다른 탭을 다시 열기 전에 탭을 닫으세요.';
+
+  @override
+  String release_core_parallel_workspace_replace_layout(String name) {
+    return '레이아웃 “$name”을(를) 교체하시겠습니까?';
+  }
+
+  @override
+  String
+  get release_core_parallel_workspace_layout_limit_reached_replace_an_existing_layout =>
+      '레이아웃 개수 한도에 도달했습니다. 기존 레이아웃을 교체하세요.';
+
+  @override
+  String get release_core_parallel_workspace_restore_layout => '레이아웃 복원';
+
+  @override
+  String get release_core_parallel_workspace_workspace_options => '워크스페이스 옵션';
+
+  @override
+  String get release_core_parallel_workspace_dock_another_pane => '다른 패널 도킹';
+
+  @override
+  String get release_core_parallel_workspace_swap_panes => '패널 맞바꾸기';
+
+  @override
+  String get release_core_parallel_workspace_undock_second_pane =>
+      '두 번째 패널 도킹 해제';
+
+  @override
+  String get release_core_parallel_workspace_arrange_side_by_side => '좌우로 배치';
+
+  @override
+  String get release_core_parallel_workspace_arrange_top_to_bottom => '위아래로 배치';
+
+  @override
+  String release_core_parallel_workspace_change_split_size(String percent) {
+    return '분할 크기 변경($percent%)';
+  }
+
+  @override
+  String get release_core_parallel_workspace_focus_pane_full_screen =>
+      '패널을 전체 화면으로 표시';
+
+  @override
+  String get release_core_parallel_workspace_open_chat_in_new_window =>
+      '새 창에서 채팅 열기';
+
+  @override
+  String get release_core_parallel_workspace_hide_pane_keep_running =>
+      '패널 숨기기(실행 유지)';
+
+  @override
+  String get release_core_parallel_workspace_previous_tab => '이전 탭';
+
+  @override
+  String get release_core_parallel_workspace_next_tab => '다음 탭';
+
+  @override
+  String get release_core_parallel_workspace_move_tab_left => '탭을 왼쪽으로 이동';
+
+  @override
+  String get release_core_parallel_workspace_move_tab_right => '탭을 오른쪽으로 이동';
+
+  @override
+  String get release_core_parallel_workspace_reload_current_tab =>
+      '현재 탭 다시 불러오기';
+
+  @override
+  String get release_core_parallel_workspace_close_tab => '탭 닫기';
+
+  @override
+  String get release_core_parallel_workspace_close_other_tabs => '다른 탭 닫기';
+
+  @override
+  String get release_core_parallel_workspace_close_tabs_to_the_right =>
+      '오른쪽 탭 닫기';
+
+  @override
+  String get release_core_parallel_workspace_close_all_tabs => '모든 탭 닫기';
+
+  @override
+  String get release_core_parallel_workspace_reopen_closed_tab => '닫은 탭 다시 열기';
+
+  @override
+  String get release_core_parallel_workspace_save_named_layout =>
+      '이름을 지정하여 레이아웃 저장';
+
+  @override
+  String get release_core_parallel_workspace_restore_named_layout =>
+      '이름이 지정된 레이아웃 복원';
+
+  @override
+  String get release_core_parallel_workspace_refresh_chat_list => '채팅 목록 새로고침';
+
+  @override
+  String get release_core_parallel_workspace_workspace_tools => '워크스페이스 도구';
+
+  @override
+  String get release_core_parallel_workspace_choose_a_chat_for_this_pane =>
+      '이 패널의 채팅 선택';
+
+  @override
+  String release_core_parallel_workspace_choose_chat_for(String pane) {
+    return '$pane의 채팅 선택';
+  }
+
+  @override
+  String get release_core_parallel_workspace_add_a_chat_to_start_a_workspace =>
+      '워크스페이스를 시작하려면 채팅을 추가하세요.';
+
+  @override
+  String get release_core_parallel_workspace_select_a_tab_to_show_its_pane =>
+      '탭을 선택하면 해당 패널이 표시됩니다.';
+
+  @override
+  String get release_core_parallel_workspace_parallel_workspace => '병렬 워크스페이스';
+
+  @override
+  String get release_core_parallel_workspace_show_workspace => '워크스페이스 표시';
+
+  @override
+  String get release_core_parallel_workspace_could_not_load_chats_retry =>
+      '채팅을 불러올 수 없습니다. 다시 시도';
+
+  @override
+  String release_core_parallel_workspace_close(String pane) {
+    return '$pane 닫기';
+  }
+
+  @override
+  String release_core_parallel_workspace_switch_pane(String pane) {
+    return '패널 전환: $pane';
+  }
+
+  @override
+  String get release_core_workspace_registry_session_id_copied =>
+      '세션 ID를 복사했습니다.';
+
+  @override
+  String get release_core_workspace_registry_chat_details => '채팅 세부 정보';
+
+  @override
+  String get release_core_workspace_registry_server_default => '서버 기본값';
+
+  @override
+  String get release_core_workspace_registry_session_id => '세션 ID';
+
+  @override
+  String get release_core_workspace_registry_title => '제목';
+
+  @override
+  String get release_core_workspace_label_terminals => '터미널';
+
+  @override
+  String get release_core_workspace_label_copy_id => '세션 ID 복사';
+
+  @override
+  String get release_core_workspace_label_contributions => '기여 항목';
+
+  @override
+  String get release_core_workspace_owner_inactive =>
+      '이 워크스페이스의 소유자가 더 이상 활성 상태가 아닙니다.';
+
+  @override
+  String get release_core_workspace_select_chat => '먼저 채팅을 선택하세요.';
+
+  @override
+  String get release_core_workspace_chat_unavailable =>
+      '이 연결에서는 이 채팅을 사용할 수 없습니다.';
+
+  @override
+  String get release_core_workspace_page_unavailable =>
+      '이 연결에서는 이 페이지를 사용할 수 없습니다.';
+
+  @override
+  String release_core_client_queue_count(int count) {
+    return '$count개 대기 중';
+  }
+
+  @override
+  String release_core_client_queue_paused_count(int count) {
+    return '$count개 대기 중 — 일시 중지됨';
+  }
+
+  @override
+  String release_core_git_diff_truncated(String diff) {
+    return '$diff\n… 잘림';
+  }
+
+  @override
+  String get release_core_search_no_models =>
+      'Hermes가 구성된 선택 가능 모델을 반환하지 않았습니다.';
+
+  @override
+  String get release_core_chat_archive_unavailable => '채팅 보관 작업을 사용할 수 없습니다.';
+
+  @override
+  String get release_core_chat_pin_unconfirmed => '고정 상태가 확인되지 않았습니다.';
+
+  @override
+  String get release_core_chat_archive_unconfirmed => '보관 상태가 확인되지 않았습니다.';
+
+  @override
+  String get release_core_chat_archive_history_unavailable =>
+      '보관된 기록을 사용할 수 없습니다';
+
+  @override
+  String get release_core_quick_chat_history_unavailable =>
+      '빠른 채팅 기록을 사용할 수 없습니다';
+
+  @override
+  String get release_core_chat_project_ownership_unavailable =>
+      '프로젝트 소유 정보를 사용할 수 없습니다';
+
+  @override
+  String get release_core_chat_unknown_project => '알 수 없는 프로젝트';
+
+  @override
+  String get release_core_chat_local_search_fallback =>
+      '메시지 검색을 사용할 수 없습니다. 로컬 일치 항목을 표시합니다.';
+
+  @override
+  String release_core_fleet_update_eligible(String version) {
+    return '업데이트 가능 · $version';
+  }
+
+  @override
+  String get release_core_fleet_update_state_1 => '건너뜀: 동일한 설치';
+
+  @override
+  String get release_core_fleet_update_state_2 => '확인하지 않음';
+
+  @override
+  String get release_core_fleet_update_state_3 => '건너뜀: 클라우드에서 관리됨';
+
+  @override
+  String get release_core_fleet_update_state_4 => '건너뜀: 직접 연결 게이트웨이로 등록되지 않음';
+
+  @override
+  String get release_core_fleet_update_state_5 => '건너뜀: 연결 끊김 또는 사용 중';
+
+  @override
+  String get release_core_fleet_update_state_6 => '적용 가능한 업데이트 없음';
+
+  @override
+  String get release_core_fleet_update_state_7 => '업데이트 가능 여부를 확인할 수 없음';
+
+  @override
+  String get release_core_fleet_update_state_8 => '건너뜀: 오래된 정보, 사용 중 또는 이미 요청됨';
+
+  @override
+  String get release_core_fleet_update_state_9 => '요청 중';
+
+  @override
+  String get release_core_fleet_update_state_10 => '수락됨. 처리 기록을 사용할 수 없음';
+
+  @override
+  String get release_core_fleet_update_state_11 => '수락됨. 처리 기록 대기 중';
+
+  @override
+  String get release_core_fleet_update_state_12 => '건너뜀: 이 설치에서 채팅 실행 중';
+
+  @override
+  String get release_core_fleet_update_state_13 => '확인되지 않음. 자동으로 다시 보내지 마세요';
+
+  @override
+  String get release_core_fleet_update_state_14 => '처리 기록을 확인하려면 다시 연결하세요';
+
+  @override
+  String get release_core_fleet_update_state_15 => '처리 기록을 사용할 수 없음';
+
+  @override
+  String get release_core_fleet_update_state_16 => '일치하는 처리 기록 대기 중';
+
+  @override
+  String get release_core_fleet_update_state_17 => '업데이트됨. 후속 조치 필요';
+
+  @override
+  String get release_core_fleet_update_state_19 => '일부 업데이트됨';
+
+  @override
+  String get release_core_fleet_update_state_20 => '업데이트 실패';
+
+  @override
+  String get release_core_fleet_update_state_21 => '확인되지 않음';
+
+  @override
+  String get release_core_cloud_status_ready => '준비됨';
+
+  @override
+  String get release_core_cloud_status_online => '온라인';
+
+  @override
+  String get release_core_cloud_status_stopped => '중지됨';
+
+  @override
+  String get release_core_cloud_status_error => '오류';
+
+  @override
+  String get ng_release_more_contributions_subtitle => '이 연결의 검토된 응답 카드';
+
+  @override
+  String get ng_release_more_gateway_fleet => '게이트웨이 플릿';
+
+  @override
+  String get ng_release_more_memory_graph => '메모리 그래프';
+
+  @override
+  String get ng_release_more_memory_graph_subtitle => '타임라인, 편집 및 메모리 제공업체';
+
+  @override
+  String get ng_release_more_capabilities_subtitle =>
+      '스킬, 플러그인, 커넥터 및 도구 백엔드 설치와 관리';
+
+  @override
+  String get ng_release_more_browser_vault => '브라우저 보관함';
+
+  @override
+  String get ng_release_more_browser_vault_subtitle =>
+      '사이트 로그인, 주소, 카드 및 자격 증명 소스';
+
+  @override
+  String get ng_release_more_agent_policy => '에이전트 정책';
+
+  @override
+  String get ng_release_more_agent_policy_subtitle =>
+      '승인, 체크포인트, 브라우저 액세스 및 공유 지표';
+
+  @override
+  String get ng_release_more_schedules => '일정';
+
+  @override
+  String get ng_release_more_schedules_subtitle => '모든 프로필, 블루프린트, 누락 실행 및 중지';
+
+  @override
+  String get ng_release_more_host_subtitle => '원격 로그, 상태, 유지보수 및 업데이트';
+
+  @override
+  String get ng_release_more_providers_routes => '제공업체 및 경로';
+
+  @override
+  String get ng_release_more_providers_routes_subtitle =>
+      '키, 엔드포인트, 위임 및 모델 조합';
+
+  @override
+  String get ng_release_more_credits_plans => '크레딧 및 요금제';
+
+  @override
+  String get ng_release_more_credits_plans_subtitle =>
+      '계정이 허용하는 경우 동의에 따른 Nous 결제';
+
+  @override
+  String get ng_release_sign_in_or => '또는';
+
+  @override
+  String ng_release_deployment_sign_in_hint(String message) {
+    return '$message 다음 단계에서 배포 세션 토큰으로 로그인할 수도 있습니다.';
+  }
+
+  @override
+  String get ng_release_message_search_unavailable =>
+      '메시지 검색을 사용할 수 없습니다. 로컬 일치 항목을 표시합니다.';
+
+  @override
+  String ng_release_insights_days(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days일',
+      one: '$days일',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_release_signed_in_you => '사용자';
+
+  @override
+  String get release_chat_unsent_prompt_gone => '해당 미전송 프롬프트는 더 이상 대기열에 없습니다.';
+
+  @override
+  String ng_release_attachment_not_attached(String name) {
+    return '게이트웨이가 $name의 첨부를 확인하지 않았습니다.';
+  }
+
+  @override
+  String get ng_release_gateway_not_connected => '아직 게이트웨이에 연결되지 않았습니다.';
+
+  @override
+  String get ng_release_gateway_unreachable => '게이트웨이에 연결할 수 없습니다.';
+
+  @override
+  String get ng_release_projects_scope_changed => '프로젝트 범위가 더 이상 선택되어 있지 않습니다';
+
+  @override
+  String get ng_release_missing_providers => '제공업체 누락';
+
+  @override
+  String get ng_release_missing_tasks => '작업 누락';
+
+  @override
+  String ng_release_age_minutes(int count) {
+    return '$count분';
+  }
+
+  @override
+  String ng_release_age_hours(int count) {
+    return '$count시간';
+  }
+
+  @override
+  String ng_release_age_days(int count) {
+    return '$count일';
+  }
+
+  @override
+  String ng_release_age_weeks(int count) {
+    return '$count주';
+  }
+
+  @override
+  String ng_release_age_years(int count) {
+    return '$count년';
+  }
+
+  @override
+  String ng_release_compact_billions(String count) {
+    return '$count십억';
+  }
+
+  @override
+  String ng_release_compact_millions(String count) {
+    return '$count백만';
+  }
+
+  @override
+  String ng_release_compact_thousands(String count) {
+    return '$count천';
+  }
+
+  @override
+  String ng_release_token_thousands(String count) {
+    return '$count천';
+  }
+
+  @override
+  String ng_release_elapsed_minutes_seconds(int minutes, int seconds) {
+    return '$minutes분 $seconds초';
+  }
+
+  @override
+  String ng_release_elapsed_seconds(int seconds) {
+    return '$seconds초';
+  }
+
+  @override
+  String get ng_release_notification_foreground => 'Ares가 화면에 표시되어 있었습니다';
+
+  @override
+  String get ng_release_notification_stopped => '턴이 중지되었습니다';
+
+  @override
+  String get ng_release_more_parallel_workspace => '병렬 워크스페이스';
+
+  @override
+  String get ng_release_more_parallel_workspace_subtitle =>
+      '여러 채팅을 탭이나 나란히 배치하여 엽니다.';
+
+  @override
+  String get release_chat_unknown_model => '알 수 없음';
+
+  @override
+  String release_chat_profile_default(String model) {
+    return '프로필 기본값: $model';
+  }
+
+  @override
+  String release_chat_profile_default_provider(String model, String provider) {
+    return '프로필 기본값: $model • $provider';
+  }
+
+  @override
+  String get release_chat_choose_provider =>
+      '이 모델은 여러 제공업체에서 사용할 수 있습니다. 계속하려면 제공업체를 선택하세요.';
+
+  @override
+  String get release_chat_slash_needs_gateway =>
+      '슬래시 명령에는 Desktop 게이트웨이가 필요합니다';
+
+  @override
+  String get release_chat_recovering_without_resending => '다시 보내지 않고 복구 중';
+
+  @override
+  String get release_chat_live_request_unreachable =>
+      '죄송합니다. 해당 요청을 위해 Hermes에 연결할 수 없었습니다.';
+
+  @override
+  String release_chat_live_working(String tool) {
+    return 'Hermes가 작업 중입니다: $tool. 아직 완료되지 않았습니다.';
+  }
+
+  @override
+  String get release_chat_live_finished_without_spoken_result =>
+      'Hermes가 음성 결과 없이 해당 요청을 완료했습니다.';
+
+  @override
+  String get release_chat_reply_language_unavailable => '선택한 응답 언어를 사용할 수 없습니다';
+
+  @override
+  String get release_chat_reply_voice_unavailable => '선택한 응답 음성을 사용할 수 없습니다';
+
+  @override
+  String get release_chat_reply_voice_configuration_unavailable =>
+      '응답 음성 설정을 사용할 수 없습니다';
+
+  @override
+  String get release_chat_notification_review_action => '채팅을 열어 요청된 작업을 검토하세요.';
+
+  @override
+  String get release_chat_notification_respond => '채팅을 열어 응답하세요.';
+
+  @override
+  String get release_chat_start_new_main_window => '기본 창에서 새 채팅을 시작하세요.';
+
+  @override
+  String get release_chat_no_desktop_gateway => 'Desktop 게이트웨이 없음';
+
+  @override
+  String get release_chat_attachment_preparation_cancelled =>
+      '첨부 파일 준비가 취소되었습니다.';
+
+  @override
+  String get release_chat_approval_authority_revoked => '승인 권한이 취소되었습니다.';
+
+  @override
+  String get release_chat_gateway_session_disconnected =>
+      'Desktop 게이트웨이 세션의 연결이 끊어졌습니다';
+
+  @override
+  String get release_chat_stop_requested =>
+      '중지를 요청했습니다. Hermes가 마칠 때까지 기다리고 있습니다.';
+
+  @override
+  String release_chat_stop_request_failed(String error) {
+    return '중지를 요청할 수 없습니다: $error';
+  }
+
+  @override
+  String get release_chat_queued_prompt_not_sent => '대기 중인 프롬프트가 전송되지 않았습니다.';
+
+  @override
+  String get release_chat_running_turn_unreachable =>
+      '실행 중인 턴에 연결할 수 없습니다. 다시 보내지 않고 다시 연결하고 있습니다.';
+
+  @override
+  String get release_chat_wait_for_composer => '입력창을 사용할 수 있을 때까지 기다리세요.';
+
+  @override
+  String get release_chat_find_in_transcript => '대화 기록에서 찾기';
+
+  @override
+  String get release_chat_open_browser_preview => '브라우저 미리보기 열기';
+
+  @override
+  String get release_chat_more_tools => '채팅 도구 더 보기';
+
+  @override
+  String get release_chat_queue_until_finished => '이 턴이 끝날 때까지 대기열에 보관';
+
+  @override
+  String get release_chat_format_bold => '굵게';
+
+  @override
+  String get release_chat_format_italic => '기울임꼴';
+
+  @override
+  String get ng_release_chat_gateway_queue_requirements =>
+      '게이트웨이 대기열에는 연결된 채팅과 텍스트 전용 프롬프트가 필요합니다.';
+
+  @override
+  String get ng_release_chat_start_new_main_screen => '기본 채팅 화면에서 새 채팅을 시작하세요.';
+
+  @override
+  String get ng_release_chat_image => '이미지';
+
+  @override
+  String ng_release_chat_tool_seconds(String seconds) {
+    return '$seconds초';
+  }
+
+  @override
+  String get release_preview_chat_changed =>
+      '채팅이 변경되었습니다. 계속하려면 미리보기를 다시 연결하세요.';
+
+  @override
+  String get release_preview_authenticating_chat => '채팅 인증 중…';
+
+  @override
+  String release_preview_unavailable_reason(String reason) {
+    return '미리보기를 사용할 수 없습니다: $reason';
+  }
+
+  @override
+  String get release_preview_operation_failed => '미리보기 작업에 실패했습니다.';
+
+  @override
+  String get release_preview_added_to_draft => '초안에 추가했습니다. 아무것도 보내지 않았습니다.';
+
+  @override
+  String get release_preview_open_site_title => '이 사이트를 여시겠습니까?';
+
+  @override
+  String release_preview_open_site_body(String origin) {
+    return '$origin\n\n읽기 모드는 이 문서만 불러옵니다. 쿠키, 로그인 정보 또는 페이지를 Hermes와 공유하지 않습니다.';
+  }
+
+  @override
+  String get release_preview_open_site => '사이트 열기';
+
+  @override
+  String get release_preview_discard_pins_title => '초안에 추가하지 않은 핀을 버리시겠습니까?';
+
+  @override
+  String get release_preview_keep_pins => '핀 유지';
+
+  @override
+  String get release_preview_share_page_title => '이 페이지를 이 채팅과 공유하시겠습니까?';
+
+  @override
+  String release_preview_share_page_body(String origin) {
+    return 'Hermes는 $origin에 표시된 텍스트와 요소 목록을 읽고 이 패널을 스크롤할 수 있습니다. 다른 페이지로 이동하면 공유가 종료됩니다. 양식과 자격 증명은 공유되지 않습니다.';
+  }
+
+  @override
+  String get release_preview_share_page => '페이지 공유';
+
+  @override
+  String release_preview_comment_number(int number) {
+    return '댓글 #$number';
+  }
+
+  @override
+  String get release_preview_note => '메모';
+
+  @override
+  String get release_preview_keep_pin => '핀 유지';
+
+  @override
+  String get release_preview_title => '브라우저 미리보기';
+
+  @override
+  String get release_preview_hide => '미리보기 숨기기';
+
+  @override
+  String get release_preview_close_and_forget => '닫고 페이지 지우기';
+
+  @override
+  String get release_preview_site_address => '사이트 주소';
+
+  @override
+  String get release_preview_go_to_address => '주소로 이동';
+
+  @override
+  String get release_preview_forward => '앞으로';
+
+  @override
+  String get release_preview_reload => '다시 불러오기';
+
+  @override
+  String get release_preview_share_with_hermes => 'Hermes와 페이지 공유';
+
+  @override
+  String get release_preview_stop_sharing => '페이지 공유 중지';
+
+  @override
+  String get release_preview_annotate => '요소 또는 영역에 주석 추가';
+
+  @override
+  String get release_preview_reader_console => '읽기 모드 콘솔';
+
+  @override
+  String get release_preview_reconnect => '미리보기 다시 연결';
+
+  @override
+  String get release_preview_reader_mode_help =>
+      '읽기 모드: HTML 및 텍스트만 지원합니다. 스크립트, 내장 리소스 또는 로그인된 브라우저 프로필은 사용하지 않습니다.';
+
+  @override
+  String release_preview_sharing_origin(String origin) {
+    return '이 채팅과 읽기 모드 공유 중: $origin';
+  }
+
+  @override
+  String get release_preview_annotation_help => '요소를 누르거나 영역을 드래그하여 댓글을 작성하세요.';
+
+  @override
+  String get release_preview_reader_requests => '읽기 모드 요청(JavaScript 꺼짐)';
+
+  @override
+  String release_preview_selected_requests(int count) {
+    return '$count개 선택됨 · JavaScript 꺼짐';
+  }
+
+  @override
+  String get release_preview_copy_all => '모두 복사';
+
+  @override
+  String get release_preview_copy_selected => '선택 항목 복사';
+
+  @override
+  String get release_preview_add_log_to_draft => '초안에 로그 추가';
+
+  @override
+  String release_preview_requests_draft(String log) {
+    return '읽기 모드 요청:\n$log';
+  }
+
+  @override
+  String release_preview_add_pins_to_draft(int count) {
+    return '초안에 $count개 추가';
+  }
+
+  @override
+  String release_preview_request_loaded(String origin, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '읽기 모드 요소 $count개',
+      one: '읽기 모드 요소 $count개',
+    );
+    return 'HTTP 200 · $origin · $_temp0';
+  }
+
+  @override
+  String release_preview_annotation_intro(String origin) {
+    return '$origin 미리보기에 달린 이 댓글들을 검토하세요. 첨부된 잘라낸 이미지에는 같은 순서로 번호가 매겨져 있습니다.';
+  }
+
+  @override
+  String get release_preview_reader_region => '읽기 모드 영역';
+
+  @override
+  String get release_preview_capture_failed => '이 영역의 이미지를 캡처할 수 없습니다.';
+
+  @override
+  String get release_preview_address_not_approved =>
+      '이 주소는 승인된 미리보기 출처 밖에 있습니다.';
+
+  @override
+  String get release_preview_page_limit => '페이지가 읽기 모드 한도를 초과합니다.';
+
+  @override
+  String get release_preview_page_unreadable => '페이지를 읽을 수 없습니다.';
+
+  @override
+  String get release_preview_page_complex => '이 페이지는 읽기 모드로 처리하기에 너무 복잡합니다.';
+
+  @override
+  String release_preview_http_failed(int statusCode) {
+    return 'HTTP $statusCode. 리디렉션을 따르거나 로그인을 진행하지 않았습니다.';
+  }
+
+  @override
+  String get release_preview_unsupported_type =>
+      '읽기 모드에서는 HTML과 일반 텍스트만 열 수 있습니다.';
+
+  @override
+  String get release_preview_load_insecure => '사이트를 안전하게 불러올 수 없습니다.';
+
+  @override
+  String get release_preview_crop_limit => '잘라낸 미리보기 이미지가 한도를 초과합니다.';
+
+  @override
+  String get release_preview_image_unreadable => '선택한 이미지가 비어 있거나 읽을 수 없습니다.';
+
+  @override
+  String get release_preview_image_budget =>
+      '선택한 이미지가 초안 용량 한도인 64 MiB를 초과합니다.';
+
+  @override
+  String get release_preview_image_format =>
+      '지원되지 않는 이미지 형식입니다. JPEG, PNG 또는 WebP 이미지를 선택하세요.';
+
+  @override
+  String get release_preview_image_decode =>
+      '선택한 JPEG, PNG 또는 WebP 이미지를 안전하게 디코딩할 수 없습니다.';
+
+  @override
+  String get release_preview_image_sanitize =>
+      '이 이미지를 안전하게 정리할 수 없습니다. 유효한 JPEG, PNG 또는 WebP 이미지를 선택하세요.';
+
+  @override
+  String get release_preview_draft_budget => '첨부 파일은 초안당 총 64 MiB로 제한됩니다.';
+
+  @override
+  String get release_preview_generic_file_limit => '일반 파일은 각각 16 MiB로 제한됩니다.';
+
+  @override
+  String get release_preview_image_not_sanitized =>
+      '원격 이미지는 업로드 전에 안전하게 정리해야 합니다.';
+
+  @override
+  String get release_preview_stage_failed =>
+      '미리보기 자료를 초안에 추가할 수 없습니다. 다시 시도하세요.';
+
+  @override
+  String get release_misc_find_hermes_on_lan => 'LAN에서 Hermes 찾기';
+
+  @override
+  String release_misc_discovery_failed(String error) {
+    return '검색 실패: $error';
+  }
+
+  @override
+  String get release_misc_no_lan_servers => '로컬 네트워크에서 Hermes 서버를 찾지 못했습니다.';
+
+  @override
+  String release_misc_api_key_rejected(String endpoint, int statusCode) {
+    return '$endpoint에서 API 키를 거부했습니다(HTTP $statusCode).';
+  }
+
+  @override
+  String get release_misc_api_key_required =>
+      '서버에 API 키가 필요합니다. API_SERVER_KEY를 입력하세요.';
+
+  @override
+  String release_misc_gateway_not_found(String endpoint) {
+    return '게이트웨이 엔드포인트 $endpoint에서 HTTP 404를 반환했습니다. 게이트웨이 경로 접두사와 리버스 프록시 경로를 확인하세요.';
+  }
+
+  @override
+  String release_misc_gateway_http_error(String endpoint, int statusCode) {
+    return '게이트웨이 엔드포인트 $endpoint에서 HTTP $statusCode를 반환했습니다.';
+  }
+
+  @override
+  String release_misc_gateway_unreachable(String endpoint) {
+    return '게이트웨이 엔드포인트 $endpoint에 연결할 수 없습니다.';
+  }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target =>
+      '전송 대상이 올바르지 않습니다';
+
+  @override
+  String get release_core_file_save_direct_only =>
+      '작업 디렉터리 바로 아래에 있는 파일만 저장할 수 있습니다.';
+
+  @override
+  String get release_core_file_save_hidden => '게이트웨이는 숨김 파일을 저장할 수 없습니다.';
 }

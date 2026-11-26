@@ -300,17 +300,17 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String message_time_recorded(String time) {
-    return 'Recorded by server: $time (local time)';
+    return '服务器记录时间：$time（本地时间）';
   }
 
   @override
   String message_time_sent(String time) {
-    return 'Send observed on this device: $time (local time)';
+    return '本设备观察到发送的时间：$time（本地时间）';
   }
 
   @override
   String message_time_received(String time) {
-    return 'First received on this device: $time (local time)';
+    return '本设备首次接收时间：$time（本地时间）';
   }
 
   @override
@@ -418,28 +418,26 @@ class AppLocalizationsZh extends AppLocalizations {
   String get attachment_retry => '重试';
 
   @override
-  String get saved_history_heading => 'Saved history';
+  String get saved_history_heading => '已保存的历史记录';
 
   @override
-  String get received_output_heading =>
-      'Received output — match to saved history unconfirmed';
+  String get received_output_heading => '已接收的输出 — 尚未确认与已保存的历史记录匹配';
 
   @override
-  String get received_output_details => 'About received output';
+  String get received_output_details => '关于已接收的输出';
 
   @override
-  String get received_output_explanation =>
-      'This may also appear in saved history. The app cannot confirm a match.';
+  String get received_output_explanation => '此内容也可能出现在已保存的历史记录中。应用无法确认是否匹配。';
 
   @override
-  String get local_prompt_context => 'Local prompt context';
+  String get local_prompt_context => '本地提示词上下文';
 
   @override
-  String get received_output_badge => 'Received · match unconfirmed';
+  String get received_output_badge => '已接收 · 匹配未确认';
 
   @override
   String get received_output_lifetime =>
-      'Received output is kept temporarily in this app session and may be shortened or removed as limits are reached. It may not be available after the app or connection is closed.';
+      '已接收的输出会在本次应用会话中临时保留，达到限制时可能会被缩短或移除。关闭应用或连接后，这些内容可能无法再查看。';
 
   @override
   String get theme_palette => '颜色主题';
@@ -635,15 +633,13 @@ class AppLocalizationsZh extends AppLocalizations {
       '在此 Hermes 会话结束前允许匹配的命令。';
 
   @override
-  String get allow_folder_until_sandbox_off =>
-      'Allow this folder until the sandbox is switched off.';
+  String get allow_folder_until_sandbox_off => '允许此文件夹，直到关闭沙盒为止。';
 
   @override
   String get allow_once => '允许一次';
 
   @override
-  String get allow_website_until_sandbox_off =>
-      'Allow this website until the sandbox is switched off.';
+  String get allow_website_until_sandbox_off => '允许此网站，直到关闭沙盒为止。';
 
   @override
   String get always_allow => '总是允许';
@@ -869,7 +865,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get code_copied => '代码已复制';
 
   @override
-  String get code_format => 'Code';
+  String get code_format => '代码';
 
   @override
   String get coming_next => '敬请期待';
@@ -878,25 +874,25 @@ class AppLocalizationsZh extends AppLocalizations {
   String get command => '命令';
 
   @override
-  String get command_palette => 'Command palette';
+  String get command_palette => '命令面板';
 
   @override
-  String get command_palette_hint => 'Type a command';
+  String get command_palette_hint => '输入命令';
 
   @override
-  String get command_palette_no_results => 'No commands found';
+  String get command_palette_no_results => '未找到命令';
 
   @override
-  String get command_palette_new_chat => 'New chat';
+  String get command_palette_new_chat => '新聊天';
 
   @override
-  String get command_palette_search_chats => 'Search chats';
+  String get command_palette_search_chats => '搜索聊天';
 
   @override
-  String get command_palette_toggle_theme => 'Toggle theme';
+  String get command_palette_toggle_theme => '切换主题';
 
   @override
-  String get command_palette_copy_last_code => 'Copy last code block';
+  String get command_palette_copy_last_code => '复制最后一个代码块';
 
   @override
   String get command_line_chats => '命令行聊天';
@@ -1084,14 +1080,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cron => 'Cron';
 
   @override
-  String get crons => 'Crons';
+  String get crons => '定时任务';
 
   @override
-  String get cron_conversations_empty =>
-      'Conversations from scheduled jobs appear here, including older runs.';
+  String get cron_conversations_empty => '定时任务的对话会显示在此处，包括较早的运行记录。';
 
   @override
-  String get search_cron_conversations => 'Search cron conversations';
+  String get search_cron_conversations => '搜索定时任务对话';
 
   @override
   String get cron_jobs => 'Cron 任务';
@@ -1858,51 +1853,48 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get windows_notifications_blocked =>
-      'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.';
+      '通知不可用。请使用已安装的 Ares 应用，并检查 Windows 中的“设置 → 系统 → 通知”。';
 
   @override
-  String get windows_notification_diagnostics =>
-      'What Ares submitted to Windows';
+  String get windows_notification_diagnostics => 'Ares 提交给 Windows 的内容';
 
   @override
-  String get chat_activity_share => 'Share chat activity';
+  String get chat_activity_share => '共享聊天活动';
 
   @override
   String get chat_activity_share_hint =>
-      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+      '在你使用此聊天时告知兼容的已连接网关，让其手机通知插件避免重复提醒。不会发送任何密钥或消息内容。';
 
   @override
-  String get completion_sound => 'Completion sound';
+  String get completion_sound => '完成提示音';
 
   @override
-  String get completion_sound_system => 'System default';
+  String get completion_sound_system => '系统默认';
 
   @override
-  String get completion_sound_mail => 'Mail';
+  String get completion_sound_mail => '邮件';
 
   @override
-  String get completion_sound_reminder => 'Reminder';
+  String get completion_sound_reminder => '提醒';
 
   @override
-  String get completion_sound_silent => 'Silent';
+  String get completion_sound_silent => '静音';
 
   @override
-  String get completion_sound_scope =>
-      'Plays for finished replies, the test notification and inside the app. Approvals and other alerts keep their usual sound.';
+  String get completion_sound_scope => '用于回复完成、测试通知和应用内提示。审批和其他提醒仍使用原有声音。';
 
   @override
   String get completion_sound_scope_android =>
-      'Plays for finished replies, the test notification and inside the app. Approvals, other alerts, background notifications from the server and Android Auto messages keep their usual sound.';
+      '用于回复完成、测试通知和应用内提示。审批、其他提醒、服务器后台通知和 Android Auto 消息仍使用原有声音。';
 
   @override
-  String get notification_open_action => 'Open';
+  String get notification_open_action => '打开';
 
   @override
-  String get app_sounds_mute => 'Mute app sounds';
+  String get app_sounds_mute => '静音应用音效';
 
   @override
-  String get app_sounds_mute_hint =>
-      'Stops the completion sound Ares plays while it is open. Notifications keep their own sound.';
+  String get app_sounds_mute_hint => '停止 Ares 在打开期间播放的完成提示音。通知仍使用各自的声音。';
 
   @override
   String get notifications_permission_denied =>
@@ -2371,10 +2363,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get starting_hermes => '正在启动 Hermes…';
 
   @override
-  String get media_card_download => 'Download file';
+  String get media_card_download => '下载文件';
 
   @override
-  String get media_card_tap_to_download => 'Tap to download';
+  String get media_card_tap_to_download => '点击下载';
 
   @override
   String get still_loading_your_projects => '正在加载你的项目。';
@@ -2665,7 +2657,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get verbose_mode => '详细模式';
 
   @override
-  String get message_metadata => 'Message details';
+  String get message_metadata => '消息详情';
 
   @override
   String get voice => '语音';
@@ -3240,45 +3232,40 @@ class AppLocalizationsZh extends AppLocalizations {
       '紧凑模式会去掉 You 和 Hermes 标签，并缩小气泡内边距、间距和两侧边距。';
 
   @override
-  String get client_certificate_mtls => 'Client certificate (mTLS)';
+  String get client_certificate_mtls => '客户端证书（mTLS）';
 
   @override
-  String get client_certificate_mtls_description =>
-      'Present a certificate when an HTTPS proxy requires mutual TLS.';
+  String get client_certificate_mtls_description => '在 HTTPS 代理要求双向 TLS 时提供证书。';
 
   @override
-  String get client_certificate_https_only =>
-      'Client certificates are only used for HTTPS connections.';
+  String get client_certificate_https_only => '客户端证书仅用于 HTTPS 连接。';
 
   @override
-  String get choose_certificate => 'Choose certificate';
+  String get choose_certificate => '选择证书';
 
   @override
-  String get certificate_password => 'Certificate password';
+  String get certificate_password => '证书密码';
 
   @override
-  String get this_certificate_is_password_protected =>
-      'This certificate is password-protected. It opens as you type.';
+  String get this_certificate_is_password_protected => '此证书受密码保护，输入密码时会自动解锁。';
 
   @override
   String get enter_the_certificate_password_to_finish_loading_it =>
-      'Enter the certificate password to finish loading the certificate you chose.';
+      '输入证书密码，完成加载所选证书。';
 
   @override
-  String get client_certificate_required =>
-      'Load a client certificate or turn off the client certificate option.';
+  String get client_certificate_required => '请加载客户端证书，或关闭客户端证书选项。';
 
   @override
   String client_certificate_loaded(String label) {
-    return 'Loaded: $label';
+    return '已加载：$label';
   }
 
   @override
-  String get remove_certificate => 'Remove certificate';
+  String get remove_certificate => '移除证书';
 
   @override
-  String get certificate_import_failed =>
-      'That certificate could not be loaded.';
+  String get certificate_import_failed => '无法加载该证书。';
 
   @override
   String get background_work => '后台运行';
@@ -3726,73 +3713,69 @@ class AppLocalizationsZh extends AppLocalizations {
   String get provider_oauth_account_status_unknown => '无法获取主机账户状态。';
 
   @override
-  String get app_language => 'App language';
+  String get app_language => '应用语言';
 
   @override
-  String get app_language_system => 'Same as phone';
+  String get app_language_system => '与手机相同';
 
   @override
-  String get auto_archives_after_72_hours => 'Auto-archives after 72 hours';
+  String get auto_archives_after_72_hours => '72 小时后自动归档';
 
   @override
-  String get automation => 'Automation';
+  String get automation => '自动化';
 
   @override
-  String get voice_recording_start => 'Record voice message';
+  String get voice_recording_start => '录制语音消息';
 
   @override
-  String get voice_recording_pause => 'Pause recording';
+  String get voice_recording_pause => '暂停录音';
 
   @override
-  String get voice_recording_preview => 'Play recording';
+  String get voice_recording_preview => '播放录音';
 
   @override
-  String get voice_recording_resume => 'Continue recording';
+  String get voice_recording_resume => '继续录音';
 
   @override
-  String get voice_recording_send => 'Send voice message';
+  String get voice_recording_send => '发送语音消息';
 
   @override
-  String get voice_recording_discard => 'Discard recording';
+  String get voice_recording_discard => '舍弃录音';
 
   @override
-  String get voice_recording_processing => 'Preparing voice message…';
+  String get voice_recording_processing => '正在准备语音消息…';
 
   @override
   String voice_recording_elapsed(String time) {
-    return 'Recording $time';
+    return '录音中 $time';
   }
 
   @override
   String voice_recording_draft(String time) {
-    return 'Voice message $time';
+    return '语音消息 $time';
   }
 
   @override
-  String get voice_recording_permission =>
-      'Allow microphone access to record a voice message.';
+  String get voice_recording_permission => '请允许访问麦克风，以录制语音消息。';
 
   @override
-  String get voice_recording_limit =>
-      'This recording has reached the ten-minute limit.';
+  String get voice_recording_limit => '此录音已达到十分钟上限。';
 
   @override
-  String get voice_recording_empty => 'No audio was recorded. Try again.';
+  String get voice_recording_empty => '未录到音频。请重试。';
 
   @override
-  String get voice_recording_failed =>
-      'Could not process the recording. Any saved fragments have been kept.';
+  String get voice_recording_failed => '无法处理录音。所有已保存的片段均已保留。';
 
   @override
-  String get voice_recording_unconfirmed =>
-      'Delivery was not confirmed. Your recording is saved. Check the chat before trying again.';
+  String get voice_recording_unconfirmed => '尚未确认送达。录音已保存。请先查看聊天，再决定是否重试。';
 
   @override
   String get voice_recording_submit_failed =>
-      'Could not send the voice message. Your recording is saved. Check the connection, Dashboard access and server transcription settings.';
+      '无法发送语音消息。录音已保存。请检查连接、仪表盘访问权限和服务器转写设置。';
 
   @override
-  String get voice_recording_pause_playback => 'Pause playback';
+  String get voice_recording_pause_playback => '暂停播放';
 
   @override
   String get projects_root_title => '服务器上的项目文件夹';
@@ -3935,178 +3918,164 @@ class AppLocalizationsZh extends AppLocalizations {
   String get slash_sessions_inline => '请打开会话列表选择聊天。草稿已保留。';
 
   @override
-  String get composer_snippets => 'Prompt snippets';
+  String get composer_snippets => '提示词片段';
 
   @override
-  String get composer_snippets_description =>
-      'Pick a starter prompt to drop into the composer.';
+  String get composer_snippets_description => '选择一条起始提示词，填入消息输入框。';
 
   @override
-  String get composer_snippet_review => 'Code review';
+  String get composer_snippet_review => '代码审查';
 
   @override
-  String get composer_snippet_review_body =>
-      'Audit the current change for regressions, dropped edge cases and missing tests.';
+  String get composer_snippet_review_body => '审查当前改动中的回归问题、遗漏的边界情况和缺失的测试。';
 
   @override
-  String get composer_snippet_review_text =>
-      'Please review this for bugs, regressions and missing tests.';
+  String get composer_snippet_review_text => '请审查其中的错误、回归问题和缺失的测试。';
 
   @override
-  String get composer_snippet_plan => 'Implementation plan';
+  String get composer_snippet_plan => '实施计划';
 
   @override
-  String get composer_snippet_plan_body =>
-      'Outline an approach before touching code so the diff stays focused.';
+  String get composer_snippet_plan_body => '修改代码前先概述方案，使改动保持聚焦。';
 
   @override
-  String get composer_snippet_plan_text =>
-      'Please make a concise implementation plan before changing code.';
+  String get composer_snippet_plan_text => '请在修改代码前制定简明的实施计划。';
 
   @override
-  String get composer_snippet_explain => 'Explain this';
+  String get composer_snippet_explain => '解释这段代码';
 
   @override
-  String get composer_snippet_explain_body =>
-      'Walk through how the selected code works and point to the key files.';
+  String get composer_snippet_explain_body => '逐步讲解所选代码的工作原理，并指出关键文件。';
 
   @override
-  String get composer_snippet_explain_text =>
-      'Please explain how this works and point me to the key files.';
+  String get composer_snippet_explain_text => '请解释其工作原理，并指出关键文件。';
 
   @override
-  String get composer_status => 'Status';
+  String get composer_status => '状态';
 
   @override
-  String get composer_status_context => 'Context';
+  String get composer_status_context => '上下文';
 
   @override
-  String get composer_status_cache => 'Cache hit';
+  String get composer_status_cache => '缓存命中';
 
   @override
-  String get composer_status_throughput => 'Output tokens/sec';
+  String get composer_status_throughput => '输出 token/秒';
 
   @override
-  String get composer_status_running => 'Running';
+  String get composer_status_running => '运行中';
 
   @override
-  String get composer_status_session => 'Session';
+  String get composer_status_session => '会话';
 
   @override
-  String get composer_status_not_reported => 'Not reported';
+  String get composer_status_not_reported => '未报告';
 
   @override
-  String get composer_status_empty => 'No context breakdown was reported.';
+  String get composer_status_empty => '未报告上下文明细。';
 
   @override
-  String get composer_status_loading => 'Loading context breakdown';
+  String get composer_status_loading => '正在加载上下文明细';
 
   @override
-  String get composer_status_reset => 'Reset status bar';
+  String get composer_status_reset => '重置状态栏';
 
   @override
-  String get composer_resume_title => 'Resume a chat';
+  String get composer_resume_title => '继续聊天';
 
   @override
-  String get composer_resume_search => 'Search titles and ids';
+  String get composer_resume_search => '搜索标题和 ID';
 
   @override
-  String get composer_resume_empty => 'No chats match.';
+  String get composer_resume_empty => '没有匹配的聊天。';
 
   @override
-  String get composer_resume_unavailable =>
-      'This pane has no chat list to search.';
+  String get composer_resume_unavailable => '此面板没有可供搜索的聊天列表。';
 
   @override
-  String get composer_failure_retry => 'Retry';
+  String get composer_failure_retry => '重试';
 
   @override
   String composer_failure_retry_at(String time) {
-    return 'Retry at $time';
+    return '在 $time 重试';
   }
 
   @override
-  String get composer_failure_compress => 'Compress';
+  String get composer_failure_compress => '压缩';
 
   @override
-  String get composer_failure_switch_model => 'Switch model';
+  String get composer_failure_switch_model => '切换模型';
 
   @override
   String composer_failure_switch_to(String model) {
-    return 'Switch to $model';
+    return '切换到 $model';
   }
 
   @override
-  String get composer_failure_new_chat => 'New chat';
+  String get composer_failure_new_chat => '新聊天';
 
   @override
-  String get composer_failure_edit => 'Edit message';
+  String get composer_failure_edit => '编辑消息';
 
   @override
-  String get composer_failure_details => 'Details';
+  String get composer_failure_details => '详情';
 
   @override
-  String get composer_failure_hide_details => 'Hide details';
+  String get composer_failure_hide_details => '隐藏详情';
 
   @override
-  String get composer_failure_copy => 'Copy diagnostics';
+  String get composer_failure_copy => '复制诊断信息';
 
   @override
-  String get composer_failure_account =>
-      'The other fix is on the gateway account. This chat cannot do it.';
+  String get composer_failure_account => '另一项修复需在网关账户端完成，无法在此聊天中进行。';
 
   @override
-  String get composer_failure_account_only =>
-      'This has to be fixed on the gateway account. This chat cannot do it.';
+  String get composer_failure_account_only => '此问题必须在网关账户端修复，无法在此聊天中处理。';
 
   @override
-  String get composer_failure_confirm_compress =>
-      'Compress this chat? The gateway will shorten the transcript.';
+  String get composer_failure_confirm_compress => '压缩此聊天？网关会缩短对话记录。';
 
   @override
   String composer_failure_confirm_model(String model) {
-    return 'Switch this chat to $model?';
+    return '将此聊天切换到 $model？';
   }
 
   @override
-  String get composer_drop_attach => 'Drop to attach';
+  String get composer_drop_attach => '拖放以添加附件';
 
   @override
-  String get composer_drop_folder_unsupported =>
-      'Folders can\'t be attached. Drop the files instead.';
+  String get composer_drop_folder_unsupported => '无法附加文件夹。请改为拖放其中的文件。';
 
   @override
-  String get composer_drop_reference => 'Drop to reference';
+  String get composer_drop_reference => '拖放以添加引用';
 
   @override
-  String get composer_reference_copy => 'Copy reference';
+  String get composer_reference_copy => '复制引用';
 
   @override
-  String get composer_reference_remove => 'Remove reference';
+  String get composer_reference_remove => '移除引用';
 
   @override
-  String get composer_btw_usage =>
-      'Usage: /btw <question> — answered from a snapshot of this conversation without interrupting it.';
+  String get composer_btw_usage => '用法：/btw <question> — 根据此对话的快照回答，不中断当前对话。';
 
   @override
   String get composer_background_usage =>
-      'Usage: /background <prompt> — the task runs separately and the result comes back here.';
+      '用法：/background <prompt> — 任务独立运行，结果会返回此处。';
 
   @override
   String get composer_handoff_usage =>
-      'Usage: /handoff <platform> — transfer this chat to that messaging platform.';
+      '用法：/handoff <platform> — 将此聊天转移到指定的消息平台。';
 
   @override
-  String get composer_command_needs_session =>
-      'This command needs an open chat.';
+  String get composer_command_needs_session => '此命令需要已打开的聊天。';
 
   @override
   String get composer_retry_not_found =>
-      'This turn is not in the saved history, so Retry cannot replace it. Nothing was sent again. Edit the message and send it for another try.';
+      '已保存的历史记录中没有此轮对话，因此“重试”无法替换它。未重新发送任何内容。请编辑消息并发送以再次尝试。';
 
   @override
   String get composer_retry_unavailable =>
-      'Retry cannot replace a turn on this connection, so nothing was sent again. Edit the message and send it for another try.';
+      '此连接不支持通过“重试”替换某轮对话，因此未重新发送任何内容。请编辑消息并发送以再次尝试。';
 
   @override
   String get composer_failure_switch_no_retry =>
@@ -4114,52 +4083,48 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get composer_command_needs_gateway_session =>
-      'This chat has no gateway session yet. Send a message first, then run the command again.';
+      '此聊天尚无网关会话。请先发送消息，再重新运行命令。';
 
   @override
-  String get composer_side_question =>
-      'btw — answering from a conversation snapshot';
+  String get composer_side_question => 'btw — 正在根据对话快照回答';
 
   @override
   String composer_side_question_id(String id) {
-    return 'btw $id — answering from a conversation snapshot';
+    return 'btw $id — 正在根据对话快照回答';
   }
 
   @override
-  String get composer_background_started =>
-      'Background task started. You can keep chatting. The result will appear here.';
+  String get composer_background_started => '后台任务已启动。你可以继续聊天，结果会显示在此处。';
 
   @override
   String composer_background_started_id(String id) {
-    return 'Background task $id started. You can keep chatting. The result will appear here.';
+    return '后台任务 $id 已启动。你可以继续聊天，结果会显示在此处。';
   }
 
   @override
   String composer_handoff_requested(String platform) {
-    return 'Handoff to $platform requested.';
+    return '已请求移交至 $platform。';
   }
 
   @override
   String composer_handoff_done(String platform) {
-    return 'Handed this chat to $platform.';
+    return '已将此聊天移交至 $platform。';
   }
 
   @override
-  String get composer_handoff_failed => 'Handoff failed.';
+  String get composer_handoff_failed => '移交失败。';
 
   @override
-  String get composer_handoff_timeout =>
-      'Handoff did not finish. It may still be running on the gateway.';
+  String get composer_handoff_timeout => '移交未完成，可能仍在网关上进行。';
 
   @override
-  String get composer_compress_done => 'Compressed this chat.';
+  String get composer_compress_done => '已压缩此聊天。';
 
   @override
-  String get composer_file_missing => 'That file is not on this device.';
+  String get composer_file_missing => '此设备上没有该文件。';
 
   @override
-  String get composer_attach_busy =>
-      'Attachments can be added when this reply finishes.';
+  String get composer_attach_busy => '此回复完成后即可添加附件。';
 
   @override
   String get nextgen_toggle => 'NextGen 界面';
@@ -6212,74 +6177,74 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ng_aux_curator_hint => '审查技能的使用情况';
 
   @override
-  String get appearance_save_failed => 'Could not save this change.';
+  String get appearance_save_failed => '无法保存此更改。';
 
   @override
-  String get appearance_keep_which_theme => 'Keep which theme?';
+  String get appearance_keep_which_theme => '保留哪个主题？';
 
   @override
-  String get appearance_tour_back => 'Back';
+  String get appearance_tour_back => '上一步';
 
   @override
-  String get appearance_tour_finish => 'Finish';
+  String get appearance_tour_finish => '完成';
 
   @override
-  String get appearance_tour_next => 'Next';
+  String get appearance_tour_next => '下一步';
 
   @override
-  String get appearance_tour_close => 'Close tour';
+  String get appearance_tour_close => '关闭导览';
 
   @override
-  String get appearance_dismiss_tip => 'Dismiss tip';
+  String get appearance_dismiss_tip => '关闭提示';
 
   @override
-  String get appearance_search_settings => 'Search settings';
+  String get appearance_search_settings => '搜索设置';
 
   @override
-  String get appearance_search_show => 'Show';
+  String get appearance_search_show => '显示';
 
   @override
-  String get appearance_no_matching_setting => 'No matching setting.';
+  String get appearance_no_matching_setting => '没有匹配的设置。';
 
   @override
-  String get appearance_replay_tour => 'Replay tour';
+  String get appearance_replay_tour => '重新查看导览';
 
   @override
-  String get appearance_show_tips_again => 'Show tips again';
+  String get appearance_show_tips_again => '再次显示提示';
 
   @override
   String get appearance_window_translucency_unavailable =>
-      'Window translucency is not available on this host. Linux cannot provide it, and the Apple and Windows runners paint an opaque Flutter view.';
+      '此主机不支持窗口半透明。Linux 无法提供此效果，Apple 和 Windows 运行器则会绘制不透明的 Flutter 视图。';
 
   @override
-  String get appearance_imported_themes => 'Imported themes';
+  String get appearance_imported_themes => '已导入的主题';
 
   @override
-  String get appearance_import_theme_file => 'Import theme file';
+  String get appearance_import_theme_file => '导入主题文件';
 
   @override
-  String get appearance_remove_theme => 'Remove theme';
+  String get appearance_remove_theme => '移除主题';
 
   @override
-  String get appearance_chat_font => 'Chat font';
+  String get appearance_chat_font => '聊天字体';
 
   @override
-  String get appearance_terminal_font => 'Terminal font';
+  String get appearance_terminal_font => '终端字体';
 
   @override
-  String get appearance_font_platform => 'Platform';
+  String get appearance_font_platform => '平台';
 
   @override
-  String get appearance_automatic => 'Automatic';
+  String get appearance_automatic => '自动';
 
   @override
-  String get appearance_force_left_to_right => 'Force left to right';
+  String get appearance_force_left_to_right => '强制从左到右';
 
   @override
-  String get appearance_force_right_to_left => 'Force right to left';
+  String get appearance_force_right_to_left => '强制从右到左';
 
   @override
-  String get appearance_user_bubble_opacity => 'User bubble opacity';
+  String get appearance_user_bubble_opacity => '用户气泡不透明度';
 
   @override
   String get appearance_inline_embeds => '内嵌内容';
@@ -6328,17 +6293,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appearance_embed_preview_unavailable => '无法预览';
 
   @override
-  String get appearance_emoji_reactions => 'Emoji reactions';
+  String get appearance_emoji_reactions => '表情回应';
 
   @override
-  String get appearance_celebration_hearts => 'Celebration hearts';
+  String get appearance_celebration_hearts => '庆祝爱心';
 
   @override
-  String get appearance_celebration_hearts_hint =>
-      'A heart plays when a reply arrives while you were away.';
+  String get appearance_celebration_hearts_hint => '你离开期间收到回复时，会播放爱心动画。';
 
   @override
-  String get appearance_pop_out_companion => 'Pop out companion';
+  String get appearance_pop_out_companion => '弹出伙伴窗口';
 
   @override
   String get appearance_mosskip => 'Mosskip';
@@ -6350,212 +6314,198 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appearance_tideling => 'Tideling';
 
   @override
-  String get appearance_my_hatchling => 'My hatchling';
+  String get appearance_my_hatchling => '我的幼宠';
 
   @override
-  String get appearance_at_rest => 'At rest';
+  String get appearance_at_rest => '休息中';
 
   @override
-  String get appearance_working => 'Working';
+  String get appearance_working => '工作中';
 
   @override
-  String get appearance_thinking => 'Thinking';
+  String get appearance_thinking => '思考中';
 
   @override
-  String get appearance_waiting_for_you => 'Waiting for you';
+  String get appearance_waiting_for_you => '等待你回应';
 
   @override
-  String get appearance_reply_ready => 'Reply ready';
+  String get appearance_reply_ready => '回复已就绪';
 
   @override
-  String get appearance_turn_failed => 'Turn failed';
+  String get appearance_turn_failed => '本轮失败';
 
   @override
-  String get appearance_small => 'Small';
+  String get appearance_small => '小';
 
   @override
-  String get appearance_medium => 'Medium';
+  String get appearance_medium => '中';
 
   @override
-  String get appearance_large => 'Large';
+  String get appearance_large => '大';
 
   @override
-  String get appearance_hello => 'Hello!';
+  String get appearance_hello => '你好！';
 
   @override
-  String get appearance_unread_reply => 'Unread reply';
+  String get appearance_unread_reply => '未读回复';
 
   @override
-  String get appearance_compose => 'Compose';
+  String get appearance_compose => '撰写消息';
 
   @override
-  String get appearance_say_hello => 'Say hello';
+  String get appearance_say_hello => '打个招呼';
 
   @override
-  String get appearance_pet_image_failed =>
-      'Could not open that image. Choose a smaller PNG or JPEG.';
+  String get appearance_pet_image_failed => '无法打开该图片。请选择较小的 PNG 或 JPEG。';
 
   @override
-  String get appearance_pet_companion => 'Pet companion';
+  String get appearance_pet_companion => '宠物伙伴';
 
   @override
-  String get appearance_pet_companion_hint =>
-      'Show a companion while you chat.';
+  String get appearance_pet_companion_hint => '聊天时显示伙伴。';
 
   @override
-  String get appearance_adopt_a_companion => 'Adopt a companion';
+  String get appearance_adopt_a_companion => '领养伙伴';
 
   @override
-  String get appearance_roam_when_idle => 'Roam when idle';
+  String get appearance_roam_when_idle => '空闲时漫游';
 
   @override
-  String get appearance_pet_size => 'Pet size';
+  String get appearance_pet_size => '宠物大小';
 
   @override
-  String get appearance_hatch_from_a_local_picture =>
-      'Hatch from a local picture';
+  String get appearance_hatch_from_a_local_picture => '从本地图片孵化';
 
   @override
   String get appearance_pet_image_limits =>
-      'Choose a PNG or JPEG (up to 4 MiB, 4096 px per side and 8 MP). Preview it first. Hatching saves one 24 × 24 pixel portrait and replaces your previous hatchling.';
+      '请选择 PNG 或 JPEG（最大 4 MiB、单边最多 4096 px、总计最多 8 MP）。请先预览。孵化会保存一张 24 × 24 像素头像，并替换之前的幼宠。';
 
   @override
-  String get appearance_choose_picture => 'Choose picture';
+  String get appearance_choose_picture => '选择图片';
 
   @override
-  String get appearance_hatchling_preview => 'Hatchling preview';
+  String get appearance_hatchling_preview => '幼宠预览';
 
   @override
-  String get appearance_hatch_and_adopt => 'Hatch and adopt';
+  String get appearance_hatch_and_adopt => '孵化并领养';
 
   @override
-  String get appearance_discard_draft => 'Discard draft';
+  String get appearance_discard_draft => '舍弃草稿';
 
   @override
-  String get appearance_forget_saved_hatchling => 'Forget saved hatchling';
+  String get appearance_forget_saved_hatchling => '清除已保存的幼宠';
 
   @override
-  String get appearance_radio => 'Radio';
+  String get appearance_radio => '电台';
 
   @override
   String appearance_radio_hint(String stations) {
-    return 'Streams come straight from $stations and start only when you press Play. Station search stays on this device.';
+    return '音频流直接来自 $stations，仅在你按下播放时开始。电台搜索仅在此设备上进行。';
   }
 
   @override
-  String get appearance_radio_save_failed =>
-      'Radio settings could not be saved.';
+  String get appearance_radio_save_failed => '无法保存电台设置。';
 
   @override
-  String get appearance_choose_a_station => 'Choose a station';
+  String get appearance_choose_a_station => '选择电台';
 
   @override
-  String get appearance_pause_radio => 'Pause radio';
+  String get appearance_pause_radio => '暂停电台';
 
   @override
-  String get appearance_play_radio => 'Play radio';
+  String get appearance_play_radio => '播放电台';
 
   @override
-  String get appearance_next_station => 'Next station';
+  String get appearance_next_station => '下一个电台';
 
   @override
-  String get appearance_radio_trace_semantics =>
-      'Stream activity. Audio levels are unavailable, so this line stays flat.';
+  String get appearance_radio_trace_semantics => '音频流活动。无法获取音量电平，因此此线保持平直。';
 
   @override
-  String get appearance_radio_is_off => 'Radio is off';
+  String get appearance_radio_is_off => '电台已关闭';
 
   @override
-  String get appearance_paused => 'Paused';
+  String get appearance_paused => '已暂停';
 
   @override
-  String get appearance_connecting => 'Connecting…';
+  String get appearance_connecting => '连接中…';
 
   @override
-  String get appearance_live => 'Live';
+  String get appearance_live => '直播中';
 
   @override
-  String get appearance_stream_unavailable => 'Stream unavailable';
+  String get appearance_stream_unavailable => '音频流不可用';
 
   @override
   String appearance_now_playing(String credit) {
-    return 'Now playing: $credit';
+    return '正在播放：$credit';
   }
 
   @override
-  String get appearance_audio_only_waveform_unavailable =>
-      'Audio only · waveform unavailable';
+  String get appearance_audio_only_waveform_unavailable => '仅音频 · 波形不可用';
 
   @override
-  String get appearance_volume => 'Volume';
+  String get appearance_volume => '音量';
 
   @override
-  String get appearance_search_presets => 'Search presets';
+  String get appearance_search_presets => '搜索预设';
 
   @override
-  String get appearance_no_stations_found => 'No stations found';
+  String get appearance_no_stations_found => '未找到电台';
 
   @override
   String appearance_unpin_station(String station) {
-    return 'Unpin station: $station';
+    return '取消置顶电台：$station';
   }
 
   @override
   String appearance_pin_station(String station) {
-    return 'Pin station: $station';
+    return '置顶电台：$station';
   }
 
   @override
   String get appearance_radio_picker_metadata_notice =>
-      'While this picker is open, playing stations may share track details directly from the broadcaster.';
+      '此选择器打开期间，正在播放的电台可能会直接从广播方提供曲目详情。';
 
   @override
-  String get appearance_message_from_your_companion =>
-      'Message from your companion';
+  String get appearance_message_from_your_companion => '来自伙伴的消息';
 
   @override
-  String get appearance_send_to_the_open_chat => 'Send to the open chat';
+  String get appearance_send_to_the_open_chat => '发送到当前打开的聊天';
 
   @override
-  String get appearance_tour_theme_body =>
-      'Import a VS Code colour theme from a file on this device, then choose which variant to keep.';
+  String get appearance_tour_theme_body => '从此设备上的文件导入 VS Code 颜色主题，再选择要保留的变体。';
 
   @override
-  String get appearance_tour_fonts_title => 'Reading fonts';
+  String get appearance_tour_fonts_title => '阅读字体';
 
   @override
-  String get appearance_tour_fonts_body =>
-      'Chat prose and terminal code use separate faces shipped with Ares.';
+  String get appearance_tour_fonts_body => '聊天正文和终端代码分别使用 Ares 内置的不同字体。';
 
   @override
-  String get appearance_tour_direction_title => 'Transcript direction';
+  String get appearance_tour_direction_title => '对话文字方向';
 
   @override
-  String get appearance_tour_direction_body =>
-      'Leave this on automatic, or force the transcript left to right or right to left.';
+  String get appearance_tour_direction_body => '保持自动，或强制对话文字从左到右或从右到左。';
 
   @override
-  String get appearance_tour_pet_title => 'Companion';
+  String get appearance_tour_pet_title => '伙伴';
 
   @override
-  String get appearance_tour_pet_body =>
-      'The companion is off until you adopt one. Pop-out adds a small composer.';
+  String get appearance_tour_pet_body => '领养前，伙伴功能保持关闭。弹出窗口会附带一个小型消息输入框。';
 
   @override
-  String get appearance_tour_radio_body =>
-      'Radio stays off until you enable it. Play is what opens a stream.';
+  String get appearance_tour_radio_body => '启用前，电台保持关闭。按下播放才会打开音频流。';
 
   @override
-  String get appearance_tip_theme =>
-      'Imported themes replace the built-in palette until you clear the selection. Only the colours are kept.';
+  String get appearance_tip_theme => '导入的主题会替换内置配色，直到你清除所选主题。仅保留颜色。';
 
   @override
-  String get appearance_tip_pet =>
-      'The companion stores one small portrait on this device. It does not upload the picture you hatch from.';
+  String get appearance_tip_pet => '伙伴仅在此设备上保存一张小头像，不会上传用于孵化的图片。';
 
   @override
   String get appearance_theme_import_failed =>
-      'Could not import that theme. Choose a VS Code colour theme saved as a .vsix, .json or .jsonc file.';
+      '无法导入该主题。请选择以 .vsix、.json 或 .jsonc 文件保存的 VS Code 颜色主题。';
 
   @override
   String get render_widget_file_truncated => '只读取了此文件的开头部分，因此小组件可能不完整。';
@@ -9234,6 +9184,2320 @@ class AppLocalizationsZh extends AppLocalizations {
   String ng_bots_section_toggle(String name) {
     return '显示或隐藏“$name”';
   }
+
+  @override
+  String
+  get release_core_transcript_reader_this_passage_is_no_longer_in_the_loaded =>
+      '这段内容已不在当前加载的范围内。';
+
+  @override
+  String get release_core_transcript_reader_loaded_prompts => '已加载的提示词';
+
+  @override
+  String get release_core_transcript_reader_jump_to_latest => '跳至最新内容';
+
+  @override
+  String get release_core_transcript_reader_no_prompts_loaded => '未加载提示词';
+
+  @override
+  String get release_core_transcript_reader_find_in_loaded_messages =>
+      '在已加载的消息中查找';
+
+  @override
+  String get release_core_transcript_reader_previous_match => '上一个匹配项';
+
+  @override
+  String get release_core_transcript_reader_next_match => '下一个匹配项';
+
+  @override
+  String get release_core_transcript_reader_prompt_timeline => '提示词时间线';
+
+  @override
+  String get release_core_transcript_reader_close_find => '关闭查找';
+
+  @override
+  String get release_core_session_organisation_organise_chats => '整理聊天';
+
+  @override
+  String get release_core_session_organisation_show_model_and_usage =>
+      '显示模型和用量';
+
+  @override
+  String
+  get release_core_session_files_view_connection_changed_reopen_files_on_the_new_connection =>
+      '连接已更改。请通过新连接重新打开文件。';
+
+  @override
+  String
+  get release_core_session_files_view_the_connection_or_session_changed_reopen_this_pane =>
+      '连接或会话已更改。请重新打开此面板。';
+
+  @override
+  String
+  get release_core_session_files_view_no_verified_host_working_directory_for_this_session =>
+      '此会话没有经验证的主机工作目录。';
+
+  @override
+  String
+  get release_core_session_files_view_the_gateway_denied_this_operation =>
+      '网关拒绝了此操作。';
+
+  @override
+  String
+  get release_core_session_files_view_this_gateway_does_not_support_this_operation =>
+      '此网关不支持此操作。';
+
+  @override
+  String
+  get release_core_session_files_view_the_file_owner_or_working_directory_changed_reload =>
+      '文件、所有者或工作目录已更改。请重新加载并检查。';
+
+  @override
+  String
+  get release_core_session_files_view_the_gateway_returned_an_unsafe_path_or_invalid =>
+      '网关返回了不安全的路径或无效的文件响应。';
+
+  @override
+  String
+  get release_core_session_files_view_workspace_access_requires_a_secure_gateway_connection =>
+      '访问工作区需要安全的网关连接。';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_unavailable_refresh_to_check_the_current_state =>
+      '网关不可用。请刷新以查看当前状态。';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_operation_could_not_be_confirmed =>
+      '无法确认网关操作。';
+
+  @override
+  String get release_core_session_files_view_git_status_unavailable =>
+      '无法获取 Git 状态。';
+
+  @override
+  String
+  get release_core_session_files_view_change_this_chat_s_working_directory =>
+      '更改此聊天的工作目录？';
+
+  @override
+  String get release_core_session_files_view_absolute_gateway_directory =>
+      '网关目录的绝对路径';
+
+  @override
+  String get release_core_session_files_view_change_directory => '更改目录';
+
+  @override
+  String get release_core_session_files_view_replace_gateway_file =>
+      '替换网关上的文件？';
+
+  @override
+  String
+  release_core_session_files_view_only_if_the_file_still_matches_the_version(
+    String path,
+  ) {
+    return '$path\n\n仅当文件仍与已检查的版本一致时才会替换。兼容的主机会保留被替换的文件，以便恢复。';
+  }
+
+  @override
+  String get release_core_session_files_view_save_changes => '保存更改';
+
+  @override
+  String
+  get release_core_session_files_view_saved_and_verified_on_the_gateway =>
+      '已在网关上保存并验证。';
+
+  @override
+  String
+  get release_core_session_files_view_guarded_saving_is_unavailable_on_this_gateway_your =>
+      '此网关不提供受保护的保存功能。你的草稿仍在。';
+
+  @override
+  String
+  release_core_session_files_view_save_was_not_confirmed_your_draft_is_still(
+    String reason,
+  ) {
+    return '$reason 保存未获确认。你的草稿仍在。';
+  }
+
+  @override
+  String get release_core_session_files_view_review_current_gateway_version =>
+      '检查网关上的当前版本';
+
+  @override
+  String get release_core_session_files_view_discard_draft_and_reload =>
+      '丢弃草稿并重新加载';
+
+  @override
+  String get release_core_session_files_view_keep_draft_against_this_version =>
+      '基于此版本保留草稿';
+
+  @override
+  String get release_core_session_files_view_discard_unsaved_edits =>
+      '丢弃未保存的编辑？';
+
+  @override
+  String get release_core_session_files_view_keep_editing => '继续编辑';
+
+  @override
+  String get release_core_session_files_view_discard_edits => '丢弃编辑';
+
+  @override
+  String get release_core_session_files_view_remote_working_directory =>
+      '远程工作目录';
+
+  @override
+  String get release_core_session_files_view_change_working_directory =>
+      '更改工作目录';
+
+  @override
+  String get release_core_session_files_view_show_ignored_files => '显示已忽略的文件';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_does_not_report_ignored_status =>
+      '网关未报告忽略状态。';
+
+  @override
+  String get release_core_session_files_view_no_visible_entries => '无可见条目';
+
+  @override
+  String get release_core_session_files_view_changed => '已更改';
+
+  @override
+  String get release_core_session_files_view_ignored => '已忽略';
+
+  @override
+  String release_core_session_files_view_actions_for(String name) {
+    return '$name 的操作';
+  }
+
+  @override
+  String get release_core_session_files_view_copy_relative_path => '复制相对路径';
+
+  @override
+  String get release_core_session_files_view_copy_gateway_path => '复制网关路径';
+
+  @override
+  String get release_core_session_files_view_attach_folder_reference =>
+      '附加文件夹引用';
+
+  @override
+  String get release_core_session_files_view_attach_file_reference => '附加文件引用';
+
+  @override
+  String
+  get release_core_session_files_view_preview_truncated_editing_disabled =>
+      '预览已截断，编辑已禁用。';
+
+  @override
+  String get release_core_session_files_view_select_lines => '选择行';
+
+  @override
+  String get release_core_session_files_view_review_gateway_version =>
+      '检查网关上的版本';
+
+  @override
+  String get release_core_session_files_view_attach_selected_lines => '附加所选行';
+
+  @override
+  String get release_core_session_files_view_binary_file_no_text_preview =>
+      '二进制文件，无文本预览。';
+
+  @override
+  String get release_core_session_files_view_file_source => '文件来源';
+
+  @override
+  String get release_core_session_files_view_close_session_files => '关闭会话文件';
+
+  @override
+  String get release_core_session_files_view_back_to_tree => '返回文件树';
+
+  @override
+  String get release_core_session_files_view_session_files => '会话文件';
+
+  @override
+  String get release_core_session_files_view_git_review => 'Git 审查';
+
+  @override
+  String get release_core_session_files_view_refresh_tree => '刷新文件树';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_this_connection_changed_reopen_its_chat =>
+      '此连接已更改。请重新打开对应的聊天。';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_disconnected_reconnect_the_chat_then_refresh =>
+      '连接已断开。请重新连接聊天，然后刷新。';
+
+  @override
+  String release_core_gateway_queue_screen_gateway_queue_unavailable(
+    String reason,
+  ) {
+    return '网关队列不可用：$reason。';
+  }
+
+  @override
+  String release_core_gateway_queue_screen_not_confirmed_nothing_was_resent(
+    String reason,
+  ) {
+    return '未获确认（$reason）。未重新发送任何内容。';
+  }
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_confirmed_admission =>
+      '网关已确认接收。';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_edited_entry_admitted_at_the_end_of_the =>
+      '编辑后的条目已被接收并加入队尾。';
+
+  @override
+  String get release_core_gateway_queue_screen_discard_unknown_outcome =>
+      '丢弃结果未知的条目？';
+
+  @override
+  String get release_core_gateway_queue_screen_remove_this_entry => '移除此条目？';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_the_lost_turn_will_not_be_retried_waiting =>
+      '不会重试丢失的轮次。等待中的轮次现在可以运行。';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_if_the_gateway_has_just_started_this_entry =>
+      '如果网关刚开始处理此条目，移除它可能会停止该轮次。';
+
+  @override
+  String get release_core_gateway_queue_screen_keep => '保留';
+
+  @override
+  String get release_core_gateway_queue_screen_discard_and_resume => '丢弃并恢复';
+
+  @override
+  String get release_core_gateway_queue_screen_remove_entry => '移除条目';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_lost_admission_resolved_it_was_not_resent =>
+      '接收确认丢失的问题已解决；未重新发送。';
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_acknowledged_removal =>
+      '网关已确认移除。';
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_queue => '网关队列';
+
+  @override
+  String get release_core_gateway_queue_screen_refresh_queue => '刷新队列';
+
+  @override
+  String get release_core_gateway_queue_screen_queue_paused_unknown_outcome =>
+      '队列已暂停：结果未知';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_review_the_lost_admission_before_resuming_nothing_is =>
+      '请先检查缺失的接收确认，再恢复队列。不会重新发送任何内容。';
+
+  @override
+  String get release_core_gateway_queue_screen_no_pending_admissions =>
+      '无待接收条目';
+
+  @override
+  String get release_core_gateway_queue_screen_discard => '丢弃…';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_gateway_acknowledged_the_steering_request =>
+      '网关已确认引导请求。';
+
+  @override
+  String get release_core_gateway_queue_screen_steer_running_turn =>
+      '引导正在运行的轮次';
+
+  @override
+  String get release_core_gateway_queue_screen_remove => '移除…';
+
+  @override
+  String get release_core_gateway_queue_screen_next_prompt => '下一条提示词';
+
+  @override
+  String get release_core_gateway_queue_screen_edit_queued_prompt =>
+      '编辑排队中的提示词';
+
+  @override
+  String get release_core_gateway_queue_screen_submit_to_gateway_queue =>
+      '提交到网关队列';
+
+  @override
+  String get release_core_gateway_queue_screen_save_at_queue_end => '保存到队尾';
+
+  @override
+  String get release_core_gateway_queue_screen_cancel_edit => '取消编辑';
+
+  @override
+  String get release_core_git_review_pane_the_git_operation_did_not_complete =>
+      'Git 操作未完成。';
+
+  @override
+  String get release_core_git_review_pane_close_git_review => '关闭 Git 审查';
+
+  @override
+  String get release_core_git_review_pane_pin_lane => '固定泳道';
+
+  @override
+  String get release_core_git_review_pane_refresh_git_review => '刷新 Git 审查';
+
+  @override
+  String get release_core_git_review_pane_uncommitted => '未提交';
+
+  @override
+  String get release_core_git_review_pane_last_turn => '上一轮';
+
+  @override
+  String
+  get release_core_git_review_pane_branch_and_last_turn_views_are_read_only =>
+      '分支和上一轮视图均为只读。';
+
+  @override
+  String get release_core_git_review_pane_mark_head_as_the_turn_baseline =>
+      '将 HEAD 标记为轮次基准';
+
+  @override
+  String get release_core_git_review_pane_stage_all => '暂存全部';
+
+  @override
+  String get release_core_git_review_pane_discard_every_uncommitted_change =>
+      '丢弃所有未提交的更改？';
+
+  @override
+  String
+  get release_core_git_review_pane_tracked_files_return_to_head_and_untracked_files =>
+      '已跟踪文件将恢复到 HEAD，此会话目录中未跟踪的文件将被移除。';
+
+  @override
+  String get release_core_git_review_pane_discard => '丢弃';
+
+  @override
+  String get release_core_git_review_pane_discard_all => '全部丢弃';
+
+  @override
+  String get release_core_git_review_pane_unstage => '取消暂存';
+
+  @override
+  String get release_core_git_review_pane_stage => '暂存';
+
+  @override
+  String get release_core_git_review_pane_discard_file => '丢弃文件';
+
+  @override
+  String release_core_git_review_pane_discard_2(String path) {
+    return '丢弃 $path？';
+  }
+
+  @override
+  String
+  get release_core_git_review_pane_this_restores_the_committed_copy_or_removes_the =>
+      '这会恢复已提交的副本，或移除未跟踪的文件。';
+
+  @override
+  String get release_core_git_review_pane_commit_message => '提交说明';
+
+  @override
+  String get release_core_git_review_pane_nothing_in_the_diff_to_summarise =>
+      '差异中没有可供总结的内容。';
+
+  @override
+  String get release_core_git_review_pane_generate_message => '生成提交说明';
+
+  @override
+  String get release_core_git_review_pane_commit => '提交';
+
+  @override
+  String get release_core_git_review_pane_commit_and_push => '提交并推送';
+
+  @override
+  String get release_core_git_review_pane_push => '推送';
+
+  @override
+  String get release_core_git_review_pane_create_pull_request => '创建拉取请求';
+
+  @override
+  String get release_core_git_review_pane_pull_request_ready => '拉取请求已就绪';
+
+  @override
+  String get release_core_git_review_pane_ask_hermes_to_ship => '请 Hermes 完成发布';
+
+  @override
+  String get release_core_git_review_pane_gh_is_authenticated_on_this_gateway =>
+      'gh 已在此网关上通过身份验证。';
+
+  @override
+  String
+  get release_core_git_review_pane_install_the_github_cli_gh_and_sign_in =>
+      '安装 GitHub CLI（gh）并登录，即可创建拉取请求';
+
+  @override
+  String get release_core_git_review_pane_worktrees => '工作树';
+
+  @override
+  String get release_core_git_review_pane_main => '主工作树';
+
+  @override
+  String release_core_git_review_pane_follow(String branch) {
+    return '跟随 $branch？';
+  }
+
+  @override
+  String
+  get release_core_git_review_pane_the_session_working_directory_becomes_this_worktree_unless =>
+      '除非泳道已固定，否则会话工作目录将切换为此工作树。';
+
+  @override
+  String get release_core_git_review_pane_follow_2 => '跟随';
+
+  @override
+  String release_core_git_review_pane_remove(String branch) {
+    return '移除 $branch？';
+  }
+
+  @override
+  String get release_core_git_review_pane_the_worktree_directory_is_removed =>
+      '工作树目录将被移除。';
+
+  @override
+  String get release_core_git_review_pane_remove_2 => '移除';
+
+  @override
+  String get release_core_git_review_pane_new_worktree_name => '新工作树名称';
+
+  @override
+  String get release_core_git_review_pane_new_branch => '新分支';
+
+  @override
+  String get release_core_git_review_pane_base_branch => '基础分支';
+
+  @override
+  String get release_core_git_review_pane_create_worktree => '创建工作树';
+
+  @override
+  String get release_core_git_review_pane_existing_branch => '现有分支';
+
+  @override
+  String get release_core_git_review_pane_convert_branch_to_worktree =>
+      '将分支转换为工作树';
+
+  @override
+  String get release_core_git_review_pane_switch_branch => '切换分支';
+
+  @override
+  String
+  get release_core_git_review_pane_this_gateway_does_not_support_that_git_operation =>
+      '此网关不支持该 Git 操作。';
+
+  @override
+  String
+  get release_core_git_review_pane_git_needs_the_session_directory_on_the_local =>
+      'Git 需要会话目录位于本地终端后端。';
+
+  @override
+  String
+  get release_core_git_review_pane_the_gateway_refused_the_git_operation =>
+      '网关拒绝了 Git 操作。';
+
+  @override
+  String
+  get release_core_git_review_pane_the_session_changed_refresh_and_try_again =>
+      '会话已更改。请刷新后重试。';
+
+  @override
+  String
+  get release_core_git_review_pane_this_review_is_no_longer_the_selected_session =>
+      '此审查已不再对应当前选中的会话。';
+
+  @override
+  String
+  get release_core_git_review_pane_the_gateway_returned_an_unexpected_git_result =>
+      '网关返回了意外的 Git 结果。';
+
+  @override
+  String
+  get release_core_git_review_pane_git_review_requires_the_gateway_transport =>
+      'Git 审查需要通过网关传输。';
+
+  @override
+  String get release_core_client_held_queue_bar_resume => '恢复';
+
+  @override
+  String get release_core_client_held_queue_bar_send_queued_prompt =>
+      '发送排队中的提示词';
+
+  @override
+  String get release_core_client_held_queue_bar_edit_unsent_prompt =>
+      '编辑未发送的提示词';
+
+  @override
+  String get release_core_client_held_queue_bar_remove_unsent_prompt =>
+      '移除未发送的提示词';
+
+  @override
+  String get release_core_workspace_discovery_view_repository_discovery =>
+      '仓库发现';
+
+  @override
+  String get release_core_workspace_discovery_view_refresh_results => '刷新结果';
+
+  @override
+  String release_core_workspace_discovery_view_hide(String path) {
+    return '隐藏 $path';
+  }
+
+  @override
+  String
+  get release_core_workspace_discovery_view_invalid_path_or_discovery_data_use_absolute_server =>
+      '路径或发现数据无效。请使用不含 . 或 .. 路径段的服务器绝对路径。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_this_gateway_does_not_support_repository_discovery =>
+      '此网关不支持仓库发现。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_gateway_denied_access_to_repository_discovery =>
+      '网关拒绝访问仓库发现功能。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_connection_changed_reopen_discovery_on_the_current =>
+      '连接已更改。请在当前网关上重新打开仓库发现。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_displayed_settings_have_changed_refresh_before_trying =>
+      '显示的设置已更改。请刷新后重试。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_could_not_load_or_verify_discovery_settings_refresh =>
+      '无法加载或验证发现设置。请刷新以重试。';
+
+  @override
+  String release_core_workspace_discovery_view_repositories_shown_of(
+    int visible,
+    int total,
+  ) {
+    return '已显示仓库：$visible / $total';
+  }
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_gateway_returned_no_repositories =>
+      '网关未返回任何仓库。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_no_repositories_match_your_device_filters =>
+      '没有仓库符合此设备上的筛选条件。';
+
+  @override
+  String get release_core_workspace_discovery_view_gateway_scan_policy =>
+      '网关扫描策略';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_this_gateway_did_not_report_a_scan_policy =>
+      '此网关未报告扫描策略。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_to_scan_folders_configure_repository_scanning_in_the =>
+      '要扫描文件夹，请在网关配置档案的桌面设置中配置仓库扫描。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_results_can_include_cached_repositories_and_repositories_with =>
+      '结果可能包含已缓存的仓库及有关联会话的仓库。扫描并不保证遍历了每个文件夹。';
+
+  @override
+  String get release_core_workspace_discovery_view_scan_gateway_roots =>
+      '扫描网关根目录';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_filter_results_on_this_device =>
+      '在此设备上筛选结果';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_only_this_discovery_list_changes_not_the_gateway =>
+      '仅更改此发现列表，不影响网关扫描。';
+
+  @override
+  String get release_core_workspace_discovery_view_include_subtrees_empty_all =>
+      '包含的子目录树（留空表示全部）';
+
+  @override
+  String get release_core_workspace_discovery_view_exclude_subtrees =>
+      '排除的子目录树';
+
+  @override
+  String get release_core_workspace_discovery_view_apply_filters => '应用筛选条件';
+
+  @override
+  String release_core_workspace_discovery_view_hidden_repositories(int count) {
+    return '隐藏的仓库（$count）';
+  }
+
+  @override
+  String get release_core_workspace_discovery_view_undo_hide => '撤销隐藏';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_one_absolute_server_path_per_line =>
+      '每行一个服务器绝对路径';
+
+  @override
+  String get release_core_project_settings_view_project_settings => '项目设置';
+
+  @override
+  String
+  get release_core_project_settings_view_the_gateway_did_not_confirm_the_selected_project =>
+      '网关未确认所选项目或更改。请检查设置后重试。';
+
+  @override
+  String
+  get release_core_project_settings_view_could_not_verify_these_settings_use_one_absolute =>
+      '无法验证这些设置。请每行填写一个服务器文件夹的绝对路径，且不含 . 或 .. 路径段。';
+
+  @override
+  String get release_core_project_settings_view_set_active => '设为活动项目';
+
+  @override
+  String get release_core_project_settings_view_icon => '图标';
+
+  @override
+  String get release_core_project_settings_view_folder => '文件夹';
+
+  @override
+  String get release_core_project_settings_view_repository => '仓库';
+
+  @override
+  String get release_core_project_settings_view_rocket => '火箭';
+
+  @override
+  String get release_core_project_settings_view_star => '星星';
+
+  @override
+  String get release_core_project_settings_view_book => '书籍';
+
+  @override
+  String get release_core_project_settings_view_terminal => '终端';
+
+  @override
+  String get release_core_project_settings_view_colour => '颜色';
+
+  @override
+  String get release_core_project_settings_view_primary_folder => '主文件夹';
+
+  @override
+  String get release_core_project_settings_view_server_folder_paths =>
+      '服务器文件夹路径';
+
+  @override
+  String
+  get release_core_project_settings_view_one_absolute_path_per_line_existing_folders_are =>
+      '每行一个绝对路径。现有文件夹将保留。';
+
+  @override
+  String get release_core_project_settings_view_add_folders => '添加文件夹';
+
+  @override
+  String release_core_project_settings_view_choose(String label) {
+    return '选择$label';
+  }
+
+  @override
+  String
+  get release_core_prepared_image_recovery_wait_for_an_empty_draft_before_restoring =>
+      '请等草稿为空后再恢复。';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_no_unacknowledged_image_drafts_in_this_chat =>
+      '此聊天中没有未获接收确认的图片草稿。';
+
+  @override
+  String get release_core_prepared_image_recovery_unacknowledged_image_drafts =>
+      '未获接收确认的图片草稿';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_the_gateway_may_already_have_received_these_restore =>
+      '网关可能已收到这些内容。恢复后可查看，不会发送任何内容。';
+
+  @override
+  String get release_core_prepared_image_recovery_image_draft => '图片草稿';
+
+  @override
+  String get release_core_prepared_image_recovery_discard_local_copy =>
+      '丢弃本地副本';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_discard_this_local_image_draft =>
+      '丢弃此本地图片草稿？';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_image_draft_recovery_is_unavailable =>
+      '图片草稿恢复功能不可用。';
+
+  @override
+  String get release_core_prepared_image_recovery_recover_image_draft =>
+      '恢复图片草稿…';
+
+  @override
+  String get release_core_session_search_mode_menu_could_not_save_search_mode =>
+      '无法保存搜索模式。';
+
+  @override
+  String get release_core_projects_pane_discover_repositories => '发现仓库';
+
+  @override
+  String
+  get release_core_projects_pane_project_created_but_the_gateway_did_not_confirm =>
+      '项目已创建，但网关未确认项目构想。';
+
+  @override
+  String get release_core_projects_pane_project_idea_optional => '项目构想（可选）';
+
+  @override
+  String
+  get release_core_projects_pane_saved_in_the_project_description_not_a_file =>
+      '保存在项目描述中，而非文件中。';
+
+  @override
+  String get release_core_project_detail_screen_new_chat_in_this_lane =>
+      '在此泳道中新建聊天';
+
+  @override
+  String get release_core_project_detail_screen_review_git => '审查 Git 更改';
+
+  @override
+  String get release_core_more_pane_gateway_fleet => '网关集群';
+
+  @override
+  String
+  get release_core_more_pane_connected_sessions_hermes_cloud_and_desktop_webapp =>
+      '已连接的会话、Hermes Cloud 和桌面网页应用';
+
+  @override
+  String get release_core_more_pane_use_dashboard_sign_in_for_a_named_profile =>
+      '请通过仪表盘登录指定的配置档案。此旧版 API 无法确认聊天记录属于哪个配置档案。';
+
+  @override
+  String get release_core_more_pane_capabilities => '功能';
+
+  @override
+  String
+  get release_core_more_pane_install_and_govern_skills_plugins_connectors_and_tool =>
+      '安装和管理技能、插件、连接器及工具后端';
+
+  @override
+  String get release_core_more_pane_browser_vault => '浏览器保险库';
+
+  @override
+  String
+  get release_core_more_pane_site_logins_addresses_cards_and_credential_sources =>
+      '网站登录信息、地址、银行卡和凭据来源';
+
+  @override
+  String get release_core_more_pane_agent_policy => '智能体策略';
+
+  @override
+  String
+  get release_core_more_pane_approvals_checkpoints_browser_access_and_shared_metrics =>
+      '审批、检查点、浏览器访问和共享指标';
+
+  @override
+  String get release_core_more_pane_remote_logs_health_maintenance_and_update =>
+      '远程日志、健康状态、维护和更新';
+
+  @override
+  String get release_core_more_pane_schedules => '计划任务';
+
+  @override
+  String get release_core_more_pane_all_profiles_blueprints_catch_up_and_stop =>
+      '所有配置档案、蓝图、补跑和停止';
+
+  @override
+  String get release_core_more_pane_memory_graph => '记忆图谱';
+
+  @override
+  String get release_core_more_pane_timeline_edits_and_memory_providers =>
+      '时间线、编辑和记忆提供商';
+
+  @override
+  String get release_core_more_pane_providers_and_routes => '提供商和路由';
+
+  @override
+  String get release_core_more_pane_keys_endpoints_delegation_and_mixtures =>
+      '密钥、端点、委派和混合配置';
+
+  @override
+  String get release_core_more_pane_credits_and_plans => '额度和套餐';
+
+  @override
+  String
+  get release_core_more_pane_consented_nous_billing_when_the_account_allows_it =>
+      '账户允许且经你同意后使用 Nous 计费';
+
+  @override
+  String
+  get release_core_fleet_screen_this_gateway_does_not_offer_this_service =>
+      '此网关不提供此服务。';
+
+  @override
+  String
+  get release_core_fleet_screen_sign_in_or_permission_required_on_this_gateway =>
+      '需要在此网关上登录或取得权限。';
+
+  @override
+  String get release_core_fleet_screen_a_secure_gateway_address_is_required =>
+      '需要安全的网关地址。';
+
+  @override
+  String
+  get release_core_fleet_screen_the_owner_changed_refresh_before_continuing =>
+      '所有者已更改。请刷新后再继续。';
+
+  @override
+  String
+  get release_core_fleet_screen_could_not_verify_the_operation_check_the_gateway =>
+      '无法验证操作。请检查网关并刷新。';
+
+  @override
+  String get release_core_fleet_screen_verified_ssh => '已验证的 SSH';
+
+  @override
+  String
+  get release_core_fleet_screen_confirm_a_host_key_inspect_a_remote_service =>
+      '确认主机密钥、检查远程服务或打开其命令行';
+
+  @override
+  String get release_core_fleet_screen_cloud_and_desktop_webapp => '云端和桌面网页应用';
+
+  @override
+  String get release_core_fleet_screen_register_an_existing_gateway_or_webapp =>
+      '注册现有网关或网页应用';
+
+  @override
+  String
+  get release_core_fleet_screen_sign_in_to_its_address_nothing_is_hosted =>
+      '通过其地址登录。此设备不会托管任何服务。';
+
+  @override
+  String get release_core_fleet_screen_fleet_updates => '网关集群更新';
+
+  @override
+  String get release_core_fleet_screen_refresh_roster => '刷新网关列表';
+
+  @override
+  String release_core_fleet_screen_disconnect(String gateway) {
+    return '断开 $gateway 的连接';
+  }
+
+  @override
+  String get release_core_fleet_screen_open_this_gateway_on_launch =>
+      '启动时打开此网关';
+
+  @override
+  String
+  get release_core_fleet_screen_primary_for_ares_does_not_change_the_last =>
+      '设为 Ares 的主网关；不会更改上次使用的网关。';
+
+  @override
+  String get release_core_fleet_screen_reconnect_in_fleet_on_launch =>
+      '启动时在集群中重新连接';
+
+  @override
+  String get release_core_fleet_screen_no_sessions_for_this_profile =>
+      '此配置档案没有会话。';
+
+  @override
+  String get release_core_fleet_screen_more_sessions => '更多会话';
+
+  @override
+  String get release_core_fleet_screen_this_gateway_was_disconnected =>
+      '此网关已断开连接。';
+
+  @override
+  String
+  get release_core_fleet_screen_some_conversation_data_could_not_be_loaded =>
+      '部分对话数据无法加载。';
+
+  @override
+  String get release_core_fleet_screen_message_this_session => '向此会话发送消息';
+
+  @override
+  String get release_core_fleet_screen_send_to_this_session => '发送到此会话';
+
+  @override
+  String get release_core_fleet_updates_screen_update_these_remote_gateways =>
+      '更新这些远程网关？';
+
+  @override
+  String
+  release_core_fleet_updates_screen_this_can_restart_the_backend_and_interrupt_other(
+    String gateways,
+  ) {
+    return '这可能会重启后端并中断其他用户的使用。不会更新 Ares。\n\n$gateways';
+  }
+
+  @override
+  String get release_core_fleet_updates_screen_update_listed_gateways =>
+      '更新列出的网关';
+
+  @override
+  String
+  get release_core_fleet_updates_screen_checks_connected_gateways_cloud_is_platform_managed_entries =>
+      '检查已连接的网关。云端由平台管理；没有注册来源记录的条目不包含在内。';
+
+  @override
+  String get release_core_fleet_updates_screen_check_connected_gateways =>
+      '检查已连接的网关';
+
+  @override
+  String get release_core_fleet_updates_screen_read_update_receipt => '读取更新回执';
+
+  @override
+  String get release_core_fleet_updates_screen_review_eligible_updates =>
+      '检查符合条件的更新';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_account_changed_reopen_this_page =>
+      '账户已更改。请重新打开此页面。';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_set_the_webapp_s_primary_gateway =>
+      '设置网页应用的主网关？';
+
+  @override
+  String
+  release_core_fleet_webapp_screen_this_changes_the_shared_registry_not_the_last(
+    String webapp,
+    String gateway,
+    String id,
+  ) {
+    return '$webapp → $gateway ($id)\n这会更改共享注册表，而非上次使用的网关。';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_set_primary => '设为主网关';
+
+  @override
+  String get release_core_fleet_webapp_screen_serving_profile => '提供服务的配置档案';
+
+  @override
+  String get release_core_fleet_webapp_screen_hermes_cloud => 'Hermes Cloud';
+
+  @override
+  String get release_core_fleet_webapp_screen_discover_signed_in_agents =>
+      '发现已登录的智能体';
+
+  @override
+  String release_core_fleet_webapp_screen_organisation(String organisation) {
+    return '组织：$organisation';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_no_agents_available =>
+      '没有可用的智能体。';
+
+  @override
+  String get release_core_fleet_webapp_screen_existing_desktop_webapp =>
+      '现有桌面网页应用';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_check_gateway_and_web_access_status =>
+      '检查网关和网页访问状态';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_these_settings_belong_to_the_machine_serving_this =>
+      '这些设置属于为此网页应用提供服务的机器。发布和重启不是远程操作。';
+
+  @override
+  String get release_core_fleet_webapp_screen_read_webapp_gateway_registry =>
+      '读取网页应用的网关注册表';
+
+  @override
+  String get release_core_fleet_webapp_screen_last_used => '上次使用';
+
+  @override
+  String get release_core_fleet_webapp_screen_primary => '主网关';
+
+  @override
+  String release_core_fleet_webapp_screen_set_primary_2(String gateway) {
+    return '设为主网关：$gateway';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_read_shared_display_preferences =>
+      '读取共享显示偏好设置';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_chat_text_direction_on_this_webapp_and_desktop =>
+      '此网页应用及桌面端的聊天文本方向';
+
+  @override
+  String release_core_schedule_desk_screen_created_on(
+    String job,
+    String profile,
+  ) {
+    return '已在 $profile 上创建 $job。';
+  }
+
+  @override
+  String
+  get release_core_schedule_desk_screen_the_list_covers_every_profile_on_this_gateway =>
+      '此列表涵盖此网关上的所有配置档案。停止、暂停、补跑、投递和蓝图操作都会发送到任务所属的配置档案。';
+
+  @override
+  String get release_core_schedule_desk_screen_a_run_is_in_progress => '任务正在运行';
+
+  @override
+  String get release_core_schedule_desk_screen_no_current_run => '当前没有运行中的任务';
+
+  @override
+  String release_core_schedule_desk_screen_stop_requested_for(String job) {
+    return '已请求停止 $job。';
+  }
+
+  @override
+  String release_core_schedule_desk_screen_no_run_was_in_flight_for(
+    String job,
+  ) {
+    return '$job 没有正在运行的任务。';
+  }
+
+  @override
+  String get release_core_schedule_desk_screen_stop_current_run => '停止当前运行';
+
+  @override
+  String get release_core_schedule_desk_screen_pause_future_runs => '暂停后续运行';
+
+  @override
+  String get release_core_schedule_desk_screen_resume_future_runs => '恢复后续运行';
+
+  @override
+  String get release_core_schedule_desk_screen_catch_up_default => '默认补跑方式';
+
+  @override
+  String get release_core_schedule_desk_screen_run_one_missed => '补跑一次错过的任务';
+
+  @override
+  String get release_core_schedule_desk_screen_skip_missed => '跳过错过的任务';
+
+  @override
+  String get release_core_schedule_desk_screen_blueprint_recipes => '蓝图模板';
+
+  @override
+  String get release_core_schedule_desk_screen_profile_for_the_new_job =>
+      '新任务使用的配置档案';
+
+  @override
+  String release_core_schedule_desk_screen_create(String blueprint) {
+    return '创建 $blueprint';
+  }
+
+  @override
+  String get release_core_schedule_desk_screen_loading_delivery_targets =>
+      '正在加载投递目标';
+
+  @override
+  String release_core_schedule_desk_screen_no_home_channel(String target) {
+    return '$target（无默认频道）';
+  }
+
+  @override
+  String release_core_memory_graph_screen_edit(String label) {
+    return '编辑$label';
+  }
+
+  @override
+  String get release_core_memory_graph_screen_content => '内容';
+
+  @override
+  String get release_core_memory_graph_screen_archive_skill => '归档技能';
+
+  @override
+  String get release_core_memory_graph_screen_delete_memory => '删除记忆';
+
+  @override
+  String release_core_memory_graph_screen_archive_on_it_can_be_restored_on_the(
+    String label,
+    String profile,
+  ) {
+    return '将 $profile 上的 $label 归档？可以在主机上使用 Curator 恢复。';
+  }
+
+  @override
+  String release_core_memory_graph_screen_delete_from_this_removes_that_memory(
+    String label,
+    String profile,
+  ) {
+    return '从 $profile 中删除 $label？这会移除该条记忆。';
+  }
+
+  @override
+  String get release_core_memory_graph_screen_filter => '筛选';
+
+  @override
+  String get release_core_memory_graph_screen_timeline => '时间线';
+
+  @override
+  String get release_core_memory_graph_screen_play_timeline => '播放时间线';
+
+  @override
+  String get release_core_memory_graph_screen_layout_code => '布局代码';
+
+  @override
+  String get release_core_memory_graph_screen_external_memory_providers =>
+      '外部记忆提供商';
+
+  @override
+  String
+  get release_core_memory_graph_screen_a_value_is_stored_leave_blank_to_keep =>
+      '已存储一个值。留空即可保留。';
+
+  @override
+  String get release_core_memory_graph_screen_save_provider => '保存提供商';
+
+  @override
+  String release_core_workspace_profiles_screen_applies_to(String profile) {
+    return '适用于：$profile';
+  }
+
+  @override
+  String get release_core_workspace_profiles_screen_choose_another_profile =>
+      '选择其他配置档案';
+
+  @override
+  String
+  get release_core_workspace_profiles_screen_could_not_verify_the_selected_profile_on_this =>
+      '无法在此网关上验证所选配置档案。';
+
+  @override
+  String get release_core_workspace_profiles_screen_create_profile => '创建配置档案';
+
+  @override
+  String get release_core_workspace_profiles_screen_new_profile_id =>
+      '新配置档案 ID';
+
+  @override
+  String get release_core_assets_screen_links => '链接';
+
+  @override
+  String get release_core_workspace_picker_no_matching_items => '没有匹配的项目。';
+
+  @override
+  String get release_core_workspace_picker_save_layout => '保存布局';
+
+  @override
+  String get release_core_workspace_picker_layout_name => '布局名称';
+
+  @override
+  String
+  get release_core_workspace_popout_this_chat_already_has_a_pop_out_window =>
+      '此聊天已有一个独立窗口。';
+
+  @override
+  String
+  get release_core_workspace_popout_could_not_open_this_saved_chat_check_the =>
+      '无法打开此已保存的聊天。请检查连接后重试。';
+
+  @override
+  String
+  get release_core_popout_bootstrap_use_the_main_window_to_change_your_connection =>
+      '请在主窗口中更改连接。';
+
+  @override
+  String get release_core_guarded_save_refused => '网关无法保存此文件';
+
+  @override
+  String get release_core_guarded_save_unavailable => '此网关不提供受保护的保存功能';
+
+  @override
+  String release_core_git_files_changed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '本轮更改了 $count 个文件',
+      one: '本轮更改了 1 个文件',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String release_core_git_entries_omitted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '因无法安全显示，已省略 $count 个 Git 条目。',
+      one: '因无法安全显示，已省略 1 个 Git 条目。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get release_core_git_staged => '已暂存';
+
+  @override
+  String get release_core_session_sort_recent => '最近活动';
+
+  @override
+  String get release_core_session_sort_created => '最新创建';
+
+  @override
+  String get release_core_session_sort_status => '运行中的优先';
+
+  @override
+  String get release_core_session_sort_tokens => '令牌最多';
+
+  @override
+  String get release_core_session_sort_cost => '费用最高';
+
+  @override
+  String get release_core_session_group_standard => '默认分组';
+
+  @override
+  String get release_core_session_group_status => '按状态分组';
+
+  @override
+  String get release_core_session_group_project => '按项目分组';
+
+  @override
+  String release_core_session_tokens(int count) {
+    return '$count 个令牌';
+  }
+
+  @override
+  String release_core_search_gateway_mode(String mode) {
+    return '$mode（网关）';
+  }
+
+  @override
+  String release_core_search_mode_tooltip(String label, String mode) {
+    return '$label：$mode';
+  }
+
+  @override
+  String get release_core_image_recovery_new_turn => '发送会创建新的轮次';
+
+  @override
+  String release_core_image_recovery_metadata(int count, String date) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 张图片 · $date',
+      one: '1 张图片 · $date',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String release_core_discovery_scanning(String state) {
+    return '扫描：$state';
+  }
+
+  @override
+  String get release_core_discovery_enabled => '已启用';
+
+  @override
+  String get release_core_discovery_disabled => '已禁用';
+
+  @override
+  String get release_core_discovery_none => '无';
+
+  @override
+  String release_core_discovery_roots(String paths) {
+    return '扫描根目录：$paths';
+  }
+
+  @override
+  String release_core_discovery_excluded(String paths) {
+    return '排除的子目录树：$paths';
+  }
+
+  @override
+  String release_core_discovery_repository_sessions(String path, int count) {
+    return '$path\n会话数：$count';
+  }
+
+  @override
+  String get release_core_projects_local_only =>
+      '此 Hermes 网关版本较旧，不支持服务器端项目，因此聊天分组仅保留在此设备上。请更新 Hermes，以便在各设备间共享相同的项目。';
+
+  @override
+  String get release_core_fleet_no_address => '尚无网关地址';
+
+  @override
+  String release_core_fleet_diagnostics(String version, String access) {
+    return '网关 $version · $access';
+  }
+
+  @override
+  String get release_core_schedule_builtin => '内置';
+
+  @override
+  String get release_core_memory_gateway_profile => '网关';
+
+  @override
+  String release_core_memory_profile_summary(String profile, String gateway) {
+    return '$gateway 上的配置档案 $profile。分享代码仅存储缩放、时间和筛选条件。';
+  }
+
+  @override
+  String release_core_memory_layers_summary(
+    int memoryBytes,
+    int userBytes,
+    String provider,
+  ) {
+    return '内置记忆 $memoryBytes 字节，用户信息 $userBytes 字节。当前提供商为 $provider。';
+  }
+
+  @override
+  String get release_core_memory_kind_all => '全部';
+
+  @override
+  String get release_core_memory_kind_skill => '技能';
+
+  @override
+  String get release_core_memory_kind_memory => '记忆';
+
+  @override
+  String get release_core_workspace_failure_stale => '连接已更改';
+
+  @override
+  String get release_core_workspace_failure_unbound => '无经验证的工作目录';
+
+  @override
+  String get release_core_workspace_failure_denied => '权限被拒绝';
+
+  @override
+  String get release_core_workspace_failure_ineligible => '不允许对此文件执行该操作';
+
+  @override
+  String get release_core_workspace_failure_unsupported => '此网关不支持';
+
+  @override
+  String get release_core_workspace_failure_mismatch => '远程状态已更改';
+
+  @override
+  String get release_core_workspace_failure_invalid => '网关响应无效';
+
+  @override
+  String get release_core_workspace_failure_insecure => '需要安全连接';
+
+  @override
+  String get release_core_workspace_failure_unavailable => '网关不可用';
+
+  @override
+  String get release_core_queue_state_queued => '已排队';
+
+  @override
+  String get release_core_queue_state_started => '已开始';
+
+  @override
+  String get release_core_queue_state_unknown => '结果未知';
+
+  @override
+  String get release_core_unknown_state => '未知';
+
+  @override
+  String get release_core_fleet_state_idle => '离线';
+
+  @override
+  String get release_core_fleet_state_connected => '已连接';
+
+  @override
+  String get release_core_fleet_state_reconnecting => '正在重新连接…';
+
+  @override
+  String get release_core_fleet_state_sessionExpired => '已退出登录';
+
+  @override
+  String get release_core_fleet_state_failed => '连接失败';
+
+  @override
+  String release_core_workspace_operation_failed(String reason) {
+    return '无法确认网关操作：$reason。';
+  }
+
+  @override
+  String get release_core_workspace_invalid_data => '无法验证数据或输入。请检查后重试。';
+
+  @override
+  String
+  get release_core_parallel_workspace_layout_changed_in_this_window_but_could_not =>
+      '此窗口中的布局已更改，但无法保存。';
+
+  @override
+  String get release_core_parallel_workspace_first_pane => '第一个面板';
+
+  @override
+  String get release_core_parallel_workspace_second_pane => '第二个面板';
+
+  @override
+  String get release_core_parallel_workspace_unavailable_page => '页面不可用';
+
+  @override
+  String release_core_parallel_workspace_close_a_tab_first_maximum(
+    String maximum,
+  ) {
+    return '请先关闭一个标签页（最多 $maximum 个）。';
+  }
+
+  @override
+  String get release_core_parallel_workspace_dock_beside_current_pane =>
+      '停靠在当前面板旁';
+
+  @override
+  String get release_core_parallel_workspace_add_chat => '添加聊天';
+
+  @override
+  String
+  get release_core_parallel_workspace_action_failed_check_the_connection_and_try_again =>
+      '操作失败。请检查连接后重试。';
+
+  @override
+  String
+  get release_core_parallel_workspace_close_a_tab_before_reopening_another =>
+      '请先关闭一个标签页，再重新打开另一个。';
+
+  @override
+  String release_core_parallel_workspace_replace_layout(String name) {
+    return '替换布局“$name”？';
+  }
+
+  @override
+  String
+  get release_core_parallel_workspace_layout_limit_reached_replace_an_existing_layout =>
+      '已达布局数量上限。请替换现有布局。';
+
+  @override
+  String get release_core_parallel_workspace_restore_layout => '恢复布局';
+
+  @override
+  String get release_core_parallel_workspace_workspace_options => '工作区选项';
+
+  @override
+  String get release_core_parallel_workspace_dock_another_pane => '停靠另一个面板';
+
+  @override
+  String get release_core_parallel_workspace_swap_panes => '交换面板';
+
+  @override
+  String get release_core_parallel_workspace_undock_second_pane => '取消停靠第二个面板';
+
+  @override
+  String get release_core_parallel_workspace_arrange_side_by_side => '左右排列';
+
+  @override
+  String get release_core_parallel_workspace_arrange_top_to_bottom => '上下排列';
+
+  @override
+  String release_core_parallel_workspace_change_split_size(String percent) {
+    return '调整分割比例（$percent%）';
+  }
+
+  @override
+  String get release_core_parallel_workspace_focus_pane_full_screen => '全屏聚焦面板';
+
+  @override
+  String get release_core_parallel_workspace_open_chat_in_new_window =>
+      '在新窗口中打开聊天';
+
+  @override
+  String get release_core_parallel_workspace_hide_pane_keep_running =>
+      '隐藏面板（保持运行）';
+
+  @override
+  String get release_core_parallel_workspace_previous_tab => '上一个标签页';
+
+  @override
+  String get release_core_parallel_workspace_next_tab => '下一个标签页';
+
+  @override
+  String get release_core_parallel_workspace_move_tab_left => '向左移动标签页';
+
+  @override
+  String get release_core_parallel_workspace_move_tab_right => '向右移动标签页';
+
+  @override
+  String get release_core_parallel_workspace_reload_current_tab => '重新加载当前标签页';
+
+  @override
+  String get release_core_parallel_workspace_close_tab => '关闭标签页';
+
+  @override
+  String get release_core_parallel_workspace_close_other_tabs => '关闭其他标签页';
+
+  @override
+  String get release_core_parallel_workspace_close_tabs_to_the_right =>
+      '关闭右侧标签页';
+
+  @override
+  String get release_core_parallel_workspace_close_all_tabs => '关闭所有标签页';
+
+  @override
+  String get release_core_parallel_workspace_reopen_closed_tab => '重新打开已关闭的标签页';
+
+  @override
+  String get release_core_parallel_workspace_save_named_layout => '保存命名布局';
+
+  @override
+  String get release_core_parallel_workspace_restore_named_layout => '恢复命名布局';
+
+  @override
+  String get release_core_parallel_workspace_refresh_chat_list => '刷新聊天列表';
+
+  @override
+  String get release_core_parallel_workspace_workspace_tools => '工作区工具';
+
+  @override
+  String get release_core_parallel_workspace_choose_a_chat_for_this_pane =>
+      '为此面板选择聊天';
+
+  @override
+  String release_core_parallel_workspace_choose_chat_for(String pane) {
+    return '为$pane选择聊天';
+  }
+
+  @override
+  String get release_core_parallel_workspace_add_a_chat_to_start_a_workspace =>
+      '添加聊天以开始使用工作区。';
+
+  @override
+  String get release_core_parallel_workspace_select_a_tab_to_show_its_pane =>
+      '选择一个标签页以显示对应的面板。';
+
+  @override
+  String get release_core_parallel_workspace_parallel_workspace => '并行工作区';
+
+  @override
+  String get release_core_parallel_workspace_show_workspace => '显示工作区';
+
+  @override
+  String get release_core_parallel_workspace_could_not_load_chats_retry =>
+      '无法加载聊天。重试';
+
+  @override
+  String release_core_parallel_workspace_close(String pane) {
+    return '关闭$pane';
+  }
+
+  @override
+  String release_core_parallel_workspace_switch_pane(String pane) {
+    return '切换面板：$pane';
+  }
+
+  @override
+  String get release_core_workspace_registry_session_id_copied => '已复制会话 ID。';
+
+  @override
+  String get release_core_workspace_registry_chat_details => '聊天详情';
+
+  @override
+  String get release_core_workspace_registry_server_default => '服务器默认值';
+
+  @override
+  String get release_core_workspace_registry_session_id => '会话 ID';
+
+  @override
+  String get release_core_workspace_registry_title => '标题';
+
+  @override
+  String get release_core_workspace_label_terminals => '终端';
+
+  @override
+  String get release_core_workspace_label_copy_id => '复制会话 ID';
+
+  @override
+  String get release_core_workspace_label_contributions => '扩展项';
+
+  @override
+  String get release_core_workspace_owner_inactive => '此工作区的所有者已不再处于活动状态。';
+
+  @override
+  String get release_core_workspace_select_chat => '请先选择聊天。';
+
+  @override
+  String get release_core_workspace_chat_unavailable => '此连接无法使用该聊天。';
+
+  @override
+  String get release_core_workspace_page_unavailable => '此连接无法使用该页面。';
+
+  @override
+  String release_core_client_queue_count(int count) {
+    return '$count 条已排队';
+  }
+
+  @override
+  String release_core_client_queue_paused_count(int count) {
+    return '$count 条已排队，已暂停';
+  }
+
+  @override
+  String release_core_git_diff_truncated(String diff) {
+    return '$diff\n…已截断';
+  }
+
+  @override
+  String get release_core_search_no_models => 'Hermes 未返回任何已配置的可选模型。';
+
+  @override
+  String get release_core_chat_archive_unavailable => '聊天归档操作不可用。';
+
+  @override
+  String get release_core_chat_pin_unconfirmed => '置顶状态未获确认。';
+
+  @override
+  String get release_core_chat_archive_unconfirmed => '归档状态未获确认。';
+
+  @override
+  String get release_core_chat_archive_history_unavailable => '已归档的历史记录不可用';
+
+  @override
+  String get release_core_quick_chat_history_unavailable => '快速聊天的历史记录不可用';
+
+  @override
+  String get release_core_chat_project_ownership_unavailable => '无法确认项目归属';
+
+  @override
+  String get release_core_chat_unknown_project => '未知项目';
+
+  @override
+  String get release_core_chat_local_search_fallback => '消息搜索不可用。正在显示本地匹配结果。';
+
+  @override
+  String release_core_fleet_update_eligible(String version) {
+    return '符合条件 · $version';
+  }
+
+  @override
+  String get release_core_fleet_update_state_1 => '已跳过：同一安装实例';
+
+  @override
+  String get release_core_fleet_update_state_2 => '尚未检查';
+
+  @override
+  String get release_core_fleet_update_state_3 => '已跳过：由云端管理';
+
+  @override
+  String get release_core_fleet_update_state_4 => '已跳过：未注册为直连网关';
+
+  @override
+  String get release_core_fleet_update_state_5 => '已跳过：已断开连接或正忙';
+
+  @override
+  String get release_core_fleet_update_state_6 => '没有适用的更新';
+
+  @override
+  String get release_core_fleet_update_state_7 => '无法验证更新资格';
+
+  @override
+  String get release_core_fleet_update_state_8 => '已跳过：状态已过期、正忙或已请求';
+
+  @override
+  String get release_core_fleet_update_state_9 => '正在请求';
+
+  @override
+  String get release_core_fleet_update_state_10 => '已接受；回执不可用';
+
+  @override
+  String get release_core_fleet_update_state_11 => '已接受；正在等待回执';
+
+  @override
+  String get release_core_fleet_update_state_12 => '已跳过：此安装实例上有聊天正在运行';
+
+  @override
+  String get release_core_fleet_update_state_13 => '未获确认；不要自动重新发送';
+
+  @override
+  String get release_core_fleet_update_state_14 => '重新连接以检查回执';
+
+  @override
+  String get release_core_fleet_update_state_15 => '回执不可用';
+
+  @override
+  String get release_core_fleet_update_state_16 => '正在等待匹配的回执';
+
+  @override
+  String get release_core_fleet_update_state_17 => '已更新；需要后续处理';
+
+  @override
+  String get release_core_fleet_update_state_19 => '已部分更新';
+
+  @override
+  String get release_core_fleet_update_state_20 => '更新失败';
+
+  @override
+  String get release_core_fleet_update_state_21 => '未获确认';
+
+  @override
+  String get release_core_cloud_status_ready => '就绪';
+
+  @override
+  String get release_core_cloud_status_online => '在线';
+
+  @override
+  String get release_core_cloud_status_stopped => '已停止';
+
+  @override
+  String get release_core_cloud_status_error => '错误';
+
+  @override
+  String get ng_release_more_contributions_subtitle => '此连接中已审核的回复卡片';
+
+  @override
+  String get ng_release_more_gateway_fleet => '网关集群';
+
+  @override
+  String get ng_release_more_memory_graph => '记忆图谱';
+
+  @override
+  String get ng_release_more_memory_graph_subtitle => '时间线、编辑和记忆提供商';
+
+  @override
+  String get ng_release_more_capabilities_subtitle => '安装和管理技能、插件、连接器及工具后端';
+
+  @override
+  String get ng_release_more_browser_vault => '浏览器保险库';
+
+  @override
+  String get ng_release_more_browser_vault_subtitle => '网站登录信息、地址、银行卡和凭据来源';
+
+  @override
+  String get ng_release_more_agent_policy => '智能体策略';
+
+  @override
+  String get ng_release_more_agent_policy_subtitle => '审批、检查点、浏览器访问和共享指标';
+
+  @override
+  String get ng_release_more_schedules => '计划任务';
+
+  @override
+  String get ng_release_more_schedules_subtitle => '所有配置档案、蓝图、补跑和停止';
+
+  @override
+  String get ng_release_more_host_subtitle => '远程日志、健康状态、维护和更新';
+
+  @override
+  String get ng_release_more_providers_routes => '提供商和路由';
+
+  @override
+  String get ng_release_more_providers_routes_subtitle => '密钥、端点、委派和混合配置';
+
+  @override
+  String get ng_release_more_credits_plans => '额度和套餐';
+
+  @override
+  String get ng_release_more_credits_plans_subtitle => '账户允许且经你同意后使用 Nous 计费';
+
+  @override
+  String get ng_release_sign_in_or => '或';
+
+  @override
+  String ng_release_deployment_sign_in_hint(String message) {
+    return '$message 你仍可在下一步使用部署会话令牌登录。';
+  }
+
+  @override
+  String get ng_release_message_search_unavailable => '消息搜索不可用。正在显示本地匹配结果。';
+
+  @override
+  String ng_release_insights_days(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days 天',
+      one: '$days 天',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_release_signed_in_you => '你';
+
+  @override
+  String get release_chat_unsent_prompt_gone => '该未发送的提示词已不在队列中。';
+
+  @override
+  String ng_release_attachment_not_attached(String name) {
+    return '网关未附加 $name。';
+  }
+
+  @override
+  String get ng_release_gateway_not_connected => '尚未连接到网关。';
+
+  @override
+  String get ng_release_gateway_unreachable => '无法连接到网关。';
+
+  @override
+  String get ng_release_projects_scope_changed => '项目所属的连接或配置档案已不再选中';
+
+  @override
+  String get ng_release_missing_providers => '缺少提供商';
+
+  @override
+  String get ng_release_missing_tasks => '缺少任务';
+
+  @override
+  String ng_release_age_minutes(int count) {
+    return '$count分';
+  }
+
+  @override
+  String ng_release_age_hours(int count) {
+    return '$count小时';
+  }
+
+  @override
+  String ng_release_age_days(int count) {
+    return '$count天';
+  }
+
+  @override
+  String ng_release_age_weeks(int count) {
+    return '$count周';
+  }
+
+  @override
+  String ng_release_age_years(int count) {
+    return '$count年';
+  }
+
+  @override
+  String ng_release_compact_billions(String count) {
+    return '$count十亿';
+  }
+
+  @override
+  String ng_release_compact_millions(String count) {
+    return '$count百万';
+  }
+
+  @override
+  String ng_release_compact_thousands(String count) {
+    return '$count千';
+  }
+
+  @override
+  String ng_release_token_thousands(String count) {
+    return '$count千';
+  }
+
+  @override
+  String ng_release_elapsed_minutes_seconds(int minutes, int seconds) {
+    return '$minutes分 $seconds秒';
+  }
+
+  @override
+  String ng_release_elapsed_seconds(int seconds) {
+    return '$seconds秒';
+  }
+
+  @override
+  String get ng_release_notification_foreground => 'Ares 当时显示在屏幕上';
+
+  @override
+  String get ng_release_notification_stopped => '该轮次已停止';
+
+  @override
+  String get ng_release_more_parallel_workspace => '并行工作区';
+
+  @override
+  String get ng_release_more_parallel_workspace_subtitle => '在标签页中或并排打开多个聊天。';
+
+  @override
+  String get release_chat_unknown_model => '未知';
+
+  @override
+  String release_chat_profile_default(String model) {
+    return '配置档案默认值：$model';
+  }
+
+  @override
+  String release_chat_profile_default_provider(String model, String provider) {
+    return '配置档案默认值：$model • $provider';
+  }
+
+  @override
+  String get release_chat_choose_provider => '此模型可通过多个提供商使用。请选择一个提供商以继续。';
+
+  @override
+  String get release_chat_slash_needs_gateway => '斜杠命令需要桌面网关';
+
+  @override
+  String get release_chat_recovering_without_resending => '正在恢复，不会重新发送';
+
+  @override
+  String get release_chat_live_request_unreachable => '抱歉，无法连接到 Hermes 来处理该请求。';
+
+  @override
+  String release_chat_live_working(String tool) {
+    return 'Hermes 正在处理：$tool。尚未完成。';
+  }
+
+  @override
+  String get release_chat_live_finished_without_spoken_result =>
+      'Hermes 已完成该请求，但没有语音回复。';
+
+  @override
+  String get release_chat_reply_language_unavailable => '所选回复语言不可用';
+
+  @override
+  String get release_chat_reply_voice_unavailable => '所选回复音色不可用';
+
+  @override
+  String get release_chat_reply_voice_configuration_unavailable => '回复语音配置不可用';
+
+  @override
+  String get release_chat_notification_review_action => '打开聊天以检查请求的操作。';
+
+  @override
+  String get release_chat_notification_respond => '打开聊天以回复。';
+
+  @override
+  String get release_chat_start_new_main_window => '请在主窗口中开始新的聊天。';
+
+  @override
+  String get release_chat_no_desktop_gateway => '无桌面网关';
+
+  @override
+  String get release_chat_attachment_preparation_cancelled => '附件准备已取消。';
+
+  @override
+  String get release_chat_approval_authority_revoked => '审批权限已被撤销。';
+
+  @override
+  String get release_chat_gateway_session_disconnected => '桌面网关会话已断开连接';
+
+  @override
+  String get release_chat_stop_requested => '已请求停止。正在等待 Hermes 结束。';
+
+  @override
+  String release_chat_stop_request_failed(String error) {
+    return '无法请求停止：$error';
+  }
+
+  @override
+  String get release_chat_queued_prompt_not_sent => '排队中的提示词未发送。';
+
+  @override
+  String get release_chat_running_turn_unreachable =>
+      '无法联系到正在运行的轮次。正在重新连接，不会重新发送。';
+
+  @override
+  String get release_chat_wait_for_composer => '请等待消息输入框可用。';
+
+  @override
+  String get release_chat_find_in_transcript => '在对话记录中查找';
+
+  @override
+  String get release_chat_open_browser_preview => '打开浏览器预览';
+
+  @override
+  String get release_chat_more_tools => '更多聊天工具';
+
+  @override
+  String get release_chat_queue_until_finished => '排队等待本轮结束';
+
+  @override
+  String get release_chat_format_bold => '粗体';
+
+  @override
+  String get release_chat_format_italic => '斜体';
+
+  @override
+  String get ng_release_chat_gateway_queue_requirements =>
+      '网关队列需要已关联的聊天和纯文本提示词。';
+
+  @override
+  String get ng_release_chat_start_new_main_screen => '请从聊天主界面开始新的聊天。';
+
+  @override
+  String get ng_release_chat_image => '图片';
+
+  @override
+  String ng_release_chat_tool_seconds(String seconds) {
+    return '$seconds秒';
+  }
+
+  @override
+  String get release_preview_chat_changed => '聊天已更改。请重新连接预览以继续。';
+
+  @override
+  String get release_preview_authenticating_chat => '正在验证聊天身份…';
+
+  @override
+  String release_preview_unavailable_reason(String reason) {
+    return '预览不可用：$reason';
+  }
+
+  @override
+  String get release_preview_operation_failed => '预览操作失败。';
+
+  @override
+  String get release_preview_added_to_draft => '已添加到草稿。未发送任何内容。';
+
+  @override
+  String get release_preview_open_site_title => '打开此网站？';
+
+  @override
+  String release_preview_open_site_body(String origin) {
+    return '$origin\n\n阅读模式仅加载此文档，不会与 Hermes 共享 Cookie、登录信息或页面。';
+  }
+
+  @override
+  String get release_preview_open_site => '打开网站';
+
+  @override
+  String get release_preview_discard_pins_title => '丢弃尚未添加到草稿的标注？';
+
+  @override
+  String get release_preview_keep_pins => '保留标注';
+
+  @override
+  String get release_preview_share_page_title => '与此聊天共享此页面？';
+
+  @override
+  String release_preview_share_page_body(String origin) {
+    return 'Hermes 可以读取 $origin 中显示的文本和元素列表，并滚动此面板。导航到其他页面后将结束共享。不会共享表单和凭据。';
+  }
+
+  @override
+  String get release_preview_share_page => '共享页面';
+
+  @override
+  String release_preview_comment_number(int number) {
+    return '评论 #$number';
+  }
+
+  @override
+  String get release_preview_note => '备注';
+
+  @override
+  String get release_preview_keep_pin => '保留标注';
+
+  @override
+  String get release_preview_title => '浏览器预览';
+
+  @override
+  String get release_preview_hide => '隐藏预览';
+
+  @override
+  String get release_preview_close_and_forget => '关闭并清除此页面';
+
+  @override
+  String get release_preview_site_address => '网站地址';
+
+  @override
+  String get release_preview_go_to_address => '前往地址';
+
+  @override
+  String get release_preview_forward => '前进';
+
+  @override
+  String get release_preview_reload => '重新加载';
+
+  @override
+  String get release_preview_share_with_hermes => '与 Hermes 共享页面';
+
+  @override
+  String get release_preview_stop_sharing => '停止共享页面';
+
+  @override
+  String get release_preview_annotate => '标注元素或区域';
+
+  @override
+  String get release_preview_reader_console => '阅读器控制台';
+
+  @override
+  String get release_preview_reconnect => '重新连接预览';
+
+  @override
+  String get release_preview_reader_mode_help =>
+      '阅读模式：仅 HTML 和文本。不运行脚本、不加载嵌入资源，也不使用已登录的浏览器配置档案。';
+
+  @override
+  String release_preview_sharing_origin(String origin) {
+    return '正在与此聊天共享阅读器：$origin';
+  }
+
+  @override
+  String get release_preview_annotation_help => '点按元素或拖选区域以添加评论。';
+
+  @override
+  String get release_preview_reader_requests => '阅读器请求（JavaScript 已关闭）';
+
+  @override
+  String release_preview_selected_requests(int count) {
+    return '已选择 $count 项 · JavaScript 已关闭';
+  }
+
+  @override
+  String get release_preview_copy_all => '全部复制';
+
+  @override
+  String get release_preview_copy_selected => '复制所选内容';
+
+  @override
+  String get release_preview_add_log_to_draft => '将日志添加到草稿';
+
+  @override
+  String release_preview_requests_draft(String log) {
+    return '阅读器请求：\n$log';
+  }
+
+  @override
+  String release_preview_add_pins_to_draft(int count) {
+    return '将 $count 个标注添加到草稿';
+  }
+
+  @override
+  String release_preview_request_loaded(String origin, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 个阅读器元素',
+      one: '$count 个阅读器元素',
+    );
+    return 'HTTP 200 · $origin · $_temp0';
+  }
+
+  @override
+  String release_preview_annotation_intro(String origin) {
+    return '请检查对 $origin 预览的这些评论。附带的裁剪图按相同顺序编号。';
+  }
+
+  @override
+  String get release_preview_reader_region => '阅读器区域';
+
+  @override
+  String get release_preview_capture_failed => '无法截取这些像素。';
+
+  @override
+  String get release_preview_address_not_approved => '此地址不属于已批准的预览来源。';
+
+  @override
+  String get release_preview_page_limit => '页面超出阅读器限制。';
+
+  @override
+  String get release_preview_page_unreadable => '无法读取此页面。';
+
+  @override
+  String get release_preview_page_complex => '此页面过于复杂，无法使用阅读模式。';
+
+  @override
+  String release_preview_http_failed(int statusCode) {
+    return 'HTTP $statusCode。未跟随任何重定向，也未进行登录。';
+  }
+
+  @override
+  String get release_preview_unsupported_type => '阅读模式只能打开 HTML 和纯文本。';
+
+  @override
+  String get release_preview_load_insecure => '无法安全加载此网站。';
+
+  @override
+  String get release_preview_crop_limit => '预览裁剪图超出限制。';
+
+  @override
+  String get release_preview_image_unreadable => '所选图片为空或无法读取。';
+
+  @override
+  String get release_preview_image_budget => '所选图片超出草稿的 64 MiB 大小限制。';
+
+  @override
+  String get release_preview_image_format => '不支持此图片格式。请选择 JPEG、PNG 或 WebP 图片。';
+
+  @override
+  String get release_preview_image_decode => '无法安全解码所选的 JPEG、PNG 或 WebP 图片。';
+
+  @override
+  String get release_preview_image_sanitize =>
+      '无法安全清除此图片的元数据。请选择有效的 JPEG、PNG 或 WebP 图片。';
+
+  @override
+  String get release_preview_draft_budget => '每份草稿的附件总大小不得超过 64 MiB。';
+
+  @override
+  String get release_preview_generic_file_limit => '通用文件每个不得超过 16 MiB。';
+
+  @override
+  String get release_preview_image_not_sanitized => '远程图片必须先经过安全清理才能上传。';
+
+  @override
+  String get release_preview_stage_failed => '无法将预览证据添加到草稿。请重试。';
+
+  @override
+  String get release_misc_find_hermes_on_lan => '在局域网中查找 Hermes';
+
+  @override
+  String release_misc_discovery_failed(String error) {
+    return '发现失败：$error';
+  }
+
+  @override
+  String get release_misc_no_lan_servers => '在本地网络中未找到 Hermes 服务器。';
+
+  @override
+  String release_misc_api_key_rejected(String endpoint, int statusCode) {
+    return '$endpoint 拒绝了 API 密钥（HTTP $statusCode）。';
+  }
+
+  @override
+  String get release_misc_api_key_required =>
+      '服务器需要 API 密钥。请输入你的 API_SERVER_KEY。';
+
+  @override
+  String release_misc_gateway_not_found(String endpoint) {
+    return '网关端点 $endpoint 返回 HTTP 404。请检查网关路径前缀和反向代理路由。';
+  }
+
+  @override
+  String release_misc_gateway_http_error(String endpoint, int statusCode) {
+    return '网关端点 $endpoint 返回 HTTP $statusCode。';
+  }
+
+  @override
+  String release_misc_gateway_unreachable(String endpoint) {
+    return '无法连接到网关端点 $endpoint。';
+  }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target => '无效的投递目标';
+
+  @override
+  String get release_core_file_save_direct_only => '只能保存工作目录直属的文件。';
+
+  @override
+  String get release_core_file_save_hidden => '网关无法保存隐藏文件。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -9531,6 +11795,21 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get hands_free_setup_complete => '麦克风设置完成。请再次点击开始。';
 
   @override
+  String message_time_recorded(String time) {
+    return '服务器记录时间：$time（本地时间）';
+  }
+
+  @override
+  String message_time_sent(String time) {
+    return '本设备观察到发送的时间：$time（本地时间）';
+  }
+
+  @override
+  String message_time_received(String time) {
+    return '本设备首次接收时间：$time（本地时间）';
+  }
+
+  @override
   String get stop_and_send => '停止并发送';
 
   @override
@@ -9633,6 +11912,28 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get attachment_retry => '重试';
+
+  @override
+  String get saved_history_heading => '已保存的历史记录';
+
+  @override
+  String get received_output_heading => '已接收的输出 — 尚未确认与已保存的历史记录匹配';
+
+  @override
+  String get received_output_details => '关于已接收的输出';
+
+  @override
+  String get received_output_explanation => '此内容也可能出现在已保存的历史记录中。应用无法确认是否匹配。';
+
+  @override
+  String get local_prompt_context => '本地提示词上下文';
+
+  @override
+  String get received_output_badge => '已接收 · 匹配未确认';
+
+  @override
+  String get received_output_lifetime =>
+      '已接收的输出会在本次应用会话中临时保留，达到限制时可能会被缩短或移除。关闭应用或连接后，这些内容可能无法再查看。';
 
   @override
   String get theme_palette => '颜色主题';
@@ -9828,7 +12129,13 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
       '在此 Hermes 会话结束前允许匹配的命令。';
 
   @override
+  String get allow_folder_until_sandbox_off => '允许此文件夹，直到关闭沙盒为止。';
+
+  @override
   String get allow_once => '允许一次';
+
+  @override
+  String get allow_website_until_sandbox_off => '允许此网站，直到关闭沙盒为止。';
 
   @override
   String get always_allow => '总是允许';
@@ -10054,10 +12361,34 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get code_copied => '代码已复制';
 
   @override
+  String get code_format => '代码';
+
+  @override
   String get coming_next => '敬请期待';
 
   @override
   String get command => '命令';
+
+  @override
+  String get command_palette => '命令面板';
+
+  @override
+  String get command_palette_hint => '输入命令';
+
+  @override
+  String get command_palette_no_results => '未找到命令';
+
+  @override
+  String get command_palette_new_chat => '新聊天';
+
+  @override
+  String get command_palette_search_chats => '搜索聊天';
+
+  @override
+  String get command_palette_toggle_theme => '切换主题';
+
+  @override
+  String get command_palette_copy_last_code => '复制最后一个代码块';
 
   @override
   String get command_line_chats => '命令行聊天';
@@ -10243,6 +12574,15 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get cron => 'Cron';
+
+  @override
+  String get crons => '定时任务';
+
+  @override
+  String get cron_conversations_empty => '定时任务的对话会显示在此处，包括较早的运行记录。';
+
+  @override
+  String get search_cron_conversations => '搜索定时任务对话';
 
   @override
   String get cron_jobs => 'Cron 任务';
@@ -11008,6 +13348,51 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get notifications => '通知';
 
   @override
+  String get windows_notifications_blocked =>
+      '通知不可用。请使用已安装的 Ares 应用，并检查 Windows 中的“设置 → 系统 → 通知”。';
+
+  @override
+  String get windows_notification_diagnostics => 'Ares 提交给 Windows 的内容';
+
+  @override
+  String get chat_activity_share => '共享聊天活动';
+
+  @override
+  String get chat_activity_share_hint =>
+      '在你使用此聊天时告知兼容的已连接网关，让其手机通知插件避免重复提醒。不会发送任何密钥或消息内容。';
+
+  @override
+  String get completion_sound => '完成提示音';
+
+  @override
+  String get completion_sound_system => '系统默认';
+
+  @override
+  String get completion_sound_mail => '邮件';
+
+  @override
+  String get completion_sound_reminder => '提醒';
+
+  @override
+  String get completion_sound_silent => '静音';
+
+  @override
+  String get completion_sound_scope => '用于回复完成、测试通知和应用内提示。审批和其他提醒仍使用原有声音。';
+
+  @override
+  String get completion_sound_scope_android =>
+      '用于回复完成、测试通知和应用内提示。审批、其他提醒、服务器后台通知和 Android Auto 消息仍使用原有声音。';
+
+  @override
+  String get notification_open_action => '打开';
+
+  @override
+  String get app_sounds_mute => '静音应用音效';
+
+  @override
+  String get app_sounds_mute_hint => '停止 Ares 在打开期间播放的完成提示音。通知仍使用各自的声音。';
+
+  @override
   String get notifications_permission_denied =>
       '系统已阻止通知。请在 Android 设置中允许此应用发送通知。';
 
@@ -11474,6 +13859,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get starting_hermes => '正在启动 Hermes…';
 
   @override
+  String get media_card_download => '下载文件';
+
+  @override
+  String get media_card_tap_to_download => '点击下载';
+
+  @override
   String get still_loading_your_projects => '正在加载你的项目。';
 
   @override
@@ -11760,6 +14151,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get verbose_mode => '详细模式';
+
+  @override
+  String get message_metadata => '消息详情';
 
   @override
   String get voice => '语音';
@@ -12334,6 +14728,42 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
       '紧凑模式会去掉 You 和 Hermes 标签，并缩小气泡内边距、间距和两侧边距。';
 
   @override
+  String get client_certificate_mtls => '客户端证书（mTLS）';
+
+  @override
+  String get client_certificate_mtls_description => '在 HTTPS 代理要求双向 TLS 时提供证书。';
+
+  @override
+  String get client_certificate_https_only => '客户端证书仅用于 HTTPS 连接。';
+
+  @override
+  String get choose_certificate => '选择证书';
+
+  @override
+  String get certificate_password => '证书密码';
+
+  @override
+  String get this_certificate_is_password_protected => '此证书受密码保护，输入密码时会自动解锁。';
+
+  @override
+  String get enter_the_certificate_password_to_finish_loading_it =>
+      '输入证书密码，完成加载所选证书。';
+
+  @override
+  String get client_certificate_required => '请加载客户端证书，或关闭客户端证书选项。';
+
+  @override
+  String client_certificate_loaded(String label) {
+    return '已加载：$label';
+  }
+
+  @override
+  String get remove_certificate => '移除证书';
+
+  @override
+  String get certificate_import_failed => '无法加载该证书。';
+
+  @override
   String get background_work => '后台运行';
 
   @override
@@ -12779,6 +15209,71 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get provider_oauth_account_status_unknown => '无法获取主机账户状态。';
 
   @override
+  String get app_language => '应用语言';
+
+  @override
+  String get app_language_system => '与手机相同';
+
+  @override
+  String get auto_archives_after_72_hours => '72 小时后自动归档';
+
+  @override
+  String get automation => '自动化';
+
+  @override
+  String get voice_recording_start => '录制语音消息';
+
+  @override
+  String get voice_recording_pause => '暂停录音';
+
+  @override
+  String get voice_recording_preview => '播放录音';
+
+  @override
+  String get voice_recording_resume => '继续录音';
+
+  @override
+  String get voice_recording_send => '发送语音消息';
+
+  @override
+  String get voice_recording_discard => '舍弃录音';
+
+  @override
+  String get voice_recording_processing => '正在准备语音消息…';
+
+  @override
+  String voice_recording_elapsed(String time) {
+    return '录音中 $time';
+  }
+
+  @override
+  String voice_recording_draft(String time) {
+    return '语音消息 $time';
+  }
+
+  @override
+  String get voice_recording_permission => '请允许访问麦克风，以录制语音消息。';
+
+  @override
+  String get voice_recording_limit => '此录音已达到十分钟上限。';
+
+  @override
+  String get voice_recording_empty => '未录到音频。请重试。';
+
+  @override
+  String get voice_recording_failed => '无法处理录音。所有已保存的片段均已保留。';
+
+  @override
+  String get voice_recording_unconfirmed => '尚未确认送达。录音已保存。请先查看聊天，再决定是否重试。';
+
+  @override
+  String get voice_recording_submit_failed =>
+      '无法发送语音消息。录音已保存。请检查连接、仪表盘访问权限和服务器转写设置。';
+
+  @override
+  String get voice_recording_pause_playback => '暂停播放';
+
+  @override
   String get projects_root_title => '服务器上的项目文件夹';
 
   @override
@@ -12919,8 +15414,213 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get slash_sessions_inline => '请打开会话列表选择聊天。草稿已保留。';
 
   @override
+  String get composer_snippets => '提示词片段';
+
+  @override
+  String get composer_snippets_description => '选择一条起始提示词，填入消息输入框。';
+
+  @override
+  String get composer_snippet_review => '代码审查';
+
+  @override
+  String get composer_snippet_review_body => '审查当前改动中的回归问题、遗漏的边界情况和缺失的测试。';
+
+  @override
+  String get composer_snippet_review_text => '请审查其中的错误、回归问题和缺失的测试。';
+
+  @override
+  String get composer_snippet_plan => '实施计划';
+
+  @override
+  String get composer_snippet_plan_body => '修改代码前先概述方案，使改动保持聚焦。';
+
+  @override
+  String get composer_snippet_plan_text => '请在修改代码前制定简明的实施计划。';
+
+  @override
+  String get composer_snippet_explain => '解释这段代码';
+
+  @override
+  String get composer_snippet_explain_body => '逐步讲解所选代码的工作原理，并指出关键文件。';
+
+  @override
+  String get composer_snippet_explain_text => '请解释其工作原理，并指出关键文件。';
+
+  @override
+  String get composer_status => '状态';
+
+  @override
+  String get composer_status_context => '上下文';
+
+  @override
+  String get composer_status_cache => '缓存命中';
+
+  @override
+  String get composer_status_throughput => '输出 token/秒';
+
+  @override
+  String get composer_status_running => '运行中';
+
+  @override
+  String get composer_status_session => '会话';
+
+  @override
+  String get composer_status_not_reported => '未报告';
+
+  @override
+  String get composer_status_empty => '未报告上下文明细。';
+
+  @override
+  String get composer_status_loading => '正在加载上下文明细';
+
+  @override
+  String get composer_status_reset => '重置状态栏';
+
+  @override
+  String get composer_resume_title => '继续聊天';
+
+  @override
+  String get composer_resume_search => '搜索标题和 ID';
+
+  @override
+  String get composer_resume_empty => '没有匹配的聊天。';
+
+  @override
+  String get composer_resume_unavailable => '此面板没有可供搜索的聊天列表。';
+
+  @override
+  String get composer_failure_retry => '重试';
+
+  @override
+  String composer_failure_retry_at(String time) {
+    return '在 $time 重试';
+  }
+
+  @override
+  String get composer_failure_compress => '压缩';
+
+  @override
+  String get composer_failure_switch_model => '切换模型';
+
+  @override
+  String composer_failure_switch_to(String model) {
+    return '切换到 $model';
+  }
+
+  @override
+  String get composer_failure_new_chat => '新聊天';
+
+  @override
+  String get composer_failure_edit => '编辑消息';
+
+  @override
+  String get composer_failure_details => '详情';
+
+  @override
+  String get composer_failure_hide_details => '隐藏详情';
+
+  @override
+  String get composer_failure_copy => '复制诊断信息';
+
+  @override
+  String get composer_failure_account => '另一项修复需在网关账户端完成，无法在此聊天中进行。';
+
+  @override
+  String get composer_failure_account_only => '此问题必须在网关账户端修复，无法在此聊天中处理。';
+
+  @override
+  String get composer_failure_confirm_compress => '压缩此聊天？网关会缩短对话记录。';
+
+  @override
+  String composer_failure_confirm_model(String model) {
+    return '将此聊天切换到 $model？';
+  }
+
+  @override
+  String get composer_drop_attach => '拖放以添加附件';
+
+  @override
+  String get composer_drop_folder_unsupported => '无法附加文件夹。请改为拖放其中的文件。';
+
+  @override
+  String get composer_drop_reference => '拖放以添加引用';
+
+  @override
+  String get composer_reference_copy => '复制引用';
+
+  @override
+  String get composer_reference_remove => '移除引用';
+
+  @override
+  String get composer_btw_usage => '用法：/btw <question> — 根据此对话的快照回答，不中断当前对话。';
+
+  @override
+  String get composer_background_usage =>
+      '用法：/background <prompt> — 任务独立运行，结果会返回此处。';
+
+  @override
+  String get composer_handoff_usage =>
+      '用法：/handoff <platform> — 将此聊天转移到指定的消息平台。';
+
+  @override
+  String get composer_command_needs_session => '此命令需要已打开的聊天。';
+
+  @override
+  String get composer_retry_not_found =>
+      '已保存的历史记录中没有此轮对话，因此“重试”无法替换它。未重新发送任何内容。请编辑消息并发送以再次尝试。';
+
+  @override
+  String get composer_retry_unavailable =>
+      '此连接不支持通过“重试”替换某轮对话，因此未重新发送任何内容。请编辑消息并发送以再次尝试。';
+
+  @override
   String get composer_failure_switch_no_retry =>
       '切换只会更改模型：此连接无法重新运行失败的轮次。切换后请重新发送。';
+
+  @override
+  String get composer_command_needs_gateway_session =>
+      '此聊天尚无网关会话。请先发送消息，再重新运行命令。';
+
+  @override
+  String get composer_side_question => 'btw — 正在根据对话快照回答';
+
+  @override
+  String composer_side_question_id(String id) {
+    return 'btw $id — 正在根据对话快照回答';
+  }
+
+  @override
+  String get composer_background_started => '后台任务已启动。你可以继续聊天，结果会显示在此处。';
+
+  @override
+  String composer_background_started_id(String id) {
+    return '后台任务 $id 已启动。你可以继续聊天，结果会显示在此处。';
+  }
+
+  @override
+  String composer_handoff_requested(String platform) {
+    return '已请求移交至 $platform。';
+  }
+
+  @override
+  String composer_handoff_done(String platform) {
+    return '已将此聊天移交至 $platform。';
+  }
+
+  @override
+  String get composer_handoff_failed => '移交失败。';
+
+  @override
+  String get composer_handoff_timeout => '移交未完成，可能仍在网关上进行。';
+
+  @override
+  String get composer_compress_done => '已压缩此聊天。';
+
+  @override
+  String get composer_file_missing => '此设备上没有该文件。';
+
+  @override
+  String get composer_attach_busy => '此回复完成后即可添加附件。';
 
   @override
   String get nextgen_toggle => 'NextGen 界面';
@@ -14973,6 +17673,76 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get ng_aux_curator_hint => '审查技能的使用情况';
 
   @override
+  String get appearance_save_failed => '无法保存此更改。';
+
+  @override
+  String get appearance_keep_which_theme => '保留哪个主题？';
+
+  @override
+  String get appearance_tour_back => '上一步';
+
+  @override
+  String get appearance_tour_finish => '完成';
+
+  @override
+  String get appearance_tour_next => '下一步';
+
+  @override
+  String get appearance_tour_close => '关闭导览';
+
+  @override
+  String get appearance_dismiss_tip => '关闭提示';
+
+  @override
+  String get appearance_search_settings => '搜索设置';
+
+  @override
+  String get appearance_search_show => '显示';
+
+  @override
+  String get appearance_no_matching_setting => '没有匹配的设置。';
+
+  @override
+  String get appearance_replay_tour => '重新查看导览';
+
+  @override
+  String get appearance_show_tips_again => '再次显示提示';
+
+  @override
+  String get appearance_window_translucency_unavailable =>
+      '此主机不支持窗口半透明。Linux 无法提供此效果，Apple 和 Windows 运行器则会绘制不透明的 Flutter 视图。';
+
+  @override
+  String get appearance_imported_themes => '已导入的主题';
+
+  @override
+  String get appearance_import_theme_file => '导入主题文件';
+
+  @override
+  String get appearance_remove_theme => '移除主题';
+
+  @override
+  String get appearance_chat_font => '聊天字体';
+
+  @override
+  String get appearance_terminal_font => '终端字体';
+
+  @override
+  String get appearance_font_platform => '平台';
+
+  @override
+  String get appearance_automatic => '自动';
+
+  @override
+  String get appearance_force_left_to_right => '强制从左到右';
+
+  @override
+  String get appearance_force_right_to_left => '强制从右到左';
+
+  @override
+  String get appearance_user_bubble_opacity => '用户气泡不透明度';
+
+  @override
   String get appearance_inline_embeds => '内嵌内容';
 
   @override
@@ -15017,6 +17787,221 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get appearance_embed_preview_unavailable => '无法预览';
+
+  @override
+  String get appearance_emoji_reactions => '表情回应';
+
+  @override
+  String get appearance_celebration_hearts => '庆祝爱心';
+
+  @override
+  String get appearance_celebration_hearts_hint => '你离开期间收到回复时，会播放爱心动画。';
+
+  @override
+  String get appearance_pop_out_companion => '弹出伙伴窗口';
+
+  @override
+  String get appearance_mosskip => 'Mosskip';
+
+  @override
+  String get appearance_emberbun => 'Emberbun';
+
+  @override
+  String get appearance_tideling => 'Tideling';
+
+  @override
+  String get appearance_my_hatchling => '我的幼宠';
+
+  @override
+  String get appearance_at_rest => '休息中';
+
+  @override
+  String get appearance_working => '工作中';
+
+  @override
+  String get appearance_thinking => '思考中';
+
+  @override
+  String get appearance_waiting_for_you => '等待你回应';
+
+  @override
+  String get appearance_reply_ready => '回复已就绪';
+
+  @override
+  String get appearance_turn_failed => '本轮失败';
+
+  @override
+  String get appearance_small => '小';
+
+  @override
+  String get appearance_medium => '中';
+
+  @override
+  String get appearance_large => '大';
+
+  @override
+  String get appearance_hello => '你好！';
+
+  @override
+  String get appearance_unread_reply => '未读回复';
+
+  @override
+  String get appearance_compose => '撰写消息';
+
+  @override
+  String get appearance_say_hello => '打个招呼';
+
+  @override
+  String get appearance_pet_image_failed => '无法打开该图片。请选择较小的 PNG 或 JPEG。';
+
+  @override
+  String get appearance_pet_companion => '宠物伙伴';
+
+  @override
+  String get appearance_pet_companion_hint => '聊天时显示伙伴。';
+
+  @override
+  String get appearance_adopt_a_companion => '领养伙伴';
+
+  @override
+  String get appearance_roam_when_idle => '空闲时漫游';
+
+  @override
+  String get appearance_pet_size => '宠物大小';
+
+  @override
+  String get appearance_hatch_from_a_local_picture => '从本地图片孵化';
+
+  @override
+  String get appearance_pet_image_limits =>
+      '请选择 PNG 或 JPEG（最大 4 MiB、单边最多 4096 px、总计最多 8 MP）。请先预览。孵化会保存一张 24 × 24 像素头像，并替换之前的幼宠。';
+
+  @override
+  String get appearance_choose_picture => '选择图片';
+
+  @override
+  String get appearance_hatchling_preview => '幼宠预览';
+
+  @override
+  String get appearance_hatch_and_adopt => '孵化并领养';
+
+  @override
+  String get appearance_discard_draft => '舍弃草稿';
+
+  @override
+  String get appearance_forget_saved_hatchling => '清除已保存的幼宠';
+
+  @override
+  String get appearance_radio => '电台';
+
+  @override
+  String appearance_radio_hint(String stations) {
+    return '音频流直接来自 $stations，仅在你按下播放时开始。电台搜索仅在此设备上进行。';
+  }
+
+  @override
+  String get appearance_radio_save_failed => '无法保存电台设置。';
+
+  @override
+  String get appearance_choose_a_station => '选择电台';
+
+  @override
+  String get appearance_pause_radio => '暂停电台';
+
+  @override
+  String get appearance_play_radio => '播放电台';
+
+  @override
+  String get appearance_next_station => '下一个电台';
+
+  @override
+  String get appearance_radio_trace_semantics => '音频流活动。无法获取音量电平，因此此线保持平直。';
+
+  @override
+  String get appearance_radio_is_off => '电台已关闭';
+
+  @override
+  String get appearance_paused => '已暂停';
+
+  @override
+  String get appearance_connecting => '连接中…';
+
+  @override
+  String get appearance_live => '直播中';
+
+  @override
+  String get appearance_stream_unavailable => '音频流不可用';
+
+  @override
+  String appearance_now_playing(String credit) {
+    return '正在播放：$credit';
+  }
+
+  @override
+  String get appearance_audio_only_waveform_unavailable => '仅音频 · 波形不可用';
+
+  @override
+  String get appearance_volume => '音量';
+
+  @override
+  String get appearance_search_presets => '搜索预设';
+
+  @override
+  String get appearance_no_stations_found => '未找到电台';
+
+  @override
+  String appearance_unpin_station(String station) {
+    return '取消置顶电台：$station';
+  }
+
+  @override
+  String appearance_pin_station(String station) {
+    return '置顶电台：$station';
+  }
+
+  @override
+  String get appearance_radio_picker_metadata_notice =>
+      '此选择器打开期间，正在播放的电台可能会直接从广播方提供曲目详情。';
+
+  @override
+  String get appearance_message_from_your_companion => '来自伙伴的消息';
+
+  @override
+  String get appearance_send_to_the_open_chat => '发送到当前打开的聊天';
+
+  @override
+  String get appearance_tour_theme_body => '从此设备上的文件导入 VS Code 颜色主题，再选择要保留的变体。';
+
+  @override
+  String get appearance_tour_fonts_title => '阅读字体';
+
+  @override
+  String get appearance_tour_fonts_body => '聊天正文和终端代码分别使用 Ares 内置的不同字体。';
+
+  @override
+  String get appearance_tour_direction_title => '对话文字方向';
+
+  @override
+  String get appearance_tour_direction_body => '保持自动，或强制对话文字从左到右或从右到左。';
+
+  @override
+  String get appearance_tour_pet_title => '伙伴';
+
+  @override
+  String get appearance_tour_pet_body => '领养前，伙伴功能保持关闭。弹出窗口会附带一个小型消息输入框。';
+
+  @override
+  String get appearance_tour_radio_body => '启用前，电台保持关闭。按下播放才会打开音频流。';
+
+  @override
+  String get appearance_tip_theme => '导入的主题会替换内置配色，直到你清除所选主题。仅保留颜色。';
+
+  @override
+  String get appearance_tip_pet => '伙伴仅在此设备上保存一张小头像，不会上传用于孵化的图片。';
+
+  @override
+  String get appearance_theme_import_failed =>
+      '无法导入该主题。请选择以 .vsix、.json 或 .jsonc 文件保存的 VS Code 颜色主题。';
 
   @override
   String get render_widget_file_truncated => '只读取了此文件的开头部分，因此小组件可能不完整。';
@@ -17695,6 +20680,2320 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String ng_bots_section_toggle(String name) {
     return '显示或隐藏“$name”';
   }
+
+  @override
+  String
+  get release_core_transcript_reader_this_passage_is_no_longer_in_the_loaded =>
+      '这段内容已不在当前加载的范围内。';
+
+  @override
+  String get release_core_transcript_reader_loaded_prompts => '已加载的提示词';
+
+  @override
+  String get release_core_transcript_reader_jump_to_latest => '跳至最新内容';
+
+  @override
+  String get release_core_transcript_reader_no_prompts_loaded => '未加载提示词';
+
+  @override
+  String get release_core_transcript_reader_find_in_loaded_messages =>
+      '在已加载的消息中查找';
+
+  @override
+  String get release_core_transcript_reader_previous_match => '上一个匹配项';
+
+  @override
+  String get release_core_transcript_reader_next_match => '下一个匹配项';
+
+  @override
+  String get release_core_transcript_reader_prompt_timeline => '提示词时间线';
+
+  @override
+  String get release_core_transcript_reader_close_find => '关闭查找';
+
+  @override
+  String get release_core_session_organisation_organise_chats => '整理聊天';
+
+  @override
+  String get release_core_session_organisation_show_model_and_usage =>
+      '显示模型和用量';
+
+  @override
+  String
+  get release_core_session_files_view_connection_changed_reopen_files_on_the_new_connection =>
+      '连接已更改。请通过新连接重新打开文件。';
+
+  @override
+  String
+  get release_core_session_files_view_the_connection_or_session_changed_reopen_this_pane =>
+      '连接或会话已更改。请重新打开此面板。';
+
+  @override
+  String
+  get release_core_session_files_view_no_verified_host_working_directory_for_this_session =>
+      '此会话没有经验证的主机工作目录。';
+
+  @override
+  String
+  get release_core_session_files_view_the_gateway_denied_this_operation =>
+      '网关拒绝了此操作。';
+
+  @override
+  String
+  get release_core_session_files_view_this_gateway_does_not_support_this_operation =>
+      '此网关不支持此操作。';
+
+  @override
+  String
+  get release_core_session_files_view_the_file_owner_or_working_directory_changed_reload =>
+      '文件、所有者或工作目录已更改。请重新加载并检查。';
+
+  @override
+  String
+  get release_core_session_files_view_the_gateway_returned_an_unsafe_path_or_invalid =>
+      '网关返回了不安全的路径或无效的文件响应。';
+
+  @override
+  String
+  get release_core_session_files_view_workspace_access_requires_a_secure_gateway_connection =>
+      '访问工作区需要安全的网关连接。';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_unavailable_refresh_to_check_the_current_state =>
+      '网关不可用。请刷新以查看当前状态。';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_operation_could_not_be_confirmed =>
+      '无法确认网关操作。';
+
+  @override
+  String get release_core_session_files_view_git_status_unavailable =>
+      '无法获取 Git 状态。';
+
+  @override
+  String
+  get release_core_session_files_view_change_this_chat_s_working_directory =>
+      '更改此聊天的工作目录？';
+
+  @override
+  String get release_core_session_files_view_absolute_gateway_directory =>
+      '网关目录的绝对路径';
+
+  @override
+  String get release_core_session_files_view_change_directory => '更改目录';
+
+  @override
+  String get release_core_session_files_view_replace_gateway_file =>
+      '替换网关上的文件？';
+
+  @override
+  String
+  release_core_session_files_view_only_if_the_file_still_matches_the_version(
+    String path,
+  ) {
+    return '$path\n\n仅当文件仍与已检查的版本一致时才会替换。兼容的主机会保留被替换的文件，以便恢复。';
+  }
+
+  @override
+  String get release_core_session_files_view_save_changes => '保存更改';
+
+  @override
+  String
+  get release_core_session_files_view_saved_and_verified_on_the_gateway =>
+      '已在网关上保存并验证。';
+
+  @override
+  String
+  get release_core_session_files_view_guarded_saving_is_unavailable_on_this_gateway_your =>
+      '此网关不提供受保护的保存功能。你的草稿仍在。';
+
+  @override
+  String
+  release_core_session_files_view_save_was_not_confirmed_your_draft_is_still(
+    String reason,
+  ) {
+    return '$reason 保存未获确认。你的草稿仍在。';
+  }
+
+  @override
+  String get release_core_session_files_view_review_current_gateway_version =>
+      '检查网关上的当前版本';
+
+  @override
+  String get release_core_session_files_view_discard_draft_and_reload =>
+      '丢弃草稿并重新加载';
+
+  @override
+  String get release_core_session_files_view_keep_draft_against_this_version =>
+      '基于此版本保留草稿';
+
+  @override
+  String get release_core_session_files_view_discard_unsaved_edits =>
+      '丢弃未保存的编辑？';
+
+  @override
+  String get release_core_session_files_view_keep_editing => '继续编辑';
+
+  @override
+  String get release_core_session_files_view_discard_edits => '丢弃编辑';
+
+  @override
+  String get release_core_session_files_view_remote_working_directory =>
+      '远程工作目录';
+
+  @override
+  String get release_core_session_files_view_change_working_directory =>
+      '更改工作目录';
+
+  @override
+  String get release_core_session_files_view_show_ignored_files => '显示已忽略的文件';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_does_not_report_ignored_status =>
+      '网关未报告忽略状态。';
+
+  @override
+  String get release_core_session_files_view_no_visible_entries => '无可见条目';
+
+  @override
+  String get release_core_session_files_view_changed => '已更改';
+
+  @override
+  String get release_core_session_files_view_ignored => '已忽略';
+
+  @override
+  String release_core_session_files_view_actions_for(String name) {
+    return '$name 的操作';
+  }
+
+  @override
+  String get release_core_session_files_view_copy_relative_path => '复制相对路径';
+
+  @override
+  String get release_core_session_files_view_copy_gateway_path => '复制网关路径';
+
+  @override
+  String get release_core_session_files_view_attach_folder_reference =>
+      '附加文件夹引用';
+
+  @override
+  String get release_core_session_files_view_attach_file_reference => '附加文件引用';
+
+  @override
+  String
+  get release_core_session_files_view_preview_truncated_editing_disabled =>
+      '预览已截断，编辑已禁用。';
+
+  @override
+  String get release_core_session_files_view_select_lines => '选择行';
+
+  @override
+  String get release_core_session_files_view_review_gateway_version =>
+      '检查网关上的版本';
+
+  @override
+  String get release_core_session_files_view_attach_selected_lines => '附加所选行';
+
+  @override
+  String get release_core_session_files_view_binary_file_no_text_preview =>
+      '二进制文件，无文本预览。';
+
+  @override
+  String get release_core_session_files_view_file_source => '文件来源';
+
+  @override
+  String get release_core_session_files_view_close_session_files => '关闭会话文件';
+
+  @override
+  String get release_core_session_files_view_back_to_tree => '返回文件树';
+
+  @override
+  String get release_core_session_files_view_session_files => '会话文件';
+
+  @override
+  String get release_core_session_files_view_git_review => 'Git 审查';
+
+  @override
+  String get release_core_session_files_view_refresh_tree => '刷新文件树';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_this_connection_changed_reopen_its_chat =>
+      '此连接已更改。请重新打开对应的聊天。';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_disconnected_reconnect_the_chat_then_refresh =>
+      '连接已断开。请重新连接聊天，然后刷新。';
+
+  @override
+  String release_core_gateway_queue_screen_gateway_queue_unavailable(
+    String reason,
+  ) {
+    return '网关队列不可用：$reason。';
+  }
+
+  @override
+  String release_core_gateway_queue_screen_not_confirmed_nothing_was_resent(
+    String reason,
+  ) {
+    return '未获确认（$reason）。未重新发送任何内容。';
+  }
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_confirmed_admission =>
+      '网关已确认接收。';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_edited_entry_admitted_at_the_end_of_the =>
+      '编辑后的条目已被接收并加入队尾。';
+
+  @override
+  String get release_core_gateway_queue_screen_discard_unknown_outcome =>
+      '丢弃结果未知的条目？';
+
+  @override
+  String get release_core_gateway_queue_screen_remove_this_entry => '移除此条目？';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_the_lost_turn_will_not_be_retried_waiting =>
+      '不会重试丢失的轮次。等待中的轮次现在可以运行。';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_if_the_gateway_has_just_started_this_entry =>
+      '如果网关刚开始处理此条目，移除它可能会停止该轮次。';
+
+  @override
+  String get release_core_gateway_queue_screen_keep => '保留';
+
+  @override
+  String get release_core_gateway_queue_screen_discard_and_resume => '丢弃并恢复';
+
+  @override
+  String get release_core_gateway_queue_screen_remove_entry => '移除条目';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_lost_admission_resolved_it_was_not_resent =>
+      '接收确认丢失的问题已解决；未重新发送。';
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_acknowledged_removal =>
+      '网关已确认移除。';
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_queue => '网关队列';
+
+  @override
+  String get release_core_gateway_queue_screen_refresh_queue => '刷新队列';
+
+  @override
+  String get release_core_gateway_queue_screen_queue_paused_unknown_outcome =>
+      '队列已暂停：结果未知';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_review_the_lost_admission_before_resuming_nothing_is =>
+      '请先检查缺失的接收确认，再恢复队列。不会重新发送任何内容。';
+
+  @override
+  String get release_core_gateway_queue_screen_no_pending_admissions =>
+      '无待接收条目';
+
+  @override
+  String get release_core_gateway_queue_screen_discard => '丢弃…';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_gateway_acknowledged_the_steering_request =>
+      '网关已确认引导请求。';
+
+  @override
+  String get release_core_gateway_queue_screen_steer_running_turn =>
+      '引导正在运行的轮次';
+
+  @override
+  String get release_core_gateway_queue_screen_remove => '移除…';
+
+  @override
+  String get release_core_gateway_queue_screen_next_prompt => '下一条提示词';
+
+  @override
+  String get release_core_gateway_queue_screen_edit_queued_prompt =>
+      '编辑排队中的提示词';
+
+  @override
+  String get release_core_gateway_queue_screen_submit_to_gateway_queue =>
+      '提交到网关队列';
+
+  @override
+  String get release_core_gateway_queue_screen_save_at_queue_end => '保存到队尾';
+
+  @override
+  String get release_core_gateway_queue_screen_cancel_edit => '取消编辑';
+
+  @override
+  String get release_core_git_review_pane_the_git_operation_did_not_complete =>
+      'Git 操作未完成。';
+
+  @override
+  String get release_core_git_review_pane_close_git_review => '关闭 Git 审查';
+
+  @override
+  String get release_core_git_review_pane_pin_lane => '固定泳道';
+
+  @override
+  String get release_core_git_review_pane_refresh_git_review => '刷新 Git 审查';
+
+  @override
+  String get release_core_git_review_pane_uncommitted => '未提交';
+
+  @override
+  String get release_core_git_review_pane_last_turn => '上一轮';
+
+  @override
+  String
+  get release_core_git_review_pane_branch_and_last_turn_views_are_read_only =>
+      '分支和上一轮视图均为只读。';
+
+  @override
+  String get release_core_git_review_pane_mark_head_as_the_turn_baseline =>
+      '将 HEAD 标记为轮次基准';
+
+  @override
+  String get release_core_git_review_pane_stage_all => '暂存全部';
+
+  @override
+  String get release_core_git_review_pane_discard_every_uncommitted_change =>
+      '丢弃所有未提交的更改？';
+
+  @override
+  String
+  get release_core_git_review_pane_tracked_files_return_to_head_and_untracked_files =>
+      '已跟踪文件将恢复到 HEAD，此会话目录中未跟踪的文件将被移除。';
+
+  @override
+  String get release_core_git_review_pane_discard => '丢弃';
+
+  @override
+  String get release_core_git_review_pane_discard_all => '全部丢弃';
+
+  @override
+  String get release_core_git_review_pane_unstage => '取消暂存';
+
+  @override
+  String get release_core_git_review_pane_stage => '暂存';
+
+  @override
+  String get release_core_git_review_pane_discard_file => '丢弃文件';
+
+  @override
+  String release_core_git_review_pane_discard_2(String path) {
+    return '丢弃 $path？';
+  }
+
+  @override
+  String
+  get release_core_git_review_pane_this_restores_the_committed_copy_or_removes_the =>
+      '这会恢复已提交的副本，或移除未跟踪的文件。';
+
+  @override
+  String get release_core_git_review_pane_commit_message => '提交说明';
+
+  @override
+  String get release_core_git_review_pane_nothing_in_the_diff_to_summarise =>
+      '差异中没有可供总结的内容。';
+
+  @override
+  String get release_core_git_review_pane_generate_message => '生成提交说明';
+
+  @override
+  String get release_core_git_review_pane_commit => '提交';
+
+  @override
+  String get release_core_git_review_pane_commit_and_push => '提交并推送';
+
+  @override
+  String get release_core_git_review_pane_push => '推送';
+
+  @override
+  String get release_core_git_review_pane_create_pull_request => '创建拉取请求';
+
+  @override
+  String get release_core_git_review_pane_pull_request_ready => '拉取请求已就绪';
+
+  @override
+  String get release_core_git_review_pane_ask_hermes_to_ship => '请 Hermes 完成发布';
+
+  @override
+  String get release_core_git_review_pane_gh_is_authenticated_on_this_gateway =>
+      'gh 已在此网关上通过身份验证。';
+
+  @override
+  String
+  get release_core_git_review_pane_install_the_github_cli_gh_and_sign_in =>
+      '安装 GitHub CLI（gh）并登录，即可创建拉取请求';
+
+  @override
+  String get release_core_git_review_pane_worktrees => '工作树';
+
+  @override
+  String get release_core_git_review_pane_main => '主工作树';
+
+  @override
+  String release_core_git_review_pane_follow(String branch) {
+    return '跟随 $branch？';
+  }
+
+  @override
+  String
+  get release_core_git_review_pane_the_session_working_directory_becomes_this_worktree_unless =>
+      '除非泳道已固定，否则会话工作目录将切换为此工作树。';
+
+  @override
+  String get release_core_git_review_pane_follow_2 => '跟随';
+
+  @override
+  String release_core_git_review_pane_remove(String branch) {
+    return '移除 $branch？';
+  }
+
+  @override
+  String get release_core_git_review_pane_the_worktree_directory_is_removed =>
+      '工作树目录将被移除。';
+
+  @override
+  String get release_core_git_review_pane_remove_2 => '移除';
+
+  @override
+  String get release_core_git_review_pane_new_worktree_name => '新工作树名称';
+
+  @override
+  String get release_core_git_review_pane_new_branch => '新分支';
+
+  @override
+  String get release_core_git_review_pane_base_branch => '基础分支';
+
+  @override
+  String get release_core_git_review_pane_create_worktree => '创建工作树';
+
+  @override
+  String get release_core_git_review_pane_existing_branch => '现有分支';
+
+  @override
+  String get release_core_git_review_pane_convert_branch_to_worktree =>
+      '将分支转换为工作树';
+
+  @override
+  String get release_core_git_review_pane_switch_branch => '切换分支';
+
+  @override
+  String
+  get release_core_git_review_pane_this_gateway_does_not_support_that_git_operation =>
+      '此网关不支持该 Git 操作。';
+
+  @override
+  String
+  get release_core_git_review_pane_git_needs_the_session_directory_on_the_local =>
+      'Git 需要会话目录位于本地终端后端。';
+
+  @override
+  String
+  get release_core_git_review_pane_the_gateway_refused_the_git_operation =>
+      '网关拒绝了 Git 操作。';
+
+  @override
+  String
+  get release_core_git_review_pane_the_session_changed_refresh_and_try_again =>
+      '会话已更改。请刷新后重试。';
+
+  @override
+  String
+  get release_core_git_review_pane_this_review_is_no_longer_the_selected_session =>
+      '此审查已不再对应当前选中的会话。';
+
+  @override
+  String
+  get release_core_git_review_pane_the_gateway_returned_an_unexpected_git_result =>
+      '网关返回了意外的 Git 结果。';
+
+  @override
+  String
+  get release_core_git_review_pane_git_review_requires_the_gateway_transport =>
+      'Git 审查需要通过网关传输。';
+
+  @override
+  String get release_core_client_held_queue_bar_resume => '恢复';
+
+  @override
+  String get release_core_client_held_queue_bar_send_queued_prompt =>
+      '发送排队中的提示词';
+
+  @override
+  String get release_core_client_held_queue_bar_edit_unsent_prompt =>
+      '编辑未发送的提示词';
+
+  @override
+  String get release_core_client_held_queue_bar_remove_unsent_prompt =>
+      '移除未发送的提示词';
+
+  @override
+  String get release_core_workspace_discovery_view_repository_discovery =>
+      '仓库发现';
+
+  @override
+  String get release_core_workspace_discovery_view_refresh_results => '刷新结果';
+
+  @override
+  String release_core_workspace_discovery_view_hide(String path) {
+    return '隐藏 $path';
+  }
+
+  @override
+  String
+  get release_core_workspace_discovery_view_invalid_path_or_discovery_data_use_absolute_server =>
+      '路径或发现数据无效。请使用不含 . 或 .. 路径段的服务器绝对路径。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_this_gateway_does_not_support_repository_discovery =>
+      '此网关不支持仓库发现。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_gateway_denied_access_to_repository_discovery =>
+      '网关拒绝访问仓库发现功能。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_connection_changed_reopen_discovery_on_the_current =>
+      '连接已更改。请在当前网关上重新打开仓库发现。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_displayed_settings_have_changed_refresh_before_trying =>
+      '显示的设置已更改。请刷新后重试。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_could_not_load_or_verify_discovery_settings_refresh =>
+      '无法加载或验证发现设置。请刷新以重试。';
+
+  @override
+  String release_core_workspace_discovery_view_repositories_shown_of(
+    int visible,
+    int total,
+  ) {
+    return '已显示仓库：$visible / $total';
+  }
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_gateway_returned_no_repositories =>
+      '网关未返回任何仓库。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_no_repositories_match_your_device_filters =>
+      '没有仓库符合此设备上的筛选条件。';
+
+  @override
+  String get release_core_workspace_discovery_view_gateway_scan_policy =>
+      '网关扫描策略';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_this_gateway_did_not_report_a_scan_policy =>
+      '此网关未报告扫描策略。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_to_scan_folders_configure_repository_scanning_in_the =>
+      '要扫描文件夹，请在网关配置档案的桌面设置中配置仓库扫描。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_results_can_include_cached_repositories_and_repositories_with =>
+      '结果可能包含已缓存的仓库及有关联会话的仓库。扫描并不保证遍历了每个文件夹。';
+
+  @override
+  String get release_core_workspace_discovery_view_scan_gateway_roots =>
+      '扫描网关根目录';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_filter_results_on_this_device =>
+      '在此设备上筛选结果';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_only_this_discovery_list_changes_not_the_gateway =>
+      '仅更改此发现列表，不影响网关扫描。';
+
+  @override
+  String get release_core_workspace_discovery_view_include_subtrees_empty_all =>
+      '包含的子目录树（留空表示全部）';
+
+  @override
+  String get release_core_workspace_discovery_view_exclude_subtrees =>
+      '排除的子目录树';
+
+  @override
+  String get release_core_workspace_discovery_view_apply_filters => '应用筛选条件';
+
+  @override
+  String release_core_workspace_discovery_view_hidden_repositories(int count) {
+    return '隐藏的仓库（$count）';
+  }
+
+  @override
+  String get release_core_workspace_discovery_view_undo_hide => '撤销隐藏';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_one_absolute_server_path_per_line =>
+      '每行一个服务器绝对路径';
+
+  @override
+  String get release_core_project_settings_view_project_settings => '项目设置';
+
+  @override
+  String
+  get release_core_project_settings_view_the_gateway_did_not_confirm_the_selected_project =>
+      '网关未确认所选项目或更改。请检查设置后重试。';
+
+  @override
+  String
+  get release_core_project_settings_view_could_not_verify_these_settings_use_one_absolute =>
+      '无法验证这些设置。请每行填写一个服务器文件夹的绝对路径，且不含 . 或 .. 路径段。';
+
+  @override
+  String get release_core_project_settings_view_set_active => '设为活动项目';
+
+  @override
+  String get release_core_project_settings_view_icon => '图标';
+
+  @override
+  String get release_core_project_settings_view_folder => '文件夹';
+
+  @override
+  String get release_core_project_settings_view_repository => '仓库';
+
+  @override
+  String get release_core_project_settings_view_rocket => '火箭';
+
+  @override
+  String get release_core_project_settings_view_star => '星星';
+
+  @override
+  String get release_core_project_settings_view_book => '书籍';
+
+  @override
+  String get release_core_project_settings_view_terminal => '终端';
+
+  @override
+  String get release_core_project_settings_view_colour => '颜色';
+
+  @override
+  String get release_core_project_settings_view_primary_folder => '主文件夹';
+
+  @override
+  String get release_core_project_settings_view_server_folder_paths =>
+      '服务器文件夹路径';
+
+  @override
+  String
+  get release_core_project_settings_view_one_absolute_path_per_line_existing_folders_are =>
+      '每行一个绝对路径。现有文件夹将保留。';
+
+  @override
+  String get release_core_project_settings_view_add_folders => '添加文件夹';
+
+  @override
+  String release_core_project_settings_view_choose(String label) {
+    return '选择$label';
+  }
+
+  @override
+  String
+  get release_core_prepared_image_recovery_wait_for_an_empty_draft_before_restoring =>
+      '请等草稿为空后再恢复。';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_no_unacknowledged_image_drafts_in_this_chat =>
+      '此聊天中没有未获接收确认的图片草稿。';
+
+  @override
+  String get release_core_prepared_image_recovery_unacknowledged_image_drafts =>
+      '未获接收确认的图片草稿';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_the_gateway_may_already_have_received_these_restore =>
+      '网关可能已收到这些内容。恢复后可查看，不会发送任何内容。';
+
+  @override
+  String get release_core_prepared_image_recovery_image_draft => '图片草稿';
+
+  @override
+  String get release_core_prepared_image_recovery_discard_local_copy =>
+      '丢弃本地副本';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_discard_this_local_image_draft =>
+      '丢弃此本地图片草稿？';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_image_draft_recovery_is_unavailable =>
+      '图片草稿恢复功能不可用。';
+
+  @override
+  String get release_core_prepared_image_recovery_recover_image_draft =>
+      '恢复图片草稿…';
+
+  @override
+  String get release_core_session_search_mode_menu_could_not_save_search_mode =>
+      '无法保存搜索模式。';
+
+  @override
+  String get release_core_projects_pane_discover_repositories => '发现仓库';
+
+  @override
+  String
+  get release_core_projects_pane_project_created_but_the_gateway_did_not_confirm =>
+      '项目已创建，但网关未确认项目构想。';
+
+  @override
+  String get release_core_projects_pane_project_idea_optional => '项目构想（可选）';
+
+  @override
+  String
+  get release_core_projects_pane_saved_in_the_project_description_not_a_file =>
+      '保存在项目描述中，而非文件中。';
+
+  @override
+  String get release_core_project_detail_screen_new_chat_in_this_lane =>
+      '在此泳道中新建聊天';
+
+  @override
+  String get release_core_project_detail_screen_review_git => '审查 Git 更改';
+
+  @override
+  String get release_core_more_pane_gateway_fleet => '网关集群';
+
+  @override
+  String
+  get release_core_more_pane_connected_sessions_hermes_cloud_and_desktop_webapp =>
+      '已连接的会话、Hermes Cloud 和桌面网页应用';
+
+  @override
+  String get release_core_more_pane_use_dashboard_sign_in_for_a_named_profile =>
+      '请通过仪表盘登录指定的配置档案。此旧版 API 无法确认聊天记录属于哪个配置档案。';
+
+  @override
+  String get release_core_more_pane_capabilities => '功能';
+
+  @override
+  String
+  get release_core_more_pane_install_and_govern_skills_plugins_connectors_and_tool =>
+      '安装和管理技能、插件、连接器及工具后端';
+
+  @override
+  String get release_core_more_pane_browser_vault => '浏览器保险库';
+
+  @override
+  String
+  get release_core_more_pane_site_logins_addresses_cards_and_credential_sources =>
+      '网站登录信息、地址、银行卡和凭据来源';
+
+  @override
+  String get release_core_more_pane_agent_policy => '智能体策略';
+
+  @override
+  String
+  get release_core_more_pane_approvals_checkpoints_browser_access_and_shared_metrics =>
+      '审批、检查点、浏览器访问和共享指标';
+
+  @override
+  String get release_core_more_pane_remote_logs_health_maintenance_and_update =>
+      '远程日志、健康状态、维护和更新';
+
+  @override
+  String get release_core_more_pane_schedules => '计划任务';
+
+  @override
+  String get release_core_more_pane_all_profiles_blueprints_catch_up_and_stop =>
+      '所有配置档案、蓝图、补跑和停止';
+
+  @override
+  String get release_core_more_pane_memory_graph => '记忆图谱';
+
+  @override
+  String get release_core_more_pane_timeline_edits_and_memory_providers =>
+      '时间线、编辑和记忆提供商';
+
+  @override
+  String get release_core_more_pane_providers_and_routes => '提供商和路由';
+
+  @override
+  String get release_core_more_pane_keys_endpoints_delegation_and_mixtures =>
+      '密钥、端点、委派和混合配置';
+
+  @override
+  String get release_core_more_pane_credits_and_plans => '额度和套餐';
+
+  @override
+  String
+  get release_core_more_pane_consented_nous_billing_when_the_account_allows_it =>
+      '账户允许且经你同意后使用 Nous 计费';
+
+  @override
+  String
+  get release_core_fleet_screen_this_gateway_does_not_offer_this_service =>
+      '此网关不提供此服务。';
+
+  @override
+  String
+  get release_core_fleet_screen_sign_in_or_permission_required_on_this_gateway =>
+      '需要在此网关上登录或取得权限。';
+
+  @override
+  String get release_core_fleet_screen_a_secure_gateway_address_is_required =>
+      '需要安全的网关地址。';
+
+  @override
+  String
+  get release_core_fleet_screen_the_owner_changed_refresh_before_continuing =>
+      '所有者已更改。请刷新后再继续。';
+
+  @override
+  String
+  get release_core_fleet_screen_could_not_verify_the_operation_check_the_gateway =>
+      '无法验证操作。请检查网关并刷新。';
+
+  @override
+  String get release_core_fleet_screen_verified_ssh => '已验证的 SSH';
+
+  @override
+  String
+  get release_core_fleet_screen_confirm_a_host_key_inspect_a_remote_service =>
+      '确认主机密钥、检查远程服务或打开其命令行';
+
+  @override
+  String get release_core_fleet_screen_cloud_and_desktop_webapp => '云端和桌面网页应用';
+
+  @override
+  String get release_core_fleet_screen_register_an_existing_gateway_or_webapp =>
+      '注册现有网关或网页应用';
+
+  @override
+  String
+  get release_core_fleet_screen_sign_in_to_its_address_nothing_is_hosted =>
+      '通过其地址登录。此设备不会托管任何服务。';
+
+  @override
+  String get release_core_fleet_screen_fleet_updates => '网关集群更新';
+
+  @override
+  String get release_core_fleet_screen_refresh_roster => '刷新网关列表';
+
+  @override
+  String release_core_fleet_screen_disconnect(String gateway) {
+    return '断开 $gateway 的连接';
+  }
+
+  @override
+  String get release_core_fleet_screen_open_this_gateway_on_launch =>
+      '启动时打开此网关';
+
+  @override
+  String
+  get release_core_fleet_screen_primary_for_ares_does_not_change_the_last =>
+      '设为 Ares 的主网关；不会更改上次使用的网关。';
+
+  @override
+  String get release_core_fleet_screen_reconnect_in_fleet_on_launch =>
+      '启动时在集群中重新连接';
+
+  @override
+  String get release_core_fleet_screen_no_sessions_for_this_profile =>
+      '此配置档案没有会话。';
+
+  @override
+  String get release_core_fleet_screen_more_sessions => '更多会话';
+
+  @override
+  String get release_core_fleet_screen_this_gateway_was_disconnected =>
+      '此网关已断开连接。';
+
+  @override
+  String
+  get release_core_fleet_screen_some_conversation_data_could_not_be_loaded =>
+      '部分对话数据无法加载。';
+
+  @override
+  String get release_core_fleet_screen_message_this_session => '向此会话发送消息';
+
+  @override
+  String get release_core_fleet_screen_send_to_this_session => '发送到此会话';
+
+  @override
+  String get release_core_fleet_updates_screen_update_these_remote_gateways =>
+      '更新这些远程网关？';
+
+  @override
+  String
+  release_core_fleet_updates_screen_this_can_restart_the_backend_and_interrupt_other(
+    String gateways,
+  ) {
+    return '这可能会重启后端并中断其他用户的使用。不会更新 Ares。\n\n$gateways';
+  }
+
+  @override
+  String get release_core_fleet_updates_screen_update_listed_gateways =>
+      '更新列出的网关';
+
+  @override
+  String
+  get release_core_fleet_updates_screen_checks_connected_gateways_cloud_is_platform_managed_entries =>
+      '检查已连接的网关。云端由平台管理；没有注册来源记录的条目不包含在内。';
+
+  @override
+  String get release_core_fleet_updates_screen_check_connected_gateways =>
+      '检查已连接的网关';
+
+  @override
+  String get release_core_fleet_updates_screen_read_update_receipt => '读取更新回执';
+
+  @override
+  String get release_core_fleet_updates_screen_review_eligible_updates =>
+      '检查符合条件的更新';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_account_changed_reopen_this_page =>
+      '账户已更改。请重新打开此页面。';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_set_the_webapp_s_primary_gateway =>
+      '设置网页应用的主网关？';
+
+  @override
+  String
+  release_core_fleet_webapp_screen_this_changes_the_shared_registry_not_the_last(
+    String webapp,
+    String gateway,
+    String id,
+  ) {
+    return '$webapp → $gateway ($id)\n这会更改共享注册表，而非上次使用的网关。';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_set_primary => '设为主网关';
+
+  @override
+  String get release_core_fleet_webapp_screen_serving_profile => '提供服务的配置档案';
+
+  @override
+  String get release_core_fleet_webapp_screen_hermes_cloud => 'Hermes Cloud';
+
+  @override
+  String get release_core_fleet_webapp_screen_discover_signed_in_agents =>
+      '发现已登录的智能体';
+
+  @override
+  String release_core_fleet_webapp_screen_organisation(String organisation) {
+    return '组织：$organisation';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_no_agents_available =>
+      '没有可用的智能体。';
+
+  @override
+  String get release_core_fleet_webapp_screen_existing_desktop_webapp =>
+      '现有桌面网页应用';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_check_gateway_and_web_access_status =>
+      '检查网关和网页访问状态';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_these_settings_belong_to_the_machine_serving_this =>
+      '这些设置属于为此网页应用提供服务的机器。发布和重启不是远程操作。';
+
+  @override
+  String get release_core_fleet_webapp_screen_read_webapp_gateway_registry =>
+      '读取网页应用的网关注册表';
+
+  @override
+  String get release_core_fleet_webapp_screen_last_used => '上次使用';
+
+  @override
+  String get release_core_fleet_webapp_screen_primary => '主网关';
+
+  @override
+  String release_core_fleet_webapp_screen_set_primary_2(String gateway) {
+    return '设为主网关：$gateway';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_read_shared_display_preferences =>
+      '读取共享显示偏好设置';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_chat_text_direction_on_this_webapp_and_desktop =>
+      '此网页应用及桌面端的聊天文本方向';
+
+  @override
+  String release_core_schedule_desk_screen_created_on(
+    String job,
+    String profile,
+  ) {
+    return '已在 $profile 上创建 $job。';
+  }
+
+  @override
+  String
+  get release_core_schedule_desk_screen_the_list_covers_every_profile_on_this_gateway =>
+      '此列表涵盖此网关上的所有配置档案。停止、暂停、补跑、投递和蓝图操作都会发送到任务所属的配置档案。';
+
+  @override
+  String get release_core_schedule_desk_screen_a_run_is_in_progress => '任务正在运行';
+
+  @override
+  String get release_core_schedule_desk_screen_no_current_run => '当前没有运行中的任务';
+
+  @override
+  String release_core_schedule_desk_screen_stop_requested_for(String job) {
+    return '已请求停止 $job。';
+  }
+
+  @override
+  String release_core_schedule_desk_screen_no_run_was_in_flight_for(
+    String job,
+  ) {
+    return '$job 没有正在运行的任务。';
+  }
+
+  @override
+  String get release_core_schedule_desk_screen_stop_current_run => '停止当前运行';
+
+  @override
+  String get release_core_schedule_desk_screen_pause_future_runs => '暂停后续运行';
+
+  @override
+  String get release_core_schedule_desk_screen_resume_future_runs => '恢复后续运行';
+
+  @override
+  String get release_core_schedule_desk_screen_catch_up_default => '默认补跑方式';
+
+  @override
+  String get release_core_schedule_desk_screen_run_one_missed => '补跑一次错过的任务';
+
+  @override
+  String get release_core_schedule_desk_screen_skip_missed => '跳过错过的任务';
+
+  @override
+  String get release_core_schedule_desk_screen_blueprint_recipes => '蓝图模板';
+
+  @override
+  String get release_core_schedule_desk_screen_profile_for_the_new_job =>
+      '新任务使用的配置档案';
+
+  @override
+  String release_core_schedule_desk_screen_create(String blueprint) {
+    return '创建 $blueprint';
+  }
+
+  @override
+  String get release_core_schedule_desk_screen_loading_delivery_targets =>
+      '正在加载投递目标';
+
+  @override
+  String release_core_schedule_desk_screen_no_home_channel(String target) {
+    return '$target（无默认频道）';
+  }
+
+  @override
+  String release_core_memory_graph_screen_edit(String label) {
+    return '编辑$label';
+  }
+
+  @override
+  String get release_core_memory_graph_screen_content => '内容';
+
+  @override
+  String get release_core_memory_graph_screen_archive_skill => '归档技能';
+
+  @override
+  String get release_core_memory_graph_screen_delete_memory => '删除记忆';
+
+  @override
+  String release_core_memory_graph_screen_archive_on_it_can_be_restored_on_the(
+    String label,
+    String profile,
+  ) {
+    return '将 $profile 上的 $label 归档？可以在主机上使用 Curator 恢复。';
+  }
+
+  @override
+  String release_core_memory_graph_screen_delete_from_this_removes_that_memory(
+    String label,
+    String profile,
+  ) {
+    return '从 $profile 中删除 $label？这会移除该条记忆。';
+  }
+
+  @override
+  String get release_core_memory_graph_screen_filter => '筛选';
+
+  @override
+  String get release_core_memory_graph_screen_timeline => '时间线';
+
+  @override
+  String get release_core_memory_graph_screen_play_timeline => '播放时间线';
+
+  @override
+  String get release_core_memory_graph_screen_layout_code => '布局代码';
+
+  @override
+  String get release_core_memory_graph_screen_external_memory_providers =>
+      '外部记忆提供商';
+
+  @override
+  String
+  get release_core_memory_graph_screen_a_value_is_stored_leave_blank_to_keep =>
+      '已存储一个值。留空即可保留。';
+
+  @override
+  String get release_core_memory_graph_screen_save_provider => '保存提供商';
+
+  @override
+  String release_core_workspace_profiles_screen_applies_to(String profile) {
+    return '适用于：$profile';
+  }
+
+  @override
+  String get release_core_workspace_profiles_screen_choose_another_profile =>
+      '选择其他配置档案';
+
+  @override
+  String
+  get release_core_workspace_profiles_screen_could_not_verify_the_selected_profile_on_this =>
+      '无法在此网关上验证所选配置档案。';
+
+  @override
+  String get release_core_workspace_profiles_screen_create_profile => '创建配置档案';
+
+  @override
+  String get release_core_workspace_profiles_screen_new_profile_id =>
+      '新配置档案 ID';
+
+  @override
+  String get release_core_assets_screen_links => '链接';
+
+  @override
+  String get release_core_workspace_picker_no_matching_items => '没有匹配的项目。';
+
+  @override
+  String get release_core_workspace_picker_save_layout => '保存布局';
+
+  @override
+  String get release_core_workspace_picker_layout_name => '布局名称';
+
+  @override
+  String
+  get release_core_workspace_popout_this_chat_already_has_a_pop_out_window =>
+      '此聊天已有一个独立窗口。';
+
+  @override
+  String
+  get release_core_workspace_popout_could_not_open_this_saved_chat_check_the =>
+      '无法打开此已保存的聊天。请检查连接后重试。';
+
+  @override
+  String
+  get release_core_popout_bootstrap_use_the_main_window_to_change_your_connection =>
+      '请在主窗口中更改连接。';
+
+  @override
+  String get release_core_guarded_save_refused => '网关无法保存此文件';
+
+  @override
+  String get release_core_guarded_save_unavailable => '此网关不提供受保护的保存功能';
+
+  @override
+  String release_core_git_files_changed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '本轮更改了 $count 个文件',
+      one: '本轮更改了 1 个文件',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String release_core_git_entries_omitted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '因无法安全显示，已省略 $count 个 Git 条目。',
+      one: '因无法安全显示，已省略 1 个 Git 条目。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get release_core_git_staged => '已暂存';
+
+  @override
+  String get release_core_session_sort_recent => '最近活动';
+
+  @override
+  String get release_core_session_sort_created => '最新创建';
+
+  @override
+  String get release_core_session_sort_status => '运行中的优先';
+
+  @override
+  String get release_core_session_sort_tokens => '令牌最多';
+
+  @override
+  String get release_core_session_sort_cost => '费用最高';
+
+  @override
+  String get release_core_session_group_standard => '默认分组';
+
+  @override
+  String get release_core_session_group_status => '按状态分组';
+
+  @override
+  String get release_core_session_group_project => '按项目分组';
+
+  @override
+  String release_core_session_tokens(int count) {
+    return '$count 个令牌';
+  }
+
+  @override
+  String release_core_search_gateway_mode(String mode) {
+    return '$mode（网关）';
+  }
+
+  @override
+  String release_core_search_mode_tooltip(String label, String mode) {
+    return '$label：$mode';
+  }
+
+  @override
+  String get release_core_image_recovery_new_turn => '发送会创建新的轮次';
+
+  @override
+  String release_core_image_recovery_metadata(int count, String date) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 张图片 · $date',
+      one: '1 张图片 · $date',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String release_core_discovery_scanning(String state) {
+    return '扫描：$state';
+  }
+
+  @override
+  String get release_core_discovery_enabled => '已启用';
+
+  @override
+  String get release_core_discovery_disabled => '已禁用';
+
+  @override
+  String get release_core_discovery_none => '无';
+
+  @override
+  String release_core_discovery_roots(String paths) {
+    return '扫描根目录：$paths';
+  }
+
+  @override
+  String release_core_discovery_excluded(String paths) {
+    return '排除的子目录树：$paths';
+  }
+
+  @override
+  String release_core_discovery_repository_sessions(String path, int count) {
+    return '$path\n会话数：$count';
+  }
+
+  @override
+  String get release_core_projects_local_only =>
+      '此 Hermes 网关版本较旧，不支持服务器端项目，因此聊天分组仅保留在此设备上。请更新 Hermes，以便在各设备间共享相同的项目。';
+
+  @override
+  String get release_core_fleet_no_address => '尚无网关地址';
+
+  @override
+  String release_core_fleet_diagnostics(String version, String access) {
+    return '网关 $version · $access';
+  }
+
+  @override
+  String get release_core_schedule_builtin => '内置';
+
+  @override
+  String get release_core_memory_gateway_profile => '网关';
+
+  @override
+  String release_core_memory_profile_summary(String profile, String gateway) {
+    return '$gateway 上的配置档案 $profile。分享代码仅存储缩放、时间和筛选条件。';
+  }
+
+  @override
+  String release_core_memory_layers_summary(
+    int memoryBytes,
+    int userBytes,
+    String provider,
+  ) {
+    return '内置记忆 $memoryBytes 字节，用户信息 $userBytes 字节。当前提供商为 $provider。';
+  }
+
+  @override
+  String get release_core_memory_kind_all => '全部';
+
+  @override
+  String get release_core_memory_kind_skill => '技能';
+
+  @override
+  String get release_core_memory_kind_memory => '记忆';
+
+  @override
+  String get release_core_workspace_failure_stale => '连接已更改';
+
+  @override
+  String get release_core_workspace_failure_unbound => '无经验证的工作目录';
+
+  @override
+  String get release_core_workspace_failure_denied => '权限被拒绝';
+
+  @override
+  String get release_core_workspace_failure_ineligible => '不允许对此文件执行该操作';
+
+  @override
+  String get release_core_workspace_failure_unsupported => '此网关不支持';
+
+  @override
+  String get release_core_workspace_failure_mismatch => '远程状态已更改';
+
+  @override
+  String get release_core_workspace_failure_invalid => '网关响应无效';
+
+  @override
+  String get release_core_workspace_failure_insecure => '需要安全连接';
+
+  @override
+  String get release_core_workspace_failure_unavailable => '网关不可用';
+
+  @override
+  String get release_core_queue_state_queued => '已排队';
+
+  @override
+  String get release_core_queue_state_started => '已开始';
+
+  @override
+  String get release_core_queue_state_unknown => '结果未知';
+
+  @override
+  String get release_core_unknown_state => '未知';
+
+  @override
+  String get release_core_fleet_state_idle => '离线';
+
+  @override
+  String get release_core_fleet_state_connected => '已连接';
+
+  @override
+  String get release_core_fleet_state_reconnecting => '正在重新连接…';
+
+  @override
+  String get release_core_fleet_state_sessionExpired => '已退出登录';
+
+  @override
+  String get release_core_fleet_state_failed => '连接失败';
+
+  @override
+  String release_core_workspace_operation_failed(String reason) {
+    return '无法确认网关操作：$reason。';
+  }
+
+  @override
+  String get release_core_workspace_invalid_data => '无法验证数据或输入。请检查后重试。';
+
+  @override
+  String
+  get release_core_parallel_workspace_layout_changed_in_this_window_but_could_not =>
+      '此窗口中的布局已更改，但无法保存。';
+
+  @override
+  String get release_core_parallel_workspace_first_pane => '第一个面板';
+
+  @override
+  String get release_core_parallel_workspace_second_pane => '第二个面板';
+
+  @override
+  String get release_core_parallel_workspace_unavailable_page => '页面不可用';
+
+  @override
+  String release_core_parallel_workspace_close_a_tab_first_maximum(
+    String maximum,
+  ) {
+    return '请先关闭一个标签页（最多 $maximum 个）。';
+  }
+
+  @override
+  String get release_core_parallel_workspace_dock_beside_current_pane =>
+      '停靠在当前面板旁';
+
+  @override
+  String get release_core_parallel_workspace_add_chat => '添加聊天';
+
+  @override
+  String
+  get release_core_parallel_workspace_action_failed_check_the_connection_and_try_again =>
+      '操作失败。请检查连接后重试。';
+
+  @override
+  String
+  get release_core_parallel_workspace_close_a_tab_before_reopening_another =>
+      '请先关闭一个标签页，再重新打开另一个。';
+
+  @override
+  String release_core_parallel_workspace_replace_layout(String name) {
+    return '替换布局“$name”？';
+  }
+
+  @override
+  String
+  get release_core_parallel_workspace_layout_limit_reached_replace_an_existing_layout =>
+      '已达布局数量上限。请替换现有布局。';
+
+  @override
+  String get release_core_parallel_workspace_restore_layout => '恢复布局';
+
+  @override
+  String get release_core_parallel_workspace_workspace_options => '工作区选项';
+
+  @override
+  String get release_core_parallel_workspace_dock_another_pane => '停靠另一个面板';
+
+  @override
+  String get release_core_parallel_workspace_swap_panes => '交换面板';
+
+  @override
+  String get release_core_parallel_workspace_undock_second_pane => '取消停靠第二个面板';
+
+  @override
+  String get release_core_parallel_workspace_arrange_side_by_side => '左右排列';
+
+  @override
+  String get release_core_parallel_workspace_arrange_top_to_bottom => '上下排列';
+
+  @override
+  String release_core_parallel_workspace_change_split_size(String percent) {
+    return '调整分割比例（$percent%）';
+  }
+
+  @override
+  String get release_core_parallel_workspace_focus_pane_full_screen => '全屏聚焦面板';
+
+  @override
+  String get release_core_parallel_workspace_open_chat_in_new_window =>
+      '在新窗口中打开聊天';
+
+  @override
+  String get release_core_parallel_workspace_hide_pane_keep_running =>
+      '隐藏面板（保持运行）';
+
+  @override
+  String get release_core_parallel_workspace_previous_tab => '上一个标签页';
+
+  @override
+  String get release_core_parallel_workspace_next_tab => '下一个标签页';
+
+  @override
+  String get release_core_parallel_workspace_move_tab_left => '向左移动标签页';
+
+  @override
+  String get release_core_parallel_workspace_move_tab_right => '向右移动标签页';
+
+  @override
+  String get release_core_parallel_workspace_reload_current_tab => '重新加载当前标签页';
+
+  @override
+  String get release_core_parallel_workspace_close_tab => '关闭标签页';
+
+  @override
+  String get release_core_parallel_workspace_close_other_tabs => '关闭其他标签页';
+
+  @override
+  String get release_core_parallel_workspace_close_tabs_to_the_right =>
+      '关闭右侧标签页';
+
+  @override
+  String get release_core_parallel_workspace_close_all_tabs => '关闭所有标签页';
+
+  @override
+  String get release_core_parallel_workspace_reopen_closed_tab => '重新打开已关闭的标签页';
+
+  @override
+  String get release_core_parallel_workspace_save_named_layout => '保存命名布局';
+
+  @override
+  String get release_core_parallel_workspace_restore_named_layout => '恢复命名布局';
+
+  @override
+  String get release_core_parallel_workspace_refresh_chat_list => '刷新聊天列表';
+
+  @override
+  String get release_core_parallel_workspace_workspace_tools => '工作区工具';
+
+  @override
+  String get release_core_parallel_workspace_choose_a_chat_for_this_pane =>
+      '为此面板选择聊天';
+
+  @override
+  String release_core_parallel_workspace_choose_chat_for(String pane) {
+    return '为$pane选择聊天';
+  }
+
+  @override
+  String get release_core_parallel_workspace_add_a_chat_to_start_a_workspace =>
+      '添加聊天以开始使用工作区。';
+
+  @override
+  String get release_core_parallel_workspace_select_a_tab_to_show_its_pane =>
+      '选择一个标签页以显示对应的面板。';
+
+  @override
+  String get release_core_parallel_workspace_parallel_workspace => '并行工作区';
+
+  @override
+  String get release_core_parallel_workspace_show_workspace => '显示工作区';
+
+  @override
+  String get release_core_parallel_workspace_could_not_load_chats_retry =>
+      '无法加载聊天。重试';
+
+  @override
+  String release_core_parallel_workspace_close(String pane) {
+    return '关闭$pane';
+  }
+
+  @override
+  String release_core_parallel_workspace_switch_pane(String pane) {
+    return '切换面板：$pane';
+  }
+
+  @override
+  String get release_core_workspace_registry_session_id_copied => '已复制会话 ID。';
+
+  @override
+  String get release_core_workspace_registry_chat_details => '聊天详情';
+
+  @override
+  String get release_core_workspace_registry_server_default => '服务器默认值';
+
+  @override
+  String get release_core_workspace_registry_session_id => '会话 ID';
+
+  @override
+  String get release_core_workspace_registry_title => '标题';
+
+  @override
+  String get release_core_workspace_label_terminals => '终端';
+
+  @override
+  String get release_core_workspace_label_copy_id => '复制会话 ID';
+
+  @override
+  String get release_core_workspace_label_contributions => '扩展项';
+
+  @override
+  String get release_core_workspace_owner_inactive => '此工作区的所有者已不再处于活动状态。';
+
+  @override
+  String get release_core_workspace_select_chat => '请先选择聊天。';
+
+  @override
+  String get release_core_workspace_chat_unavailable => '此连接无法使用该聊天。';
+
+  @override
+  String get release_core_workspace_page_unavailable => '此连接无法使用该页面。';
+
+  @override
+  String release_core_client_queue_count(int count) {
+    return '$count 条已排队';
+  }
+
+  @override
+  String release_core_client_queue_paused_count(int count) {
+    return '$count 条已排队，已暂停';
+  }
+
+  @override
+  String release_core_git_diff_truncated(String diff) {
+    return '$diff\n…已截断';
+  }
+
+  @override
+  String get release_core_search_no_models => 'Hermes 未返回任何已配置的可选模型。';
+
+  @override
+  String get release_core_chat_archive_unavailable => '聊天归档操作不可用。';
+
+  @override
+  String get release_core_chat_pin_unconfirmed => '置顶状态未获确认。';
+
+  @override
+  String get release_core_chat_archive_unconfirmed => '归档状态未获确认。';
+
+  @override
+  String get release_core_chat_archive_history_unavailable => '已归档的历史记录不可用';
+
+  @override
+  String get release_core_quick_chat_history_unavailable => '快速聊天的历史记录不可用';
+
+  @override
+  String get release_core_chat_project_ownership_unavailable => '无法确认项目归属';
+
+  @override
+  String get release_core_chat_unknown_project => '未知项目';
+
+  @override
+  String get release_core_chat_local_search_fallback => '消息搜索不可用。正在显示本地匹配结果。';
+
+  @override
+  String release_core_fleet_update_eligible(String version) {
+    return '符合条件 · $version';
+  }
+
+  @override
+  String get release_core_fleet_update_state_1 => '已跳过：同一安装实例';
+
+  @override
+  String get release_core_fleet_update_state_2 => '尚未检查';
+
+  @override
+  String get release_core_fleet_update_state_3 => '已跳过：由云端管理';
+
+  @override
+  String get release_core_fleet_update_state_4 => '已跳过：未注册为直连网关';
+
+  @override
+  String get release_core_fleet_update_state_5 => '已跳过：已断开连接或正忙';
+
+  @override
+  String get release_core_fleet_update_state_6 => '没有适用的更新';
+
+  @override
+  String get release_core_fleet_update_state_7 => '无法验证更新资格';
+
+  @override
+  String get release_core_fleet_update_state_8 => '已跳过：状态已过期、正忙或已请求';
+
+  @override
+  String get release_core_fleet_update_state_9 => '正在请求';
+
+  @override
+  String get release_core_fleet_update_state_10 => '已接受；回执不可用';
+
+  @override
+  String get release_core_fleet_update_state_11 => '已接受；正在等待回执';
+
+  @override
+  String get release_core_fleet_update_state_12 => '已跳过：此安装实例上有聊天正在运行';
+
+  @override
+  String get release_core_fleet_update_state_13 => '未获确认；不要自动重新发送';
+
+  @override
+  String get release_core_fleet_update_state_14 => '重新连接以检查回执';
+
+  @override
+  String get release_core_fleet_update_state_15 => '回执不可用';
+
+  @override
+  String get release_core_fleet_update_state_16 => '正在等待匹配的回执';
+
+  @override
+  String get release_core_fleet_update_state_17 => '已更新；需要后续处理';
+
+  @override
+  String get release_core_fleet_update_state_19 => '已部分更新';
+
+  @override
+  String get release_core_fleet_update_state_20 => '更新失败';
+
+  @override
+  String get release_core_fleet_update_state_21 => '未获确认';
+
+  @override
+  String get release_core_cloud_status_ready => '就绪';
+
+  @override
+  String get release_core_cloud_status_online => '在线';
+
+  @override
+  String get release_core_cloud_status_stopped => '已停止';
+
+  @override
+  String get release_core_cloud_status_error => '错误';
+
+  @override
+  String get ng_release_more_contributions_subtitle => '此连接中已审核的回复卡片';
+
+  @override
+  String get ng_release_more_gateway_fleet => '网关集群';
+
+  @override
+  String get ng_release_more_memory_graph => '记忆图谱';
+
+  @override
+  String get ng_release_more_memory_graph_subtitle => '时间线、编辑和记忆提供商';
+
+  @override
+  String get ng_release_more_capabilities_subtitle => '安装和管理技能、插件、连接器及工具后端';
+
+  @override
+  String get ng_release_more_browser_vault => '浏览器保险库';
+
+  @override
+  String get ng_release_more_browser_vault_subtitle => '网站登录信息、地址、银行卡和凭据来源';
+
+  @override
+  String get ng_release_more_agent_policy => '智能体策略';
+
+  @override
+  String get ng_release_more_agent_policy_subtitle => '审批、检查点、浏览器访问和共享指标';
+
+  @override
+  String get ng_release_more_schedules => '计划任务';
+
+  @override
+  String get ng_release_more_schedules_subtitle => '所有配置档案、蓝图、补跑和停止';
+
+  @override
+  String get ng_release_more_host_subtitle => '远程日志、健康状态、维护和更新';
+
+  @override
+  String get ng_release_more_providers_routes => '提供商和路由';
+
+  @override
+  String get ng_release_more_providers_routes_subtitle => '密钥、端点、委派和混合配置';
+
+  @override
+  String get ng_release_more_credits_plans => '额度和套餐';
+
+  @override
+  String get ng_release_more_credits_plans_subtitle => '账户允许且经你同意后使用 Nous 计费';
+
+  @override
+  String get ng_release_sign_in_or => '或';
+
+  @override
+  String ng_release_deployment_sign_in_hint(String message) {
+    return '$message 你仍可在下一步使用部署会话令牌登录。';
+  }
+
+  @override
+  String get ng_release_message_search_unavailable => '消息搜索不可用。正在显示本地匹配结果。';
+
+  @override
+  String ng_release_insights_days(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days 天',
+      one: '$days 天',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_release_signed_in_you => '你';
+
+  @override
+  String get release_chat_unsent_prompt_gone => '该未发送的提示词已不在队列中。';
+
+  @override
+  String ng_release_attachment_not_attached(String name) {
+    return '网关未附加 $name。';
+  }
+
+  @override
+  String get ng_release_gateway_not_connected => '尚未连接到网关。';
+
+  @override
+  String get ng_release_gateway_unreachable => '无法连接到网关。';
+
+  @override
+  String get ng_release_projects_scope_changed => '项目所属的连接或配置档案已不再选中';
+
+  @override
+  String get ng_release_missing_providers => '缺少提供商';
+
+  @override
+  String get ng_release_missing_tasks => '缺少任务';
+
+  @override
+  String ng_release_age_minutes(int count) {
+    return '$count分';
+  }
+
+  @override
+  String ng_release_age_hours(int count) {
+    return '$count小时';
+  }
+
+  @override
+  String ng_release_age_days(int count) {
+    return '$count天';
+  }
+
+  @override
+  String ng_release_age_weeks(int count) {
+    return '$count周';
+  }
+
+  @override
+  String ng_release_age_years(int count) {
+    return '$count年';
+  }
+
+  @override
+  String ng_release_compact_billions(String count) {
+    return '$count十亿';
+  }
+
+  @override
+  String ng_release_compact_millions(String count) {
+    return '$count百万';
+  }
+
+  @override
+  String ng_release_compact_thousands(String count) {
+    return '$count千';
+  }
+
+  @override
+  String ng_release_token_thousands(String count) {
+    return '$count千';
+  }
+
+  @override
+  String ng_release_elapsed_minutes_seconds(int minutes, int seconds) {
+    return '$minutes分 $seconds秒';
+  }
+
+  @override
+  String ng_release_elapsed_seconds(int seconds) {
+    return '$seconds秒';
+  }
+
+  @override
+  String get ng_release_notification_foreground => 'Ares 当时显示在屏幕上';
+
+  @override
+  String get ng_release_notification_stopped => '该轮次已停止';
+
+  @override
+  String get ng_release_more_parallel_workspace => '并行工作区';
+
+  @override
+  String get ng_release_more_parallel_workspace_subtitle => '在标签页中或并排打开多个聊天。';
+
+  @override
+  String get release_chat_unknown_model => '未知';
+
+  @override
+  String release_chat_profile_default(String model) {
+    return '配置档案默认值：$model';
+  }
+
+  @override
+  String release_chat_profile_default_provider(String model, String provider) {
+    return '配置档案默认值：$model • $provider';
+  }
+
+  @override
+  String get release_chat_choose_provider => '此模型可通过多个提供商使用。请选择一个提供商以继续。';
+
+  @override
+  String get release_chat_slash_needs_gateway => '斜杠命令需要桌面网关';
+
+  @override
+  String get release_chat_recovering_without_resending => '正在恢复，不会重新发送';
+
+  @override
+  String get release_chat_live_request_unreachable => '抱歉，无法连接到 Hermes 来处理该请求。';
+
+  @override
+  String release_chat_live_working(String tool) {
+    return 'Hermes 正在处理：$tool。尚未完成。';
+  }
+
+  @override
+  String get release_chat_live_finished_without_spoken_result =>
+      'Hermes 已完成该请求，但没有语音回复。';
+
+  @override
+  String get release_chat_reply_language_unavailable => '所选回复语言不可用';
+
+  @override
+  String get release_chat_reply_voice_unavailable => '所选回复音色不可用';
+
+  @override
+  String get release_chat_reply_voice_configuration_unavailable => '回复语音配置不可用';
+
+  @override
+  String get release_chat_notification_review_action => '打开聊天以检查请求的操作。';
+
+  @override
+  String get release_chat_notification_respond => '打开聊天以回复。';
+
+  @override
+  String get release_chat_start_new_main_window => '请在主窗口中开始新的聊天。';
+
+  @override
+  String get release_chat_no_desktop_gateway => '无桌面网关';
+
+  @override
+  String get release_chat_attachment_preparation_cancelled => '附件准备已取消。';
+
+  @override
+  String get release_chat_approval_authority_revoked => '审批权限已被撤销。';
+
+  @override
+  String get release_chat_gateway_session_disconnected => '桌面网关会话已断开连接';
+
+  @override
+  String get release_chat_stop_requested => '已请求停止。正在等待 Hermes 结束。';
+
+  @override
+  String release_chat_stop_request_failed(String error) {
+    return '无法请求停止：$error';
+  }
+
+  @override
+  String get release_chat_queued_prompt_not_sent => '排队中的提示词未发送。';
+
+  @override
+  String get release_chat_running_turn_unreachable =>
+      '无法联系到正在运行的轮次。正在重新连接，不会重新发送。';
+
+  @override
+  String get release_chat_wait_for_composer => '请等待消息输入框可用。';
+
+  @override
+  String get release_chat_find_in_transcript => '在对话记录中查找';
+
+  @override
+  String get release_chat_open_browser_preview => '打开浏览器预览';
+
+  @override
+  String get release_chat_more_tools => '更多聊天工具';
+
+  @override
+  String get release_chat_queue_until_finished => '排队等待本轮结束';
+
+  @override
+  String get release_chat_format_bold => '粗体';
+
+  @override
+  String get release_chat_format_italic => '斜体';
+
+  @override
+  String get ng_release_chat_gateway_queue_requirements =>
+      '网关队列需要已关联的聊天和纯文本提示词。';
+
+  @override
+  String get ng_release_chat_start_new_main_screen => '请从聊天主界面开始新的聊天。';
+
+  @override
+  String get ng_release_chat_image => '图片';
+
+  @override
+  String ng_release_chat_tool_seconds(String seconds) {
+    return '$seconds秒';
+  }
+
+  @override
+  String get release_preview_chat_changed => '聊天已更改。请重新连接预览以继续。';
+
+  @override
+  String get release_preview_authenticating_chat => '正在验证聊天身份…';
+
+  @override
+  String release_preview_unavailable_reason(String reason) {
+    return '预览不可用：$reason';
+  }
+
+  @override
+  String get release_preview_operation_failed => '预览操作失败。';
+
+  @override
+  String get release_preview_added_to_draft => '已添加到草稿。未发送任何内容。';
+
+  @override
+  String get release_preview_open_site_title => '打开此网站？';
+
+  @override
+  String release_preview_open_site_body(String origin) {
+    return '$origin\n\n阅读模式仅加载此文档，不会与 Hermes 共享 Cookie、登录信息或页面。';
+  }
+
+  @override
+  String get release_preview_open_site => '打开网站';
+
+  @override
+  String get release_preview_discard_pins_title => '丢弃尚未添加到草稿的标注？';
+
+  @override
+  String get release_preview_keep_pins => '保留标注';
+
+  @override
+  String get release_preview_share_page_title => '与此聊天共享此页面？';
+
+  @override
+  String release_preview_share_page_body(String origin) {
+    return 'Hermes 可以读取 $origin 中显示的文本和元素列表，并滚动此面板。导航到其他页面后将结束共享。不会共享表单和凭据。';
+  }
+
+  @override
+  String get release_preview_share_page => '共享页面';
+
+  @override
+  String release_preview_comment_number(int number) {
+    return '评论 #$number';
+  }
+
+  @override
+  String get release_preview_note => '备注';
+
+  @override
+  String get release_preview_keep_pin => '保留标注';
+
+  @override
+  String get release_preview_title => '浏览器预览';
+
+  @override
+  String get release_preview_hide => '隐藏预览';
+
+  @override
+  String get release_preview_close_and_forget => '关闭并清除此页面';
+
+  @override
+  String get release_preview_site_address => '网站地址';
+
+  @override
+  String get release_preview_go_to_address => '前往地址';
+
+  @override
+  String get release_preview_forward => '前进';
+
+  @override
+  String get release_preview_reload => '重新加载';
+
+  @override
+  String get release_preview_share_with_hermes => '与 Hermes 共享页面';
+
+  @override
+  String get release_preview_stop_sharing => '停止共享页面';
+
+  @override
+  String get release_preview_annotate => '标注元素或区域';
+
+  @override
+  String get release_preview_reader_console => '阅读器控制台';
+
+  @override
+  String get release_preview_reconnect => '重新连接预览';
+
+  @override
+  String get release_preview_reader_mode_help =>
+      '阅读模式：仅 HTML 和文本。不运行脚本、不加载嵌入资源，也不使用已登录的浏览器配置档案。';
+
+  @override
+  String release_preview_sharing_origin(String origin) {
+    return '正在与此聊天共享阅读器：$origin';
+  }
+
+  @override
+  String get release_preview_annotation_help => '点按元素或拖选区域以添加评论。';
+
+  @override
+  String get release_preview_reader_requests => '阅读器请求（JavaScript 已关闭）';
+
+  @override
+  String release_preview_selected_requests(int count) {
+    return '已选择 $count 项 · JavaScript 已关闭';
+  }
+
+  @override
+  String get release_preview_copy_all => '全部复制';
+
+  @override
+  String get release_preview_copy_selected => '复制所选内容';
+
+  @override
+  String get release_preview_add_log_to_draft => '将日志添加到草稿';
+
+  @override
+  String release_preview_requests_draft(String log) {
+    return '阅读器请求：\n$log';
+  }
+
+  @override
+  String release_preview_add_pins_to_draft(int count) {
+    return '将 $count 个标注添加到草稿';
+  }
+
+  @override
+  String release_preview_request_loaded(String origin, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 个阅读器元素',
+      one: '$count 个阅读器元素',
+    );
+    return 'HTTP 200 · $origin · $_temp0';
+  }
+
+  @override
+  String release_preview_annotation_intro(String origin) {
+    return '请检查对 $origin 预览的这些评论。附带的裁剪图按相同顺序编号。';
+  }
+
+  @override
+  String get release_preview_reader_region => '阅读器区域';
+
+  @override
+  String get release_preview_capture_failed => '无法截取这些像素。';
+
+  @override
+  String get release_preview_address_not_approved => '此地址不属于已批准的预览来源。';
+
+  @override
+  String get release_preview_page_limit => '页面超出阅读器限制。';
+
+  @override
+  String get release_preview_page_unreadable => '无法读取此页面。';
+
+  @override
+  String get release_preview_page_complex => '此页面过于复杂，无法使用阅读模式。';
+
+  @override
+  String release_preview_http_failed(int statusCode) {
+    return 'HTTP $statusCode。未跟随任何重定向，也未进行登录。';
+  }
+
+  @override
+  String get release_preview_unsupported_type => '阅读模式只能打开 HTML 和纯文本。';
+
+  @override
+  String get release_preview_load_insecure => '无法安全加载此网站。';
+
+  @override
+  String get release_preview_crop_limit => '预览裁剪图超出限制。';
+
+  @override
+  String get release_preview_image_unreadable => '所选图片为空或无法读取。';
+
+  @override
+  String get release_preview_image_budget => '所选图片超出草稿的 64 MiB 大小限制。';
+
+  @override
+  String get release_preview_image_format => '不支持此图片格式。请选择 JPEG、PNG 或 WebP 图片。';
+
+  @override
+  String get release_preview_image_decode => '无法安全解码所选的 JPEG、PNG 或 WebP 图片。';
+
+  @override
+  String get release_preview_image_sanitize =>
+      '无法安全清除此图片的元数据。请选择有效的 JPEG、PNG 或 WebP 图片。';
+
+  @override
+  String get release_preview_draft_budget => '每份草稿的附件总大小不得超过 64 MiB。';
+
+  @override
+  String get release_preview_generic_file_limit => '通用文件每个不得超过 16 MiB。';
+
+  @override
+  String get release_preview_image_not_sanitized => '远程图片必须先经过安全清理才能上传。';
+
+  @override
+  String get release_preview_stage_failed => '无法将预览证据添加到草稿。请重试。';
+
+  @override
+  String get release_misc_find_hermes_on_lan => '在局域网中查找 Hermes';
+
+  @override
+  String release_misc_discovery_failed(String error) {
+    return '发现失败：$error';
+  }
+
+  @override
+  String get release_misc_no_lan_servers => '在本地网络中未找到 Hermes 服务器。';
+
+  @override
+  String release_misc_api_key_rejected(String endpoint, int statusCode) {
+    return '$endpoint 拒绝了 API 密钥（HTTP $statusCode）。';
+  }
+
+  @override
+  String get release_misc_api_key_required =>
+      '服务器需要 API 密钥。请输入你的 API_SERVER_KEY。';
+
+  @override
+  String release_misc_gateway_not_found(String endpoint) {
+    return '网关端点 $endpoint 返回 HTTP 404。请检查网关路径前缀和反向代理路由。';
+  }
+
+  @override
+  String release_misc_gateway_http_error(String endpoint, int statusCode) {
+    return '网关端点 $endpoint 返回 HTTP $statusCode。';
+  }
+
+  @override
+  String release_misc_gateway_unreachable(String endpoint) {
+    return '无法连接到网关端点 $endpoint。';
+  }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target => '无效的投递目标';
+
+  @override
+  String get release_core_file_save_direct_only => '只能保存工作目录直属的文件。';
+
+  @override
+  String get release_core_file_save_hidden => '网关无法保存隐藏文件。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -21610,8 +26909,213 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get slash_sessions_inline => '請開啟工作階段清單選擇聊天。草稿已保留。';
 
   @override
+  String get composer_snippets => '提示詞片段';
+
+  @override
+  String get composer_snippets_description => '選擇一則起始提示詞，填入訊息輸入框。';
+
+  @override
+  String get composer_snippet_review => '程式碼審查';
+
+  @override
+  String get composer_snippet_review_body => '審查目前變更中的回歸問題、遺漏的邊界情況和缺少的測試。';
+
+  @override
+  String get composer_snippet_review_text => '請審查其中的錯誤、回歸問題和缺少的測試。';
+
+  @override
+  String get composer_snippet_plan => '實作計畫';
+
+  @override
+  String get composer_snippet_plan_body => '修改程式碼前先概述做法，讓變更保持聚焦。';
+
+  @override
+  String get composer_snippet_plan_text => '請在修改程式碼前擬定簡明的實作計畫。';
+
+  @override
+  String get composer_snippet_explain => '解釋這段程式碼';
+
+  @override
+  String get composer_snippet_explain_body => '逐步說明所選程式碼的運作方式，並指出關鍵檔案。';
+
+  @override
+  String get composer_snippet_explain_text => '請解釋其運作方式，並指出關鍵檔案。';
+
+  @override
+  String get composer_status => '狀態';
+
+  @override
+  String get composer_status_context => '上下文';
+
+  @override
+  String get composer_status_cache => '快取命中';
+
+  @override
+  String get composer_status_throughput => '輸出 token/秒';
+
+  @override
+  String get composer_status_running => '執行中';
+
+  @override
+  String get composer_status_session => '工作階段';
+
+  @override
+  String get composer_status_not_reported => '未回報';
+
+  @override
+  String get composer_status_empty => '未回報上下文明細。';
+
+  @override
+  String get composer_status_loading => '正在載入上下文明細';
+
+  @override
+  String get composer_status_reset => '重設狀態列';
+
+  @override
+  String get composer_resume_title => '繼續聊天';
+
+  @override
+  String get composer_resume_search => '搜尋標題和 ID';
+
+  @override
+  String get composer_resume_empty => '沒有符合的聊天。';
+
+  @override
+  String get composer_resume_unavailable => '此窗格沒有可供搜尋的聊天清單。';
+
+  @override
+  String get composer_failure_retry => '重試';
+
+  @override
+  String composer_failure_retry_at(String time) {
+    return '於 $time 重試';
+  }
+
+  @override
+  String get composer_failure_compress => '壓縮';
+
+  @override
+  String get composer_failure_switch_model => '切換模型';
+
+  @override
+  String composer_failure_switch_to(String model) {
+    return '切換為 $model';
+  }
+
+  @override
+  String get composer_failure_new_chat => '新增聊天';
+
+  @override
+  String get composer_failure_edit => '編輯訊息';
+
+  @override
+  String get composer_failure_details => '詳細資訊';
+
+  @override
+  String get composer_failure_hide_details => '隱藏詳細資訊';
+
+  @override
+  String get composer_failure_copy => '複製診斷資訊';
+
+  @override
+  String get composer_failure_account => '另一項修復需在閘道帳號端完成，無法在此聊天中進行。';
+
+  @override
+  String get composer_failure_account_only => '此問題必須在閘道帳號端修復，無法在此聊天中處理。';
+
+  @override
+  String get composer_failure_confirm_compress => '壓縮此聊天？閘道會縮短對話記錄。';
+
+  @override
+  String composer_failure_confirm_model(String model) {
+    return '將此聊天切換為 $model？';
+  }
+
+  @override
+  String get composer_drop_attach => '拖放以新增附件';
+
+  @override
+  String get composer_drop_folder_unsupported => '無法附加資料夾。請改為拖放其中的檔案。';
+
+  @override
+  String get composer_drop_reference => '拖放以新增參照';
+
+  @override
+  String get composer_reference_copy => '複製參照';
+
+  @override
+  String get composer_reference_remove => '移除參照';
+
+  @override
+  String get composer_btw_usage => '用法：/btw <question> — 根據此對話的快照回答，不中斷目前的對話。';
+
+  @override
+  String get composer_background_usage =>
+      '用法：/background <prompt> — 任務獨立執行，結果會回到此處。';
+
+  @override
+  String get composer_handoff_usage =>
+      '用法：/handoff <platform> — 將此聊天轉移到指定的訊息平台。';
+
+  @override
+  String get composer_command_needs_session => '此指令需要已開啟的聊天。';
+
+  @override
+  String get composer_retry_not_found =>
+      '已儲存的歷史記錄中沒有此回合，因此「重試」無法取代它。未重新傳送任何內容。請編輯訊息並傳送，以再試一次。';
+
+  @override
+  String get composer_retry_unavailable =>
+      '此連線不支援透過「重試」取代某個回合，因此未重新傳送任何內容。請編輯訊息並傳送，以再試一次。';
+
+  @override
   String get composer_failure_switch_no_retry =>
       '切換只會變更模型：此連線無法重新執行失敗的輪次。切換後請重新傳送。';
+
+  @override
+  String get composer_command_needs_gateway_session =>
+      '此聊天尚無閘道工作階段。請先傳送訊息，再重新執行指令。';
+
+  @override
+  String get composer_side_question => 'btw — 正在根據對話快照回答';
+
+  @override
+  String composer_side_question_id(String id) {
+    return 'btw $id — 正在根據對話快照回答';
+  }
+
+  @override
+  String get composer_background_started => '背景任務已啟動。你可以繼續聊天，結果會顯示在此處。';
+
+  @override
+  String composer_background_started_id(String id) {
+    return '背景任務 $id 已啟動。你可以繼續聊天，結果會顯示在此處。';
+  }
+
+  @override
+  String composer_handoff_requested(String platform) {
+    return '已要求移交至 $platform。';
+  }
+
+  @override
+  String composer_handoff_done(String platform) {
+    return '已將此聊天移交至 $platform。';
+  }
+
+  @override
+  String get composer_handoff_failed => '移交失敗。';
+
+  @override
+  String get composer_handoff_timeout => '移交尚未完成，可能仍在閘道上進行。';
+
+  @override
+  String get composer_compress_done => '已壓縮此聊天。';
+
+  @override
+  String get composer_file_missing => '此裝置上沒有該檔案。';
+
+  @override
+  String get composer_attach_busy => '此回覆完成後即可新增附件。';
 
   @override
   String get nextgen_toggle => 'NextGen 介面';
@@ -23995,6 +29499,127 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   @override
   String get appearance_theme_import_failed =>
       '無法匯入這個佈景主題。請選擇以 .vsix、.json 或 .jsonc 檔案儲存的 VS Code 色彩佈景主題。';
+
+  @override
+  String get render_widget_file_truncated => '僅讀取了此檔案的開頭，元件可能不完整。';
+
+  @override
+  String get setup_beat_title => '設定';
+
+  @override
+  String setup_beat_use_name(String name) {
+    return '使用 $name';
+  }
+
+  @override
+  String get setup_beat_name_hint => '你希望 Hermes 怎麼稱呼你？';
+
+  @override
+  String get setup_beat_on_computer =>
+      '此步驟需在執行 Hermes 的電腦上，於 Hermes 中完成。繼續會保留該處已完成的設定。';
+
+  @override
+  String get setup_beat_not_waiting => '此設定卡片已不再等待回答。';
+
+  @override
+  String get catalog_kind_plugin => '外掛程式';
+
+  @override
+  String get catalog_kind_skill => '技能';
+
+  @override
+  String get catalog_tier_official => '官方';
+
+  @override
+  String get catalog_tier_verified => '已驗證';
+
+  @override
+  String get catalog_tier_community => '社群';
+
+  @override
+  String get catalog_install => '安裝';
+
+  @override
+  String get catalog_waiting => '等待你選擇';
+
+  @override
+  String get catalog_installed => '已安裝';
+
+  @override
+  String get catalog_installed_off => '已安裝，尚未啟用';
+
+  @override
+  String get catalog_skipped => '已略過';
+
+  @override
+  String get catalog_not_installed => '未安裝';
+
+  @override
+  String catalog_target_profile(String profile) {
+    return '安裝至 $profile 設定檔';
+  }
+
+  @override
+  String catalog_source(String repo, String sha) {
+    return '$repo 的 $sha';
+  }
+
+  @override
+  String catalog_scan(String status, String summary) {
+    return '安全掃描：$status。$summary';
+  }
+
+  @override
+  String catalog_requires_hermes(String range) {
+    return '需要 Hermes $range';
+  }
+
+  @override
+  String catalog_skill_ready(String name) {
+    return '技能 $name 已可使用';
+  }
+
+  @override
+  String catalog_missing_env(String names) {
+    return '仍需要：$names';
+  }
+
+  @override
+  String catalog_server_error(String name, String error) {
+    return '$name 未能連線：$error';
+  }
+
+  @override
+  String get catalog_send_failed => '未能傳送你的選擇。請再試一次。';
+
+  @override
+  String get attachment_video_speed => '播放速度';
+
+  @override
+  String get catalog_installing => '正在安裝…';
+
+  @override
+  String get catalog_phase_downloading => '正在下載…';
+
+  @override
+  String get catalog_phase_python_packages => '正在安裝 Python 套件…';
+
+  @override
+  String get catalog_phase_loading_tools => '正在載入工具…';
+
+  @override
+  String get setup_beat_send_failed => '未能傳送你的回答。請再試一次。';
+
+  @override
+  String catalog_tool_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 個工具',
+      one: '1 個工具',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get render_svg_not_drawn => '未繪製此 SVG。';
@@ -26554,4 +32179,2319 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String ng_bots_section_toggle(String name) {
     return '顯示或隱藏「$name」';
   }
+
+  @override
+  String
+  get release_core_transcript_reader_this_passage_is_no_longer_in_the_loaded =>
+      '這段內容已不在目前載入的範圍內。';
+
+  @override
+  String get release_core_transcript_reader_loaded_prompts => '已載入的提示詞';
+
+  @override
+  String get release_core_transcript_reader_jump_to_latest => '跳至最新內容';
+
+  @override
+  String get release_core_transcript_reader_no_prompts_loaded => '未載入提示詞';
+
+  @override
+  String get release_core_transcript_reader_find_in_loaded_messages =>
+      '在已載入的訊息中尋找';
+
+  @override
+  String get release_core_transcript_reader_previous_match => '上一個符合項目';
+
+  @override
+  String get release_core_transcript_reader_next_match => '下一個符合項目';
+
+  @override
+  String get release_core_transcript_reader_prompt_timeline => '提示詞時間軸';
+
+  @override
+  String get release_core_transcript_reader_close_find => '關閉尋找';
+
+  @override
+  String get release_core_session_organisation_organise_chats => '整理聊天';
+
+  @override
+  String get release_core_session_organisation_show_model_and_usage =>
+      '顯示模型和用量';
+
+  @override
+  String
+  get release_core_session_files_view_connection_changed_reopen_files_on_the_new_connection =>
+      '連線已變更。請透過新連線重新開啟檔案。';
+
+  @override
+  String
+  get release_core_session_files_view_the_connection_or_session_changed_reopen_this_pane =>
+      '連線或工作階段已變更。請重新開啟此窗格。';
+
+  @override
+  String
+  get release_core_session_files_view_no_verified_host_working_directory_for_this_session =>
+      '此工作階段沒有經驗證的主機工作目錄。';
+
+  @override
+  String
+  get release_core_session_files_view_the_gateway_denied_this_operation =>
+      '閘道拒絕了此操作。';
+
+  @override
+  String
+  get release_core_session_files_view_this_gateway_does_not_support_this_operation =>
+      '此閘道不支援此操作。';
+
+  @override
+  String
+  get release_core_session_files_view_the_file_owner_or_working_directory_changed_reload =>
+      '檔案、擁有者或工作目錄已變更。請重新載入並檢查。';
+
+  @override
+  String
+  get release_core_session_files_view_the_gateway_returned_an_unsafe_path_or_invalid =>
+      '閘道傳回了不安全的路徑或無效的檔案回應。';
+
+  @override
+  String
+  get release_core_session_files_view_workspace_access_requires_a_secure_gateway_connection =>
+      '存取工作區需要安全的閘道連線。';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_unavailable_refresh_to_check_the_current_state =>
+      '閘道無法使用。請重新整理以查看目前狀態。';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_operation_could_not_be_confirmed =>
+      '無法確認閘道操作。';
+
+  @override
+  String get release_core_session_files_view_git_status_unavailable =>
+      '無法取得 Git 狀態。';
+
+  @override
+  String
+  get release_core_session_files_view_change_this_chat_s_working_directory =>
+      '變更此聊天的工作目錄？';
+
+  @override
+  String get release_core_session_files_view_absolute_gateway_directory =>
+      '閘道目錄的絕對路徑';
+
+  @override
+  String get release_core_session_files_view_change_directory => '變更目錄';
+
+  @override
+  String get release_core_session_files_view_replace_gateway_file =>
+      '取代閘道上的檔案？';
+
+  @override
+  String
+  release_core_session_files_view_only_if_the_file_still_matches_the_version(
+    String path,
+  ) {
+    return '$path\n\n僅當檔案仍與已檢查的版本一致時才會取代。相容的主機會保留被取代的檔案，以便還原。';
+  }
+
+  @override
+  String get release_core_session_files_view_save_changes => '儲存變更';
+
+  @override
+  String
+  get release_core_session_files_view_saved_and_verified_on_the_gateway =>
+      '已在閘道上儲存並驗證。';
+
+  @override
+  String
+  get release_core_session_files_view_guarded_saving_is_unavailable_on_this_gateway_your =>
+      '此閘道不提供受保護的儲存功能。你的草稿仍在。';
+
+  @override
+  String
+  release_core_session_files_view_save_was_not_confirmed_your_draft_is_still(
+    String reason,
+  ) {
+    return '$reason 儲存未獲確認。你的草稿仍在。';
+  }
+
+  @override
+  String get release_core_session_files_view_review_current_gateway_version =>
+      '檢查閘道上的目前版本';
+
+  @override
+  String get release_core_session_files_view_discard_draft_and_reload =>
+      '捨棄草稿並重新載入';
+
+  @override
+  String get release_core_session_files_view_keep_draft_against_this_version =>
+      '以此版本為基準保留草稿';
+
+  @override
+  String get release_core_session_files_view_discard_unsaved_edits =>
+      '捨棄未儲存的編輯？';
+
+  @override
+  String get release_core_session_files_view_keep_editing => '繼續編輯';
+
+  @override
+  String get release_core_session_files_view_discard_edits => '捨棄編輯';
+
+  @override
+  String get release_core_session_files_view_remote_working_directory =>
+      '遠端工作目錄';
+
+  @override
+  String get release_core_session_files_view_change_working_directory =>
+      '變更工作目錄';
+
+  @override
+  String get release_core_session_files_view_show_ignored_files => '顯示已忽略的檔案';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_does_not_report_ignored_status =>
+      '閘道未回報忽略狀態。';
+
+  @override
+  String get release_core_session_files_view_no_visible_entries => '無可見項目';
+
+  @override
+  String get release_core_session_files_view_changed => '已變更';
+
+  @override
+  String get release_core_session_files_view_ignored => '已忽略';
+
+  @override
+  String release_core_session_files_view_actions_for(String name) {
+    return '$name 的操作';
+  }
+
+  @override
+  String get release_core_session_files_view_copy_relative_path => '複製相對路徑';
+
+  @override
+  String get release_core_session_files_view_copy_gateway_path => '複製閘道路徑';
+
+  @override
+  String get release_core_session_files_view_attach_folder_reference =>
+      '附加資料夾參照';
+
+  @override
+  String get release_core_session_files_view_attach_file_reference => '附加檔案參照';
+
+  @override
+  String
+  get release_core_session_files_view_preview_truncated_editing_disabled =>
+      '預覽已截斷，編輯已停用。';
+
+  @override
+  String get release_core_session_files_view_select_lines => '選取行';
+
+  @override
+  String get release_core_session_files_view_review_gateway_version =>
+      '檢查閘道上的版本';
+
+  @override
+  String get release_core_session_files_view_attach_selected_lines => '附加所選行';
+
+  @override
+  String get release_core_session_files_view_binary_file_no_text_preview =>
+      '二進位檔案，無文字預覽。';
+
+  @override
+  String get release_core_session_files_view_file_source => '檔案來源';
+
+  @override
+  String get release_core_session_files_view_close_session_files => '關閉工作階段檔案';
+
+  @override
+  String get release_core_session_files_view_back_to_tree => '返回檔案樹';
+
+  @override
+  String get release_core_session_files_view_session_files => '工作階段檔案';
+
+  @override
+  String get release_core_session_files_view_git_review => 'Git 檢閱';
+
+  @override
+  String get release_core_session_files_view_refresh_tree => '重新整理檔案樹';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_this_connection_changed_reopen_its_chat =>
+      '此連線已變更。請重新開啟對應的聊天。';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_disconnected_reconnect_the_chat_then_refresh =>
+      '連線已中斷。請重新連線聊天，然後重新整理。';
+
+  @override
+  String release_core_gateway_queue_screen_gateway_queue_unavailable(
+    String reason,
+  ) {
+    return '閘道佇列無法使用：$reason。';
+  }
+
+  @override
+  String release_core_gateway_queue_screen_not_confirmed_nothing_was_resent(
+    String reason,
+  ) {
+    return '未獲確認（$reason）。未重新傳送任何內容。';
+  }
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_confirmed_admission =>
+      '閘道已確認接收。';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_edited_entry_admitted_at_the_end_of_the =>
+      '編輯後的項目已被接收並加入佇列尾端。';
+
+  @override
+  String get release_core_gateway_queue_screen_discard_unknown_outcome =>
+      '捨棄結果未知的項目？';
+
+  @override
+  String get release_core_gateway_queue_screen_remove_this_entry => '移除此項目？';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_the_lost_turn_will_not_be_retried_waiting =>
+      '不會重試遺失的輪次。等待中的輪次現在可以執行。';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_if_the_gateway_has_just_started_this_entry =>
+      '如果閘道剛開始處理此項目，移除它可能會停止該輪次。';
+
+  @override
+  String get release_core_gateway_queue_screen_keep => '保留';
+
+  @override
+  String get release_core_gateway_queue_screen_discard_and_resume => '捨棄並繼續';
+
+  @override
+  String get release_core_gateway_queue_screen_remove_entry => '移除項目';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_lost_admission_resolved_it_was_not_resent =>
+      '接收確認遺失的問題已解決；未重新傳送。';
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_acknowledged_removal =>
+      '閘道已確認移除。';
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_queue => '閘道佇列';
+
+  @override
+  String get release_core_gateway_queue_screen_refresh_queue => '重新整理佇列';
+
+  @override
+  String get release_core_gateway_queue_screen_queue_paused_unknown_outcome =>
+      '佇列已暫停：結果未知';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_review_the_lost_admission_before_resuming_nothing_is =>
+      '請先檢查缺失的接收確認，再繼續佇列。不會重新傳送任何內容。';
+
+  @override
+  String get release_core_gateway_queue_screen_no_pending_admissions =>
+      '無待接收項目';
+
+  @override
+  String get release_core_gateway_queue_screen_discard => '捨棄…';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_gateway_acknowledged_the_steering_request =>
+      '閘道已確認引導要求。';
+
+  @override
+  String get release_core_gateway_queue_screen_steer_running_turn =>
+      '引導正在執行的輪次';
+
+  @override
+  String get release_core_gateway_queue_screen_remove => '移除…';
+
+  @override
+  String get release_core_gateway_queue_screen_next_prompt => '下一則提示詞';
+
+  @override
+  String get release_core_gateway_queue_screen_edit_queued_prompt =>
+      '編輯佇列中的提示詞';
+
+  @override
+  String get release_core_gateway_queue_screen_submit_to_gateway_queue =>
+      '提交至閘道佇列';
+
+  @override
+  String get release_core_gateway_queue_screen_save_at_queue_end => '儲存至佇列尾端';
+
+  @override
+  String get release_core_gateway_queue_screen_cancel_edit => '取消編輯';
+
+  @override
+  String get release_core_git_review_pane_the_git_operation_did_not_complete =>
+      'Git 操作未完成。';
+
+  @override
+  String get release_core_git_review_pane_close_git_review => '關閉 Git 檢閱';
+
+  @override
+  String get release_core_git_review_pane_pin_lane => '釘選泳道';
+
+  @override
+  String get release_core_git_review_pane_refresh_git_review => '重新整理 Git 檢閱';
+
+  @override
+  String get release_core_git_review_pane_uncommitted => '未提交';
+
+  @override
+  String get release_core_git_review_pane_last_turn => '上一輪';
+
+  @override
+  String
+  get release_core_git_review_pane_branch_and_last_turn_views_are_read_only =>
+      '分支和上一輪檢視均為唯讀。';
+
+  @override
+  String get release_core_git_review_pane_mark_head_as_the_turn_baseline =>
+      '將 HEAD 標記為輪次基準';
+
+  @override
+  String get release_core_git_review_pane_stage_all => '暫存全部';
+
+  @override
+  String get release_core_git_review_pane_discard_every_uncommitted_change =>
+      '捨棄所有未提交的變更？';
+
+  @override
+  String
+  get release_core_git_review_pane_tracked_files_return_to_head_and_untracked_files =>
+      '已追蹤檔案將還原至 HEAD，此工作階段目錄中未追蹤的檔案將被移除。';
+
+  @override
+  String get release_core_git_review_pane_discard => '捨棄';
+
+  @override
+  String get release_core_git_review_pane_discard_all => '全部捨棄';
+
+  @override
+  String get release_core_git_review_pane_unstage => '取消暫存';
+
+  @override
+  String get release_core_git_review_pane_stage => '暫存';
+
+  @override
+  String get release_core_git_review_pane_discard_file => '捨棄檔案';
+
+  @override
+  String release_core_git_review_pane_discard_2(String path) {
+    return '捨棄 $path？';
+  }
+
+  @override
+  String
+  get release_core_git_review_pane_this_restores_the_committed_copy_or_removes_the =>
+      '這會還原已提交的副本，或移除未追蹤的檔案。';
+
+  @override
+  String get release_core_git_review_pane_commit_message => '提交訊息';
+
+  @override
+  String get release_core_git_review_pane_nothing_in_the_diff_to_summarise =>
+      '差異中沒有可供摘要的內容。';
+
+  @override
+  String get release_core_git_review_pane_generate_message => '產生提交訊息';
+
+  @override
+  String get release_core_git_review_pane_commit => '提交';
+
+  @override
+  String get release_core_git_review_pane_commit_and_push => '提交並推送';
+
+  @override
+  String get release_core_git_review_pane_push => '推送';
+
+  @override
+  String get release_core_git_review_pane_create_pull_request => '建立提取要求';
+
+  @override
+  String get release_core_git_review_pane_pull_request_ready => '提取要求已就緒';
+
+  @override
+  String get release_core_git_review_pane_ask_hermes_to_ship => '請 Hermes 完成發布';
+
+  @override
+  String get release_core_git_review_pane_gh_is_authenticated_on_this_gateway =>
+      'gh 已在此閘道上通過身分驗證。';
+
+  @override
+  String
+  get release_core_git_review_pane_install_the_github_cli_gh_and_sign_in =>
+      '安裝 GitHub CLI（gh）並登入，即可建立提取要求';
+
+  @override
+  String get release_core_git_review_pane_worktrees => '工作樹';
+
+  @override
+  String get release_core_git_review_pane_main => '主工作樹';
+
+  @override
+  String release_core_git_review_pane_follow(String branch) {
+    return '跟隨 $branch？';
+  }
+
+  @override
+  String
+  get release_core_git_review_pane_the_session_working_directory_becomes_this_worktree_unless =>
+      '除非泳道已釘選，否則工作階段的工作目錄將切換為此工作樹。';
+
+  @override
+  String get release_core_git_review_pane_follow_2 => '跟隨';
+
+  @override
+  String release_core_git_review_pane_remove(String branch) {
+    return '移除 $branch？';
+  }
+
+  @override
+  String get release_core_git_review_pane_the_worktree_directory_is_removed =>
+      '工作樹目錄將被移除。';
+
+  @override
+  String get release_core_git_review_pane_remove_2 => '移除';
+
+  @override
+  String get release_core_git_review_pane_new_worktree_name => '新工作樹名稱';
+
+  @override
+  String get release_core_git_review_pane_new_branch => '新分支';
+
+  @override
+  String get release_core_git_review_pane_base_branch => '基礎分支';
+
+  @override
+  String get release_core_git_review_pane_create_worktree => '建立工作樹';
+
+  @override
+  String get release_core_git_review_pane_existing_branch => '現有分支';
+
+  @override
+  String get release_core_git_review_pane_convert_branch_to_worktree =>
+      '將分支轉換為工作樹';
+
+  @override
+  String get release_core_git_review_pane_switch_branch => '切換分支';
+
+  @override
+  String
+  get release_core_git_review_pane_this_gateway_does_not_support_that_git_operation =>
+      '此閘道不支援該 Git 操作。';
+
+  @override
+  String
+  get release_core_git_review_pane_git_needs_the_session_directory_on_the_local =>
+      'Git 需要工作階段目錄位於本機終端機後端。';
+
+  @override
+  String
+  get release_core_git_review_pane_the_gateway_refused_the_git_operation =>
+      '閘道拒絕了 Git 操作。';
+
+  @override
+  String
+  get release_core_git_review_pane_the_session_changed_refresh_and_try_again =>
+      '工作階段已變更。請重新整理後重試。';
+
+  @override
+  String
+  get release_core_git_review_pane_this_review_is_no_longer_the_selected_session =>
+      '此檢閱已不再對應目前選取的工作階段。';
+
+  @override
+  String
+  get release_core_git_review_pane_the_gateway_returned_an_unexpected_git_result =>
+      '閘道傳回了非預期的 Git 結果。';
+
+  @override
+  String
+  get release_core_git_review_pane_git_review_requires_the_gateway_transport =>
+      'Git 檢閱需要透過閘道傳輸。';
+
+  @override
+  String get release_core_client_held_queue_bar_resume => '繼續';
+
+  @override
+  String get release_core_client_held_queue_bar_send_queued_prompt =>
+      '傳送佇列中的提示詞';
+
+  @override
+  String get release_core_client_held_queue_bar_edit_unsent_prompt =>
+      '編輯未傳送的提示詞';
+
+  @override
+  String get release_core_client_held_queue_bar_remove_unsent_prompt =>
+      '移除未傳送的提示詞';
+
+  @override
+  String get release_core_workspace_discovery_view_repository_discovery =>
+      '儲存庫探索';
+
+  @override
+  String get release_core_workspace_discovery_view_refresh_results => '重新整理結果';
+
+  @override
+  String release_core_workspace_discovery_view_hide(String path) {
+    return '隱藏 $path';
+  }
+
+  @override
+  String
+  get release_core_workspace_discovery_view_invalid_path_or_discovery_data_use_absolute_server =>
+      '路徑或探索資料無效。請使用不含 . 或 .. 路徑區段的伺服器絕對路徑。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_this_gateway_does_not_support_repository_discovery =>
+      '此閘道不支援儲存庫探索。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_gateway_denied_access_to_repository_discovery =>
+      '閘道拒絕存取儲存庫探索功能。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_connection_changed_reopen_discovery_on_the_current =>
+      '連線已變更。請在目前閘道上重新開啟儲存庫探索。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_displayed_settings_have_changed_refresh_before_trying =>
+      '顯示的設定已變更。請重新整理後重試。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_could_not_load_or_verify_discovery_settings_refresh =>
+      '無法載入或驗證探索設定。請重新整理以重試。';
+
+  @override
+  String release_core_workspace_discovery_view_repositories_shown_of(
+    int visible,
+    int total,
+  ) {
+    return '已顯示儲存庫：$visible / $total';
+  }
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_gateway_returned_no_repositories =>
+      '閘道未傳回任何儲存庫。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_no_repositories_match_your_device_filters =>
+      '沒有儲存庫符合此裝置上的篩選條件。';
+
+  @override
+  String get release_core_workspace_discovery_view_gateway_scan_policy =>
+      '閘道掃描原則';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_this_gateway_did_not_report_a_scan_policy =>
+      '此閘道未回報掃描原則。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_to_scan_folders_configure_repository_scanning_in_the =>
+      '若要掃描資料夾，請在閘道設定檔的桌面設定中設定儲存庫掃描。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_results_can_include_cached_repositories_and_repositories_with =>
+      '結果可能包含已快取的儲存庫及有關聯工作階段的儲存庫。掃描並不保證已遍歷每個資料夾。';
+
+  @override
+  String get release_core_workspace_discovery_view_scan_gateway_roots =>
+      '掃描閘道根目錄';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_filter_results_on_this_device =>
+      '在此裝置上篩選結果';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_only_this_discovery_list_changes_not_the_gateway =>
+      '僅變更此探索清單，不影響閘道掃描。';
+
+  @override
+  String get release_core_workspace_discovery_view_include_subtrees_empty_all =>
+      '包含的子目錄樹（留空表示全部）';
+
+  @override
+  String get release_core_workspace_discovery_view_exclude_subtrees =>
+      '排除的子目錄樹';
+
+  @override
+  String get release_core_workspace_discovery_view_apply_filters => '套用篩選條件';
+
+  @override
+  String release_core_workspace_discovery_view_hidden_repositories(int count) {
+    return '隱藏的儲存庫（$count）';
+  }
+
+  @override
+  String get release_core_workspace_discovery_view_undo_hide => '復原隱藏';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_one_absolute_server_path_per_line =>
+      '每行一個伺服器絕對路徑';
+
+  @override
+  String get release_core_project_settings_view_project_settings => '專案設定';
+
+  @override
+  String
+  get release_core_project_settings_view_the_gateway_did_not_confirm_the_selected_project =>
+      '閘道未確認所選專案或變更。請檢查設定後重試。';
+
+  @override
+  String
+  get release_core_project_settings_view_could_not_verify_these_settings_use_one_absolute =>
+      '無法驗證這些設定。請每行填寫一個伺服器資料夾的絕對路徑，且不含 . 或 .. 路徑區段。';
+
+  @override
+  String get release_core_project_settings_view_set_active => '設為使用中的專案';
+
+  @override
+  String get release_core_project_settings_view_icon => '圖示';
+
+  @override
+  String get release_core_project_settings_view_folder => '資料夾';
+
+  @override
+  String get release_core_project_settings_view_repository => '儲存庫';
+
+  @override
+  String get release_core_project_settings_view_rocket => '火箭';
+
+  @override
+  String get release_core_project_settings_view_star => '星星';
+
+  @override
+  String get release_core_project_settings_view_book => '書籍';
+
+  @override
+  String get release_core_project_settings_view_terminal => '終端機';
+
+  @override
+  String get release_core_project_settings_view_colour => '色彩';
+
+  @override
+  String get release_core_project_settings_view_primary_folder => '主要資料夾';
+
+  @override
+  String get release_core_project_settings_view_server_folder_paths =>
+      '伺服器資料夾路徑';
+
+  @override
+  String
+  get release_core_project_settings_view_one_absolute_path_per_line_existing_folders_are =>
+      '每行一個絕對路徑。現有資料夾將保留。';
+
+  @override
+  String get release_core_project_settings_view_add_folders => '新增資料夾';
+
+  @override
+  String release_core_project_settings_view_choose(String label) {
+    return '選擇$label';
+  }
+
+  @override
+  String
+  get release_core_prepared_image_recovery_wait_for_an_empty_draft_before_restoring =>
+      '請等草稿為空後再還原。';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_no_unacknowledged_image_drafts_in_this_chat =>
+      '此聊天中沒有未獲接收確認的圖片草稿。';
+
+  @override
+  String get release_core_prepared_image_recovery_unacknowledged_image_drafts =>
+      '未獲接收確認的圖片草稿';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_the_gateway_may_already_have_received_these_restore =>
+      '閘道可能已收到這些內容。還原後可查看，不會傳送任何內容。';
+
+  @override
+  String get release_core_prepared_image_recovery_image_draft => '圖片草稿';
+
+  @override
+  String get release_core_prepared_image_recovery_discard_local_copy =>
+      '捨棄本機副本';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_discard_this_local_image_draft =>
+      '捨棄此本機圖片草稿？';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_image_draft_recovery_is_unavailable =>
+      '圖片草稿還原功能無法使用。';
+
+  @override
+  String get release_core_prepared_image_recovery_recover_image_draft =>
+      '還原圖片草稿…';
+
+  @override
+  String get release_core_session_search_mode_menu_could_not_save_search_mode =>
+      '無法儲存搜尋模式。';
+
+  @override
+  String get release_core_projects_pane_discover_repositories => '探索儲存庫';
+
+  @override
+  String
+  get release_core_projects_pane_project_created_but_the_gateway_did_not_confirm =>
+      '專案已建立，但閘道未確認專案構想。';
+
+  @override
+  String get release_core_projects_pane_project_idea_optional => '專案構想（選填）';
+
+  @override
+  String
+  get release_core_projects_pane_saved_in_the_project_description_not_a_file =>
+      '儲存在專案描述中，而非檔案中。';
+
+  @override
+  String get release_core_project_detail_screen_new_chat_in_this_lane =>
+      '在此泳道中新增聊天';
+
+  @override
+  String get release_core_project_detail_screen_review_git => '檢閱 Git 變更';
+
+  @override
+  String get release_core_more_pane_gateway_fleet => '閘道群組';
+
+  @override
+  String
+  get release_core_more_pane_connected_sessions_hermes_cloud_and_desktop_webapp =>
+      '已連線的工作階段、Hermes Cloud 和桌面網頁應用程式';
+
+  @override
+  String get release_core_more_pane_use_dashboard_sign_in_for_a_named_profile =>
+      '請透過儀表板登入指定的設定檔。此舊版 API 無法確認聊天記錄屬於哪個設定檔。';
+
+  @override
+  String get release_core_more_pane_capabilities => '功能';
+
+  @override
+  String
+  get release_core_more_pane_install_and_govern_skills_plugins_connectors_and_tool =>
+      '安裝和管理技能、外掛程式、連接器及工具後端';
+
+  @override
+  String get release_core_more_pane_browser_vault => '瀏覽器保險庫';
+
+  @override
+  String
+  get release_core_more_pane_site_logins_addresses_cards_and_credential_sources =>
+      '網站登入資訊、地址、付款卡和憑證來源';
+
+  @override
+  String get release_core_more_pane_agent_policy => '代理程式原則';
+
+  @override
+  String
+  get release_core_more_pane_approvals_checkpoints_browser_access_and_shared_metrics =>
+      '核准、檢查點、瀏覽器存取和共用指標';
+
+  @override
+  String get release_core_more_pane_remote_logs_health_maintenance_and_update =>
+      '遠端記錄、健康狀態、維護和更新';
+
+  @override
+  String get release_core_more_pane_schedules => '排程任務';
+
+  @override
+  String get release_core_more_pane_all_profiles_blueprints_catch_up_and_stop =>
+      '所有設定檔、藍圖、補執行和停止';
+
+  @override
+  String get release_core_more_pane_memory_graph => '記憶圖譜';
+
+  @override
+  String get release_core_more_pane_timeline_edits_and_memory_providers =>
+      '時間軸、編輯和記憶供應商';
+
+  @override
+  String get release_core_more_pane_providers_and_routes => '供應商和路由';
+
+  @override
+  String get release_core_more_pane_keys_endpoints_delegation_and_mixtures =>
+      '金鑰、端點、委派和混合設定';
+
+  @override
+  String get release_core_more_pane_credits_and_plans => '額度和方案';
+
+  @override
+  String
+  get release_core_more_pane_consented_nous_billing_when_the_account_allows_it =>
+      '帳號允許且經你同意後使用 Nous 計費';
+
+  @override
+  String
+  get release_core_fleet_screen_this_gateway_does_not_offer_this_service =>
+      '此閘道不提供此服務。';
+
+  @override
+  String
+  get release_core_fleet_screen_sign_in_or_permission_required_on_this_gateway =>
+      '需要在此閘道上登入或取得權限。';
+
+  @override
+  String get release_core_fleet_screen_a_secure_gateway_address_is_required =>
+      '需要安全的閘道位址。';
+
+  @override
+  String
+  get release_core_fleet_screen_the_owner_changed_refresh_before_continuing =>
+      '擁有者已變更。請重新整理後再繼續。';
+
+  @override
+  String
+  get release_core_fleet_screen_could_not_verify_the_operation_check_the_gateway =>
+      '無法驗證操作。請檢查閘道並重新整理。';
+
+  @override
+  String get release_core_fleet_screen_verified_ssh => '已驗證的 SSH';
+
+  @override
+  String
+  get release_core_fleet_screen_confirm_a_host_key_inspect_a_remote_service =>
+      '確認主機金鑰、檢查遠端服務或開啟其命令列';
+
+  @override
+  String get release_core_fleet_screen_cloud_and_desktop_webapp =>
+      '雲端和桌面網頁應用程式';
+
+  @override
+  String get release_core_fleet_screen_register_an_existing_gateway_or_webapp =>
+      '註冊現有閘道或網頁應用程式';
+
+  @override
+  String
+  get release_core_fleet_screen_sign_in_to_its_address_nothing_is_hosted =>
+      '透過其位址登入。此裝置不會代管任何服務。';
+
+  @override
+  String get release_core_fleet_screen_fleet_updates => '閘道群組更新';
+
+  @override
+  String get release_core_fleet_screen_refresh_roster => '重新整理閘道清單';
+
+  @override
+  String release_core_fleet_screen_disconnect(String gateway) {
+    return '中斷 $gateway 的連線';
+  }
+
+  @override
+  String get release_core_fleet_screen_open_this_gateway_on_launch =>
+      '啟動時開啟此閘道';
+
+  @override
+  String
+  get release_core_fleet_screen_primary_for_ares_does_not_change_the_last =>
+      '設為 Ares 的主要閘道；不會變更上次使用的閘道。';
+
+  @override
+  String get release_core_fleet_screen_reconnect_in_fleet_on_launch =>
+      '啟動時在群組中重新連線';
+
+  @override
+  String get release_core_fleet_screen_no_sessions_for_this_profile =>
+      '此設定檔沒有工作階段。';
+
+  @override
+  String get release_core_fleet_screen_more_sessions => '更多工作階段';
+
+  @override
+  String get release_core_fleet_screen_this_gateway_was_disconnected =>
+      '此閘道已中斷連線。';
+
+  @override
+  String
+  get release_core_fleet_screen_some_conversation_data_could_not_be_loaded =>
+      '部分對話資料無法載入。';
+
+  @override
+  String get release_core_fleet_screen_message_this_session => '向此工作階段傳送訊息';
+
+  @override
+  String get release_core_fleet_screen_send_to_this_session => '傳送至此工作階段';
+
+  @override
+  String get release_core_fleet_updates_screen_update_these_remote_gateways =>
+      '更新這些遠端閘道？';
+
+  @override
+  String
+  release_core_fleet_updates_screen_this_can_restart_the_backend_and_interrupt_other(
+    String gateways,
+  ) {
+    return '這可能會重新啟動後端並中斷其他使用者的使用。不會更新 Ares。\n\n$gateways';
+  }
+
+  @override
+  String get release_core_fleet_updates_screen_update_listed_gateways =>
+      '更新列出的閘道';
+
+  @override
+  String
+  get release_core_fleet_updates_screen_checks_connected_gateways_cloud_is_platform_managed_entries =>
+      '檢查已連線的閘道。雲端由平台管理；沒有註冊來源記錄的項目不包含在內。';
+
+  @override
+  String get release_core_fleet_updates_screen_check_connected_gateways =>
+      '檢查已連線的閘道';
+
+  @override
+  String get release_core_fleet_updates_screen_read_update_receipt => '讀取更新回條';
+
+  @override
+  String get release_core_fleet_updates_screen_review_eligible_updates =>
+      '檢查符合條件的更新';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_account_changed_reopen_this_page =>
+      '帳號已變更。請重新開啟此頁面。';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_set_the_webapp_s_primary_gateway =>
+      '設定網頁應用程式的主要閘道？';
+
+  @override
+  String
+  release_core_fleet_webapp_screen_this_changes_the_shared_registry_not_the_last(
+    String webapp,
+    String gateway,
+    String id,
+  ) {
+    return '$webapp → $gateway ($id)\n這會變更共用登錄表，而非上次使用的閘道。';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_set_primary => '設為主要閘道';
+
+  @override
+  String get release_core_fleet_webapp_screen_serving_profile => '提供服務的設定檔';
+
+  @override
+  String get release_core_fleet_webapp_screen_hermes_cloud => 'Hermes Cloud';
+
+  @override
+  String get release_core_fleet_webapp_screen_discover_signed_in_agents =>
+      '探索已登入的代理程式';
+
+  @override
+  String release_core_fleet_webapp_screen_organisation(String organisation) {
+    return '組織：$organisation';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_no_agents_available =>
+      '沒有可用的代理程式。';
+
+  @override
+  String get release_core_fleet_webapp_screen_existing_desktop_webapp =>
+      '現有桌面網頁應用程式';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_check_gateway_and_web_access_status =>
+      '檢查閘道和網頁存取狀態';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_these_settings_belong_to_the_machine_serving_this =>
+      '這些設定屬於為此網頁應用程式提供服務的機器。發布和重新啟動不是遠端操作。';
+
+  @override
+  String get release_core_fleet_webapp_screen_read_webapp_gateway_registry =>
+      '讀取網頁應用程式的閘道登錄表';
+
+  @override
+  String get release_core_fleet_webapp_screen_last_used => '上次使用';
+
+  @override
+  String get release_core_fleet_webapp_screen_primary => '主要閘道';
+
+  @override
+  String release_core_fleet_webapp_screen_set_primary_2(String gateway) {
+    return '設為主要閘道：$gateway';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_read_shared_display_preferences =>
+      '讀取共用顯示偏好設定';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_chat_text_direction_on_this_webapp_and_desktop =>
+      '此網頁應用程式及桌面端的聊天文字方向';
+
+  @override
+  String release_core_schedule_desk_screen_created_on(
+    String job,
+    String profile,
+  ) {
+    return '已在 $profile 上建立 $job。';
+  }
+
+  @override
+  String
+  get release_core_schedule_desk_screen_the_list_covers_every_profile_on_this_gateway =>
+      '此清單涵蓋此閘道上的所有設定檔。停止、暫停、補執行、傳送和藍圖操作都會傳送至任務所屬的設定檔。';
+
+  @override
+  String get release_core_schedule_desk_screen_a_run_is_in_progress => '任務正在執行';
+
+  @override
+  String get release_core_schedule_desk_screen_no_current_run => '目前沒有執行中的任務';
+
+  @override
+  String release_core_schedule_desk_screen_stop_requested_for(String job) {
+    return '已要求停止 $job。';
+  }
+
+  @override
+  String release_core_schedule_desk_screen_no_run_was_in_flight_for(
+    String job,
+  ) {
+    return '$job 沒有正在執行的任務。';
+  }
+
+  @override
+  String get release_core_schedule_desk_screen_stop_current_run => '停止目前執行';
+
+  @override
+  String get release_core_schedule_desk_screen_pause_future_runs => '暫停後續執行';
+
+  @override
+  String get release_core_schedule_desk_screen_resume_future_runs => '恢復後續執行';
+
+  @override
+  String get release_core_schedule_desk_screen_catch_up_default => '預設補執行方式';
+
+  @override
+  String get release_core_schedule_desk_screen_run_one_missed => '補執行一次錯過的任務';
+
+  @override
+  String get release_core_schedule_desk_screen_skip_missed => '略過錯過的任務';
+
+  @override
+  String get release_core_schedule_desk_screen_blueprint_recipes => '藍圖範本';
+
+  @override
+  String get release_core_schedule_desk_screen_profile_for_the_new_job =>
+      '新任務使用的設定檔';
+
+  @override
+  String release_core_schedule_desk_screen_create(String blueprint) {
+    return '建立 $blueprint';
+  }
+
+  @override
+  String get release_core_schedule_desk_screen_loading_delivery_targets =>
+      '正在載入傳送目標';
+
+  @override
+  String release_core_schedule_desk_screen_no_home_channel(String target) {
+    return '$target（無預設頻道）';
+  }
+
+  @override
+  String release_core_memory_graph_screen_edit(String label) {
+    return '編輯$label';
+  }
+
+  @override
+  String get release_core_memory_graph_screen_content => '內容';
+
+  @override
+  String get release_core_memory_graph_screen_archive_skill => '封存技能';
+
+  @override
+  String get release_core_memory_graph_screen_delete_memory => '刪除記憶';
+
+  @override
+  String release_core_memory_graph_screen_archive_on_it_can_be_restored_on_the(
+    String label,
+    String profile,
+  ) {
+    return '將 $profile 上的 $label 封存？可以在主機上使用 Curator 還原。';
+  }
+
+  @override
+  String release_core_memory_graph_screen_delete_from_this_removes_that_memory(
+    String label,
+    String profile,
+  ) {
+    return '從 $profile 中刪除 $label？這會移除該則記憶。';
+  }
+
+  @override
+  String get release_core_memory_graph_screen_filter => '篩選';
+
+  @override
+  String get release_core_memory_graph_screen_timeline => '時間軸';
+
+  @override
+  String get release_core_memory_graph_screen_play_timeline => '播放時間軸';
+
+  @override
+  String get release_core_memory_graph_screen_layout_code => '版面配置代碼';
+
+  @override
+  String get release_core_memory_graph_screen_external_memory_providers =>
+      '外部記憶供應商';
+
+  @override
+  String
+  get release_core_memory_graph_screen_a_value_is_stored_leave_blank_to_keep =>
+      '已儲存一個值。留空即可保留。';
+
+  @override
+  String get release_core_memory_graph_screen_save_provider => '儲存供應商';
+
+  @override
+  String release_core_workspace_profiles_screen_applies_to(String profile) {
+    return '適用於：$profile';
+  }
+
+  @override
+  String get release_core_workspace_profiles_screen_choose_another_profile =>
+      '選擇其他設定檔';
+
+  @override
+  String
+  get release_core_workspace_profiles_screen_could_not_verify_the_selected_profile_on_this =>
+      '無法在此閘道上驗證所選設定檔。';
+
+  @override
+  String get release_core_workspace_profiles_screen_create_profile => '建立設定檔';
+
+  @override
+  String get release_core_workspace_profiles_screen_new_profile_id => '新設定檔 ID';
+
+  @override
+  String get release_core_assets_screen_links => '連結';
+
+  @override
+  String get release_core_workspace_picker_no_matching_items => '沒有符合的項目。';
+
+  @override
+  String get release_core_workspace_picker_save_layout => '儲存版面配置';
+
+  @override
+  String get release_core_workspace_picker_layout_name => '版面配置名稱';
+
+  @override
+  String
+  get release_core_workspace_popout_this_chat_already_has_a_pop_out_window =>
+      '此聊天已有一個獨立視窗。';
+
+  @override
+  String
+  get release_core_workspace_popout_could_not_open_this_saved_chat_check_the =>
+      '無法開啟此已儲存的聊天。請檢查連線後重試。';
+
+  @override
+  String
+  get release_core_popout_bootstrap_use_the_main_window_to_change_your_connection =>
+      '請在主視窗中變更連線。';
+
+  @override
+  String get release_core_guarded_save_refused => '閘道無法儲存此檔案';
+
+  @override
+  String get release_core_guarded_save_unavailable => '此閘道不提供受保護的儲存功能';
+
+  @override
+  String release_core_git_files_changed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '本輪變更了 $count 個檔案',
+      one: '本輪變更了 1 個檔案',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String release_core_git_entries_omitted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '因無法安全顯示，已省略 $count 個 Git 項目。',
+      one: '因無法安全顯示，已省略 1 個 Git 項目。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get release_core_git_staged => '已暫存';
+
+  @override
+  String get release_core_session_sort_recent => '最近活動';
+
+  @override
+  String get release_core_session_sort_created => '最新建立';
+
+  @override
+  String get release_core_session_sort_status => '執行中的優先';
+
+  @override
+  String get release_core_session_sort_tokens => '令牌最多';
+
+  @override
+  String get release_core_session_sort_cost => '費用最高';
+
+  @override
+  String get release_core_session_group_standard => '預設分組';
+
+  @override
+  String get release_core_session_group_status => '依狀態分組';
+
+  @override
+  String get release_core_session_group_project => '依專案分組';
+
+  @override
+  String release_core_session_tokens(int count) {
+    return '$count 個令牌';
+  }
+
+  @override
+  String release_core_search_gateway_mode(String mode) {
+    return '$mode（閘道）';
+  }
+
+  @override
+  String release_core_search_mode_tooltip(String label, String mode) {
+    return '$label：$mode';
+  }
+
+  @override
+  String get release_core_image_recovery_new_turn => '傳送會建立新的輪次';
+
+  @override
+  String release_core_image_recovery_metadata(int count, String date) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 張圖片 · $date',
+      one: '1 張圖片 · $date',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String release_core_discovery_scanning(String state) {
+    return '掃描：$state';
+  }
+
+  @override
+  String get release_core_discovery_enabled => '已啟用';
+
+  @override
+  String get release_core_discovery_disabled => '已停用';
+
+  @override
+  String get release_core_discovery_none => '無';
+
+  @override
+  String release_core_discovery_roots(String paths) {
+    return '掃描根目錄：$paths';
+  }
+
+  @override
+  String release_core_discovery_excluded(String paths) {
+    return '排除的子目錄樹：$paths';
+  }
+
+  @override
+  String release_core_discovery_repository_sessions(String path, int count) {
+    return '$path\n工作階段數：$count';
+  }
+
+  @override
+  String get release_core_projects_local_only =>
+      '此 Hermes 閘道版本較舊，不支援伺服器端專案，因此聊天分組僅保留在此裝置上。請更新 Hermes，以便在各裝置間共用相同的專案。';
+
+  @override
+  String get release_core_fleet_no_address => '尚無閘道位址';
+
+  @override
+  String release_core_fleet_diagnostics(String version, String access) {
+    return '閘道 $version · $access';
+  }
+
+  @override
+  String get release_core_schedule_builtin => '內建';
+
+  @override
+  String get release_core_memory_gateway_profile => '閘道';
+
+  @override
+  String release_core_memory_profile_summary(String profile, String gateway) {
+    return '$gateway 上的設定檔 $profile。分享代碼僅儲存縮放、時間和篩選條件。';
+  }
+
+  @override
+  String release_core_memory_layers_summary(
+    int memoryBytes,
+    int userBytes,
+    String provider,
+  ) {
+    return '內建記憶 $memoryBytes 位元組，使用者資訊 $userBytes 位元組。目前供應商為 $provider。';
+  }
+
+  @override
+  String get release_core_memory_kind_all => '全部';
+
+  @override
+  String get release_core_memory_kind_skill => '技能';
+
+  @override
+  String get release_core_memory_kind_memory => '記憶';
+
+  @override
+  String get release_core_workspace_failure_stale => '連線已變更';
+
+  @override
+  String get release_core_workspace_failure_unbound => '無經驗證的工作目錄';
+
+  @override
+  String get release_core_workspace_failure_denied => '權限遭拒';
+
+  @override
+  String get release_core_workspace_failure_ineligible => '不允許對此檔案執行該操作';
+
+  @override
+  String get release_core_workspace_failure_unsupported => '此閘道不支援';
+
+  @override
+  String get release_core_workspace_failure_mismatch => '遠端狀態已變更';
+
+  @override
+  String get release_core_workspace_failure_invalid => '閘道回應無效';
+
+  @override
+  String get release_core_workspace_failure_insecure => '需要安全連線';
+
+  @override
+  String get release_core_workspace_failure_unavailable => '閘道無法使用';
+
+  @override
+  String get release_core_queue_state_queued => '已排入佇列';
+
+  @override
+  String get release_core_queue_state_started => '已開始';
+
+  @override
+  String get release_core_queue_state_unknown => '結果未知';
+
+  @override
+  String get release_core_unknown_state => '未知';
+
+  @override
+  String get release_core_fleet_state_idle => '離線';
+
+  @override
+  String get release_core_fleet_state_connected => '已連線';
+
+  @override
+  String get release_core_fleet_state_reconnecting => '正在重新連線…';
+
+  @override
+  String get release_core_fleet_state_sessionExpired => '已登出';
+
+  @override
+  String get release_core_fleet_state_failed => '連線失敗';
+
+  @override
+  String release_core_workspace_operation_failed(String reason) {
+    return '無法確認閘道操作：$reason。';
+  }
+
+  @override
+  String get release_core_workspace_invalid_data => '無法驗證資料或輸入。請檢查後重試。';
+
+  @override
+  String
+  get release_core_parallel_workspace_layout_changed_in_this_window_but_could_not =>
+      '此視窗中的版面配置已變更，但無法儲存。';
+
+  @override
+  String get release_core_parallel_workspace_first_pane => '第一個窗格';
+
+  @override
+  String get release_core_parallel_workspace_second_pane => '第二個窗格';
+
+  @override
+  String get release_core_parallel_workspace_unavailable_page => '頁面無法使用';
+
+  @override
+  String release_core_parallel_workspace_close_a_tab_first_maximum(
+    String maximum,
+  ) {
+    return '請先關閉一個分頁（最多 $maximum 個）。';
+  }
+
+  @override
+  String get release_core_parallel_workspace_dock_beside_current_pane =>
+      '停駐在目前窗格旁';
+
+  @override
+  String get release_core_parallel_workspace_add_chat => '新增聊天';
+
+  @override
+  String
+  get release_core_parallel_workspace_action_failed_check_the_connection_and_try_again =>
+      '操作失敗。請檢查連線後重試。';
+
+  @override
+  String
+  get release_core_parallel_workspace_close_a_tab_before_reopening_another =>
+      '請先關閉一個分頁，再重新開啟另一個。';
+
+  @override
+  String release_core_parallel_workspace_replace_layout(String name) {
+    return '取代版面配置「$name」？';
+  }
+
+  @override
+  String
+  get release_core_parallel_workspace_layout_limit_reached_replace_an_existing_layout =>
+      '已達版面配置數量上限。請取代現有版面配置。';
+
+  @override
+  String get release_core_parallel_workspace_restore_layout => '還原版面配置';
+
+  @override
+  String get release_core_parallel_workspace_workspace_options => '工作區選項';
+
+  @override
+  String get release_core_parallel_workspace_dock_another_pane => '停駐另一個窗格';
+
+  @override
+  String get release_core_parallel_workspace_swap_panes => '交換窗格';
+
+  @override
+  String get release_core_parallel_workspace_undock_second_pane => '取消停駐第二個窗格';
+
+  @override
+  String get release_core_parallel_workspace_arrange_side_by_side => '左右排列';
+
+  @override
+  String get release_core_parallel_workspace_arrange_top_to_bottom => '上下排列';
+
+  @override
+  String release_core_parallel_workspace_change_split_size(String percent) {
+    return '調整分割比例（$percent%）';
+  }
+
+  @override
+  String get release_core_parallel_workspace_focus_pane_full_screen =>
+      '全螢幕聚焦窗格';
+
+  @override
+  String get release_core_parallel_workspace_open_chat_in_new_window =>
+      '在新視窗中開啟聊天';
+
+  @override
+  String get release_core_parallel_workspace_hide_pane_keep_running =>
+      '隱藏窗格（保持執行）';
+
+  @override
+  String get release_core_parallel_workspace_previous_tab => '上一個分頁';
+
+  @override
+  String get release_core_parallel_workspace_next_tab => '下一個分頁';
+
+  @override
+  String get release_core_parallel_workspace_move_tab_left => '向左移動分頁';
+
+  @override
+  String get release_core_parallel_workspace_move_tab_right => '向右移動分頁';
+
+  @override
+  String get release_core_parallel_workspace_reload_current_tab => '重新載入目前分頁';
+
+  @override
+  String get release_core_parallel_workspace_close_tab => '關閉分頁';
+
+  @override
+  String get release_core_parallel_workspace_close_other_tabs => '關閉其他分頁';
+
+  @override
+  String get release_core_parallel_workspace_close_tabs_to_the_right =>
+      '關閉右側分頁';
+
+  @override
+  String get release_core_parallel_workspace_close_all_tabs => '關閉所有分頁';
+
+  @override
+  String get release_core_parallel_workspace_reopen_closed_tab => '重新開啟已關閉的分頁';
+
+  @override
+  String get release_core_parallel_workspace_save_named_layout => '儲存具名版面配置';
+
+  @override
+  String get release_core_parallel_workspace_restore_named_layout => '還原具名版面配置';
+
+  @override
+  String get release_core_parallel_workspace_refresh_chat_list => '重新整理聊天清單';
+
+  @override
+  String get release_core_parallel_workspace_workspace_tools => '工作區工具';
+
+  @override
+  String get release_core_parallel_workspace_choose_a_chat_for_this_pane =>
+      '為此窗格選擇聊天';
+
+  @override
+  String release_core_parallel_workspace_choose_chat_for(String pane) {
+    return '為$pane選擇聊天';
+  }
+
+  @override
+  String get release_core_parallel_workspace_add_a_chat_to_start_a_workspace =>
+      '新增聊天以開始使用工作區。';
+
+  @override
+  String get release_core_parallel_workspace_select_a_tab_to_show_its_pane =>
+      '選擇一個分頁以顯示對應的窗格。';
+
+  @override
+  String get release_core_parallel_workspace_parallel_workspace => '並行工作區';
+
+  @override
+  String get release_core_parallel_workspace_show_workspace => '顯示工作區';
+
+  @override
+  String get release_core_parallel_workspace_could_not_load_chats_retry =>
+      '無法載入聊天。重試';
+
+  @override
+  String release_core_parallel_workspace_close(String pane) {
+    return '關閉$pane';
+  }
+
+  @override
+  String release_core_parallel_workspace_switch_pane(String pane) {
+    return '切換窗格：$pane';
+  }
+
+  @override
+  String get release_core_workspace_registry_session_id_copied => '已複製工作階段 ID。';
+
+  @override
+  String get release_core_workspace_registry_chat_details => '聊天詳細資訊';
+
+  @override
+  String get release_core_workspace_registry_server_default => '伺服器預設值';
+
+  @override
+  String get release_core_workspace_registry_session_id => '工作階段 ID';
+
+  @override
+  String get release_core_workspace_registry_title => '標題';
+
+  @override
+  String get release_core_workspace_label_terminals => '終端機';
+
+  @override
+  String get release_core_workspace_label_copy_id => '複製工作階段 ID';
+
+  @override
+  String get release_core_workspace_label_contributions => '擴充內容';
+
+  @override
+  String get release_core_workspace_owner_inactive => '此工作區的擁有者已不再處於作用中狀態。';
+
+  @override
+  String get release_core_workspace_select_chat => '請先選擇聊天。';
+
+  @override
+  String get release_core_workspace_chat_unavailable => '此連線無法使用該聊天。';
+
+  @override
+  String get release_core_workspace_page_unavailable => '此連線無法使用該頁面。';
+
+  @override
+  String release_core_client_queue_count(int count) {
+    return '$count 則已排入佇列';
+  }
+
+  @override
+  String release_core_client_queue_paused_count(int count) {
+    return '$count 則已排入佇列，已暫停';
+  }
+
+  @override
+  String release_core_git_diff_truncated(String diff) {
+    return '$diff\n…已截斷';
+  }
+
+  @override
+  String get release_core_search_no_models => 'Hermes 未傳回任何已設定的可選模型。';
+
+  @override
+  String get release_core_chat_archive_unavailable => '聊天封存操作無法使用。';
+
+  @override
+  String get release_core_chat_pin_unconfirmed => '置頂狀態未獲確認。';
+
+  @override
+  String get release_core_chat_archive_unconfirmed => '封存狀態未獲確認。';
+
+  @override
+  String get release_core_chat_archive_history_unavailable => '已封存的歷史記錄無法使用';
+
+  @override
+  String get release_core_quick_chat_history_unavailable => '快速聊天的歷史記錄無法使用';
+
+  @override
+  String get release_core_chat_project_ownership_unavailable => '無法確認專案歸屬';
+
+  @override
+  String get release_core_chat_unknown_project => '未知專案';
+
+  @override
+  String get release_core_chat_local_search_fallback => '訊息搜尋無法使用。正在顯示本機符合結果。';
+
+  @override
+  String release_core_fleet_update_eligible(String version) {
+    return '符合條件 · $version';
+  }
+
+  @override
+  String get release_core_fleet_update_state_1 => '已略過：同一安裝執行個體';
+
+  @override
+  String get release_core_fleet_update_state_2 => '尚未檢查';
+
+  @override
+  String get release_core_fleet_update_state_3 => '已略過：由雲端管理';
+
+  @override
+  String get release_core_fleet_update_state_4 => '已略過：未註冊為直連閘道';
+
+  @override
+  String get release_core_fleet_update_state_5 => '已略過：已中斷連線或忙碌中';
+
+  @override
+  String get release_core_fleet_update_state_6 => '沒有適用的更新';
+
+  @override
+  String get release_core_fleet_update_state_7 => '無法驗證更新資格';
+
+  @override
+  String get release_core_fleet_update_state_8 => '已略過：狀態已過期、忙碌中或已要求';
+
+  @override
+  String get release_core_fleet_update_state_9 => '正在提出要求';
+
+  @override
+  String get release_core_fleet_update_state_10 => '已接受；回條無法取得';
+
+  @override
+  String get release_core_fleet_update_state_11 => '已接受；正在等待回條';
+
+  @override
+  String get release_core_fleet_update_state_12 => '已略過：此安裝執行個體上有聊天正在執行';
+
+  @override
+  String get release_core_fleet_update_state_13 => '未獲確認；請勿自動重新傳送';
+
+  @override
+  String get release_core_fleet_update_state_14 => '重新連線以檢查回條';
+
+  @override
+  String get release_core_fleet_update_state_15 => '回條無法取得';
+
+  @override
+  String get release_core_fleet_update_state_16 => '正在等待相符的回條';
+
+  @override
+  String get release_core_fleet_update_state_17 => '已更新；需要後續處理';
+
+  @override
+  String get release_core_fleet_update_state_19 => '已部分更新';
+
+  @override
+  String get release_core_fleet_update_state_20 => '更新失敗';
+
+  @override
+  String get release_core_fleet_update_state_21 => '未獲確認';
+
+  @override
+  String get release_core_cloud_status_ready => '就緒';
+
+  @override
+  String get release_core_cloud_status_online => '上線';
+
+  @override
+  String get release_core_cloud_status_stopped => '已停止';
+
+  @override
+  String get release_core_cloud_status_error => '錯誤';
+
+  @override
+  String get ng_release_more_contributions_subtitle => '此連線中已審核的回覆卡片';
+
+  @override
+  String get ng_release_more_gateway_fleet => '閘道群組';
+
+  @override
+  String get ng_release_more_memory_graph => '記憶圖譜';
+
+  @override
+  String get ng_release_more_memory_graph_subtitle => '時間軸、編輯和記憶供應商';
+
+  @override
+  String get ng_release_more_capabilities_subtitle => '安裝和管理技能、外掛程式、連接器及工具後端';
+
+  @override
+  String get ng_release_more_browser_vault => '瀏覽器保險庫';
+
+  @override
+  String get ng_release_more_browser_vault_subtitle => '網站登入資訊、地址、付款卡和憑證來源';
+
+  @override
+  String get ng_release_more_agent_policy => '代理程式原則';
+
+  @override
+  String get ng_release_more_agent_policy_subtitle => '核准、檢查點、瀏覽器存取和共用指標';
+
+  @override
+  String get ng_release_more_schedules => '排程任務';
+
+  @override
+  String get ng_release_more_schedules_subtitle => '所有設定檔、藍圖、補執行和停止';
+
+  @override
+  String get ng_release_more_host_subtitle => '遠端記錄、健康狀態、維護和更新';
+
+  @override
+  String get ng_release_more_providers_routes => '供應商和路由';
+
+  @override
+  String get ng_release_more_providers_routes_subtitle => '金鑰、端點、委派和混合設定';
+
+  @override
+  String get ng_release_more_credits_plans => '額度和方案';
+
+  @override
+  String get ng_release_more_credits_plans_subtitle => '帳號允許且經你同意後使用 Nous 計費';
+
+  @override
+  String get ng_release_sign_in_or => '或';
+
+  @override
+  String ng_release_deployment_sign_in_hint(String message) {
+    return '$message 你仍可在下一步使用部署工作階段令牌登入。';
+  }
+
+  @override
+  String get ng_release_message_search_unavailable => '訊息搜尋無法使用。正在顯示本機符合結果。';
+
+  @override
+  String ng_release_insights_days(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days 天',
+      one: '$days 天',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_release_signed_in_you => '你';
+
+  @override
+  String get release_chat_unsent_prompt_gone => '該未傳送的提示詞已不在佇列中。';
+
+  @override
+  String ng_release_attachment_not_attached(String name) {
+    return '閘道未附加 $name。';
+  }
+
+  @override
+  String get ng_release_gateway_not_connected => '尚未連線至閘道。';
+
+  @override
+  String get ng_release_gateway_unreachable => '無法連線至閘道。';
+
+  @override
+  String get ng_release_projects_scope_changed => '專案所屬的連線或設定檔已不再選取';
+
+  @override
+  String get ng_release_missing_providers => '缺少供應商';
+
+  @override
+  String get ng_release_missing_tasks => '缺少任務';
+
+  @override
+  String ng_release_age_minutes(int count) {
+    return '$count分';
+  }
+
+  @override
+  String ng_release_age_hours(int count) {
+    return '$count小時';
+  }
+
+  @override
+  String ng_release_age_days(int count) {
+    return '$count天';
+  }
+
+  @override
+  String ng_release_age_weeks(int count) {
+    return '$count週';
+  }
+
+  @override
+  String ng_release_age_years(int count) {
+    return '$count年';
+  }
+
+  @override
+  String ng_release_compact_billions(String count) {
+    return '$count十億';
+  }
+
+  @override
+  String ng_release_compact_millions(String count) {
+    return '$count百萬';
+  }
+
+  @override
+  String ng_release_compact_thousands(String count) {
+    return '$count千';
+  }
+
+  @override
+  String ng_release_token_thousands(String count) {
+    return '$count千';
+  }
+
+  @override
+  String ng_release_elapsed_minutes_seconds(int minutes, int seconds) {
+    return '$minutes分 $seconds秒';
+  }
+
+  @override
+  String ng_release_elapsed_seconds(int seconds) {
+    return '$seconds秒';
+  }
+
+  @override
+  String get ng_release_notification_foreground => 'Ares 當時顯示在螢幕上';
+
+  @override
+  String get ng_release_notification_stopped => '該輪次已停止';
+
+  @override
+  String get ng_release_more_parallel_workspace => '並行工作區';
+
+  @override
+  String get ng_release_more_parallel_workspace_subtitle => '在分頁中或並排開啟多個聊天。';
+
+  @override
+  String get release_chat_unknown_model => '未知';
+
+  @override
+  String release_chat_profile_default(String model) {
+    return '設定檔預設值：$model';
+  }
+
+  @override
+  String release_chat_profile_default_provider(String model, String provider) {
+    return '設定檔預設值：$model • $provider';
+  }
+
+  @override
+  String get release_chat_choose_provider => '此模型可透過多個供應商使用。請選擇一個供應商以繼續。';
+
+  @override
+  String get release_chat_slash_needs_gateway => '斜線指令需要桌面閘道';
+
+  @override
+  String get release_chat_recovering_without_resending => '正在復原，不會重新傳送';
+
+  @override
+  String get release_chat_live_request_unreachable => '抱歉，無法連線至 Hermes 來處理該要求。';
+
+  @override
+  String release_chat_live_working(String tool) {
+    return 'Hermes 正在處理：$tool。尚未完成。';
+  }
+
+  @override
+  String get release_chat_live_finished_without_spoken_result =>
+      'Hermes 已完成該要求，但沒有語音回覆。';
+
+  @override
+  String get release_chat_reply_language_unavailable => '所選回覆語言無法使用';
+
+  @override
+  String get release_chat_reply_voice_unavailable => '所選回覆音色無法使用';
+
+  @override
+  String get release_chat_reply_voice_configuration_unavailable => '回覆語音設定無法使用';
+
+  @override
+  String get release_chat_notification_review_action => '開啟聊天以檢查要求的操作。';
+
+  @override
+  String get release_chat_notification_respond => '開啟聊天以回覆。';
+
+  @override
+  String get release_chat_start_new_main_window => '請在主視窗中開始新的聊天。';
+
+  @override
+  String get release_chat_no_desktop_gateway => '無桌面閘道';
+
+  @override
+  String get release_chat_attachment_preparation_cancelled => '附件準備已取消。';
+
+  @override
+  String get release_chat_approval_authority_revoked => '核准權限已被撤銷。';
+
+  @override
+  String get release_chat_gateway_session_disconnected => '桌面閘道工作階段已中斷連線';
+
+  @override
+  String get release_chat_stop_requested => '已要求停止。正在等待 Hermes 結束。';
+
+  @override
+  String release_chat_stop_request_failed(String error) {
+    return '無法要求停止：$error';
+  }
+
+  @override
+  String get release_chat_queued_prompt_not_sent => '佇列中的提示詞未傳送。';
+
+  @override
+  String get release_chat_running_turn_unreachable =>
+      '無法聯繫到正在執行的輪次。正在重新連線，不會重新傳送。';
+
+  @override
+  String get release_chat_wait_for_composer => '請等待訊息輸入框可用。';
+
+  @override
+  String get release_chat_find_in_transcript => '在對話記錄中尋找';
+
+  @override
+  String get release_chat_open_browser_preview => '開啟瀏覽器預覽';
+
+  @override
+  String get release_chat_more_tools => '更多聊天工具';
+
+  @override
+  String get release_chat_queue_until_finished => '排入佇列，等待本輪結束';
+
+  @override
+  String get release_chat_format_bold => '粗體';
+
+  @override
+  String get release_chat_format_italic => '斜體';
+
+  @override
+  String get ng_release_chat_gateway_queue_requirements =>
+      '閘道佇列需要已關聯的聊天和純文字提示詞。';
+
+  @override
+  String get ng_release_chat_start_new_main_screen => '請從聊天主畫面開始新的聊天。';
+
+  @override
+  String get ng_release_chat_image => '圖片';
+
+  @override
+  String ng_release_chat_tool_seconds(String seconds) {
+    return '$seconds秒';
+  }
+
+  @override
+  String get release_preview_chat_changed => '聊天已變更。請重新連線預覽以繼續。';
+
+  @override
+  String get release_preview_authenticating_chat => '正在驗證聊天身分…';
+
+  @override
+  String release_preview_unavailable_reason(String reason) {
+    return '預覽無法使用：$reason';
+  }
+
+  @override
+  String get release_preview_operation_failed => '預覽操作失敗。';
+
+  @override
+  String get release_preview_added_to_draft => '已新增至草稿。未傳送任何內容。';
+
+  @override
+  String get release_preview_open_site_title => '開啟此網站？';
+
+  @override
+  String release_preview_open_site_body(String origin) {
+    return '$origin\n\n閱讀模式僅載入此文件，不會與 Hermes 分享 Cookie、登入資訊或頁面。';
+  }
+
+  @override
+  String get release_preview_open_site => '開啟網站';
+
+  @override
+  String get release_preview_discard_pins_title => '捨棄尚未新增至草稿的標註？';
+
+  @override
+  String get release_preview_keep_pins => '保留標註';
+
+  @override
+  String get release_preview_share_page_title => '與此聊天分享此頁面？';
+
+  @override
+  String release_preview_share_page_body(String origin) {
+    return 'Hermes 可以讀取 $origin 中顯示的文字和元素清單，並捲動此窗格。導覽至其他頁面後將結束分享。不會分享表單和憑證。';
+  }
+
+  @override
+  String get release_preview_share_page => '分享頁面';
+
+  @override
+  String release_preview_comment_number(int number) {
+    return '評論 #$number';
+  }
+
+  @override
+  String get release_preview_note => '備註';
+
+  @override
+  String get release_preview_keep_pin => '保留標註';
+
+  @override
+  String get release_preview_title => '瀏覽器預覽';
+
+  @override
+  String get release_preview_hide => '隱藏預覽';
+
+  @override
+  String get release_preview_close_and_forget => '關閉並清除此頁面';
+
+  @override
+  String get release_preview_site_address => '網站位址';
+
+  @override
+  String get release_preview_go_to_address => '前往位址';
+
+  @override
+  String get release_preview_forward => '前進';
+
+  @override
+  String get release_preview_reload => '重新載入';
+
+  @override
+  String get release_preview_share_with_hermes => '與 Hermes 分享頁面';
+
+  @override
+  String get release_preview_stop_sharing => '停止分享頁面';
+
+  @override
+  String get release_preview_annotate => '標註元素或區域';
+
+  @override
+  String get release_preview_reader_console => '閱讀器主控台';
+
+  @override
+  String get release_preview_reconnect => '重新連線預覽';
+
+  @override
+  String get release_preview_reader_mode_help =>
+      '閱讀模式：僅 HTML 和文字。不執行指令碼、不載入內嵌資源，也不使用已登入的瀏覽器設定檔。';
+
+  @override
+  String release_preview_sharing_origin(String origin) {
+    return '正在與此聊天分享閱讀器：$origin';
+  }
+
+  @override
+  String get release_preview_annotation_help => '點選元素或拖曳選取區域以新增評論。';
+
+  @override
+  String get release_preview_reader_requests => '閱讀器要求（JavaScript 已關閉）';
+
+  @override
+  String release_preview_selected_requests(int count) {
+    return '已選取 $count 項 · JavaScript 已關閉';
+  }
+
+  @override
+  String get release_preview_copy_all => '全部複製';
+
+  @override
+  String get release_preview_copy_selected => '複製所選內容';
+
+  @override
+  String get release_preview_add_log_to_draft => '將記錄新增至草稿';
+
+  @override
+  String release_preview_requests_draft(String log) {
+    return '閱讀器要求：\n$log';
+  }
+
+  @override
+  String release_preview_add_pins_to_draft(int count) {
+    return '將 $count 個標註新增至草稿';
+  }
+
+  @override
+  String release_preview_request_loaded(String origin, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 個閱讀器元素',
+      one: '$count 個閱讀器元素',
+    );
+    return 'HTTP 200 · $origin · $_temp0';
+  }
+
+  @override
+  String release_preview_annotation_intro(String origin) {
+    return '請檢查對 $origin 預覽的這些評論。附帶的裁切圖依相同順序編號。';
+  }
+
+  @override
+  String get release_preview_reader_region => '閱讀器區域';
+
+  @override
+  String get release_preview_capture_failed => '無法擷取這些像素。';
+
+  @override
+  String get release_preview_address_not_approved => '此位址不屬於已核准的預覽來源。';
+
+  @override
+  String get release_preview_page_limit => '頁面超出閱讀器限制。';
+
+  @override
+  String get release_preview_page_unreadable => '無法讀取此頁面。';
+
+  @override
+  String get release_preview_page_complex => '此頁面過於複雜，無法使用閱讀模式。';
+
+  @override
+  String release_preview_http_failed(int statusCode) {
+    return 'HTTP $statusCode。未跟隨任何重新導向，也未進行登入。';
+  }
+
+  @override
+  String get release_preview_unsupported_type => '閱讀模式只能開啟 HTML 和純文字。';
+
+  @override
+  String get release_preview_load_insecure => '無法安全載入此網站。';
+
+  @override
+  String get release_preview_crop_limit => '預覽裁切圖超出限制。';
+
+  @override
+  String get release_preview_image_unreadable => '所選圖片為空或無法讀取。';
+
+  @override
+  String get release_preview_image_budget => '所選圖片超出草稿的 64 MiB 大小限制。';
+
+  @override
+  String get release_preview_image_format => '不支援此圖片格式。請選擇 JPEG、PNG 或 WebP 圖片。';
+
+  @override
+  String get release_preview_image_decode => '無法安全解碼所選的 JPEG、PNG 或 WebP 圖片。';
+
+  @override
+  String get release_preview_image_sanitize =>
+      '無法安全清除此圖片的中繼資料。請選擇有效的 JPEG、PNG 或 WebP 圖片。';
+
+  @override
+  String get release_preview_draft_budget => '每份草稿的附件總大小不得超過 64 MiB。';
+
+  @override
+  String get release_preview_generic_file_limit => '一般檔案每個不得超過 16 MiB。';
+
+  @override
+  String get release_preview_image_not_sanitized => '遠端圖片必須先經過安全清理才能上傳。';
+
+  @override
+  String get release_preview_stage_failed => '無法將預覽證據新增至草稿。請重試。';
+
+  @override
+  String get release_misc_find_hermes_on_lan => '在區域網路中尋找 Hermes';
+
+  @override
+  String release_misc_discovery_failed(String error) {
+    return '探索失敗：$error';
+  }
+
+  @override
+  String get release_misc_no_lan_servers => '在區域網路中未找到 Hermes 伺服器。';
+
+  @override
+  String release_misc_api_key_rejected(String endpoint, int statusCode) {
+    return '$endpoint 拒絕了 API 金鑰（HTTP $statusCode）。';
+  }
+
+  @override
+  String get release_misc_api_key_required =>
+      '伺服器需要 API 金鑰。請輸入你的 API_SERVER_KEY。';
+
+  @override
+  String release_misc_gateway_not_found(String endpoint) {
+    return '閘道端點 $endpoint 傳回 HTTP 404。請檢查閘道路徑前置字串和反向代理路由。';
+  }
+
+  @override
+  String release_misc_gateway_http_error(String endpoint, int statusCode) {
+    return '閘道端點 $endpoint 傳回 HTTP $statusCode。';
+  }
+
+  @override
+  String release_misc_gateway_unreachable(String endpoint) {
+    return '無法連線至閘道端點 $endpoint。';
+  }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target => '無效的傳送目標';
+
+  @override
+  String get release_core_file_save_direct_only => '只能儲存工作目錄直屬的檔案。';
+
+  @override
+  String get release_core_file_save_hidden => '閘道無法儲存隱藏檔案。';
 }

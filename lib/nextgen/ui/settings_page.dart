@@ -399,7 +399,7 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
                 children: [
                   SwitchListTile(
                     contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-                    title: const Text('NextGen'),
+                    title: Text(ngL.setup_interface_nextgen),
                     subtitle: Text(ngL.ng_the_new_interface_turn_off_to),
                     value: true,
                     onChanged: (v) =>
@@ -429,7 +429,7 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
                       registerAppLicenses();
                       showLicensePage(
                         context: context,
-                        applicationName: 'Ares - formerly Hermes Android',
+                        applicationName: ngL.hermes_agent,
                       );
                     },
                   ),
@@ -651,6 +651,12 @@ class NgNotificationSettings extends StatelessWidget {
 class NgRecentNotificationsSheet extends StatelessWidget {
   const NgRecentNotificationsSheet({super.key});
 
+  static String _detail(String detail) => switch (detail) {
+    'Ares was on screen' => ngL.ng_release_notification_foreground,
+    'the turn was stopped' => ngL.ng_release_notification_stopped,
+    _ => detail,
+  };
+
   @override
   Widget build(BuildContext context) {
     final c = NgColors.of(context);
@@ -734,7 +740,7 @@ class NgRecentNotificationsSheet extends StatelessWidget {
                               ),
                             if (a.detail != null)
                               Text(
-                                a.detail!,
+                                _detail(a.detail!),
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                                 style: NgType.caption.copyWith(

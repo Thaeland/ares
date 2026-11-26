@@ -370,11 +370,24 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('/server/a'), findsOneWidget);
       expect(find.text('/server/b'), findsOneWidget);
-      await tester.tap(find.byTooltip('Choose icon'));
+      final l10n = lookupAppLocalizations(const Locale('en'));
+      await tester.tap(
+        find.byTooltip(
+          l10n.release_core_project_settings_view_choose(
+            l10n.release_core_project_settings_view_icon,
+          ),
+        ),
+      );
       await tester.pumpAndSettle();
       await tester.tap(find.text('Rocket').last);
       await tester.pumpAndSettle();
-      await tester.tap(find.byTooltip('Choose colour'));
+      await tester.tap(
+        find.byTooltip(
+          l10n.release_core_project_settings_view_choose(
+            l10n.release_core_project_settings_view_colour,
+          ),
+        ),
+      );
       await tester.pumpAndSettle();
       await tester.tap(find.text('Blue').last);
       await tester.pumpAndSettle();

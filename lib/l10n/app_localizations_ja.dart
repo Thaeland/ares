@@ -311,17 +311,17 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String message_time_recorded(String time) {
-    return 'Recorded by server: $time (local time)';
+    return 'サーバーでの記録時刻：$time（ローカル時刻）';
   }
 
   @override
   String message_time_sent(String time) {
-    return 'Send observed on this device: $time (local time)';
+    return 'この端末で送信を確認：$time（ローカル時刻）';
   }
 
   @override
   String message_time_received(String time) {
-    return 'First received on this device: $time (local time)';
+    return 'この端末での初回受信時刻：$time（ローカル時刻）';
   }
 
   @override
@@ -437,28 +437,27 @@ class AppLocalizationsJa extends AppLocalizations {
   String get attachment_retry => '再試行';
 
   @override
-  String get saved_history_heading => 'Saved history';
+  String get saved_history_heading => '保存済みの履歴';
 
   @override
-  String get received_output_heading =>
-      'Received output — match to saved history unconfirmed';
+  String get received_output_heading => '受信した出力 — 保存済みの履歴との一致は未確認';
 
   @override
-  String get received_output_details => 'About received output';
+  String get received_output_details => '受信した出力について';
 
   @override
   String get received_output_explanation =>
-      'This may also appear in saved history. The app cannot confirm a match.';
+      '保存済みの履歴にも含まれている可能性があります。アプリでは一致を確認できません。';
 
   @override
-  String get local_prompt_context => 'Local prompt context';
+  String get local_prompt_context => 'ローカルのプロンプトコンテキスト';
 
   @override
-  String get received_output_badge => 'Received · match unconfirmed';
+  String get received_output_badge => '受信済み · 一致未確認';
 
   @override
   String get received_output_lifetime =>
-      'Received output is kept temporarily in this app session and may be shortened or removed as limits are reached. It may not be available after the app or connection is closed.';
+      '受信した出力は、このアプリセッション中に一時的に保持され、上限に達すると短縮または削除される場合があります。アプリや接続を閉じると利用できなくなる場合があります。';
 
   @override
   String get theme_palette => 'カラーテーマ';
@@ -657,15 +656,14 @@ class AppLocalizationsJa extends AppLocalizations {
       'このHermesセッションが終了するまで、一致するコマンドを許可します。';
 
   @override
-  String get allow_folder_until_sandbox_off =>
-      'Allow this folder until the sandbox is switched off.';
+  String get allow_folder_until_sandbox_off => 'サンドボックスがオフになるまで、このフォルダーを許可します。';
 
   @override
   String get allow_once => '1回だけ許可';
 
   @override
   String get allow_website_until_sandbox_off =>
-      'Allow this website until the sandbox is switched off.';
+      'サンドボックスがオフになるまで、このウェブサイトを許可します。';
 
   @override
   String get always_allow => '常に許可';
@@ -894,7 +892,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get code_copied => 'コードをコピーしました';
 
   @override
-  String get code_format => 'Code';
+  String get code_format => 'コード';
 
   @override
   String get coming_next => '近日対応';
@@ -903,25 +901,25 @@ class AppLocalizationsJa extends AppLocalizations {
   String get command => 'コマンド';
 
   @override
-  String get command_palette => 'Command palette';
+  String get command_palette => 'コマンドパレット';
 
   @override
-  String get command_palette_hint => 'Type a command';
+  String get command_palette_hint => 'コマンドを入力';
 
   @override
-  String get command_palette_no_results => 'No commands found';
+  String get command_palette_no_results => 'コマンドが見つかりません';
 
   @override
-  String get command_palette_new_chat => 'New chat';
+  String get command_palette_new_chat => '新しいチャット';
 
   @override
-  String get command_palette_search_chats => 'Search chats';
+  String get command_palette_search_chats => 'チャットを検索';
 
   @override
-  String get command_palette_toggle_theme => 'Toggle theme';
+  String get command_palette_toggle_theme => 'テーマを切り替え';
 
   @override
-  String get command_palette_copy_last_code => 'Copy last code block';
+  String get command_palette_copy_last_code => '最後のコードブロックをコピー';
 
   @override
   String get command_line_chats => 'コマンドラインのチャット';
@@ -1109,14 +1107,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get cron => 'Cron';
 
   @override
-  String get crons => 'Crons';
+  String get crons => 'Cronジョブ';
 
   @override
-  String get cron_conversations_empty =>
-      'Conversations from scheduled jobs appear here, including older runs.';
+  String get cron_conversations_empty => '予定されたジョブの会話が、過去の実行分も含めてここに表示されます。';
 
   @override
-  String get search_cron_conversations => 'Search cron conversations';
+  String get search_cron_conversations => 'Cronの会話を検索';
 
   @override
   String get cron_jobs => 'Cronジョブ';
@@ -1892,51 +1889,49 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get windows_notifications_blocked =>
-      'Notifications are unavailable. Use the installed Ares app and check Settings → System → Notifications in Windows.';
+      '通知を利用できません。インストール済みのAresアプリを使用し、Windowsの設定 → システム → 通知を確認してください。';
 
   @override
-  String get windows_notification_diagnostics =>
-      'What Ares submitted to Windows';
+  String get windows_notification_diagnostics => 'AresがWindowsに送信した内容';
 
   @override
-  String get chat_activity_share => 'Share chat activity';
+  String get chat_activity_share => 'チャットの利用状況を共有';
 
   @override
   String get chat_activity_share_hint =>
-      'Tell a compatible connected gateway when you are using this chat, so its phone notification plugin can avoid duplicate alerts. No keys or message text are sent.';
+      'このチャットの利用中であることを、対応する接続済みのゲートウェイに伝え、電話通知プラグインによる重複通知を防ぎます。キーやメッセージ本文は送信されません。';
 
   @override
-  String get completion_sound => 'Completion sound';
+  String get completion_sound => '完了音';
 
   @override
-  String get completion_sound_system => 'System default';
+  String get completion_sound_system => 'システムのデフォルト';
 
   @override
-  String get completion_sound_mail => 'Mail';
+  String get completion_sound_mail => 'メール';
 
   @override
-  String get completion_sound_reminder => 'Reminder';
+  String get completion_sound_reminder => 'リマインダー';
 
   @override
-  String get completion_sound_silent => 'Silent';
+  String get completion_sound_silent => '無音';
 
   @override
   String get completion_sound_scope =>
-      'Plays for finished replies, the test notification and inside the app. Approvals and other alerts keep their usual sound.';
+      '応答の完了時、テスト通知、アプリ内で再生します。承認やその他の通知には通常の音を使用します。';
 
   @override
   String get completion_sound_scope_android =>
-      'Plays for finished replies, the test notification and inside the app. Approvals, other alerts, background notifications from the server and Android Auto messages keep their usual sound.';
+      '応答の完了時、テスト通知、アプリ内で再生します。承認、その他の通知、サーバーからのバックグラウンド通知、Android Autoのメッセージには通常の音を使用します。';
 
   @override
-  String get notification_open_action => 'Open';
+  String get notification_open_action => '開く';
 
   @override
-  String get app_sounds_mute => 'Mute app sounds';
+  String get app_sounds_mute => 'アプリの音をミュート';
 
   @override
-  String get app_sounds_mute_hint =>
-      'Stops the completion sound Ares plays while it is open. Notifications keep their own sound.';
+  String get app_sounds_mute_hint => 'Aresを開いている間に鳴る完了音を止めます。通知にはそれぞれの音を使用します。';
 
   @override
   String get notifications_permission_denied =>
@@ -2410,10 +2405,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get starting_hermes => 'Hermesを起動中…';
 
   @override
-  String get media_card_download => 'Download file';
+  String get media_card_download => 'ファイルをダウンロード';
 
   @override
-  String get media_card_tap_to_download => 'Tap to download';
+  String get media_card_tap_to_download => 'タップしてダウンロード';
 
   @override
   String get still_loading_your_projects => 'プロジェクトを読み込み中です。';
@@ -2707,7 +2702,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get verbose_mode => '詳細モード';
 
   @override
-  String get message_metadata => 'Message details';
+  String get message_metadata => 'メッセージの詳細';
 
   @override
   String get voice => '音声';
@@ -3285,45 +3280,43 @@ class AppLocalizationsJa extends AppLocalizations {
       'コンパクトでは「You」「Hermes」のラベルを外し、吹き出しの余白・間隔・左右のマージンを詰めます。';
 
   @override
-  String get client_certificate_mtls => 'Client certificate (mTLS)';
+  String get client_certificate_mtls => 'クライアント証明書（mTLS）';
 
   @override
   String get client_certificate_mtls_description =>
-      'Present a certificate when an HTTPS proxy requires mutual TLS.';
+      'HTTPSプロキシが相互TLSを要求する場合に証明書を提示します。';
 
   @override
-  String get client_certificate_https_only =>
-      'Client certificates are only used for HTTPS connections.';
+  String get client_certificate_https_only => 'クライアント証明書はHTTPS接続でのみ使用します。';
 
   @override
-  String get choose_certificate => 'Choose certificate';
+  String get choose_certificate => '証明書を選択';
 
   @override
-  String get certificate_password => 'Certificate password';
+  String get certificate_password => '証明書のパスワード';
 
   @override
   String get this_certificate_is_password_protected =>
-      'This certificate is password-protected. It opens as you type.';
+      'この証明書はパスワードで保護されています。入力すると開きます。';
 
   @override
   String get enter_the_certificate_password_to_finish_loading_it =>
-      'Enter the certificate password to finish loading the certificate you chose.';
+      '選択した証明書の読み込みを完了するには、証明書のパスワードを入力してください。';
 
   @override
   String get client_certificate_required =>
-      'Load a client certificate or turn off the client certificate option.';
+      'クライアント証明書を読み込むか、クライアント証明書のオプションをオフにしてください。';
 
   @override
   String client_certificate_loaded(String label) {
-    return 'Loaded: $label';
+    return '読み込み済み：$label';
   }
 
   @override
-  String get remove_certificate => 'Remove certificate';
+  String get remove_certificate => '証明書を削除';
 
   @override
-  String get certificate_import_failed =>
-      'That certificate could not be loaded.';
+  String get certificate_import_failed => 'その証明書を読み込めませんでした。';
 
   @override
   String get background_work => 'バックグラウンド動作';
@@ -3784,73 +3777,70 @@ class AppLocalizationsJa extends AppLocalizations {
   String get provider_oauth_account_status_unknown => 'ホストのアカウント状態を取得できません。';
 
   @override
-  String get app_language => 'App language';
+  String get app_language => 'アプリの言語';
 
   @override
-  String get app_language_system => 'Same as phone';
+  String get app_language_system => '端末と同じ';
 
   @override
-  String get auto_archives_after_72_hours => 'Auto-archives after 72 hours';
+  String get auto_archives_after_72_hours => '72時間後に自動でアーカイブ';
 
   @override
-  String get automation => 'Automation';
+  String get automation => '自動化';
 
   @override
-  String get voice_recording_start => 'Record voice message';
+  String get voice_recording_start => '音声メッセージを録音';
 
   @override
-  String get voice_recording_pause => 'Pause recording';
+  String get voice_recording_pause => '録音を一時停止';
 
   @override
-  String get voice_recording_preview => 'Play recording';
+  String get voice_recording_preview => '録音を再生';
 
   @override
-  String get voice_recording_resume => 'Continue recording';
+  String get voice_recording_resume => '録音を続ける';
 
   @override
-  String get voice_recording_send => 'Send voice message';
+  String get voice_recording_send => '音声メッセージを送信';
 
   @override
-  String get voice_recording_discard => 'Discard recording';
+  String get voice_recording_discard => '録音を破棄';
 
   @override
-  String get voice_recording_processing => 'Preparing voice message…';
+  String get voice_recording_processing => '音声メッセージを準備中…';
 
   @override
   String voice_recording_elapsed(String time) {
-    return 'Recording $time';
+    return '録音中 $time';
   }
 
   @override
   String voice_recording_draft(String time) {
-    return 'Voice message $time';
+    return '音声メッセージ $time';
   }
 
   @override
-  String get voice_recording_permission =>
-      'Allow microphone access to record a voice message.';
+  String get voice_recording_permission => '音声メッセージを録音するには、マイクへのアクセスを許可してください。';
 
   @override
-  String get voice_recording_limit =>
-      'This recording has reached the ten-minute limit.';
+  String get voice_recording_limit => '録音が上限の10分に達しました。';
 
   @override
-  String get voice_recording_empty => 'No audio was recorded. Try again.';
+  String get voice_recording_empty => '音声が録音されませんでした。もう一度お試しください。';
 
   @override
-  String get voice_recording_failed =>
-      'Could not process the recording. Any saved fragments have been kept.';
+  String get voice_recording_failed => '録音を処理できませんでした。保存済みの録音部分は保持されています。';
 
   @override
   String get voice_recording_unconfirmed =>
-      'Delivery was not confirmed. Your recording is saved. Check the chat before trying again.';
+      '配信を確認できませんでした。録音は保存されています。再試行する前にチャットを確認してください。';
 
   @override
   String get voice_recording_submit_failed =>
-      'Could not send the voice message. Your recording is saved. Check the connection, Dashboard access and server transcription settings.';
+      '音声メッセージを送信できませんでした。録音は保存されています。接続、ダッシュボードへのアクセス、サーバーの文字起こし設定を確認してください。';
 
   @override
-  String get voice_recording_pause_playback => 'Pause playback';
+  String get voice_recording_pause_playback => '再生を一時停止';
 
   @override
   String get projects_root_title => 'サーバー上のプロジェクトフォルダー';
@@ -3995,178 +3985,171 @@ class AppLocalizationsJa extends AppLocalizations {
   String get slash_sessions_inline => 'セッションリストを開いてチャットを選択してください。下書きは保持されています。';
 
   @override
-  String get composer_snippets => 'Prompt snippets';
+  String get composer_snippets => 'プロンプト定型文';
 
   @override
-  String get composer_snippets_description =>
-      'Pick a starter prompt to drop into the composer.';
+  String get composer_snippets_description => '入力欄に挿入する開始用のプロンプトを選んでください。';
 
   @override
-  String get composer_snippet_review => 'Code review';
+  String get composer_snippet_review => 'コードレビュー';
 
   @override
   String get composer_snippet_review_body =>
-      'Audit the current change for regressions, dropped edge cases and missing tests.';
+      '今回の変更にリグレッション、見落とした境界ケース、不足しているテストがないか確認します。';
 
   @override
   String get composer_snippet_review_text =>
-      'Please review this for bugs, regressions and missing tests.';
+      'バグ、リグレッション、不足しているテストがないかレビューしてください。';
 
   @override
-  String get composer_snippet_plan => 'Implementation plan';
+  String get composer_snippet_plan => '実装計画';
 
   @override
-  String get composer_snippet_plan_body =>
-      'Outline an approach before touching code so the diff stays focused.';
+  String get composer_snippet_plan_body => '変更範囲を絞るため、コードに手を加える前に方針をまとめます。';
 
   @override
-  String get composer_snippet_plan_text =>
-      'Please make a concise implementation plan before changing code.';
+  String get composer_snippet_plan_text => 'コードを変更する前に、簡潔な実装計画を作成してください。';
 
   @override
-  String get composer_snippet_explain => 'Explain this';
+  String get composer_snippet_explain => 'これを説明';
 
   @override
-  String get composer_snippet_explain_body =>
-      'Walk through how the selected code works and point to the key files.';
+  String get composer_snippet_explain_body => '選択したコードの仕組みを順に説明し、主要なファイルを示します。';
 
   @override
-  String get composer_snippet_explain_text =>
-      'Please explain how this works and point me to the key files.';
+  String get composer_snippet_explain_text => 'この仕組みを説明し、主要なファイルを教えてください。';
 
   @override
-  String get composer_status => 'Status';
+  String get composer_status => 'ステータス';
 
   @override
-  String get composer_status_context => 'Context';
+  String get composer_status_context => 'コンテキスト';
 
   @override
-  String get composer_status_cache => 'Cache hit';
+  String get composer_status_cache => 'キャッシュヒット';
 
   @override
-  String get composer_status_throughput => 'Output tokens/sec';
+  String get composer_status_throughput => '出力トークン/秒';
 
   @override
-  String get composer_status_running => 'Running';
+  String get composer_status_running => '実行中';
 
   @override
-  String get composer_status_session => 'Session';
+  String get composer_status_session => 'セッション';
 
   @override
-  String get composer_status_not_reported => 'Not reported';
+  String get composer_status_not_reported => '報告なし';
 
   @override
-  String get composer_status_empty => 'No context breakdown was reported.';
+  String get composer_status_empty => 'コンテキストの内訳は報告されていません。';
 
   @override
-  String get composer_status_loading => 'Loading context breakdown';
+  String get composer_status_loading => 'コンテキストの内訳を読み込み中';
 
   @override
-  String get composer_status_reset => 'Reset status bar';
+  String get composer_status_reset => 'ステータスバーをリセット';
 
   @override
-  String get composer_resume_title => 'Resume a chat';
+  String get composer_resume_title => 'チャットを再開';
 
   @override
-  String get composer_resume_search => 'Search titles and ids';
+  String get composer_resume_search => 'タイトルとIDを検索';
 
   @override
-  String get composer_resume_empty => 'No chats match.';
+  String get composer_resume_empty => '一致するチャットはありません。';
 
   @override
-  String get composer_resume_unavailable =>
-      'This pane has no chat list to search.';
+  String get composer_resume_unavailable => 'このペインには検索できるチャット一覧がありません。';
 
   @override
-  String get composer_failure_retry => 'Retry';
+  String get composer_failure_retry => '再試行';
 
   @override
   String composer_failure_retry_at(String time) {
-    return 'Retry at $time';
+    return '$timeに再試行';
   }
 
   @override
-  String get composer_failure_compress => 'Compress';
+  String get composer_failure_compress => '圧縮';
 
   @override
-  String get composer_failure_switch_model => 'Switch model';
+  String get composer_failure_switch_model => 'モデルを切り替え';
 
   @override
   String composer_failure_switch_to(String model) {
-    return 'Switch to $model';
+    return '$modelに切り替え';
   }
 
   @override
-  String get composer_failure_new_chat => 'New chat';
+  String get composer_failure_new_chat => '新しいチャット';
 
   @override
-  String get composer_failure_edit => 'Edit message';
+  String get composer_failure_edit => 'メッセージを編集';
 
   @override
-  String get composer_failure_details => 'Details';
+  String get composer_failure_details => '詳細';
 
   @override
-  String get composer_failure_hide_details => 'Hide details';
+  String get composer_failure_hide_details => '詳細を非表示';
 
   @override
-  String get composer_failure_copy => 'Copy diagnostics';
+  String get composer_failure_copy => '診断情報をコピー';
 
   @override
   String get composer_failure_account =>
-      'The other fix is on the gateway account. This chat cannot do it.';
+      'もう一つの解決策は、ゲートウェイのアカウント側での対応です。このチャットでは対応できません。';
 
   @override
   String get composer_failure_account_only =>
-      'This has to be fixed on the gateway account. This chat cannot do it.';
+      'ゲートウェイのアカウント側で修正する必要があります。このチャットでは対応できません。';
 
   @override
   String get composer_failure_confirm_compress =>
-      'Compress this chat? The gateway will shorten the transcript.';
+      'このチャットを圧縮しますか？ゲートウェイが会話記録を短縮します。';
 
   @override
   String composer_failure_confirm_model(String model) {
-    return 'Switch this chat to $model?';
+    return 'このチャットを$modelに切り替えますか？';
   }
 
   @override
-  String get composer_drop_attach => 'Drop to attach';
+  String get composer_drop_attach => 'ドロップして添付';
 
   @override
   String get composer_drop_folder_unsupported =>
-      'Folders can\'t be attached. Drop the files instead.';
+      'フォルダーは添付できません。代わりにファイルをドロップしてください。';
 
   @override
-  String get composer_drop_reference => 'Drop to reference';
+  String get composer_drop_reference => 'ドロップして参照を追加';
 
   @override
-  String get composer_reference_copy => 'Copy reference';
+  String get composer_reference_copy => '参照をコピー';
 
   @override
-  String get composer_reference_remove => 'Remove reference';
+  String get composer_reference_remove => '参照を削除';
 
   @override
   String get composer_btw_usage =>
-      'Usage: /btw <question> — answered from a snapshot of this conversation without interrupting it.';
+      '使い方：/btw <question> — 会話を中断せず、この会話のスナップショットに基づいて回答します。';
 
   @override
   String get composer_background_usage =>
-      'Usage: /background <prompt> — the task runs separately and the result comes back here.';
+      '使い方：/background <prompt> — タスクを別途実行し、結果をここに返します。';
 
   @override
   String get composer_handoff_usage =>
-      'Usage: /handoff <platform> — transfer this chat to that messaging platform.';
+      '使い方：/handoff <platform> — このチャットを指定のメッセージングプラットフォームに引き継ぎます。';
 
   @override
-  String get composer_command_needs_session =>
-      'This command needs an open chat.';
+  String get composer_command_needs_session => 'このコマンドには開いているチャットが必要です。';
 
   @override
   String get composer_retry_not_found =>
-      'This turn is not in the saved history, so Retry cannot replace it. Nothing was sent again. Edit the message and send it for another try.';
+      'このターンは保存済みの履歴にないため、再試行で置き換えることができません。再送信は行っていません。もう一度試すには、メッセージを編集して送信してください。';
 
   @override
   String get composer_retry_unavailable =>
-      'Retry cannot replace a turn on this connection, so nothing was sent again. Edit the message and send it for another try.';
+      'この接続では再試行でターンを置き換えられないため、再送信は行っていません。もう一度試すには、メッセージを編集して送信してください。';
 
   @override
   String get composer_failure_switch_no_retry =>
@@ -4174,52 +4157,50 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get composer_command_needs_gateway_session =>
-      'This chat has no gateway session yet. Send a message first, then run the command again.';
+      'このチャットにはまだゲートウェイのセッションがありません。まずメッセージを送信してから、もう一度コマンドを実行してください。';
 
   @override
-  String get composer_side_question =>
-      'btw — answering from a conversation snapshot';
+  String get composer_side_question => 'btw — 会話のスナップショットから回答中';
 
   @override
   String composer_side_question_id(String id) {
-    return 'btw $id — answering from a conversation snapshot';
+    return 'btw $id — 会話のスナップショットから回答中';
   }
 
   @override
   String get composer_background_started =>
-      'Background task started. You can keep chatting. The result will appear here.';
+      'バックグラウンドタスクを開始しました。チャットは続けられます。結果はここに表示されます。';
 
   @override
   String composer_background_started_id(String id) {
-    return 'Background task $id started. You can keep chatting. The result will appear here.';
+    return 'バックグラウンドタスク$idを開始しました。チャットは続けられます。結果はここに表示されます。';
   }
 
   @override
   String composer_handoff_requested(String platform) {
-    return 'Handoff to $platform requested.';
+    return '$platformへの引き継ぎを要求しました。';
   }
 
   @override
   String composer_handoff_done(String platform) {
-    return 'Handed this chat to $platform.';
+    return 'このチャットを$platformに引き継ぎました。';
   }
 
   @override
-  String get composer_handoff_failed => 'Handoff failed.';
+  String get composer_handoff_failed => '引き継ぎに失敗しました。';
 
   @override
   String get composer_handoff_timeout =>
-      'Handoff did not finish. It may still be running on the gateway.';
+      '引き継ぎが完了しませんでした。ゲートウェイでまだ実行中の可能性があります。';
 
   @override
-  String get composer_compress_done => 'Compressed this chat.';
+  String get composer_compress_done => 'このチャットを圧縮しました。';
 
   @override
-  String get composer_file_missing => 'That file is not on this device.';
+  String get composer_file_missing => 'そのファイルはこの端末にありません。';
 
   @override
-  String get composer_attach_busy =>
-      'Attachments can be added when this reply finishes.';
+  String get composer_attach_busy => 'この応答が完了すると添付ファイルを追加できます。';
 
   @override
   String get nextgen_toggle => 'NextGen インターフェース';
@@ -6299,74 +6280,74 @@ class AppLocalizationsJa extends AppLocalizations {
   String get ng_aux_curator_hint => 'スキルの使われ方を確認します';
 
   @override
-  String get appearance_save_failed => 'Could not save this change.';
+  String get appearance_save_failed => 'この変更を保存できませんでした。';
 
   @override
-  String get appearance_keep_which_theme => 'Keep which theme?';
+  String get appearance_keep_which_theme => 'どちらのテーマを残しますか？';
 
   @override
-  String get appearance_tour_back => 'Back';
+  String get appearance_tour_back => '戻る';
 
   @override
-  String get appearance_tour_finish => 'Finish';
+  String get appearance_tour_finish => '完了';
 
   @override
-  String get appearance_tour_next => 'Next';
+  String get appearance_tour_next => '次へ';
 
   @override
-  String get appearance_tour_close => 'Close tour';
+  String get appearance_tour_close => 'ツアーを閉じる';
 
   @override
-  String get appearance_dismiss_tip => 'Dismiss tip';
+  String get appearance_dismiss_tip => 'ヒントを閉じる';
 
   @override
-  String get appearance_search_settings => 'Search settings';
+  String get appearance_search_settings => '設定を検索';
 
   @override
-  String get appearance_search_show => 'Show';
+  String get appearance_search_show => '表示';
 
   @override
-  String get appearance_no_matching_setting => 'No matching setting.';
+  String get appearance_no_matching_setting => '一致する設定はありません。';
 
   @override
-  String get appearance_replay_tour => 'Replay tour';
+  String get appearance_replay_tour => 'ツアーをもう一度見る';
 
   @override
-  String get appearance_show_tips_again => 'Show tips again';
+  String get appearance_show_tips_again => 'ヒントを再表示';
 
   @override
   String get appearance_window_translucency_unavailable =>
-      'Window translucency is not available on this host. Linux cannot provide it, and the Apple and Windows runners paint an opaque Flutter view.';
+      'このホストではウィンドウの半透明表示を利用できません。Linuxは対応しておらず、AppleとWindowsのランナーは不透明なFlutterビューを描画します。';
 
   @override
-  String get appearance_imported_themes => 'Imported themes';
+  String get appearance_imported_themes => 'インポート済みのテーマ';
 
   @override
-  String get appearance_import_theme_file => 'Import theme file';
+  String get appearance_import_theme_file => 'テーマファイルをインポート';
 
   @override
-  String get appearance_remove_theme => 'Remove theme';
+  String get appearance_remove_theme => 'テーマを削除';
 
   @override
-  String get appearance_chat_font => 'Chat font';
+  String get appearance_chat_font => 'チャットのフォント';
 
   @override
-  String get appearance_terminal_font => 'Terminal font';
+  String get appearance_terminal_font => 'ターミナルのフォント';
 
   @override
-  String get appearance_font_platform => 'Platform';
+  String get appearance_font_platform => 'プラットフォーム';
 
   @override
-  String get appearance_automatic => 'Automatic';
+  String get appearance_automatic => '自動';
 
   @override
-  String get appearance_force_left_to_right => 'Force left to right';
+  String get appearance_force_left_to_right => '左から右に固定';
 
   @override
-  String get appearance_force_right_to_left => 'Force right to left';
+  String get appearance_force_right_to_left => '右から左に固定';
 
   @override
-  String get appearance_user_bubble_opacity => 'User bubble opacity';
+  String get appearance_user_bubble_opacity => 'ユーザーの吹き出しの不透明度';
 
   @override
   String get appearance_inline_embeds => 'インライン埋め込み';
@@ -6415,17 +6396,17 @@ class AppLocalizationsJa extends AppLocalizations {
   String get appearance_embed_preview_unavailable => 'プレビューを表示できません';
 
   @override
-  String get appearance_emoji_reactions => 'Emoji reactions';
+  String get appearance_emoji_reactions => '絵文字リアクション';
 
   @override
-  String get appearance_celebration_hearts => 'Celebration hearts';
+  String get appearance_celebration_hearts => 'お祝いのハート';
 
   @override
   String get appearance_celebration_hearts_hint =>
-      'A heart plays when a reply arrives while you were away.';
+      '離席中に応答が届くと、ハートのアニメーションを表示します。';
 
   @override
-  String get appearance_pop_out_companion => 'Pop out companion';
+  String get appearance_pop_out_companion => 'コンパニオンを別ウィンドウに表示';
 
   @override
   String get appearance_mosskip => 'Mosskip';
@@ -6437,212 +6418,207 @@ class AppLocalizationsJa extends AppLocalizations {
   String get appearance_tideling => 'Tideling';
 
   @override
-  String get appearance_my_hatchling => 'My hatchling';
+  String get appearance_my_hatchling => '私のひな';
 
   @override
-  String get appearance_at_rest => 'At rest';
+  String get appearance_at_rest => '休憩中';
 
   @override
-  String get appearance_working => 'Working';
+  String get appearance_working => '作業中';
 
   @override
-  String get appearance_thinking => 'Thinking';
+  String get appearance_thinking => '考え中';
 
   @override
-  String get appearance_waiting_for_you => 'Waiting for you';
+  String get appearance_waiting_for_you => 'あなたを待っています';
 
   @override
-  String get appearance_reply_ready => 'Reply ready';
+  String get appearance_reply_ready => '応答の準備完了';
 
   @override
-  String get appearance_turn_failed => 'Turn failed';
+  String get appearance_turn_failed => 'ターンに失敗';
 
   @override
-  String get appearance_small => 'Small';
+  String get appearance_small => '小';
 
   @override
-  String get appearance_medium => 'Medium';
+  String get appearance_medium => '中';
 
   @override
-  String get appearance_large => 'Large';
+  String get appearance_large => '大';
 
   @override
-  String get appearance_hello => 'Hello!';
+  String get appearance_hello => 'こんにちは！';
 
   @override
-  String get appearance_unread_reply => 'Unread reply';
+  String get appearance_unread_reply => '未読の応答';
 
   @override
-  String get appearance_compose => 'Compose';
+  String get appearance_compose => '作成';
 
   @override
-  String get appearance_say_hello => 'Say hello';
+  String get appearance_say_hello => '挨拶する';
 
   @override
   String get appearance_pet_image_failed =>
-      'Could not open that image. Choose a smaller PNG or JPEG.';
+      'その画像を開けませんでした。より小さいPNGまたはJPEGを選んでください。';
 
   @override
-  String get appearance_pet_companion => 'Pet companion';
+  String get appearance_pet_companion => 'ペットのコンパニオン';
 
   @override
-  String get appearance_pet_companion_hint =>
-      'Show a companion while you chat.';
+  String get appearance_pet_companion_hint => 'チャット中にコンパニオンを表示します。';
 
   @override
-  String get appearance_adopt_a_companion => 'Adopt a companion';
+  String get appearance_adopt_a_companion => 'コンパニオンを迎える';
 
   @override
-  String get appearance_roam_when_idle => 'Roam when idle';
+  String get appearance_roam_when_idle => '待機中に歩き回る';
 
   @override
-  String get appearance_pet_size => 'Pet size';
+  String get appearance_pet_size => 'ペットのサイズ';
 
   @override
-  String get appearance_hatch_from_a_local_picture =>
-      'Hatch from a local picture';
+  String get appearance_hatch_from_a_local_picture => '端末内の画像から孵化させる';
 
   @override
   String get appearance_pet_image_limits =>
-      'Choose a PNG or JPEG (up to 4 MiB, 4096 px per side and 8 MP). Preview it first. Hatching saves one 24 × 24 pixel portrait and replaces your previous hatchling.';
+      'PNGまたはJPEG（最大4 MiB、各辺4096 px、8 MP）を選び、まずプレビューしてください。孵化させると24 × 24ピクセルの画像を1枚保存し、前のひなを置き換えます。';
 
   @override
-  String get appearance_choose_picture => 'Choose picture';
+  String get appearance_choose_picture => '画像を選択';
 
   @override
-  String get appearance_hatchling_preview => 'Hatchling preview';
+  String get appearance_hatchling_preview => 'ひなのプレビュー';
 
   @override
-  String get appearance_hatch_and_adopt => 'Hatch and adopt';
+  String get appearance_hatch_and_adopt => '孵化させて迎える';
 
   @override
-  String get appearance_discard_draft => 'Discard draft';
+  String get appearance_discard_draft => '下書きを破棄';
 
   @override
-  String get appearance_forget_saved_hatchling => 'Forget saved hatchling';
+  String get appearance_forget_saved_hatchling => '保存済みのひなを削除';
 
   @override
-  String get appearance_radio => 'Radio';
+  String get appearance_radio => 'ラジオ';
 
   @override
   String appearance_radio_hint(String stations) {
-    return 'Streams come straight from $stations and start only when you press Play. Station search stays on this device.';
+    return 'ストリームは$stationsから直接配信され、再生を押したときにのみ開始します。放送局の検索はこの端末内で行います。';
   }
 
   @override
-  String get appearance_radio_save_failed =>
-      'Radio settings could not be saved.';
+  String get appearance_radio_save_failed => 'ラジオの設定を保存できませんでした。';
 
   @override
-  String get appearance_choose_a_station => 'Choose a station';
+  String get appearance_choose_a_station => '放送局を選択';
 
   @override
-  String get appearance_pause_radio => 'Pause radio';
+  String get appearance_pause_radio => 'ラジオを一時停止';
 
   @override
-  String get appearance_play_radio => 'Play radio';
+  String get appearance_play_radio => 'ラジオを再生';
 
   @override
-  String get appearance_next_station => 'Next station';
+  String get appearance_next_station => '次の放送局';
 
   @override
   String get appearance_radio_trace_semantics =>
-      'Stream activity. Audio levels are unavailable, so this line stays flat.';
+      'ストリームの動作状況。音量レベルを取得できないため、この線は平らなままです。';
 
   @override
-  String get appearance_radio_is_off => 'Radio is off';
+  String get appearance_radio_is_off => 'ラジオはオフです';
 
   @override
-  String get appearance_paused => 'Paused';
+  String get appearance_paused => '一時停止中';
 
   @override
-  String get appearance_connecting => 'Connecting…';
+  String get appearance_connecting => '接続中…';
 
   @override
-  String get appearance_live => 'Live';
+  String get appearance_live => 'ライブ';
 
   @override
-  String get appearance_stream_unavailable => 'Stream unavailable';
+  String get appearance_stream_unavailable => 'ストリームを利用できません';
 
   @override
   String appearance_now_playing(String credit) {
-    return 'Now playing: $credit';
+    return '再生中：$credit';
   }
 
   @override
-  String get appearance_audio_only_waveform_unavailable =>
-      'Audio only · waveform unavailable';
+  String get appearance_audio_only_waveform_unavailable => '音声のみ · 波形は利用できません';
 
   @override
-  String get appearance_volume => 'Volume';
+  String get appearance_volume => '音量';
 
   @override
-  String get appearance_search_presets => 'Search presets';
+  String get appearance_search_presets => 'プリセットを検索';
 
   @override
-  String get appearance_no_stations_found => 'No stations found';
+  String get appearance_no_stations_found => '放送局が見つかりません';
 
   @override
   String appearance_unpin_station(String station) {
-    return 'Unpin station: $station';
+    return '放送局の固定を解除：$station';
   }
 
   @override
   String appearance_pin_station(String station) {
-    return 'Pin station: $station';
+    return '放送局を固定：$station';
   }
 
   @override
   String get appearance_radio_picker_metadata_notice =>
-      'While this picker is open, playing stations may share track details directly from the broadcaster.';
+      'この選択画面を開いている間、再生中の放送局から曲の情報が直接提供される場合があります。';
 
   @override
-  String get appearance_message_from_your_companion =>
-      'Message from your companion';
+  String get appearance_message_from_your_companion => 'コンパニオンからのメッセージ';
 
   @override
-  String get appearance_send_to_the_open_chat => 'Send to the open chat';
+  String get appearance_send_to_the_open_chat => '開いているチャットに送信';
 
   @override
   String get appearance_tour_theme_body =>
-      'Import a VS Code colour theme from a file on this device, then choose which variant to keep.';
+      'この端末のファイルからVS Codeのカラーテーマをインポートし、残すバリエーションを選びます。';
 
   @override
-  String get appearance_tour_fonts_title => 'Reading fonts';
+  String get appearance_tour_fonts_title => '表示フォント';
 
   @override
   String get appearance_tour_fonts_body =>
-      'Chat prose and terminal code use separate faces shipped with Ares.';
+      'チャットの文章とターミナルのコードには、Aresに同梱された別々の書体を使用します。';
 
   @override
-  String get appearance_tour_direction_title => 'Transcript direction';
+  String get appearance_tour_direction_title => '会話記録の表示方向';
 
   @override
   String get appearance_tour_direction_body =>
-      'Leave this on automatic, or force the transcript left to right or right to left.';
+      '自動のままにするか、会話記録を左から右または右から左に固定します。';
 
   @override
-  String get appearance_tour_pet_title => 'Companion';
+  String get appearance_tour_pet_title => 'コンパニオン';
 
   @override
   String get appearance_tour_pet_body =>
-      'The companion is off until you adopt one. Pop-out adds a small composer.';
+      'コンパニオンは迎えるまでオフのままです。別ウィンドウ表示には小さな入力欄が付きます。';
 
   @override
   String get appearance_tour_radio_body =>
-      'Radio stays off until you enable it. Play is what opens a stream.';
+      'ラジオは有効にするまでオフのままです。再生を押すとストリームを開きます。';
 
   @override
   String get appearance_tip_theme =>
-      'Imported themes replace the built-in palette until you clear the selection. Only the colours are kept.';
+      '選択を解除するまで、インポートしたテーマが組み込みのパレットに代わって使用されます。保持されるのは色のみです。';
 
   @override
   String get appearance_tip_pet =>
-      'The companion stores one small portrait on this device. It does not upload the picture you hatch from.';
+      'コンパニオンは小さな画像を1枚この端末に保存します。孵化に使用した画像はアップロードしません。';
 
   @override
   String get appearance_theme_import_failed =>
-      'Could not import that theme. Choose a VS Code colour theme saved as a .vsix, .json or .jsonc file.';
+      'そのテーマをインポートできませんでした。.vsix、.json、.jsonc形式で保存されたVS Codeのカラーテーマを選んでください。';
 
   @override
   String get render_widget_file_truncated =>
@@ -9365,4 +9341,2375 @@ class AppLocalizationsJa extends AppLocalizations {
   String ng_bots_section_toggle(String name) {
     return '$name の表示を切り替え';
   }
+
+  @override
+  String
+  get release_core_transcript_reader_this_passage_is_no_longer_in_the_loaded =>
+      'この箇所は読み込み済みの範囲に含まれなくなりました。';
+
+  @override
+  String get release_core_transcript_reader_loaded_prompts => '読み込み済みのプロンプト';
+
+  @override
+  String get release_core_transcript_reader_jump_to_latest => '最新に移動';
+
+  @override
+  String get release_core_transcript_reader_no_prompts_loaded =>
+      '読み込み済みのプロンプトはありません';
+
+  @override
+  String get release_core_transcript_reader_find_in_loaded_messages =>
+      '読み込み済みメッセージ内を検索';
+
+  @override
+  String get release_core_transcript_reader_previous_match => '前の一致箇所';
+
+  @override
+  String get release_core_transcript_reader_next_match => '次の一致箇所';
+
+  @override
+  String get release_core_transcript_reader_prompt_timeline => 'プロンプトのタイムライン';
+
+  @override
+  String get release_core_transcript_reader_close_find => '検索を閉じる';
+
+  @override
+  String get release_core_session_organisation_organise_chats => 'チャットを整理';
+
+  @override
+  String get release_core_session_organisation_show_model_and_usage =>
+      'モデルと使用量を表示';
+
+  @override
+  String
+  get release_core_session_files_view_connection_changed_reopen_files_on_the_new_connection =>
+      '接続が変更されました。新しい接続でファイルを開き直してください。';
+
+  @override
+  String
+  get release_core_session_files_view_the_connection_or_session_changed_reopen_this_pane =>
+      '接続またはセッションが変更されました。このペインを開き直してください。';
+
+  @override
+  String
+  get release_core_session_files_view_no_verified_host_working_directory_for_this_session =>
+      'このセッションには、確認済みのホスト作業ディレクトリがありません。';
+
+  @override
+  String
+  get release_core_session_files_view_the_gateway_denied_this_operation =>
+      'ゲートウェイがこの操作を拒否しました。';
+
+  @override
+  String
+  get release_core_session_files_view_this_gateway_does_not_support_this_operation =>
+      'このゲートウェイはこの操作に対応していません。';
+
+  @override
+  String
+  get release_core_session_files_view_the_file_owner_or_working_directory_changed_reload =>
+      'ファイル、所有者、または作業ディレクトリが変更されました。再読み込みして確認してください。';
+
+  @override
+  String
+  get release_core_session_files_view_the_gateway_returned_an_unsafe_path_or_invalid =>
+      'ゲートウェイから安全でないパス、または無効なファイル応答が返されました。';
+
+  @override
+  String
+  get release_core_session_files_view_workspace_access_requires_a_secure_gateway_connection =>
+      'ワークスペースへのアクセスには、安全なゲートウェイ接続が必要です。';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_unavailable_refresh_to_check_the_current_state =>
+      'ゲートウェイを利用できません。更新して現在の状態を確認してください。';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_operation_could_not_be_confirmed =>
+      'ゲートウェイでの操作を確認できませんでした。';
+
+  @override
+  String get release_core_session_files_view_git_status_unavailable =>
+      'Gitの状態を取得できません。';
+
+  @override
+  String
+  get release_core_session_files_view_change_this_chat_s_working_directory =>
+      'このチャットの作業ディレクトリを変更しますか？';
+
+  @override
+  String get release_core_session_files_view_absolute_gateway_directory =>
+      'ゲートウェイ上のディレクトリの絶対パス';
+
+  @override
+  String get release_core_session_files_view_change_directory => 'ディレクトリを変更';
+
+  @override
+  String get release_core_session_files_view_replace_gateway_file =>
+      'ゲートウェイ上のファイルを置き換えますか？';
+
+  @override
+  String
+  release_core_session_files_view_only_if_the_file_still_matches_the_version(
+    String path,
+  ) {
+    return '$path\n\nファイルが確認時のバージョンと一致する場合にのみ置き換えます。対応するホストでは、置き換え前のファイルを復旧用に保持します。';
+  }
+
+  @override
+  String get release_core_session_files_view_save_changes => '変更を保存';
+
+  @override
+  String
+  get release_core_session_files_view_saved_and_verified_on_the_gateway =>
+      'ゲートウェイに保存し、確認しました。';
+
+  @override
+  String
+  get release_core_session_files_view_guarded_saving_is_unavailable_on_this_gateway_your =>
+      'このゲートウェイでは競合を防ぐ保存を利用できません。下書きはここに残っています。';
+
+  @override
+  String
+  release_core_session_files_view_save_was_not_confirmed_your_draft_is_still(
+    String reason,
+  ) {
+    return '$reason 保存を確認できませんでした。下書きはここに残っています。';
+  }
+
+  @override
+  String get release_core_session_files_view_review_current_gateway_version =>
+      'ゲートウェイ上の現在のバージョンを確認';
+
+  @override
+  String get release_core_session_files_view_discard_draft_and_reload =>
+      '下書きを破棄して再読み込み';
+
+  @override
+  String get release_core_session_files_view_keep_draft_against_this_version =>
+      'このバージョンに対する下書きとして保持';
+
+  @override
+  String get release_core_session_files_view_discard_unsaved_edits =>
+      '未保存の編集を破棄しますか？';
+
+  @override
+  String get release_core_session_files_view_keep_editing => '編集を続ける';
+
+  @override
+  String get release_core_session_files_view_discard_edits => '編集を破棄';
+
+  @override
+  String get release_core_session_files_view_remote_working_directory =>
+      'リモート作業ディレクトリ';
+
+  @override
+  String get release_core_session_files_view_change_working_directory =>
+      '作業ディレクトリを変更';
+
+  @override
+  String get release_core_session_files_view_show_ignored_files =>
+      '無視されたファイルを表示';
+
+  @override
+  String
+  get release_core_session_files_view_gateway_does_not_report_ignored_status =>
+      'ゲートウェイは無視状態を報告しません。';
+
+  @override
+  String get release_core_session_files_view_no_visible_entries =>
+      '表示できる項目はありません';
+
+  @override
+  String get release_core_session_files_view_changed => '変更あり';
+
+  @override
+  String get release_core_session_files_view_ignored => '無視';
+
+  @override
+  String release_core_session_files_view_actions_for(String name) {
+    return '$nameの操作';
+  }
+
+  @override
+  String get release_core_session_files_view_copy_relative_path => '相対パスをコピー';
+
+  @override
+  String get release_core_session_files_view_copy_gateway_path =>
+      'ゲートウェイ上のパスをコピー';
+
+  @override
+  String get release_core_session_files_view_attach_folder_reference =>
+      'フォルダ参照を添付';
+
+  @override
+  String get release_core_session_files_view_attach_file_reference =>
+      'ファイル参照を添付';
+
+  @override
+  String
+  get release_core_session_files_view_preview_truncated_editing_disabled =>
+      'プレビューが省略されているため、編集できません。';
+
+  @override
+  String get release_core_session_files_view_select_lines => '行を選択';
+
+  @override
+  String get release_core_session_files_view_review_gateway_version =>
+      'ゲートウェイ上のバージョンを確認';
+
+  @override
+  String get release_core_session_files_view_attach_selected_lines =>
+      '選択した行を添付';
+
+  @override
+  String get release_core_session_files_view_binary_file_no_text_preview =>
+      'バイナリファイルのため、テキストプレビューはありません。';
+
+  @override
+  String get release_core_session_files_view_file_source => 'ファイルのソース';
+
+  @override
+  String get release_core_session_files_view_close_session_files =>
+      'セッションファイルを閉じる';
+
+  @override
+  String get release_core_session_files_view_back_to_tree => 'ツリーに戻る';
+
+  @override
+  String get release_core_session_files_view_session_files => 'セッションファイル';
+
+  @override
+  String get release_core_session_files_view_git_review => 'Gitレビュー';
+
+  @override
+  String get release_core_session_files_view_refresh_tree => 'ツリーを更新';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_this_connection_changed_reopen_its_chat =>
+      'この接続が変更されました。チャットを開き直してください。';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_disconnected_reconnect_the_chat_then_refresh =>
+      '切断されました。チャットに再接続してから更新してください。';
+
+  @override
+  String release_core_gateway_queue_screen_gateway_queue_unavailable(
+    String reason,
+  ) {
+    return 'ゲートウェイのキューを利用できません: $reason。';
+  }
+
+  @override
+  String release_core_gateway_queue_screen_not_confirmed_nothing_was_resent(
+    String reason,
+  ) {
+    return '確認できませんでした（$reason）。再送信はしていません。';
+  }
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_confirmed_admission =>
+      'ゲートウェイが受け付けを確認しました。';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_edited_entry_admitted_at_the_end_of_the =>
+      '編集した項目がキューの末尾に受け付けられました。';
+
+  @override
+  String get release_core_gateway_queue_screen_discard_unknown_outcome =>
+      '結果不明の項目を破棄しますか？';
+
+  @override
+  String get release_core_gateway_queue_screen_remove_this_entry =>
+      'この項目を削除しますか？';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_the_lost_turn_will_not_be_retried_waiting =>
+      '結果を確認できなかったターンは再試行されません。待機中のターンが実行される場合があります。';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_if_the_gateway_has_just_started_this_entry =>
+      'ゲートウェイがこの項目の処理を開始した直後の場合、削除するとそのターンが停止することがあります。';
+
+  @override
+  String get release_core_gateway_queue_screen_keep => '保持';
+
+  @override
+  String get release_core_gateway_queue_screen_discard_and_resume => '破棄して再開';
+
+  @override
+  String get release_core_gateway_queue_screen_remove_entry => '項目を削除';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_lost_admission_resolved_it_was_not_resent =>
+      '受け付け結果が不明だった項目を解決しました。再送信はしていません。';
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_acknowledged_removal =>
+      'ゲートウェイが削除を受理しました。';
+
+  @override
+  String get release_core_gateway_queue_screen_gateway_queue => 'ゲートウェイのキュー';
+
+  @override
+  String get release_core_gateway_queue_screen_refresh_queue => 'キューを更新';
+
+  @override
+  String get release_core_gateway_queue_screen_queue_paused_unknown_outcome =>
+      'キューを一時停止中: 結果不明';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_review_the_lost_admission_before_resuming_nothing_is =>
+      '再開する前に、受け付け結果が不明な項目を確認してください。再送信は行いません。';
+
+  @override
+  String get release_core_gateway_queue_screen_no_pending_admissions =>
+      '受け付け待ちの項目はありません';
+
+  @override
+  String get release_core_gateway_queue_screen_discard => '破棄…';
+
+  @override
+  String
+  get release_core_gateway_queue_screen_gateway_acknowledged_the_steering_request =>
+      'ゲートウェイが追加指示のリクエストを受理しました。';
+
+  @override
+  String get release_core_gateway_queue_screen_steer_running_turn =>
+      '実行中のターンに追加指示';
+
+  @override
+  String get release_core_gateway_queue_screen_remove => '削除…';
+
+  @override
+  String get release_core_gateway_queue_screen_next_prompt => '次のプロンプト';
+
+  @override
+  String get release_core_gateway_queue_screen_edit_queued_prompt =>
+      'キュー内のプロンプトを編集';
+
+  @override
+  String get release_core_gateway_queue_screen_submit_to_gateway_queue =>
+      'ゲートウェイのキューに送信';
+
+  @override
+  String get release_core_gateway_queue_screen_save_at_queue_end => 'キューの末尾に保存';
+
+  @override
+  String get release_core_gateway_queue_screen_cancel_edit => '編集をキャンセル';
+
+  @override
+  String get release_core_git_review_pane_the_git_operation_did_not_complete =>
+      'Git操作が完了しませんでした。';
+
+  @override
+  String get release_core_git_review_pane_close_git_review => 'Gitレビューを閉じる';
+
+  @override
+  String get release_core_git_review_pane_pin_lane => 'レーンを固定';
+
+  @override
+  String get release_core_git_review_pane_refresh_git_review => 'Gitレビューを更新';
+
+  @override
+  String get release_core_git_review_pane_uncommitted => '未コミット';
+
+  @override
+  String get release_core_git_review_pane_last_turn => '前回のターン';
+
+  @override
+  String
+  get release_core_git_review_pane_branch_and_last_turn_views_are_read_only =>
+      'ブランチ表示と前回のターン表示は読み取り専用です。';
+
+  @override
+  String get release_core_git_review_pane_mark_head_as_the_turn_baseline =>
+      'HEADをターンの基準点に設定';
+
+  @override
+  String get release_core_git_review_pane_stage_all => 'すべてステージ';
+
+  @override
+  String get release_core_git_review_pane_discard_every_uncommitted_change =>
+      '未コミットの変更をすべて破棄しますか？';
+
+  @override
+  String
+  get release_core_git_review_pane_tracked_files_return_to_head_and_untracked_files =>
+      '追跡対象のファイルをHEADに戻し、このセッションのディレクトリ内にある未追跡ファイルを削除します。';
+
+  @override
+  String get release_core_git_review_pane_discard => '破棄';
+
+  @override
+  String get release_core_git_review_pane_discard_all => 'すべて破棄';
+
+  @override
+  String get release_core_git_review_pane_unstage => 'ステージを解除';
+
+  @override
+  String get release_core_git_review_pane_stage => 'ステージ';
+
+  @override
+  String get release_core_git_review_pane_discard_file => 'ファイルの変更を破棄';
+
+  @override
+  String release_core_git_review_pane_discard_2(String path) {
+    return '$pathの変更を破棄しますか？';
+  }
+
+  @override
+  String
+  get release_core_git_review_pane_this_restores_the_committed_copy_or_removes_the =>
+      'コミット済みの内容に戻すか、未追跡ファイルを削除します。';
+
+  @override
+  String get release_core_git_review_pane_commit_message => 'コミットメッセージ';
+
+  @override
+  String get release_core_git_review_pane_nothing_in_the_diff_to_summarise =>
+      '要約する差分はありません。';
+
+  @override
+  String get release_core_git_review_pane_generate_message => 'メッセージを生成';
+
+  @override
+  String get release_core_git_review_pane_commit => 'コミット';
+
+  @override
+  String get release_core_git_review_pane_commit_and_push => 'コミットしてプッシュ';
+
+  @override
+  String get release_core_git_review_pane_push => 'プッシュ';
+
+  @override
+  String get release_core_git_review_pane_create_pull_request => 'プルリクエストを作成';
+
+  @override
+  String get release_core_git_review_pane_pull_request_ready => 'プルリクエストの準備完了';
+
+  @override
+  String get release_core_git_review_pane_ask_hermes_to_ship => 'Hermesに公開を依頼';
+
+  @override
+  String get release_core_git_review_pane_gh_is_authenticated_on_this_gateway =>
+      'このゲートウェイではghが認証済みです。';
+
+  @override
+  String
+  get release_core_git_review_pane_install_the_github_cli_gh_and_sign_in =>
+      'PRを作成するには、GitHub CLI（gh）をインストールしてサインインしてください';
+
+  @override
+  String get release_core_git_review_pane_worktrees => 'ワークツリー';
+
+  @override
+  String get release_core_git_review_pane_main => 'メイン';
+
+  @override
+  String release_core_git_review_pane_follow(String branch) {
+    return '$branchに追従しますか？';
+  }
+
+  @override
+  String
+  get release_core_git_review_pane_the_session_working_directory_becomes_this_worktree_unless =>
+      'レーンが固定されていなければ、セッションの作業ディレクトリがこのワークツリーになります。';
+
+  @override
+  String get release_core_git_review_pane_follow_2 => '追従';
+
+  @override
+  String release_core_git_review_pane_remove(String branch) {
+    return '$branchを削除しますか？';
+  }
+
+  @override
+  String get release_core_git_review_pane_the_worktree_directory_is_removed =>
+      'ワークツリーのディレクトリを削除します。';
+
+  @override
+  String get release_core_git_review_pane_remove_2 => '削除';
+
+  @override
+  String get release_core_git_review_pane_new_worktree_name => '新しいワークツリー名';
+
+  @override
+  String get release_core_git_review_pane_new_branch => '新しいブランチ';
+
+  @override
+  String get release_core_git_review_pane_base_branch => 'ベースブランチ';
+
+  @override
+  String get release_core_git_review_pane_create_worktree => 'ワークツリーを作成';
+
+  @override
+  String get release_core_git_review_pane_existing_branch => '既存のブランチ';
+
+  @override
+  String get release_core_git_review_pane_convert_branch_to_worktree =>
+      'ブランチをワークツリーに変換';
+
+  @override
+  String get release_core_git_review_pane_switch_branch => 'ブランチを切り替え';
+
+  @override
+  String
+  get release_core_git_review_pane_this_gateway_does_not_support_that_git_operation =>
+      'このゲートウェイはそのGit操作に対応していません。';
+
+  @override
+  String
+  get release_core_git_review_pane_git_needs_the_session_directory_on_the_local =>
+      'Gitには、ローカルのターミナルバックエンド上にあるセッションディレクトリが必要です。';
+
+  @override
+  String
+  get release_core_git_review_pane_the_gateway_refused_the_git_operation =>
+      'ゲートウェイがGit操作を拒否しました。';
+
+  @override
+  String
+  get release_core_git_review_pane_the_session_changed_refresh_and_try_again =>
+      'セッションが変更されました。更新してもう一度お試しください。';
+
+  @override
+  String
+  get release_core_git_review_pane_this_review_is_no_longer_the_selected_session =>
+      'このレビューは、選択中のセッションのものではなくなりました。';
+
+  @override
+  String
+  get release_core_git_review_pane_the_gateway_returned_an_unexpected_git_result =>
+      'ゲートウェイから予期しないGitの結果が返されました。';
+
+  @override
+  String
+  get release_core_git_review_pane_git_review_requires_the_gateway_transport =>
+      'Gitレビューにはゲートウェイトランスポートが必要です。';
+
+  @override
+  String get release_core_client_held_queue_bar_resume => '再開';
+
+  @override
+  String get release_core_client_held_queue_bar_send_queued_prompt =>
+      'キュー内のプロンプトを送信';
+
+  @override
+  String get release_core_client_held_queue_bar_edit_unsent_prompt =>
+      '未送信のプロンプトを編集';
+
+  @override
+  String get release_core_client_held_queue_bar_remove_unsent_prompt =>
+      '未送信のプロンプトを削除';
+
+  @override
+  String get release_core_workspace_discovery_view_repository_discovery =>
+      'リポジトリの検出';
+
+  @override
+  String get release_core_workspace_discovery_view_refresh_results => '結果を更新';
+
+  @override
+  String release_core_workspace_discovery_view_hide(String path) {
+    return '$pathを非表示';
+  }
+
+  @override
+  String
+  get release_core_workspace_discovery_view_invalid_path_or_discovery_data_use_absolute_server =>
+      'パスまたは検出データが無効です。「.」や「..」というパス要素を含まないサーバー上の絶対パスを使用してください。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_this_gateway_does_not_support_repository_discovery =>
+      'このゲートウェイはリポジトリの検出に対応していません。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_gateway_denied_access_to_repository_discovery =>
+      'ゲートウェイがリポジトリ検出へのアクセスを拒否しました。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_connection_changed_reopen_discovery_on_the_current =>
+      '接続が変更されました。現在のゲートウェイで検出画面を開き直してください。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_displayed_settings_have_changed_refresh_before_trying =>
+      '表示中の設定が変更されました。再試行する前に更新してください。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_could_not_load_or_verify_discovery_settings_refresh =>
+      '検出設定の読み込みまたは確認ができませんでした。更新してもう一度お試しください。';
+
+  @override
+  String release_core_workspace_discovery_view_repositories_shown_of(
+    int visible,
+    int total,
+  ) {
+    return '表示中のリポジトリ: $total件中$visible件';
+  }
+
+  @override
+  String
+  get release_core_workspace_discovery_view_the_gateway_returned_no_repositories =>
+      'ゲートウェイからリポジトリが返されませんでした。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_no_repositories_match_your_device_filters =>
+      'この端末のフィルターに一致するリポジトリはありません。';
+
+  @override
+  String get release_core_workspace_discovery_view_gateway_scan_policy =>
+      'ゲートウェイのスキャンポリシー';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_this_gateway_did_not_report_a_scan_policy =>
+      'このゲートウェイはスキャンポリシーを報告しませんでした。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_to_scan_folders_configure_repository_scanning_in_the =>
+      'フォルダをスキャンするには、ゲートウェイのプロファイルのDesktop設定でリポジトリスキャンを設定してください。';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_results_can_include_cached_repositories_and_repositories_with =>
+      '結果には、キャッシュされたリポジトリやセッションがあるリポジトリが含まれることがあります。スキャンですべてのフォルダに到達できるとは限りません。';
+
+  @override
+  String get release_core_workspace_discovery_view_scan_gateway_roots =>
+      'ゲートウェイのルートをスキャン';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_filter_results_on_this_device =>
+      'この端末で結果を絞り込む';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_only_this_discovery_list_changes_not_the_gateway =>
+      '変更されるのはこの検出リストのみで、ゲートウェイのスキャンには影響しません。';
+
+  @override
+  String get release_core_workspace_discovery_view_include_subtrees_empty_all =>
+      '含めるサブツリー（空欄ですべて）';
+
+  @override
+  String get release_core_workspace_discovery_view_exclude_subtrees =>
+      '除外するサブツリー';
+
+  @override
+  String get release_core_workspace_discovery_view_apply_filters => 'フィルターを適用';
+
+  @override
+  String release_core_workspace_discovery_view_hidden_repositories(int count) {
+    return '非表示のリポジトリ（$count）';
+  }
+
+  @override
+  String get release_core_workspace_discovery_view_undo_hide => '非表示を元に戻す';
+
+  @override
+  String
+  get release_core_workspace_discovery_view_one_absolute_server_path_per_line =>
+      'サーバー上の絶対パスを1行に1つ入力';
+
+  @override
+  String get release_core_project_settings_view_project_settings => 'プロジェクト設定';
+
+  @override
+  String
+  get release_core_project_settings_view_the_gateway_did_not_confirm_the_selected_project =>
+      'ゲートウェイで選択したプロジェクトまたは変更を確認できませんでした。再試行する前に設定を確認してください。';
+
+  @override
+  String
+  get release_core_project_settings_view_could_not_verify_these_settings_use_one_absolute =>
+      'これらの設定を確認できませんでした。「.」や「..」というパス要素を含まないサーバー上のフォルダの絶対パスを1行に1つ入力してください。';
+
+  @override
+  String get release_core_project_settings_view_set_active => 'アクティブに設定';
+
+  @override
+  String get release_core_project_settings_view_icon => 'アイコン';
+
+  @override
+  String get release_core_project_settings_view_folder => 'フォルダ';
+
+  @override
+  String get release_core_project_settings_view_repository => 'リポジトリ';
+
+  @override
+  String get release_core_project_settings_view_rocket => 'ロケット';
+
+  @override
+  String get release_core_project_settings_view_star => '星';
+
+  @override
+  String get release_core_project_settings_view_book => '本';
+
+  @override
+  String get release_core_project_settings_view_terminal => 'ターミナル';
+
+  @override
+  String get release_core_project_settings_view_colour => '色';
+
+  @override
+  String get release_core_project_settings_view_primary_folder => 'メインフォルダ';
+
+  @override
+  String get release_core_project_settings_view_server_folder_paths =>
+      'サーバー上のフォルダパス';
+
+  @override
+  String
+  get release_core_project_settings_view_one_absolute_path_per_line_existing_folders_are =>
+      '絶対パスを1行に1つ入力してください。既存のフォルダは保持されます。';
+
+  @override
+  String get release_core_project_settings_view_add_folders => 'フォルダを追加';
+
+  @override
+  String release_core_project_settings_view_choose(String label) {
+    return '$labelを選択';
+  }
+
+  @override
+  String
+  get release_core_prepared_image_recovery_wait_for_an_empty_draft_before_restoring =>
+      '下書きが空になってから復元してください。';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_no_unacknowledged_image_drafts_in_this_chat =>
+      'このチャットに受信未確認の画像下書きはありません。';
+
+  @override
+  String get release_core_prepared_image_recovery_unacknowledged_image_drafts =>
+      '受信未確認の画像下書き';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_the_gateway_may_already_have_received_these_restore =>
+      'ゲートウェイがすでに受信している可能性があります。復元して確認してください。送信は行いません。';
+
+  @override
+  String get release_core_prepared_image_recovery_image_draft => '画像の下書き';
+
+  @override
+  String get release_core_prepared_image_recovery_discard_local_copy =>
+      'ローカルのコピーを破棄';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_discard_this_local_image_draft =>
+      'このローカルの画像下書きを破棄しますか？';
+
+  @override
+  String
+  get release_core_prepared_image_recovery_image_draft_recovery_is_unavailable =>
+      '画像下書きの復元を利用できません。';
+
+  @override
+  String get release_core_prepared_image_recovery_recover_image_draft =>
+      '画像の下書きを復元…';
+
+  @override
+  String get release_core_session_search_mode_menu_could_not_save_search_mode =>
+      '検索モードを保存できませんでした。';
+
+  @override
+  String get release_core_projects_pane_discover_repositories => 'リポジトリを検出';
+
+  @override
+  String
+  get release_core_projects_pane_project_created_but_the_gateway_did_not_confirm =>
+      'プロジェクトは作成されましたが、ゲートウェイでそのアイデアを確認できませんでした。';
+
+  @override
+  String get release_core_projects_pane_project_idea_optional =>
+      'プロジェクトのアイデア（任意）';
+
+  @override
+  String
+  get release_core_projects_pane_saved_in_the_project_description_not_a_file =>
+      'ファイルではなく、プロジェクトの説明に保存されます。';
+
+  @override
+  String get release_core_project_detail_screen_new_chat_in_this_lane =>
+      'このレーンで新しいチャット';
+
+  @override
+  String get release_core_project_detail_screen_review_git => 'Gitをレビュー';
+
+  @override
+  String get release_core_more_pane_gateway_fleet => 'ゲートウェイフリート';
+
+  @override
+  String
+  get release_core_more_pane_connected_sessions_hermes_cloud_and_desktop_webapp =>
+      '接続中のセッション、Hermes CloudとDesktop Webアプリ';
+
+  @override
+  String get release_core_more_pane_use_dashboard_sign_in_for_a_named_profile =>
+      '名前付きプロファイルにはダッシュボードのサインインを使用してください。この旧APIでは、チャット履歴を所有するプロファイルを確認できません。';
+
+  @override
+  String get release_core_more_pane_capabilities => '機能';
+
+  @override
+  String
+  get release_core_more_pane_install_and_govern_skills_plugins_connectors_and_tool =>
+      'スキル、プラグイン、コネクター、ツールバックエンドのインストールと管理';
+
+  @override
+  String get release_core_more_pane_browser_vault => 'ブラウザー保管庫';
+
+  @override
+  String
+  get release_core_more_pane_site_logins_addresses_cards_and_credential_sources =>
+      'サイトのログイン情報、住所、カード、認証情報の取得元';
+
+  @override
+  String get release_core_more_pane_agent_policy => 'エージェントのポリシー';
+
+  @override
+  String
+  get release_core_more_pane_approvals_checkpoints_browser_access_and_shared_metrics =>
+      '承認、チェックポイント、ブラウザーへのアクセス、共有メトリクス';
+
+  @override
+  String get release_core_more_pane_remote_logs_health_maintenance_and_update =>
+      'リモートログ、稼働状況、メンテナンス、更新';
+
+  @override
+  String get release_core_more_pane_schedules => 'スケジュール';
+
+  @override
+  String get release_core_more_pane_all_profiles_blueprints_catch_up_and_stop =>
+      'すべてのプロファイル、ブループリント、未実行分の実行、停止';
+
+  @override
+  String get release_core_more_pane_memory_graph => 'メモリグラフ';
+
+  @override
+  String get release_core_more_pane_timeline_edits_and_memory_providers =>
+      'タイムライン、編集、メモリプロバイダー';
+
+  @override
+  String get release_core_more_pane_providers_and_routes => 'プロバイダーとルート';
+
+  @override
+  String get release_core_more_pane_keys_endpoints_delegation_and_mixtures =>
+      'キー、エンドポイント、委任、モデルの組み合わせ';
+
+  @override
+  String get release_core_more_pane_credits_and_plans => 'クレジットとプラン';
+
+  @override
+  String
+  get release_core_more_pane_consented_nous_billing_when_the_account_allows_it =>
+      'アカウントで許可されている場合の、同意に基づくNousの課金';
+
+  @override
+  String
+  get release_core_fleet_screen_this_gateway_does_not_offer_this_service =>
+      'このゲートウェイはこのサービスを提供していません。';
+
+  @override
+  String
+  get release_core_fleet_screen_sign_in_or_permission_required_on_this_gateway =>
+      'このゲートウェイではサインインまたは権限が必要です。';
+
+  @override
+  String get release_core_fleet_screen_a_secure_gateway_address_is_required =>
+      '安全なゲートウェイアドレスが必要です。';
+
+  @override
+  String
+  get release_core_fleet_screen_the_owner_changed_refresh_before_continuing =>
+      '所有者が変更されました。続行する前に更新してください。';
+
+  @override
+  String
+  get release_core_fleet_screen_could_not_verify_the_operation_check_the_gateway =>
+      '操作を確認できませんでした。ゲートウェイを確認して更新してください。';
+
+  @override
+  String get release_core_fleet_screen_verified_ssh => '検証済みSSH';
+
+  @override
+  String
+  get release_core_fleet_screen_confirm_a_host_key_inspect_a_remote_service =>
+      'ホストキーの確認、リモートサービスの調査、シェルの起動';
+
+  @override
+  String get release_core_fleet_screen_cloud_and_desktop_webapp =>
+      'クラウドとDesktop Webアプリ';
+
+  @override
+  String get release_core_fleet_screen_register_an_existing_gateway_or_webapp =>
+      '既存のゲートウェイまたはWebアプリを登録';
+
+  @override
+  String
+  get release_core_fleet_screen_sign_in_to_its_address_nothing_is_hosted =>
+      'そのアドレスでサインインしてください。この端末では何もホストしません。';
+
+  @override
+  String get release_core_fleet_screen_fleet_updates => 'フリートの更新';
+
+  @override
+  String get release_core_fleet_screen_refresh_roster => '登録一覧を更新';
+
+  @override
+  String release_core_fleet_screen_disconnect(String gateway) {
+    return '$gatewayを切断';
+  }
+
+  @override
+  String get release_core_fleet_screen_open_this_gateway_on_launch =>
+      '起動時にこのゲートウェイを開く';
+
+  @override
+  String
+  get release_core_fleet_screen_primary_for_ares_does_not_change_the_last =>
+      'Aresのメインとして使用します。最後に使用したゲートウェイは変更しません。';
+
+  @override
+  String get release_core_fleet_screen_reconnect_in_fleet_on_launch =>
+      '起動時にフリート内で再接続';
+
+  @override
+  String get release_core_fleet_screen_no_sessions_for_this_profile =>
+      'このプロファイルにセッションはありません。';
+
+  @override
+  String get release_core_fleet_screen_more_sessions => 'さらにセッションを表示';
+
+  @override
+  String get release_core_fleet_screen_this_gateway_was_disconnected =>
+      'このゲートウェイは切断されました。';
+
+  @override
+  String
+  get release_core_fleet_screen_some_conversation_data_could_not_be_loaded =>
+      '会話データの一部を読み込めませんでした。';
+
+  @override
+  String get release_core_fleet_screen_message_this_session =>
+      'このセッションにメッセージを送る';
+
+  @override
+  String get release_core_fleet_screen_send_to_this_session => 'このセッションに送信';
+
+  @override
+  String get release_core_fleet_updates_screen_update_these_remote_gateways =>
+      'これらのリモートゲートウェイを更新しますか？';
+
+  @override
+  String
+  release_core_fleet_updates_screen_this_can_restart_the_backend_and_interrupt_other(
+    String gateways,
+  ) {
+    return 'バックエンドが再起動し、他のユーザーの操作が中断される可能性があります。Aresは更新されません。\n\n$gateways';
+  }
+
+  @override
+  String get release_core_fleet_updates_screen_update_listed_gateways =>
+      '一覧のゲートウェイを更新';
+
+  @override
+  String
+  get release_core_fleet_updates_screen_checks_connected_gateways_cloud_is_platform_managed_entries =>
+      '接続中のゲートウェイを確認します。クラウドはプラットフォーム側で管理されます。登録元を確認できない項目は除外されます。';
+
+  @override
+  String get release_core_fleet_updates_screen_check_connected_gateways =>
+      '接続中のゲートウェイを確認';
+
+  @override
+  String get release_core_fleet_updates_screen_read_update_receipt =>
+      '更新の実施記録を取得';
+
+  @override
+  String get release_core_fleet_updates_screen_review_eligible_updates =>
+      '対象の更新を確認';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_account_changed_reopen_this_page =>
+      'アカウントが変更されました。このページを開き直してください。';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_set_the_webapp_s_primary_gateway =>
+      'Webアプリのメインゲートウェイを設定しますか？';
+
+  @override
+  String
+  release_core_fleet_webapp_screen_this_changes_the_shared_registry_not_the_last(
+    String webapp,
+    String gateway,
+    String id,
+  ) {
+    return '$webapp → $gateway（$id）\n共有レジストリを変更します。最後に使用したゲートウェイは変更しません。';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_set_primary => 'メインに設定';
+
+  @override
+  String get release_core_fleet_webapp_screen_serving_profile => '提供中のプロファイル';
+
+  @override
+  String get release_core_fleet_webapp_screen_hermes_cloud => 'Hermes Cloud';
+
+  @override
+  String get release_core_fleet_webapp_screen_discover_signed_in_agents =>
+      'サインイン済みのエージェントを検出';
+
+  @override
+  String release_core_fleet_webapp_screen_organisation(String organisation) {
+    return '組織: $organisation';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_no_agents_available =>
+      '利用可能なエージェントはありません。';
+
+  @override
+  String get release_core_fleet_webapp_screen_existing_desktop_webapp =>
+      '既存のDesktop Webアプリ';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_check_gateway_and_web_access_status =>
+      'ゲートウェイとWebアクセスの状態を確認';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_these_settings_belong_to_the_machine_serving_this =>
+      'これらは、このWebアプリを提供しているマシンの設定です。公開と再起動はリモート操作ではありません。';
+
+  @override
+  String get release_core_fleet_webapp_screen_read_webapp_gateway_registry =>
+      'Webアプリのゲートウェイレジストリを取得';
+
+  @override
+  String get release_core_fleet_webapp_screen_last_used => '最後に使用';
+
+  @override
+  String get release_core_fleet_webapp_screen_primary => 'メイン';
+
+  @override
+  String release_core_fleet_webapp_screen_set_primary_2(String gateway) {
+    return 'メインに設定: $gateway';
+  }
+
+  @override
+  String get release_core_fleet_webapp_screen_read_shared_display_preferences =>
+      '共有の表示設定を取得';
+
+  @override
+  String
+  get release_core_fleet_webapp_screen_chat_text_direction_on_this_webapp_and_desktop =>
+      'このWebアプリとDesktopのチャットの文字方向';
+
+  @override
+  String release_core_schedule_desk_screen_created_on(
+    String job,
+    String profile,
+  ) {
+    return '$profileに$jobを作成しました。';
+  }
+
+  @override
+  String
+  get release_core_schedule_desk_screen_the_list_covers_every_profile_on_this_gateway =>
+      '一覧には、このゲートウェイのすべてのプロファイルが含まれます。停止、一時停止、未実行分の実行、配信、ブループリントの操作は、ジョブを所有するプロファイルに送信されます。';
+
+  @override
+  String get release_core_schedule_desk_screen_a_run_is_in_progress => '実行中です';
+
+  @override
+  String get release_core_schedule_desk_screen_no_current_run => '現在の実行はありません';
+
+  @override
+  String release_core_schedule_desk_screen_stop_requested_for(String job) {
+    return '$jobの停止をリクエストしました。';
+  }
+
+  @override
+  String release_core_schedule_desk_screen_no_run_was_in_flight_for(
+    String job,
+  ) {
+    return '$jobに進行中の実行はありませんでした。';
+  }
+
+  @override
+  String get release_core_schedule_desk_screen_stop_current_run => '現在の実行を停止';
+
+  @override
+  String get release_core_schedule_desk_screen_pause_future_runs =>
+      '今後の実行を一時停止';
+
+  @override
+  String get release_core_schedule_desk_screen_resume_future_runs => '今後の実行を再開';
+
+  @override
+  String get release_core_schedule_desk_screen_catch_up_default =>
+      '未実行分の扱いのデフォルト';
+
+  @override
+  String get release_core_schedule_desk_screen_run_one_missed => '未実行分を1回実行';
+
+  @override
+  String get release_core_schedule_desk_screen_skip_missed => '未実行分をスキップ';
+
+  @override
+  String get release_core_schedule_desk_screen_blueprint_recipes =>
+      'ブループリントのレシピ';
+
+  @override
+  String get release_core_schedule_desk_screen_profile_for_the_new_job =>
+      '新しいジョブのプロファイル';
+
+  @override
+  String release_core_schedule_desk_screen_create(String blueprint) {
+    return '$blueprintを作成';
+  }
+
+  @override
+  String get release_core_schedule_desk_screen_loading_delivery_targets =>
+      '配信先を読み込み中';
+
+  @override
+  String release_core_schedule_desk_screen_no_home_channel(String target) {
+    return '$target（ホームチャンネルなし）';
+  }
+
+  @override
+  String release_core_memory_graph_screen_edit(String label) {
+    return '$labelを編集';
+  }
+
+  @override
+  String get release_core_memory_graph_screen_content => '内容';
+
+  @override
+  String get release_core_memory_graph_screen_archive_skill => 'スキルをアーカイブ';
+
+  @override
+  String get release_core_memory_graph_screen_delete_memory => 'メモリを削除';
+
+  @override
+  String release_core_memory_graph_screen_archive_on_it_can_be_restored_on_the(
+    String label,
+    String profile,
+  ) {
+    return '$profileの$labelをアーカイブしますか？ホスト上のCuratorで復元できます。';
+  }
+
+  @override
+  String release_core_memory_graph_screen_delete_from_this_removes_that_memory(
+    String label,
+    String profile,
+  ) {
+    return '$profileから$labelを削除しますか？そのメモリが削除されます。';
+  }
+
+  @override
+  String get release_core_memory_graph_screen_filter => 'フィルター';
+
+  @override
+  String get release_core_memory_graph_screen_timeline => 'タイムライン';
+
+  @override
+  String get release_core_memory_graph_screen_play_timeline => 'タイムラインを再生';
+
+  @override
+  String get release_core_memory_graph_screen_layout_code => 'レイアウトコード';
+
+  @override
+  String get release_core_memory_graph_screen_external_memory_providers =>
+      '外部メモリプロバイダー';
+
+  @override
+  String
+  get release_core_memory_graph_screen_a_value_is_stored_leave_blank_to_keep =>
+      '値が保存されています。保持する場合は空欄にしてください。';
+
+  @override
+  String get release_core_memory_graph_screen_save_provider => 'プロバイダーを保存';
+
+  @override
+  String release_core_workspace_profiles_screen_applies_to(String profile) {
+    return '適用先: $profile';
+  }
+
+  @override
+  String get release_core_workspace_profiles_screen_choose_another_profile =>
+      '別のプロファイルを選択';
+
+  @override
+  String
+  get release_core_workspace_profiles_screen_could_not_verify_the_selected_profile_on_this =>
+      'このゲートウェイで選択したプロファイルを確認できませんでした。';
+
+  @override
+  String get release_core_workspace_profiles_screen_create_profile =>
+      'プロファイルを作成';
+
+  @override
+  String get release_core_workspace_profiles_screen_new_profile_id =>
+      '新しいプロファイルID';
+
+  @override
+  String get release_core_assets_screen_links => 'リンク';
+
+  @override
+  String get release_core_workspace_picker_no_matching_items => '一致する項目はありません。';
+
+  @override
+  String get release_core_workspace_picker_save_layout => 'レイアウトを保存';
+
+  @override
+  String get release_core_workspace_picker_layout_name => 'レイアウト名';
+
+  @override
+  String
+  get release_core_workspace_popout_this_chat_already_has_a_pop_out_window =>
+      'このチャットはすでに別ウィンドウで開かれています。';
+
+  @override
+  String
+  get release_core_workspace_popout_could_not_open_this_saved_chat_check_the =>
+      '保存済みのチャットを開けませんでした。接続を確認して、もう一度お試しください。';
+
+  @override
+  String
+  get release_core_popout_bootstrap_use_the_main_window_to_change_your_connection =>
+      '接続を変更するにはメインウィンドウを使用してください。';
+
+  @override
+  String get release_core_guarded_save_refused => 'このファイルはゲートウェイで保存できません';
+
+  @override
+  String get release_core_guarded_save_unavailable =>
+      'このゲートウェイでは競合を防ぐ保存を利用できません';
+
+  @override
+  String release_core_git_files_changed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'このターンで$countファイルを変更',
+      one: 'このターンで1ファイルを変更',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String release_core_git_entries_omitted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '安全に表示できないため、Gitの項目を$count件省略しました。',
+      one: '安全に表示できないため、Gitの項目を1件省略しました。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get release_core_git_staged => 'ステージ済み';
+
+  @override
+  String get release_core_session_sort_recent => '最近のアクティビティ';
+
+  @override
+  String get release_core_session_sort_created => '作成日時の新しい順';
+
+  @override
+  String get release_core_session_sort_status => '実行中を先頭に';
+
+  @override
+  String get release_core_session_sort_tokens => 'トークン数の多い順';
+
+  @override
+  String get release_core_session_sort_cost => 'コストの高い順';
+
+  @override
+  String get release_core_session_group_standard => 'デフォルトのグループ化';
+
+  @override
+  String get release_core_session_group_status => '状態別にグループ化';
+
+  @override
+  String get release_core_session_group_project => 'プロジェクト別にグループ化';
+
+  @override
+  String release_core_session_tokens(int count) {
+    return '$countトークン';
+  }
+
+  @override
+  String release_core_search_gateway_mode(String mode) {
+    return '$mode（ゲートウェイ）';
+  }
+
+  @override
+  String release_core_search_mode_tooltip(String label, String mode) {
+    return '$label: $mode';
+  }
+
+  @override
+  String get release_core_image_recovery_new_turn => '送信すると新しいターンが作成されます';
+
+  @override
+  String release_core_image_recovery_metadata(int count, String date) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '画像$count枚 · $date',
+      one: '画像1枚 · $date',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String release_core_discovery_scanning(String state) {
+    return 'スキャン: $state';
+  }
+
+  @override
+  String get release_core_discovery_enabled => '有効';
+
+  @override
+  String get release_core_discovery_disabled => '無効';
+
+  @override
+  String get release_core_discovery_none => 'なし';
+
+  @override
+  String release_core_discovery_roots(String paths) {
+    return 'スキャンのルート: $paths';
+  }
+
+  @override
+  String release_core_discovery_excluded(String paths) {
+    return '除外するサブツリー: $paths';
+  }
+
+  @override
+  String release_core_discovery_repository_sessions(String path, int count) {
+    return '$path\nセッション: $count';
+  }
+
+  @override
+  String get release_core_projects_local_only =>
+      'このHermesゲートウェイはサーバーサイドプロジェクトより古いため、チャットのグループ化はこの端末内のみになります。端末間で同じプロジェクトを共有するにはHermesを更新してください。';
+
+  @override
+  String get release_core_fleet_no_address => 'ゲートウェイアドレスはまだありません';
+
+  @override
+  String release_core_fleet_diagnostics(String version, String access) {
+    return 'ゲートウェイ $version · $access';
+  }
+
+  @override
+  String get release_core_schedule_builtin => '組み込み';
+
+  @override
+  String get release_core_memory_gateway_profile => 'ゲートウェイ';
+
+  @override
+  String release_core_memory_profile_summary(String profile, String gateway) {
+    return '$gateway上のプロファイル$profile。共有コードにはズーム、時刻、フィルターのみが保存されます。';
+  }
+
+  @override
+  String release_core_memory_layers_summary(
+    int memoryBytes,
+    int userBytes,
+    String provider,
+  ) {
+    return '組み込みメモリ$memoryBytesバイト、ユーザーメモリ$userBytesバイト。使用中のプロバイダー: $provider。';
+  }
+
+  @override
+  String get release_core_memory_kind_all => 'すべて';
+
+  @override
+  String get release_core_memory_kind_skill => 'スキル';
+
+  @override
+  String get release_core_memory_kind_memory => 'メモリ';
+
+  @override
+  String get release_core_workspace_failure_stale => '接続が変更されました';
+
+  @override
+  String get release_core_workspace_failure_unbound => '確認済みの作業ディレクトリがありません';
+
+  @override
+  String get release_core_workspace_failure_denied => '権限がありません';
+
+  @override
+  String get release_core_workspace_failure_ineligible =>
+      'このファイルでは許可されていない操作です';
+
+  @override
+  String get release_core_workspace_failure_unsupported => 'このゲートウェイでは対応していません';
+
+  @override
+  String get release_core_workspace_failure_mismatch => 'リモートの状態が変更されました';
+
+  @override
+  String get release_core_workspace_failure_invalid => 'ゲートウェイの応答が無効です';
+
+  @override
+  String get release_core_workspace_failure_insecure => '安全な接続が必要です';
+
+  @override
+  String get release_core_workspace_failure_unavailable => 'ゲートウェイを利用できません';
+
+  @override
+  String get release_core_queue_state_queued => 'キュー待機中';
+
+  @override
+  String get release_core_queue_state_started => '開始済み';
+
+  @override
+  String get release_core_queue_state_unknown => '結果不明';
+
+  @override
+  String get release_core_unknown_state => '不明';
+
+  @override
+  String get release_core_fleet_state_idle => 'オフライン';
+
+  @override
+  String get release_core_fleet_state_connected => '接続済み';
+
+  @override
+  String get release_core_fleet_state_reconnecting => '再接続中…';
+
+  @override
+  String get release_core_fleet_state_sessionExpired => 'サインアウト済み';
+
+  @override
+  String get release_core_fleet_state_failed => '接続に失敗しました';
+
+  @override
+  String release_core_workspace_operation_failed(String reason) {
+    return 'ゲートウェイでの操作を確認できませんでした: $reason。';
+  }
+
+  @override
+  String get release_core_workspace_invalid_data =>
+      'データまたは入力内容を確認できませんでした。内容を確認して、もう一度お試しください。';
+
+  @override
+  String
+  get release_core_parallel_workspace_layout_changed_in_this_window_but_could_not =>
+      'このウィンドウのレイアウトは変更されましたが、保存できませんでした。';
+
+  @override
+  String get release_core_parallel_workspace_first_pane => '1つ目のペイン';
+
+  @override
+  String get release_core_parallel_workspace_second_pane => '2つ目のペイン';
+
+  @override
+  String get release_core_parallel_workspace_unavailable_page => '利用できないページ';
+
+  @override
+  String release_core_parallel_workspace_close_a_tab_first_maximum(
+    String maximum,
+  ) {
+    return '先にタブを閉じてください（最大$maximum個）。';
+  }
+
+  @override
+  String get release_core_parallel_workspace_dock_beside_current_pane =>
+      '現在のペインの隣にドッキング';
+
+  @override
+  String get release_core_parallel_workspace_add_chat => 'チャットを追加';
+
+  @override
+  String
+  get release_core_parallel_workspace_action_failed_check_the_connection_and_try_again =>
+      '操作に失敗しました。接続を確認して、もう一度お試しください。';
+
+  @override
+  String
+  get release_core_parallel_workspace_close_a_tab_before_reopening_another =>
+      '別のタブを開き直す前に、タブを1つ閉じてください。';
+
+  @override
+  String release_core_parallel_workspace_replace_layout(String name) {
+    return 'レイアウト「$name」を置き換えますか？';
+  }
+
+  @override
+  String
+  get release_core_parallel_workspace_layout_limit_reached_replace_an_existing_layout =>
+      'レイアウト数の上限に達しました。既存のレイアウトを置き換えてください。';
+
+  @override
+  String get release_core_parallel_workspace_restore_layout => 'レイアウトを復元';
+
+  @override
+  String get release_core_parallel_workspace_workspace_options =>
+      'ワークスペースのオプション';
+
+  @override
+  String get release_core_parallel_workspace_dock_another_pane => '別のペインをドッキング';
+
+  @override
+  String get release_core_parallel_workspace_swap_panes => 'ペインを入れ替え';
+
+  @override
+  String get release_core_parallel_workspace_undock_second_pane =>
+      '2つ目のペインのドッキングを解除';
+
+  @override
+  String get release_core_parallel_workspace_arrange_side_by_side => '左右に並べる';
+
+  @override
+  String get release_core_parallel_workspace_arrange_top_to_bottom => '上下に並べる';
+
+  @override
+  String release_core_parallel_workspace_change_split_size(String percent) {
+    return '分割サイズを変更（$percent%）';
+  }
+
+  @override
+  String get release_core_parallel_workspace_focus_pane_full_screen =>
+      'ペインを全画面表示';
+
+  @override
+  String get release_core_parallel_workspace_open_chat_in_new_window =>
+      '新しいウィンドウでチャットを開く';
+
+  @override
+  String get release_core_parallel_workspace_hide_pane_keep_running =>
+      'ペインを非表示（実行は継続）';
+
+  @override
+  String get release_core_parallel_workspace_previous_tab => '前のタブ';
+
+  @override
+  String get release_core_parallel_workspace_next_tab => '次のタブ';
+
+  @override
+  String get release_core_parallel_workspace_move_tab_left => 'タブを左に移動';
+
+  @override
+  String get release_core_parallel_workspace_move_tab_right => 'タブを右に移動';
+
+  @override
+  String get release_core_parallel_workspace_reload_current_tab =>
+      '現在のタブを再読み込み';
+
+  @override
+  String get release_core_parallel_workspace_close_tab => 'タブを閉じる';
+
+  @override
+  String get release_core_parallel_workspace_close_other_tabs => '他のタブを閉じる';
+
+  @override
+  String get release_core_parallel_workspace_close_tabs_to_the_right =>
+      '右側のタブを閉じる';
+
+  @override
+  String get release_core_parallel_workspace_close_all_tabs => 'すべてのタブを閉じる';
+
+  @override
+  String get release_core_parallel_workspace_reopen_closed_tab => '閉じたタブを開き直す';
+
+  @override
+  String get release_core_parallel_workspace_save_named_layout =>
+      '名前を付けてレイアウトを保存';
+
+  @override
+  String get release_core_parallel_workspace_restore_named_layout =>
+      '名前付きレイアウトを復元';
+
+  @override
+  String get release_core_parallel_workspace_refresh_chat_list => 'チャット一覧を更新';
+
+  @override
+  String get release_core_parallel_workspace_workspace_tools => 'ワークスペースのツール';
+
+  @override
+  String get release_core_parallel_workspace_choose_a_chat_for_this_pane =>
+      'このペインのチャットを選択';
+
+  @override
+  String release_core_parallel_workspace_choose_chat_for(String pane) {
+    return '$paneのチャットを選択';
+  }
+
+  @override
+  String get release_core_parallel_workspace_add_a_chat_to_start_a_workspace =>
+      'チャットを追加してワークスペースを開始してください。';
+
+  @override
+  String get release_core_parallel_workspace_select_a_tab_to_show_its_pane =>
+      'タブを選択すると、そのペインが表示されます。';
+
+  @override
+  String get release_core_parallel_workspace_parallel_workspace => '並列ワークスペース';
+
+  @override
+  String get release_core_parallel_workspace_show_workspace => 'ワークスペースを表示';
+
+  @override
+  String get release_core_parallel_workspace_could_not_load_chats_retry =>
+      'チャットを読み込めませんでした。再試行';
+
+  @override
+  String release_core_parallel_workspace_close(String pane) {
+    return '$paneを閉じる';
+  }
+
+  @override
+  String release_core_parallel_workspace_switch_pane(String pane) {
+    return 'ペインを切り替え: $pane';
+  }
+
+  @override
+  String get release_core_workspace_registry_session_id_copied =>
+      'セッションIDをコピーしました。';
+
+  @override
+  String get release_core_workspace_registry_chat_details => 'チャットの詳細';
+
+  @override
+  String get release_core_workspace_registry_server_default => 'サーバーのデフォルト';
+
+  @override
+  String get release_core_workspace_registry_session_id => 'セッションID';
+
+  @override
+  String get release_core_workspace_registry_title => 'タイトル';
+
+  @override
+  String get release_core_workspace_label_terminals => 'ターミナル';
+
+  @override
+  String get release_core_workspace_label_copy_id => 'セッションIDをコピー';
+
+  @override
+  String get release_core_workspace_label_contributions => 'コントリビューション';
+
+  @override
+  String get release_core_workspace_owner_inactive =>
+      'このワークスペースの所有者はアクティブではなくなりました。';
+
+  @override
+  String get release_core_workspace_select_chat => '先にチャットを選択してください。';
+
+  @override
+  String get release_core_workspace_chat_unavailable => 'この接続ではこのチャットを利用できません。';
+
+  @override
+  String get release_core_workspace_page_unavailable => 'この接続ではこのページを利用できません。';
+
+  @override
+  String release_core_client_queue_count(int count) {
+    return '$count件がキュー待機中';
+  }
+
+  @override
+  String release_core_client_queue_paused_count(int count) {
+    return '$count件がキュー待機中 — 一時停止中';
+  }
+
+  @override
+  String release_core_git_diff_truncated(String diff) {
+    return '$diff\n…省略';
+  }
+
+  @override
+  String get release_core_search_no_models =>
+      'Hermesから設定済みの選択可能なモデルが返されませんでした。';
+
+  @override
+  String get release_core_chat_archive_unavailable => 'チャットのアーカイブ操作を利用できません。';
+
+  @override
+  String get release_core_chat_pin_unconfirmed => 'ピン留めの状態を確認できませんでした。';
+
+  @override
+  String get release_core_chat_archive_unconfirmed => 'アーカイブの状態を確認できませんでした。';
+
+  @override
+  String get release_core_chat_archive_history_unavailable =>
+      'アーカイブ済みの履歴を利用できません';
+
+  @override
+  String get release_core_quick_chat_history_unavailable =>
+      'クイックチャットの履歴を利用できません';
+
+  @override
+  String get release_core_chat_project_ownership_unavailable =>
+      'プロジェクトの所有情報を利用できません';
+
+  @override
+  String get release_core_chat_unknown_project => '不明なプロジェクト';
+
+  @override
+  String get release_core_chat_local_search_fallback =>
+      'メッセージ検索を利用できません。ローカルの一致結果を表示しています。';
+
+  @override
+  String release_core_fleet_update_eligible(String version) {
+    return '更新対象 · $version';
+  }
+
+  @override
+  String get release_core_fleet_update_state_1 => 'スキップ: 同一のインストール先';
+
+  @override
+  String get release_core_fleet_update_state_2 => '未確認';
+
+  @override
+  String get release_core_fleet_update_state_3 => 'スキップ: クラウド管理';
+
+  @override
+  String get release_core_fleet_update_state_4 => 'スキップ: 直接接続のゲートウェイとして未登録';
+
+  @override
+  String get release_core_fleet_update_state_5 => 'スキップ: 切断中または処理中';
+
+  @override
+  String get release_core_fleet_update_state_6 => '適用可能な更新はありません';
+
+  @override
+  String get release_core_fleet_update_state_7 => '更新対象か確認できませんでした';
+
+  @override
+  String get release_core_fleet_update_state_8 => 'スキップ: 情報が古い、処理中、またはリクエスト済み';
+
+  @override
+  String get release_core_fleet_update_state_9 => 'リクエスト中';
+
+  @override
+  String get release_core_fleet_update_state_10 => '受理済み。実施記録を取得できません';
+
+  @override
+  String get release_core_fleet_update_state_11 => '受理済み。実施記録を待機中';
+
+  @override
+  String get release_core_fleet_update_state_12 => 'スキップ: このインストール先でチャットが実行中';
+
+  @override
+  String get release_core_fleet_update_state_13 => '未確認。自動で再送信しないでください';
+
+  @override
+  String get release_core_fleet_update_state_14 => '実施記録を確認するには再接続してください';
+
+  @override
+  String get release_core_fleet_update_state_15 => '実施記録を取得できません';
+
+  @override
+  String get release_core_fleet_update_state_16 => '一致する実施記録を待機中';
+
+  @override
+  String get release_core_fleet_update_state_17 => '更新済み。追加対応が必要です';
+
+  @override
+  String get release_core_fleet_update_state_19 => '一部更新済み';
+
+  @override
+  String get release_core_fleet_update_state_20 => '更新に失敗しました';
+
+  @override
+  String get release_core_fleet_update_state_21 => '未確認';
+
+  @override
+  String get release_core_cloud_status_ready => '準備完了';
+
+  @override
+  String get release_core_cloud_status_online => 'オンライン';
+
+  @override
+  String get release_core_cloud_status_stopped => '停止済み';
+
+  @override
+  String get release_core_cloud_status_error => 'エラー';
+
+  @override
+  String get ng_release_more_contributions_subtitle => 'この接続の確認済み応答カード';
+
+  @override
+  String get ng_release_more_gateway_fleet => 'ゲートウェイフリート';
+
+  @override
+  String get ng_release_more_memory_graph => 'メモリグラフ';
+
+  @override
+  String get ng_release_more_memory_graph_subtitle => 'タイムライン、編集、メモリプロバイダー';
+
+  @override
+  String get ng_release_more_capabilities_subtitle =>
+      'スキル、プラグイン、コネクター、ツールバックエンドのインストールと管理';
+
+  @override
+  String get ng_release_more_browser_vault => 'ブラウザー保管庫';
+
+  @override
+  String get ng_release_more_browser_vault_subtitle =>
+      'サイトのログイン情報、住所、カード、認証情報の取得元';
+
+  @override
+  String get ng_release_more_agent_policy => 'エージェントのポリシー';
+
+  @override
+  String get ng_release_more_agent_policy_subtitle =>
+      '承認、チェックポイント、ブラウザーへのアクセス、共有メトリクス';
+
+  @override
+  String get ng_release_more_schedules => 'スケジュール';
+
+  @override
+  String get ng_release_more_schedules_subtitle =>
+      'すべてのプロファイル、ブループリント、未実行分の実行、停止';
+
+  @override
+  String get ng_release_more_host_subtitle => 'リモートログ、稼働状況、メンテナンス、更新';
+
+  @override
+  String get ng_release_more_providers_routes => 'プロバイダーとルート';
+
+  @override
+  String get ng_release_more_providers_routes_subtitle =>
+      'キー、エンドポイント、委任、モデルの組み合わせ';
+
+  @override
+  String get ng_release_more_credits_plans => 'クレジットとプラン';
+
+  @override
+  String get ng_release_more_credits_plans_subtitle =>
+      'アカウントで許可されている場合の、同意に基づくNousの課金';
+
+  @override
+  String get ng_release_sign_in_or => 'または';
+
+  @override
+  String ng_release_deployment_sign_in_hint(String message) {
+    return '$message 次のステップでデプロイメントセッショントークンを使ってサインインすることもできます。';
+  }
+
+  @override
+  String get ng_release_message_search_unavailable =>
+      'メッセージ検索を利用できません。ローカルの一致結果を表示しています。';
+
+  @override
+  String ng_release_insights_days(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days日',
+      one: '$days日',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ng_release_signed_in_you => 'あなた';
+
+  @override
+  String get release_chat_unsent_prompt_gone => 'その未送信プロンプトはキューにありません。';
+
+  @override
+  String ng_release_attachment_not_attached(String name) {
+    return 'ゲートウェイが$nameの添付を確認しませんでした。';
+  }
+
+  @override
+  String get ng_release_gateway_not_connected => 'まだゲートウェイに接続していません。';
+
+  @override
+  String get ng_release_gateway_unreachable => 'ゲートウェイに接続できませんでした。';
+
+  @override
+  String get ng_release_projects_scope_changed => 'プロジェクトの対象範囲は選択されていません';
+
+  @override
+  String get ng_release_missing_providers => 'プロバイダーがありません';
+
+  @override
+  String get ng_release_missing_tasks => 'タスクがありません';
+
+  @override
+  String ng_release_age_minutes(int count) {
+    return '$count分';
+  }
+
+  @override
+  String ng_release_age_hours(int count) {
+    return '$count時間';
+  }
+
+  @override
+  String ng_release_age_days(int count) {
+    return '$count日';
+  }
+
+  @override
+  String ng_release_age_weeks(int count) {
+    return '$count週';
+  }
+
+  @override
+  String ng_release_age_years(int count) {
+    return '$count年';
+  }
+
+  @override
+  String ng_release_compact_billions(String count) {
+    return '$count十億';
+  }
+
+  @override
+  String ng_release_compact_millions(String count) {
+    return '$count百万';
+  }
+
+  @override
+  String ng_release_compact_thousands(String count) {
+    return '$count千';
+  }
+
+  @override
+  String ng_release_token_thousands(String count) {
+    return '$count千';
+  }
+
+  @override
+  String ng_release_elapsed_minutes_seconds(int minutes, int seconds) {
+    return '$minutes分$seconds秒';
+  }
+
+  @override
+  String ng_release_elapsed_seconds(int seconds) {
+    return '$seconds秒';
+  }
+
+  @override
+  String get ng_release_notification_foreground => 'Aresを画面に表示していました';
+
+  @override
+  String get ng_release_notification_stopped => 'ターンが停止されました';
+
+  @override
+  String get ng_release_more_parallel_workspace => '並列ワークスペース';
+
+  @override
+  String get ng_release_more_parallel_workspace_subtitle =>
+      '複数のチャットをタブや横並びで開きます。';
+
+  @override
+  String get release_chat_unknown_model => '不明';
+
+  @override
+  String release_chat_profile_default(String model) {
+    return 'プロファイルのデフォルト: $model';
+  }
+
+  @override
+  String release_chat_profile_default_provider(String model, String provider) {
+    return 'プロファイルのデフォルト: $model • $provider';
+  }
+
+  @override
+  String get release_chat_choose_provider =>
+      'このモデルは複数のプロバイダーで利用できます。続行するにはプロバイダーを選択してください。';
+
+  @override
+  String get release_chat_slash_needs_gateway =>
+      'スラッシュコマンドにはDesktopゲートウェイが必要です';
+
+  @override
+  String get release_chat_recovering_without_resending => '再送信せずに復旧中';
+
+  @override
+  String get release_chat_live_request_unreachable =>
+      '申し訳ありません。そのリクエストではHermesに接続できませんでした。';
+
+  @override
+  String release_chat_live_working(String tool) {
+    return 'Hermesが処理中です: $tool。まだ完了していません。';
+  }
+
+  @override
+  String get release_chat_live_finished_without_spoken_result =>
+      'Hermesがそのリクエストを完了しましたが、音声の応答はありませんでした。';
+
+  @override
+  String get release_chat_reply_language_unavailable => '選択した応答言語を利用できません';
+
+  @override
+  String get release_chat_reply_voice_unavailable => '選択した応答の音声を利用できません';
+
+  @override
+  String get release_chat_reply_voice_configuration_unavailable =>
+      '応答の音声設定を利用できません';
+
+  @override
+  String get release_chat_notification_review_action =>
+      'チャットを開いて、リクエストされた操作を確認してください。';
+
+  @override
+  String get release_chat_notification_respond => 'チャットを開いて応答してください。';
+
+  @override
+  String get release_chat_start_new_main_window => 'メインウィンドウで新しいチャットを開始してください。';
+
+  @override
+  String get release_chat_no_desktop_gateway => 'Desktopゲートウェイがありません';
+
+  @override
+  String get release_chat_attachment_preparation_cancelled =>
+      '添付ファイルの準備がキャンセルされました。';
+
+  @override
+  String get release_chat_approval_authority_revoked => '承認権限が取り消されました。';
+
+  @override
+  String get release_chat_gateway_session_disconnected =>
+      'Desktopゲートウェイのセッションは接続されていません';
+
+  @override
+  String get release_chat_stop_requested => '停止をリクエストしました。Hermesの終了を待っています。';
+
+  @override
+  String release_chat_stop_request_failed(String error) {
+    return '停止をリクエストできませんでした: $error';
+  }
+
+  @override
+  String get release_chat_queued_prompt_not_sent => 'キュー内のプロンプトは送信されませんでした。';
+
+  @override
+  String get release_chat_running_turn_unreachable =>
+      '実行中のターンに接続できませんでした。再送信せずに再接続しています。';
+
+  @override
+  String get release_chat_wait_for_composer => '入力欄が使用可能になるまでお待ちください。';
+
+  @override
+  String get release_chat_find_in_transcript => '会話履歴内を検索';
+
+  @override
+  String get release_chat_open_browser_preview => 'ブラウザープレビューを開く';
+
+  @override
+  String get release_chat_more_tools => 'その他のチャットツール';
+
+  @override
+  String get release_chat_queue_until_finished => 'このターンが終了するまでキューで待機';
+
+  @override
+  String get release_chat_format_bold => '太字';
+
+  @override
+  String get release_chat_format_italic => '斜体';
+
+  @override
+  String get ng_release_chat_gateway_queue_requirements =>
+      'ゲートウェイのキューには、接続済みのチャットとテキストのみのプロンプトが必要です。';
+
+  @override
+  String get ng_release_chat_start_new_main_screen =>
+      'メインのチャット画面から新しいチャットを開始してください。';
+
+  @override
+  String get ng_release_chat_image => '画像';
+
+  @override
+  String ng_release_chat_tool_seconds(String seconds) {
+    return '$seconds秒';
+  }
+
+  @override
+  String get release_preview_chat_changed =>
+      'チャットが変更されました。続行するにはプレビューに再接続してください。';
+
+  @override
+  String get release_preview_authenticating_chat => 'チャットを認証中…';
+
+  @override
+  String release_preview_unavailable_reason(String reason) {
+    return 'プレビューを利用できません: $reason';
+  }
+
+  @override
+  String get release_preview_operation_failed => 'プレビューの操作に失敗しました。';
+
+  @override
+  String get release_preview_added_to_draft => '下書きに追加しました。送信はしていません。';
+
+  @override
+  String get release_preview_open_site_title => 'このサイトを開きますか？';
+
+  @override
+  String release_preview_open_site_body(String origin) {
+    return '$origin\n\nリーダーモードでは、このドキュメントのみを読み込みます。Cookie、サインイン情報、ページをHermesと共有しません。';
+  }
+
+  @override
+  String get release_preview_open_site => 'サイトを開く';
+
+  @override
+  String get release_preview_discard_pins_title => '下書きに追加していないピンを破棄しますか？';
+
+  @override
+  String get release_preview_keep_pins => 'ピンを保持';
+
+  @override
+  String get release_preview_share_page_title => 'このページをこのチャットと共有しますか？';
+
+  @override
+  String release_preview_share_page_body(String origin) {
+    return 'Hermesは$originの表示中のテキストと要素一覧を読み取り、このペインをスクロールできます。別のページへの移動で共有は終了します。フォームと認証情報は共有されません。';
+  }
+
+  @override
+  String get release_preview_share_page => 'ページを共有';
+
+  @override
+  String release_preview_comment_number(int number) {
+    return 'コメント #$number';
+  }
+
+  @override
+  String get release_preview_note => 'メモ';
+
+  @override
+  String get release_preview_keep_pin => 'ピンを保持';
+
+  @override
+  String get release_preview_title => 'ブラウザープレビュー';
+
+  @override
+  String get release_preview_hide => 'プレビューを非表示';
+
+  @override
+  String get release_preview_close_and_forget => '閉じてページを破棄';
+
+  @override
+  String get release_preview_site_address => 'サイトのアドレス';
+
+  @override
+  String get release_preview_go_to_address => 'アドレスに移動';
+
+  @override
+  String get release_preview_forward => '進む';
+
+  @override
+  String get release_preview_reload => '再読み込み';
+
+  @override
+  String get release_preview_share_with_hermes => 'ページをHermesと共有';
+
+  @override
+  String get release_preview_stop_sharing => 'ページの共有を停止';
+
+  @override
+  String get release_preview_annotate => '要素または領域に注釈を追加';
+
+  @override
+  String get release_preview_reader_console => 'リーダーコンソール';
+
+  @override
+  String get release_preview_reconnect => 'プレビューに再接続';
+
+  @override
+  String get release_preview_reader_mode_help =>
+      'リーダーモード: HTMLとテキストのみ。スクリプト、埋め込みリソース、サインイン済みのブラウザープロファイルは使用しません。';
+
+  @override
+  String release_preview_sharing_origin(String origin) {
+    return 'このチャットとリーダーを共有中: $origin';
+  }
+
+  @override
+  String get release_preview_annotation_help =>
+      '要素をタップするか領域をドラッグして、コメントを追加してください。';
+
+  @override
+  String get release_preview_reader_requests => 'リーダーのリクエスト（JavaScriptは無効）';
+
+  @override
+  String release_preview_selected_requests(int count) {
+    return '$count件を選択中 · JavaScriptは無効';
+  }
+
+  @override
+  String get release_preview_copy_all => 'すべてコピー';
+
+  @override
+  String get release_preview_copy_selected => '選択項目をコピー';
+
+  @override
+  String get release_preview_add_log_to_draft => 'ログを下書きに追加';
+
+  @override
+  String release_preview_requests_draft(String log) {
+    return 'リーダーのリクエスト:\n$log';
+  }
+
+  @override
+  String release_preview_add_pins_to_draft(int count) {
+    return '$count件を下書きに追加';
+  }
+
+  @override
+  String release_preview_request_loaded(String origin, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'リーダーの要素$count件',
+      one: 'リーダーの要素$count件',
+    );
+    return 'HTTP 200 · $origin · $_temp0';
+  }
+
+  @override
+  String release_preview_annotation_intro(String origin) {
+    return '$originのプレビューに付けられたこれらのコメントを確認してください。添付の切り抜き画像には、同じ順序で番号が付いています。';
+  }
+
+  @override
+  String get release_preview_reader_region => 'リーダーの領域';
+
+  @override
+  String get release_preview_capture_failed => 'この範囲の画像をキャプチャできませんでした。';
+
+  @override
+  String get release_preview_address_not_approved =>
+      'このアドレスは、承認済みのプレビューのオリジン外です。';
+
+  @override
+  String get release_preview_page_limit => 'ページがリーダーの上限を超えています。';
+
+  @override
+  String get release_preview_page_unreadable => 'ページを読み取れませんでした。';
+
+  @override
+  String get release_preview_page_complex => 'このページは複雑すぎるため、リーダーモードで処理できません。';
+
+  @override
+  String release_preview_http_failed(int statusCode) {
+    return 'HTTP $statusCode。リダイレクト先への移動やサインインは行っていません。';
+  }
+
+  @override
+  String get release_preview_unsupported_type =>
+      'リーダーモードで開けるのはHTMLとプレーンテキストのみです。';
+
+  @override
+  String get release_preview_load_insecure => 'サイトを安全に読み込めませんでした。';
+
+  @override
+  String get release_preview_crop_limit => 'プレビューの切り抜き画像が上限を超えています。';
+
+  @override
+  String get release_preview_image_unreadable => '選択した画像は空か、読み取れません。';
+
+  @override
+  String get release_preview_image_budget => '選択した画像は下書きの上限である64 MiBを超えています。';
+
+  @override
+  String get release_preview_image_format =>
+      '対応していない画像形式です。JPEG、PNG、WebPのいずれかを選択してください。';
+
+  @override
+  String get release_preview_image_decode =>
+      '選択したJPEG、PNG、WebP画像を安全にデコードできませんでした。';
+
+  @override
+  String get release_preview_image_sanitize =>
+      'この画像を無害化できません。有効なJPEG、PNG、WebP画像を選択してください。';
+
+  @override
+  String get release_preview_draft_budget => '添付ファイルは下書きごとに合計64 MiBまでです。';
+
+  @override
+  String get release_preview_generic_file_limit => '一般ファイルは1つにつき16 MiBまでです。';
+
+  @override
+  String get release_preview_image_not_sanitized =>
+      'リモート画像はアップロード前に無害化する必要があります。';
+
+  @override
+  String get release_preview_stage_failed =>
+      'プレビューの資料を下書きに追加できませんでした。もう一度お試しください。';
+
+  @override
+  String get release_misc_find_hermes_on_lan => 'LAN上のHermesを検索';
+
+  @override
+  String release_misc_discovery_failed(String error) {
+    return '検出に失敗しました: $error';
+  }
+
+  @override
+  String get release_misc_no_lan_servers =>
+      'ローカルネットワーク上にHermesサーバーが見つかりませんでした。';
+
+  @override
+  String release_misc_api_key_rejected(String endpoint, int statusCode) {
+    return '$endpointがAPIキーを拒否しました（HTTP $statusCode）。';
+  }
+
+  @override
+  String get release_misc_api_key_required =>
+      'サーバーにはAPIキーが必要です。API_SERVER_KEYを入力してください。';
+
+  @override
+  String release_misc_gateway_not_found(String endpoint) {
+    return 'ゲートウェイのエンドポイント$endpointからHTTP 404が返されました。ゲートウェイのパスプレフィックスとリバースプロキシのルートを確認してください。';
+  }
+
+  @override
+  String release_misc_gateway_http_error(String endpoint, int statusCode) {
+    return 'ゲートウェイのエンドポイント$endpointからHTTP $statusCodeが返されました。';
+  }
+
+  @override
+  String release_misc_gateway_unreachable(String endpoint) {
+    return 'ゲートウェイのエンドポイント$endpointに接続できません。';
+  }
+
+  @override
+  String get release_core_schedule_invalid_delivery_target => '配信先が無効です';
+
+  @override
+  String get release_core_file_save_direct_only => '作業ディレクトリ直下のファイルのみ保存できます。';
+
+  @override
+  String get release_core_file_save_hidden => 'ゲートウェイでは隠しファイルを保存できません。';
 }

@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
+import '../l10n/workspace_strings.dart';
+
 import '../services/connection_manager.dart';
 import '../services/remote_workspace.dart';
 
@@ -38,7 +41,7 @@ class _MemoryGraphScreenState extends State<MemoryGraphScreen> {
   final _code = TextEditingController();
   final _providerValues = <String, TextEditingController>{};
   var _busy = false;
-  String? _error;
+  Object? _error;
   Timer? _play;
 
   @override
@@ -85,7 +88,7 @@ class _MemoryGraphScreenState extends State<MemoryGraphScreen> {
         _layers = layers;
       });
     } catch (error) {
-      if (mounted) setState(() => _error = '$error');
+      if (mounted) setState(() => _error = error);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -146,10 +149,10 @@ class _MemoryGraphScreenState extends State<MemoryGraphScreen> {
     try {
       detail = await target.memoryNode(node.id);
     } on WorkspaceException catch (error) {
-      if (mounted) setState(() => _error = '$error');
+      if (mounted) setState(() => _error = error);
       return;
     } on FormatException catch (error) {
-      if (mounted) setState(() => _error = error.message);
+      if (mounted) setState(() => _error = error);
       return;
     }
     if (!mounted) return;
@@ -157,20 +160,27 @@ class _MemoryGraphScreenState extends State<MemoryGraphScreen> {
     final save = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Edit ${detail.label}'),
+        title: Text(
+          context.sharedL10n.release_core_memory_graph_screen_edit(
+            (detail.label).toString(),
+          ),
+        ),
         content: TextField(
           controller: controller,
           maxLines: 8,
-          decoration: const InputDecoration(labelText: 'Content'),
+          decoration: InputDecoration(
+            labelText:
+                context.sharedL10n.release_core_memory_graph_screen_content,
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(context.sharedL10n.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Save'),
+            child: Text(context.sharedL10n.save),
           ),
         ],
       ),
@@ -185,20 +195,30 @@ class _MemoryGraphScreenState extends State<MemoryGraphScreen> {
   }
 
   Future<void> _remove(MemoryGraphNode node) async {
-    final verb = node.kind == 'skill' ? 'Archive skill' : 'Delete memory';
+    final verb = node.kind == 'skill'
+        ? context.sharedL10n.release_core_memory_graph_screen_archive_skill
+        : context.sharedL10n.release_core_memory_graph_screen_delete_memory;
     final agreed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(verb),
         content: Text(
           node.kind == 'skill'
-              ? 'Archive ${node.label} on ${widget.route.profile}? It can be restored on the host with the Curator.'
-              : 'Delete ${node.label} from ${widget.route.profile}? This removes that memory.',
+              ? context.sharedL10n
+                    .release_core_memory_graph_screen_archive_on_it_can_be_restored_on_the(
+                      (node.label).toString(),
+                      (widget.route.profile).toString(),
+                    )
+              : context.sharedL10n
+                    .release_core_memory_graph_screen_delete_from_this_removes_that_memory(
+                      (node.label).toString(),
+                      (widget.route.profile).toString(),
+                    ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(context.sharedL10n.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
@@ -258,9 +278,9 @@ class _MemoryGraphScreenState extends State<MemoryGraphScreen> {
     try {
       await action();
     } on WorkspaceException catch (error) {
-      _error = '$error';
+      _error = error;
     } on FormatException catch (error) {
-      _error = error.message;
+      _error = error;
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -271,23 +291,42 @@ class _MemoryGraphScreenState extends State<MemoryGraphScreen> {
     final visible = _visible;
     final layers = _layers;
     return Scaffold(
-      appBar: AppBar(title: const Text('Memory graph')),
+      appBar: AppBar(
+        title: Text(context.sharedL10n.release_core_more_pane_memory_graph),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           Text(
-            'Profile ${widget.route.profile ?? 'gateway'} on ${widget.connection.label}. The share code stores zoom, time and filters only.',
+            context.sharedL10n.release_core_memory_profile_summary(
+              widget.route.profile ??
+                  context.sharedL10n.release_core_memory_gateway_profile,
+              widget.connection.label,
+            ),
           ),
-          if (_error != null) Text(_error!, key: const Key('memory-error')),
+          if (_error != null)
+            Text(
+              workspaceErrorText(context.sharedL10n, _error!),
+              key: const Key('memory-error'),
+            ),
           if (layers != null)
             Text(
-              'Built-in memory ${layers.memoryBytes} bytes, user ${layers.userBytes} bytes. Active provider ${layers.active.isEmpty ? 'built-in' : layers.active}.',
+              context.sharedL10n.release_core_memory_layers_summary(
+                layers.memoryBytes,
+                layers.userBytes,
+                layers.active.isEmpty
+                    ? context.sharedL10n.release_core_schedule_builtin
+                    : layers.active,
+              ),
               key: const Key('memory-layers'),
             ),
           TextField(
             key: const Key('memory-filter'),
             controller: _filter,
-            decoration: const InputDecoration(labelText: 'Filter'),
+            decoration: InputDecoration(
+              labelText:
+                  context.sharedL10n.release_core_memory_graph_screen_filter,
+            ),
             onChanged: (_) => setState(() {}),
           ),
           Wrap(
@@ -295,7 +334,12 @@ class _MemoryGraphScreenState extends State<MemoryGraphScreen> {
             children: [
               for (final kind in ['all', 'skill', 'memory'])
                 ChoiceChip(
-                  label: Text(kind),
+                  label: Text(switch (kind) {
+                    'all' => context.sharedL10n.release_core_memory_kind_all,
+                    'skill' =>
+                      context.sharedL10n.release_core_memory_kind_skill,
+                    _ => context.sharedL10n.release_core_memory_kind_memory,
+                  }),
                   selected: _layout.kind == kind,
                   onSelected: (_) => _setLayout(
                     MemoryLayout(
@@ -307,7 +351,7 @@ class _MemoryGraphScreenState extends State<MemoryGraphScreen> {
                   ),
                 ),
               FilterChip(
-                label: const Text('Pinned'),
+                label: Text(context.sharedL10n.pinned_chats),
                 selected: _layout.pinnedOnly,
                 onSelected: (value) => _setLayout(
                   MemoryLayout(
@@ -324,7 +368,7 @@ class _MemoryGraphScreenState extends State<MemoryGraphScreen> {
             key: const Key('memory-time'),
             value: _layout.playback.toDouble(),
             max: 1000,
-            label: 'Timeline',
+            label: context.sharedL10n.release_core_memory_graph_screen_timeline,
             onChanged: (value) => _setLayout(
               MemoryLayout(
                 zoom: _layout.zoom,
@@ -340,7 +384,11 @@ class _MemoryGraphScreenState extends State<MemoryGraphScreen> {
               OutlinedButton(
                 key: const Key('memory-play'),
                 onPressed: _playTimeline,
-                child: const Text('Play timeline'),
+                child: Text(
+                  context
+                      .sharedL10n
+                      .release_core_memory_graph_screen_play_timeline,
+                ),
               ),
               for (final zoom in MemoryLayout.zooms)
                 ChoiceChip(
@@ -360,12 +408,16 @@ class _MemoryGraphScreenState extends State<MemoryGraphScreen> {
           TextField(
             key: const Key('memory-layout-code'),
             controller: _code,
-            decoration: const InputDecoration(labelText: 'Layout code'),
+            decoration: InputDecoration(
+              labelText: context
+                  .sharedL10n
+                  .release_core_memory_graph_screen_layout_code,
+            ),
             onSubmitted: (value) {
               try {
                 _setLayout(MemoryLayout.decode(value.trim()));
               } on FormatException catch (error) {
-                setState(() => _error = error.message);
+                setState(() => _error = error);
               }
             },
           ),
@@ -379,13 +431,23 @@ class _MemoryGraphScreenState extends State<MemoryGraphScreen> {
                   ListTile(
                     key: Key('memory-node-${node.id}'),
                     title: Text(node.label),
-                    subtitle: Text('${node.kind} · ${node.category}'),
+                    subtitle: Text(
+                      '${node.kind == 'skill'
+                          ? context.sharedL10n.release_core_memory_kind_skill
+                          : node.kind == 'memory'
+                          ? context.sharedL10n.release_core_memory_kind_memory
+                          : node.kind} · ${node.category}',
+                    ),
                     onTap: _busy ? null : () => _edit(node),
                     trailing: IconButton(
                       key: Key('memory-remove-${node.id}'),
                       tooltip: node.kind == 'skill'
-                          ? 'Archive skill'
-                          : 'Delete memory',
+                          ? context
+                                .sharedL10n
+                                .release_core_memory_graph_screen_archive_skill
+                          : context
+                                .sharedL10n
+                                .release_core_memory_graph_screen_delete_memory,
                       onPressed: _busy ? null : () => _remove(node),
                       icon: Icon(
                         node.kind == 'skill'
@@ -398,7 +460,11 @@ class _MemoryGraphScreenState extends State<MemoryGraphScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          const Text('External memory providers'),
+          Text(
+            context
+                .sharedL10n
+                .release_core_memory_graph_screen_external_memory_providers,
+          ),
           Wrap(
             spacing: 8,
             children: [
@@ -420,14 +486,20 @@ class _MemoryGraphScreenState extends State<MemoryGraphScreen> {
                 decoration: InputDecoration(
                   labelText: field.label,
                   helperText: field.kind == 'secret' && field.isSet
-                      ? 'A value is stored. Leave blank to keep it.'
+                      ? context
+                            .sharedL10n
+                            .release_core_memory_graph_screen_a_value_is_stored_leave_blank_to_keep
                       : field.kind,
                 ),
               ),
             FilledButton(
               key: const Key('provider-save'),
               onPressed: _busy ? null : _saveProvider,
-              child: const Text('Save provider'),
+              child: Text(
+                context
+                    .sharedL10n
+                    .release_core_memory_graph_screen_save_provider,
+              ),
             ),
           ],
         ],
