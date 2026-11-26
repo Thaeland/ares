@@ -6,6 +6,7 @@ import '../l10n/l10n.dart';
 import '../services/connection_manager.dart';
 import '../services/connection_mutation_barrier.dart';
 import '../services/remote_workspace.dart';
+import '../theme/hermes_theme.dart';
 import '../../nextgen/data/chat_controller.dart';
 import '../../nextgen/data/nextgen_gateway.dart';
 import '../../nextgen/ui/chat_view.dart';
@@ -610,7 +611,7 @@ class _BotsScreenState extends State<BotsScreen> {
       children: [
         if (banner != null)
           Material(
-            color: Colors.orange.shade50,
+            color: Theme.of(context).colorScheme.errorContainer,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
@@ -619,7 +620,7 @@ class _BotsScreenState extends State<BotsScreen> {
                     child: Text(
                       banner,
                       style: TextStyle(
-                        color: Colors.orange.shade900,
+                        color: Theme.of(context).colorScheme.onErrorContainer,
                         fontSize: 12,
                       ),
                     ),
@@ -712,7 +713,7 @@ class _BotsScreenState extends State<BotsScreen> {
           _installId != null
               ? 'Gateway reports install id $_installId · bot_mode_protocol: $_botModeProtocol'
               : 'The gateway injects the teammate-messaging protocol when bot_mode_protocol is set. Handle: default→hermes, otherwise the profile name.',
-          style: const TextStyle(fontSize: 12, color: Colors.grey),
+          style: TextStyle(fontSize: 12, color: HermesTokens.of(context).muted),
         ),
       ],
     );
@@ -935,11 +936,11 @@ class _BotsScreenState extends State<BotsScreen> {
         if (status != null) _screenControls(status),
         if (status?.running == true) _thumbnailCard(),
         const SizedBox(height: 12),
-        const Text(
+        Text(
           'No live RFB viewer is wired here: the Desktop uses the noVNC browser client for /api/display/ws, '
           'which is not available in this app. Use the real thumbnail, then Take over / Hand back to control the screen with the gateway’s lease. '
           'Status/install/switch-image are gateway-backed and are shown above.',
-          style: TextStyle(fontSize: 12, color: Colors.grey),
+          style: TextStyle(fontSize: 12, color: HermesTokens.of(context).muted),
         ),
       ],
     );
@@ -1086,11 +1087,15 @@ class _BotsScreenState extends State<BotsScreen> {
                   errorBuilder: (_, _, _) => Container(
                     height: 96,
                     width: double.infinity,
-                    color: Colors.black,
-                    child: const Center(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHighest,
+                    child: Center(
                       child: Text(
                         'Thumbnail unavailable',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ),
                   ),
@@ -1172,9 +1177,9 @@ class _BotsScreenState extends State<BotsScreen> {
           ),
         for (final job in _routines) _routineTile(job),
         const SizedBox(height: 16),
-        const Text(
+        Text(
           'Routines are [bot:<name>]-tagged jobs owned by the bot’s profile store. Legacy delegated routines are force-paused on load.',
-          style: TextStyle(fontSize: 12, color: Colors.grey),
+          style: TextStyle(fontSize: 12, color: HermesTokens.of(context).muted),
         ),
       ],
     );
@@ -1314,10 +1319,10 @@ class _BotsScreenState extends State<BotsScreen> {
           },
         ),
         const SizedBox(height: 12),
-        const Text(
+        Text(
           'Cross-connection delivery (relayed by this app). The message is sent to the target bot\'s '
           'profile through bot_relay.deliver.',
-          style: TextStyle(fontSize: 12, color: Colors.grey),
+          style: TextStyle(fontSize: 12, color: HermesTokens.of(context).muted),
         ),
         const SizedBox(height: 8),
         TextField(
@@ -1649,9 +1654,9 @@ class _CreateRoomSheetState extends State<_CreateRoomSheet> {
                 ),
                 const SizedBox(height: 12),
                 if (members.isEmpty)
-                  const Text(
+                  Text(
                     'Select at least one member.',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: HermesTokens.of(context).muted),
                   ),
                 const SizedBox(height: 8),
                 FilledButton(
