@@ -1355,7 +1355,9 @@ class _ChatScreenState extends State<ChatScreen>
   }) {
     if (!mounted) return;
     _observeVoiceNormalTerminal(snapshot);
-    if (_normalChat case final owner?) {
+    if (_normalChat case final owner?
+        when owner.kanbanRevision != _kanbanSeedsSeen) {
+      _kanbanSeedsSeen = owner.kanbanRevision;
       _kanbanDock.observeSeeds(owner.kanbanSeeds);
     }
     final rejectedDraft = snapshot.rejectedDraft;
@@ -1488,6 +1490,11 @@ class _ChatScreenState extends State<ChatScreen>
       }
     }
     final wasSending = _sending;
+    // The socket came up: the Kanban strip may read the board now.
+    if (_desktopConnectionState != DesktopConnectionState.connected &&
+        snapshot.connectionState == DesktopConnectionState.connected) {
+      scheduleMicrotask(() => unawaited(_kanbanDock.refresh()));
+    }
     setState(() {
       _desktopConnectionState = snapshot.connectionState;
       if (snapshot.turnId != null || snapshot.displayRows.isNotEmpty) {
@@ -1878,7 +1885,17 @@ class _ChatScreenState extends State<ChatScreen>
       final owner = _kanbanOwner;
       return owner == null ? null : WorkspaceChatKanbanSource(owner);
     },
+    // The dock reads over the socket this chat opened; it never opens one.
+    // With no gateway client there is nothing to dial: the dock then only
+    // says the connection has no dashboard.
+    online: () =>
+        widget.testKanban?.source != null ||
+        _desktopGateway == null ||
+        _desktopConnectionState == DesktopConnectionState.connected,
   );
+
+  /// The owner's live Kanban cards already handed to the dock.
+  int _kanbanSeedsSeen = -1;
 
   /// Tells the dock which session ids are this chat: a card whose
   /// `session_id` is one of them was created by this chat.
@@ -2032,6 +2049,7 @@ class _ChatScreenState extends State<ChatScreen>
       _kanbanPane.currentState?.close();
       _kanbanDock.dispose();
       _kanbanDock = _newKanbanDock();
+      _kanbanSeedsSeen = -1;
       _syncKanbanChat();
     }
     if (_slashGateway case final gateway?) {
@@ -2268,6 +2286,7 @@ class _ChatScreenState extends State<ChatScreen>
     if (changed && state == DesktopConnectionState.connected) {
       unawaited(_refreshProjectName());
       _consumePendingNotificationApproval();
+      unawaited(_kanbanDock.refresh());
     }
   }
 

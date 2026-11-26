@@ -441,8 +441,11 @@ class NormalGatewayApplicationSession {
       winner._createdEmptySessionId = null;
     }
     // One chat under two ids: its Kanban cards stay with the surviving owner.
-    winner._kanban.addAll(loser._kanban);
-    loser._kanban.clear();
+    if (loser._kanban.isNotEmpty) {
+      winner._kanban.addAll(loser._kanban);
+      winner._kanbanRevision++;
+      loser._kanban.clear();
+    }
     winner._listeners.addAll(loser._listeners);
     loser._listeners.clear();
     loser._redirect = winner;
@@ -893,6 +896,7 @@ class NormalGatewayChatOwner {
   /// Kanban cards this chat's own tool calls made or linked, kept for its
   /// dock: tool activities carry no arguments or results.
   final List<ChatKanbanSeed> _kanban = [];
+  int _kanbanRevision = 0;
   final List<GatewaySubagentActivity> _subagents = [];
   final List<GatewaySubagentActivity> _activityChildren = [];
   bool _hasTurnSubagentPresentation = false;
@@ -958,6 +962,10 @@ class NormalGatewayChatOwner {
   /// oldest first.
   List<ChatKanbanSeed> get kanbanSeeds =>
       _redirect != null ? _root.kanbanSeeds : List.unmodifiable(_kanban);
+
+  /// Changes whenever [kanbanSeeds] does, so a route reads them only then.
+  int get kanbanRevision =>
+      _redirect != null ? _root.kanbanRevision : _kanbanRevision;
 
   NormalGatewayChatSnapshot get snapshot => _redirect != null
       ? _root.snapshot
@@ -2363,14 +2371,16 @@ class NormalGatewayChatOwner {
       }
     } else if (event.type.startsWith('tool.')) {
       if (event.type == 'tool.complete') {
-        _kanban.addAll(
-          chatKanbanSeedsFromToolCall(
-            name: event.data['name']?.toString() ?? '',
-            args: event.data['args'],
-            result: event.data['result'],
-          ),
+        final cards = chatKanbanSeedsFromToolCall(
+          name: event.data['name']?.toString() ?? '',
+          args: event.data['args'],
+          result: event.data['result'],
         );
-        if (_kanban.length > 64) _kanban.removeRange(0, _kanban.length - 64);
+        if (cards.isNotEmpty) {
+          _kanban.addAll(cards);
+          _kanbanRevision++;
+          if (_kanban.length > 64) _kanban.removeRange(0, _kanban.length - 64);
+        }
       }
       final update = GatewayToolActivity.fromGatewayEvent(
         event.type,

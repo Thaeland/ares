@@ -307,6 +307,29 @@ void main() {
     expect(source.watching, isEmpty);
   });
 
+  testWidgets('the dock reads over the chat\'s own socket and never opens '
+      'one itself', (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final gateway = NextGenGateway(_connection());
+    // No fake transport: the real one, over a gateway nobody started.
+    final chat = _chat(gateway, 'chat-a', null)
+      ..debugApplyHistory([
+        {'id': 1, 'role': 'user', 'content': 'make a card'},
+        ...kanbanCreateRows(toolId: 'c1', taskId: 't_1', id: 2),
+      ]);
+    await _show(tester, gateway, chat);
+    // The row is there from the transcript; the gateway was left alone.
+    expect(find.text(_en.ng_dock_kanban(1)), findsOneWidget);
+    expect(gateway.state.phase, NgConnectionPhase.idle);
+    expect(gateway.socket, isNull);
+    expect(chat.kanban.block, isNull);
+    await tester.pumpWidget(const SizedBox());
+    gateway.dispose();
+    // No reconnect timer was left behind: the test ends without draining.
+  });
+
   testWidgets('a tap opens the board on that card, on the same connection '
       'and profile (narrow: the board\'s pushed route)', (tester) async {
     tester.view.physicalSize = const Size(390, 844);

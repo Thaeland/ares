@@ -522,6 +522,50 @@ void main() {
       expect(ChatKanbanBlock.unreachable.refusesOpen, isFalse);
     });
 
+    test('the dock never reads while the chat\'s socket is down', () async {
+      var online = false;
+      final source = FakeKanbanSource()
+        ..put('default', _task('t_1', status: 'running', session: 'chat-a'));
+      final dock = ChatKanbanDockController(
+        connectionId: 'conn-a',
+        profile: 'work',
+        openSource: () => source,
+        online: () => online,
+      )..setChat(primaryId: 'chat-a');
+      addTearDown(dock.dispose);
+      dock.attach();
+      dock.observeHistoryRows(kanbanCreateRows(toolId: 'c1', taskId: 't_1'));
+      await pumpEventQueue();
+      // Nothing was asked of the gateway, and that is not a failure to show.
+      expect(source.requests, isEmpty);
+      expect(dock.block, isNull);
+      expect(dock.debugWatching, isFalse);
+      expect(_ids(dock), ['t_1']);
+      dock.turnEnded();
+      await pumpEventQueue();
+      expect(source.requests, isEmpty);
+
+      // The chat's socket came up and the chat said so.
+      online = true;
+      await dock.refresh();
+      await pumpEventQueue();
+      expect(source.requests, contains('board:default'));
+      expect(dock.cards.single.status, 'running');
+      expect(source.watching, {'default'});
+
+      // No dashboard is still said while offline: it needs no request.
+      final none = ChatKanbanDockController(
+        connectionId: 'conn-a',
+        profile: 'work',
+        openSource: () => null,
+        online: () => false,
+      )..setChat(primaryId: 'chat-a');
+      addTearDown(none.dispose);
+      none.attach();
+      await pumpEventQueue();
+      expect(none.block, ChatKanbanBlock.noDashboard);
+    });
+
     test('a chat with no session and no cards asks nothing', () async {
       final source = FakeKanbanSource();
       final dock = _dock(source, session: null)..attach();

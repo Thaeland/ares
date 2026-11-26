@@ -645,6 +645,8 @@ class NgChatController extends ChangeNotifier {
     _subs.add(gateway.events.listen(_onEvent));
     _subs.add(gateway.serverRequests.listen(_onServerRequest));
     _subs.add(gateway.reconnected.listen((_) => unawaited(_reattach())));
+    // The socket is up (again): the dock may read the board now.
+    _subs.add(gateway.reconnected.listen((_) => unawaited(kanban.refresh())));
     // Answered on another device, withdrawn, or no longer open per the server.
     _subs.add(gateway.withdrawnRequests.listen(forgetRequest));
     SystemSleepGate.instance.addListener(_onSleepGate);
@@ -864,6 +866,11 @@ class NgChatController extends ChangeNotifier {
     openSource: () => _disposed
         ? null
         : debugKanbanSource?.call() ?? WorkspaceChatKanbanSource(kanbanOwner),
+    // The dock reads over the socket this chat opened; it never opens one.
+    // The socket itself is asked, as [NextGenGateway.connected] asks it: a
+    // connected state alone does not mean a socket is there to reuse.
+    online: () =>
+        debugKanbanSource != null || (gateway.socket?.isConnected ?? false),
   )..setChat(primaryId: storedId);
 
   /// The gateway owner the dock reads the board and opens it through.

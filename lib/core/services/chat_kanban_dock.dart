@@ -374,6 +374,7 @@ class ChatKanbanDockController extends ChangeNotifier {
     required this.connectionId,
     required String? profile,
     required this._openSource,
+    this._online,
     Future<SharedPreferences> Function()? preferences,
     this.pollInterval = const Duration(seconds: 15),
   }) : profile = profile?.trim().isEmpty ?? true ? null : profile!.trim(),
@@ -396,6 +397,11 @@ class ChatKanbanDockController extends ChangeNotifier {
   static const _maxDismissedPerChat = 200;
 
   final ChatKanbanSource? Function() _openSource;
+
+  /// Whether the chat's own gateway socket is up. The dock never opens a
+  /// connection: while this is false it reads nothing, and the chat calls
+  /// [refresh] when its socket comes up.
+  final bool Function()? _online;
   final Future<SharedPreferences> Function() _preferences;
 
   final List<_Entry> _entries = [];
@@ -675,6 +681,7 @@ class ChatKanbanDockController extends ChangeNotifier {
       _blocked(ChatKanbanBlock.noDashboard);
       return;
     }
+    if (!(_online?.call() ?? true)) return;
     try {
       final current = await source.currentBoard();
       if (stale()) return;
