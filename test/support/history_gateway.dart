@@ -15,6 +15,7 @@ class HistoryGateway {
   final foreignLists = <Map<String, dynamic>>[];
   final foreignPreviews = <Map<String, dynamic>>[];
   final imports = <Map<String, dynamic>>[];
+  final sessionLists = <Map<String, String>>[];
   bool foreignSupported = true;
   static const session = 'stored-history';
   static const profile = 'field-work';
@@ -104,6 +105,34 @@ class HistoryGateway {
           'cwd': cwd,
           'git_metadata_generation': 1,
         };
+      case ('GET', '/api/sessions')
+          when uri.queryParameters['profile'] == profile:
+        // What Hermes Desktop reads lineage from (session-branch-tree.ts).
+        sessionLists.add(Map<String, String>.from(uri.queryParameters));
+        body = {
+          'sessions': [
+            {'id': 'parent', 'title': 'Parent chat', 'last_active': 1},
+            {
+              'id': session,
+              'title': 'Current',
+              '_branched_from': 'parent',
+              'last_active': 3,
+            },
+            {
+              'id': 'sibling',
+              'title': 'Sibling',
+              '_branched_from': 'parent',
+              'last_active': 4,
+            },
+            {
+              'id': 'reset-child',
+              'title': 'Reset',
+              'parent_session_id': session,
+              '_reset_from': session,
+              'last_active': 5,
+            },
+          ],
+        };
       case ('GET', '/api/sessions/$session/mutation-snapshot'):
         body = {
           'session_id': session,
@@ -143,27 +172,19 @@ class HistoryGateway {
           ],
         };
       case 'session.list':
+        // The canonical contract (gateway/session_controls.py list_sessions,
+        // CanonicalSessionListRow): live sessions only, a closed row with no
+        // lineage fields. Lineage is the REST session rows' (below).
         return {
           'sessions': [
-            {'id': 'parent', 'title': 'Parent chat', 'last_active': 1},
             {
+              'session_id': session,
               'id': session,
               'title': 'Current',
-              '_branched_from': 'parent',
-              'last_active': 3,
-            },
-            {
-              'id': 'sibling',
-              'title': 'Sibling',
-              '_branched_from': 'parent',
-              'last_active': 4,
-            },
-            {
-              'id': 'reset-child',
-              'title': 'Reset',
-              'parent_session_id': session,
-              '_reset_from': session,
-              'last_active': 5,
+              'source': 'gui',
+              'started_at': 1.0,
+              'message_count': 2,
+              'running': false,
             },
           ],
         };

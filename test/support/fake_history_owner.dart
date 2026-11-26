@@ -13,6 +13,8 @@ class FakeHistoryBackend {
   FakeHistoryBackend({
     this.profile = 'field-work',
     this.foreignSupported = true,
+    this.sessionAuthority = true,
+    this.runtimeSessionId,
   }) {
     dashboard = DashboardClient(
       host: 'history.invalid',
@@ -27,7 +29,12 @@ class FakeHistoryBackend {
       apiKey: '',
       httpClient: MockClient(_http),
     );
-    socket = _FakeHistorySocket(dashboard.baseUrl, _rpc);
+    socket = _FakeHistorySocket(
+      dashboard.baseUrl,
+      _rpc,
+      sessionAuthority: sessionAuthority,
+      runtimeSessionId: runtimeSessionId,
+    );
     owner = RemoteWorkspaceOwner(
       connectionId: connectionId,
       expectedBaseUrl: dashboard.baseUrl,
@@ -51,6 +58,12 @@ class FakeHistoryBackend {
 
   final String profile;
   bool foreignSupported;
+
+  /// A 0.23+ session authority; false is a pre-0.23 sidecar, which has no
+  /// `session.mutate` / `session.export` and keys its session RPCs by the
+  /// runtime session ([runtimeSessionId]) it has live on the socket.
+  final bool sessionAuthority;
+  final String? runtimeSessionId;
   int revision = 4;
   int generation = 9;
 
@@ -94,6 +107,28 @@ class FakeHistoryBackend {
           'profile': profile,
           'cwd': cwd,
           'git_metadata_generation': 1,
+        }),
+        200,
+      );
+    }
+    if (path == '/api/sessions' && query['profile'] == profile) {
+      return http.Response(
+        jsonEncode({
+          'sessions': [
+            {'id': 'parent', 'title': 'Parent chat', 'last_active': 1},
+            {
+              'id': session,
+              'title': 'Current',
+              '_branched_from': 'parent',
+              'last_active': 3,
+            },
+            {
+              'id': 'sibling',
+              'title': 'Sibling',
+              '_branched_from': 'parent',
+              'last_active': 4,
+            },
+          ],
         }),
         200,
       );
@@ -160,24 +195,26 @@ class FakeHistoryBackend {
           },
         };
       case 'session.list':
+        // The canonical row (CanonicalSessionListRow) has no lineage
+        // fields; lineage is the REST session rows' (`/api/sessions`).
         return {
           'result': {
             'sessions': [
-              {'id': 'parent', 'title': 'Parent chat', 'last_active': 1},
               {
+                'session_id': session,
                 'id': session,
                 'title': 'Current',
-                '_branched_from': 'parent',
-                'last_active': 3,
-              },
-              {
-                'id': 'sibling',
-                'title': 'Sibling',
-                '_branched_from': 'parent',
-                'last_active': 4,
+                'source': 'gui',
+                'started_at': 1.0,
+                'message_count': 2,
+                'running': false,
               },
             ],
           },
+        };
+      case 'session.mutate' || 'session.export' when !sessionAuthority:
+        return {
+          'error': {'code': -32601, 'message': 'Method not found'},
         };
       case 'session.mutate':
         mutations.add(Map<String, dynamic>.from(params));
@@ -343,7 +380,16 @@ class FakeHistoryBackend {
 }
 
 class _FakeHistorySocket extends Fake implements WsClient {
-  _FakeHistorySocket(this.baseUrl, this._handler);
+  _FakeHistorySocket(
+    this.baseUrl,
+    this._handler, {
+    required this.sessionAuthority,
+    this.runtimeSessionId,
+  });
+
+  @override
+  final bool sessionAuthority;
+  final String? runtimeSessionId;
 
   @override
   final String baseUrl;
@@ -360,12 +406,26 @@ class _FakeHistorySocket extends Fake implements WsClient {
   bool get isConnected => true;
 
   @override
-  WorkspaceRuntime? workspaceBinding(String storedId) => null;
+  WorkspaceRuntime? workspaceBinding(String storedId) => _binding;
 
+  /// The live binding a resumed chat leaves on its socket.
+  late final WorkspaceRuntime? _binding = runtimeSessionId == null
+      ? null
+      : WorkspaceRuntime.forTest(runtimeSessionId!);
+
+  /// The real wire shape: the flag is nested in the ready frame's payload
+  /// (a flat top-level key never matches, #291).
   @override
   Future<Map<String, dynamic>> waitForGatewayReady({
     Duration timeout = const Duration(seconds: 15),
-  }) async => {'session_authority': true};
+  }) async => {
+    'jsonrpc': '2.0',
+    'method': 'event',
+    'params': {
+      'type': 'gateway.ready',
+      'payload': {if (sessionAuthority) 'session_authority': true},
+    },
+  };
 
   @override
   Future<Map<String, dynamic>> send(

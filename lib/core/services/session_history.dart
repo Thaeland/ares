@@ -155,12 +155,43 @@ extension SessionHistory on WorkspaceTarget {
   Future<List<HistoryMessage>> transcript() =>
       _withOwner(_readTranscript, session: true);
 
+  /// Whether this gateway can branch or rewind a saved chat here: both are
+  /// `session.mutate` operations of the 0.23+ session authority. A pre-0.23
+  /// sidecar has no such method.
+  bool get canMutateHistory => sessionAuthority;
+
+  /// Whether this gateway renders transcript exports (`session.export`, a
+  /// 0.23+ session authority method).
+  bool get canExportTranscript => sessionAuthority;
+
+  /// The id the session-keyed history RPCs take. The session authority
+  /// addresses a chat by its stored id; a pre-0.23 sidecar only knows the
+  /// runtime session it has live on this socket.
+  String _historySessionKey() {
+    if (sessionAuthority) return route.storedSessionId!;
+    final runtime = runtimeSessionId;
+    if (runtime == null) _fail(WorkspaceFailure.unbound);
+    return runtime;
+  }
+
+  /// Parent, sibling and fork chats, read from the REST session rows as
+  /// Hermes Desktop does (`GET /api/sessions`, session-branch-tree.ts): they
+  /// carry `_branched_from`, `parent_session_id`, `_reset_from` and
+  /// `_lineage_root_id`. The WebSocket `session.list` cannot answer this on
+  /// a session authority: its scope is the live sessions, and its rows
+  /// (`CanonicalSessionListRow`) have no lineage fields.
   Future<ShownSessionLineage> lineage() => _withOwner(() async {
-    final result = await _rpc('session.list', {
-      'limit': 100,
-      'include_hidden': false,
-    });
-    final rows = result['sessions'];
+    final body = await _get(
+      ['sessions'],
+      const {
+        'limit': '200',
+        'offset': '0',
+        'min_messages': '0',
+        'archived': 'include',
+        'order': 'recent',
+      },
+    );
+    final rows = body is Map ? body['sessions'] : body;
     if (rows is! List) _fail(WorkspaceFailure.invalid);
     final marks = <ForkMark>[];
     for (final row in rows) {
@@ -185,6 +216,7 @@ extension SessionHistory on WorkspaceTarget {
     required ({int revision, int generation}) fences,
   }) async {
     if (!confirmed) _fail(WorkspaceFailure.invalid);
+    if (!canMutateHistory) _fail(WorkspaceFailure.unsupported);
     return _withOwner(() async {
       await _requireMessage(throughMessageId);
       final current = await _readFences();
@@ -226,6 +258,7 @@ extension SessionHistory on WorkspaceTarget {
     required ({int revision, int generation}) fences,
   }) async {
     if (!confirmed) _fail(WorkspaceFailure.invalid);
+    if (!canMutateHistory) _fail(WorkspaceFailure.unsupported);
     return _withOwner(() async {
       final message = await _requireMessage(targetMessageId);
       final current = await _readFences();
@@ -253,7 +286,7 @@ extension SessionHistory on WorkspaceTarget {
 
   Future<List<HistoryCheckpoint>> checkpoints() => _withOwner(() async {
     final result = await _rpc('rollback.list', {
-      'session_id': route.storedSessionId,
+      'session_id': _historySessionKey(),
     });
     if (result['enabled'] != true) return const <HistoryCheckpoint>[];
     final rows = result['checkpoints'];
@@ -280,7 +313,7 @@ extension SessionHistory on WorkspaceTarget {
       _withOwner(() async {
         _requireHash(hash);
         final result = await _rpc('rollback.diff', {
-          'session_id': route.storedSessionId,
+          'session_id': _historySessionKey(),
           'hash': hash,
         });
         final body = result['diff'] ?? result['stat'] ?? '';
@@ -289,11 +322,15 @@ extension SessionHistory on WorkspaceTarget {
       }, session: true);
 
   /// Restores the working tree to [hash]. Does not send the request until
-  /// [confirmed] is true. A full restore can also rewind the live transcript;
-  /// a file restore passes [filePath] and does not set `all`.
+  /// [confirmed] is true. The default restore reverts the files the agent
+  /// changed since the checkpoint and can also rewind the live transcript.
+  /// `all` (also revert the user's own edits, Desktop's `/rollback --all`)
+  /// goes out only when [revertOwnEdits] is the user's explicit choice. A
+  /// file restore passes [filePath] and never sets `all`.
   Future<HistoryRestoreReceipt> restoreCheckpoint({
     required String hash,
     required bool confirmed,
+    bool revertOwnEdits = false,
     String? filePath,
   }) async {
     if (!confirmed) _fail(WorkspaceFailure.invalid);
@@ -301,9 +338,9 @@ extension SessionHistory on WorkspaceTarget {
       _requireHash(hash);
       if (filePath != null) _requireRestoreFile(filePath);
       final result = await _rpc('rollback.restore', {
-        'session_id': route.storedSessionId,
+        'session_id': _historySessionKey(),
         'hash': hash,
-        if (filePath == null) 'all': true,
+        if (filePath == null && revertOwnEdits) 'all': true,
         'file_path': ?filePath,
       });
       if (result['success'] != true) _fail(WorkspaceFailure.unavailable);
@@ -330,6 +367,7 @@ extension SessionHistory on WorkspaceTarget {
   }) => _withOwner(() async {
     final normalized = format == 'markdown' ? 'md' : format;
     if (!_exportFormats.contains(normalized)) _fail(WorkspaceFailure.invalid);
+    if (!canExportTranscript) _fail(WorkspaceFailure.unsupported);
     final result = await _rpc('session.export', {
       'session_id': route.storedSessionId,
       'format': normalized,
@@ -441,7 +479,7 @@ extension SessionHistory on WorkspaceTarget {
 
   Future<List<HistoryMessage>> _readTranscript() async {
     final result = await _rpc('session.history', {
-      'session_id': route.storedSessionId,
+      'session_id': _historySessionKey(),
     });
     final rows = result['messages'];
     if (rows is! List) _fail(WorkspaceFailure.invalid);

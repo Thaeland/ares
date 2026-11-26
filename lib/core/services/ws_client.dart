@@ -308,6 +308,16 @@ final class _UpgradeClient implements HttpClient {
 /// A live binding observed on this exact socket, never a persisted locator.
 final class WorkspaceRuntime {
   WorkspaceRuntime._(this.runtimeId, this.profile, this.cwd, this.backend);
+
+  /// A binding for a fake socket in tests; a real one is only ever made by
+  /// the socket that received the resume receipt.
+  @visibleForTesting
+  WorkspaceRuntime.forTest(
+    this.runtimeId, {
+    this.profile,
+    this.cwd,
+    this.backend,
+  });
   final String runtimeId;
   final String? profile;
   final String? cwd;

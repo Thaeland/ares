@@ -372,7 +372,7 @@ final class WorkspaceTarget {
     checkCurrent();
     final error = response['error'];
     if (error != null) {
-      if (error is Map && error['code'] == -32601) {
+      if (error is Map && _missingRpcMethod(error)) {
         _fail(WorkspaceFailure.unsupported);
       }
       if (error is Map && const {401, 403}.contains(error['code'])) {
@@ -383,6 +383,18 @@ final class WorkspaceTarget {
     final result = response['result'];
     if (result is! Map<String, dynamic>) _fail(WorkspaceFailure.invalid);
     return result;
+  }
+
+  /// Desktop's `isMissingRpcMethod`: the code decides (`-32601`); a refusal
+  /// without a code is judged by its message. A gateway that has no handler
+  /// for a method is "not available here", never a failure to report raw.
+  static bool _missingRpcMethod(Map<dynamic, dynamic> error) {
+    final code = error['code'];
+    if (code == -32601) return true;
+    if (code != null) return false;
+    final message = error['message']?.toString().toLowerCase() ?? '';
+    return message.contains('method not found') ||
+        message.contains('unknown method');
   }
 
   Future<T> _withOwner<T>(

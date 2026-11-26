@@ -108,10 +108,21 @@ Future<void> _exercise(
   expect(rewind.removed, 2);
   expect(rewind.text, 'Keep this');
 
+  // Lineage is the REST session rows' (as Desktop reads it), never the
+  // WebSocket session.list: its canonical rows have no lineage fields.
   final lineage = await target.lineage();
   expect(lineage.parent?.id, 'parent');
   expect(lineage.siblings.map((row) => row.id), ['sibling']);
   expect(lineage.children, isEmpty);
+  expect(gateway.sessionLists.single, {
+    'limit': '200',
+    'offset': '0',
+    'min_messages': '0',
+    'archived': 'include',
+    'order': 'recent',
+    'profile': HistoryGateway.profile,
+  });
+  expect(gateway.methods, isNot(contains('session.list')));
 
   final checkpoints = await target.checkpoints();
   final diff = await target.checkpointDiff(checkpoints.single.hash);
@@ -129,12 +140,29 @@ Future<void> _exercise(
     throwsA(isA<WorkspaceException>()),
   );
   expect(gateway.restores, isEmpty);
+  // The default restore sends no `all` (Desktop's /rollback): the user's
+  // own edits are reverted only on the explicit opt-in (--all).
   final restored = await target.restoreCheckpoint(
     hash: checkpoints.single.hash,
     confirmed: true,
   );
   expect(restored.historyRemoved, 1);
-  expect(gateway.restores.single['all'], isTrue);
+  expect(gateway.restores.single, {
+    'session_id': HistoryGateway.session,
+    'hash': checkpoints.single.hash,
+    'profile': HistoryGateway.profile,
+  });
+  await target.restoreCheckpoint(
+    hash: checkpoints.single.hash,
+    confirmed: true,
+    revertOwnEdits: true,
+  );
+  expect(gateway.restores.last, {
+    'session_id': HistoryGateway.session,
+    'hash': checkpoints.single.hash,
+    'all': true,
+    'profile': HistoryGateway.profile,
+  });
 
   final exported = await target.exportTranscript(format: 'html', redact: true);
   expect(exported.format, 'html');
