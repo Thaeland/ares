@@ -11,11 +11,11 @@ for the exact English expressions that still need work.
 
 - Filled all **2,615 initially missing translations**: de, es, fr, ja, ko, pt,
   pt_BR, ru, zh and zh_Hans: 224 each; uk: 187; ar and zh_Hant: 94 each.
-- Extracted **604 additional messages** with descriptions and typed placeholder
-  metadata: shared discovery/admin/files/workspace (458), NextGen (45), chat
-  (34), preview (59) and application shell (8).
+- Extracted **607 additional messages** with descriptions and typed placeholder
+  metadata: shared discovery/admin/files/workspace (461), NextGen-only (44),
+  chat (35), preview (59) and application shell (8).
 - Translated all extracted messages into every one of the **13 locales**.
-  Each catalogue now has **3,231 messages**, in the English source's order.
+  Each catalogue now has **3,234 messages**, in the English source's order.
 - Preserved every original English value and metadata entry byte-for-byte as
   JSON values; source messages were added, not rewritten.
 - European Portuguese and Brazilian Portuguese remain separate; zh and
@@ -110,7 +110,15 @@ listed in the residual inventory.
 - `flutter analyze --no-pub --fatal-infos`: passed, no issues.
 - Focused validation: **291 passed**, 22 files, including every `*_l10n_test`,
   `nextgen_gaps_test`, locale smoke/placeholder tests and discovery-consent tests.
-- Full-suite result is recorded in the final handoff; it must not be inferred
-  from the focused result. The prescribed SSH, PTY/Python and ffmpeg/ffprobe
-  fixtures and worktree-local `TMPDIR` are used. No local Hermes service or
-  model inference is started.
+- Full-suite initial run: **8,333 passed, 24 failed** across 641 non-perf test
+  files. These are visible JSON `testDone` results; hidden loading and
+  setup/teardown hooks are excluded. The 24 failures were corrected without
+  weakening their assertions; the complete 14-file affected subset then passed
+  **159 tests**. Fixes included consent fixture scoping, exact localised
+  provenance/chooser expectations, retained specific file/delivery refusals,
+  compact navigation labels, an embedded-sheet l10n fallback and responsive tip
+  banner actions.
+- A fresh full-suite result on the corrected fixed source is recorded in the
+  final handoff; it must not be inferred by adding focused/regression totals.
+  The prescribed SSH, PTY/Python and ffmpeg/ffprobe fixtures and worktree-local
+  `TMPDIR` are used. No local Hermes service or model inference is started.
