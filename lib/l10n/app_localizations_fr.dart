@@ -12196,4 +12196,210 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'La passerelle ne peut pas enregistrer les fichiers masqués.';
+
+  @override
+  String get rel_admin_choose_provider =>
+      'Choisissez un fournisseur et un modèle.';
+
+  @override
+  String get rel_admin_known_effort => 'Choisissez un niveau d’effort connu.';
+
+  @override
+  String get rel_admin_endpoint_name_required =>
+      'Saisissez un nom pour ce point de terminaison.';
+
+  @override
+  String get rel_admin_endpoint_model_required =>
+      'Saisissez le modèle fourni par ce point de terminaison.';
+
+  @override
+  String get rel_admin_known_api_mode =>
+      'Choisissez Automatique ou un mode API connu.';
+
+  @override
+  String get rel_admin_endpoint_id_invalid =>
+      'Cet identifiant de point de terminaison n’est pas utilisable.';
+
+  @override
+  String get rel_admin_endpoint_https =>
+      'Utilisez HTTPS pour un point de terminaison distant, ou HTTP sur localhost.';
+
+  @override
+  String get rel_admin_key_invalid =>
+      'Cette clé API ne peut pas être enregistrée.';
+
+  @override
+  String get rel_admin_response_shape =>
+      'La réponse de la passerelle n’avait pas la structure attendue.';
+
+  @override
+  String get rel_admin_limits_required =>
+      'Saisissez les limites d’itérations, de simultanéité et de délai avant d’enregistrer.';
+
+  @override
+  String get rel_admin_route_required =>
+      'Chaque route doit avoir un nom et un modèle avant d’être enregistrée.';
+
+  @override
+  String get rel_admin_route_unique =>
+      'Les noms des routes doivent être uniques.';
+
+  @override
+  String get rel_admin_route_default_invalid =>
+      'La route par défaut doit être l’une des routes enregistrées.';
+
+  @override
+  String get rel_admin_policy_required =>
+      'Choisissez une politique avec alerte ou silencieuse pour les références dégradées.';
+
+  @override
+  String get rel_admin_mixture_missing =>
+      'La passerelle n’a renvoyé aucun mélange actif.';
+
+  @override
+  String get rel_admin_mixture_slots_required =>
+      'Indiquez un fournisseur et un modèle pour l’agrégateur et chaque référence.';
+
+  @override
+  String get rel_admin_chat_id_required =>
+      'Saisissez l’identifiant du chat auquel ce changement s’applique.';
+
+  @override
+  String rel_admin_http_error(String status) {
+    return 'La passerelle a renvoyé HTTP $status.';
+  }
+
+  @override
+  String get rel_admin_response_unreadable =>
+      'La réponse de la passerelle n’a pas pu être lue.';
+
+  @override
+  String get rel_admin_connect_before_change =>
+      'Connectez la session active de la passerelle avant de modifier la facturation ou un chat.';
+
+  @override
+  String get rel_admin_operation_unavailable =>
+      'Cette passerelle ne propose pas cette opération.';
+
+  @override
+  String get rel_admin_key_required => 'Saisissez la clé à enregistrer.';
+
+  @override
+  String get rel_admin_key_save_failed =>
+      'La passerelle n’a pas enregistré cette clé.';
+
+  @override
+  String get rel_admin_key_clear_required =>
+      'Choisissez une clé de fournisseur à effacer.';
+
+  @override
+  String get rel_admin_key_clear_failed =>
+      'La passerelle n’a pas effacé cette clé.';
+
+  @override
+  String get rel_admin_endpoint_save_failed =>
+      'La passerelle n’a pas enregistré ce point de terminaison.';
+
+  @override
+  String get rel_admin_endpoint_activate_failed =>
+      'La passerelle n’a pas activé ce point de terminaison.';
+
+  @override
+  String get rel_admin_accounts_secure_required =>
+      'Les comptes fournisseurs nécessitent une passerelle HTTPS authentifiée, ou localhost.';
+
+  @override
+  String get rel_admin_accounts_read_failed =>
+      'Les comptes fournisseurs n’ont pas pu être lus.';
+
+  @override
+  String get rel_admin_account_disconnect_failed =>
+      'La passerelle n’a pas déconnecté ce compte.';
+
+  @override
+  String get rel_admin_account_not_disconnectable =>
+      'Ce compte fournisseur ne peut pas être déconnecté.';
+
+  @override
+  String get rel_admin_backend_required =>
+      'Choisissez l’un des moteurs de délégation disponibles.';
+
+  @override
+  String get rel_admin_backend_save_failed =>
+      'La passerelle n’a pas sélectionné ce moteur.';
+
+  @override
+  String get rel_admin_routes_save_failed =>
+      'La passerelle n’a pas enregistré ces routes.';
+
+  @override
+  String get rel_admin_profile_route_required =>
+      'Chaque route de profil doit avoir un nom de profil.';
+
+  @override
+  String get rel_admin_profile_route_unique =>
+      'Les routes de profil doivent être uniques.';
+
+  @override
+  String get rel_admin_profile_route_default_invalid =>
+      'La route de profil par défaut doit correspondre à l’un des profils autorisés.';
+
+  @override
+  String get rel_admin_profile_routes_save_failed =>
+      'La passerelle n’a pas enregistré ces routes de profil.';
+
+  @override
+  String get rel_admin_limits_save_failed =>
+      'La passerelle n’a pas enregistré ces limites.';
+
+  @override
+  String get rel_admin_mixture_save_failed =>
+      'La passerelle n’a pas enregistré ce mélange.';
+
+  @override
+  String get rel_admin_credit_amount_required =>
+      'Choisissez l’un des montants de crédit proposés.';
+
+  @override
+  String get rel_admin_charge_check_failed =>
+      'Ce débit n’a pas pu être vérifié.';
+
+  @override
+  String get rel_admin_reload_amounts_missing =>
+      'Les montants de recharge automatique n’ont pas été fournis et n’ont donc pas été modifiés.';
+
+  @override
+  String get rel_admin_plan_required => 'Choisissez d’abord une offre.';
+
+  @override
+  String get rel_admin_plan_scheduled_only =>
+      'Seul un changement d’offre programmé peut être confirmé ici.';
+
+  @override
+  String get rel_admin_billing_refused =>
+      'La passerelle a refusé cette demande de facturation.';
+
+  @override
+  String get rel_admin_request_refused =>
+      'La passerelle a refusé cette demande.';
+
+  @override
+  String get rel_admin_endpoint_answered =>
+      'Le point de terminaison a répondu.';
+
+  @override
+  String get rel_admin_endpoint_no_answer =>
+      'Le point de terminaison n’a pas répondu.';
+
+  @override
+  String get rel_admin_charge_unknown =>
+      'Le résultat du débit est inconnu. Il peut encore être finalisé. Consultez le portail avant de réessayer.';
+
+  @override
+  String get rel_admin_connect_before_billing =>
+      'Connectez la session active de la passerelle avant de consulter la facturation. Aucun débit n’est effectué depuis cette page.';
+
+  @override
+  String get rel_admin_preset_required =>
+      'Enregistrez un préréglage avant de l’appliquer.';
 }

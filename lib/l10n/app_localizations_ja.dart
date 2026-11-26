@@ -11712,4 +11712,174 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get release_core_file_save_hidden => 'ゲートウェイでは隠しファイルを保存できません。';
+
+  @override
+  String get rel_admin_choose_provider => 'プロバイダーとモデルを選択してください。';
+
+  @override
+  String get rel_admin_known_effort => '既知の思考レベルを選択してください。';
+
+  @override
+  String get rel_admin_endpoint_name_required => 'このエンドポイントの名前を入力してください。';
+
+  @override
+  String get rel_admin_endpoint_model_required => 'このエンドポイントが提供するモデルを入力してください。';
+
+  @override
+  String get rel_admin_known_api_mode => '自動または既知のAPIモードを選択してください。';
+
+  @override
+  String get rel_admin_endpoint_id_invalid => 'このエンドポイント識別子は使用できません。';
+
+  @override
+  String get rel_admin_endpoint_https =>
+      'リモートエンドポイントにはHTTPS、localhostにはHTTPを使用してください。';
+
+  @override
+  String get rel_admin_key_invalid => 'そのAPIキーは保存できません。';
+
+  @override
+  String get rel_admin_response_shape => 'ゲートウェイの応答が想定された形式と一致しませんでした。';
+
+  @override
+  String get rel_admin_limits_required =>
+      '保存する前に反復回数、同時実行数、タイムアウトの上限を入力してください。';
+
+  @override
+  String get rel_admin_route_required => '保存するには各ルートに名前とモデルが必要です。';
+
+  @override
+  String get rel_admin_route_unique => 'ルート名は一意である必要があります。';
+
+  @override
+  String get rel_admin_route_default_invalid => 'デフォルトルートは保存済みのルートである必要があります。';
+
+  @override
+  String get rel_admin_policy_required =>
+      '参照モデルの機能低下時のポリシーとして通知ありまたはサイレントを選択してください。';
+
+  @override
+  String get rel_admin_mixture_missing => 'ゲートウェイから有効な混合構成が返されませんでした。';
+
+  @override
+  String get rel_admin_mixture_slots_required =>
+      '集約モデルとすべての参照モデルのプロバイダーとモデルを指定してください。';
+
+  @override
+  String get rel_admin_chat_id_required => 'この変更を適用するチャットIDを入力してください。';
+
+  @override
+  String rel_admin_http_error(String status) {
+    return 'ゲートウェイがHTTP $statusを返しました。';
+  }
+
+  @override
+  String get rel_admin_response_unreadable => 'ゲートウェイの応答を読み取れませんでした。';
+
+  @override
+  String get rel_admin_connect_before_change =>
+      '請求またはチャットを変更する前に、ゲートウェイのライブセッションに接続してください。';
+
+  @override
+  String get rel_admin_operation_unavailable => 'このゲートウェイはその操作に対応していません。';
+
+  @override
+  String get rel_admin_key_required => '保存するキーを入力してください。';
+
+  @override
+  String get rel_admin_key_save_failed => 'ゲートウェイはそのキーを保存しませんでした。';
+
+  @override
+  String get rel_admin_key_clear_required => '削除するプロバイダーキーを選択してください。';
+
+  @override
+  String get rel_admin_key_clear_failed => 'ゲートウェイはそのキーを削除しませんでした。';
+
+  @override
+  String get rel_admin_endpoint_save_failed => 'ゲートウェイはそのエンドポイントを保存しませんでした。';
+
+  @override
+  String get rel_admin_endpoint_activate_failed =>
+      'ゲートウェイはそのエンドポイントを有効にしませんでした。';
+
+  @override
+  String get rel_admin_accounts_secure_required =>
+      'プロバイダーアカウントには認証済みのHTTPSゲートウェイまたはlocalhostが必要です。';
+
+  @override
+  String get rel_admin_accounts_read_failed => 'プロバイダーアカウントを読み取れませんでした。';
+
+  @override
+  String get rel_admin_account_disconnect_failed => 'ゲートウェイはそのアカウントを切断しませんでした。';
+
+  @override
+  String get rel_admin_account_not_disconnectable => 'そのプロバイダーアカウントは切断できません。';
+
+  @override
+  String get rel_admin_backend_required => '利用可能な委任バックエンドを選択してください。';
+
+  @override
+  String get rel_admin_backend_save_failed => 'ゲートウェイはそのバックエンドを選択しませんでした。';
+
+  @override
+  String get rel_admin_routes_save_failed => 'ゲートウェイはそれらのルートを保存しませんでした。';
+
+  @override
+  String get rel_admin_profile_route_required => '各プロファイルルートにはプロファイル名が必要です。';
+
+  @override
+  String get rel_admin_profile_route_unique => 'プロファイルルートは一意である必要があります。';
+
+  @override
+  String get rel_admin_profile_route_default_invalid =>
+      'デフォルトのプロファイルルートは許可されたプロファイルのいずれかである必要があります。';
+
+  @override
+  String get rel_admin_profile_routes_save_failed =>
+      'ゲートウェイはそれらのプロファイルルートを保存しませんでした。';
+
+  @override
+  String get rel_admin_limits_save_failed => 'ゲートウェイはそれらの上限を保存しませんでした。';
+
+  @override
+  String get rel_admin_mixture_save_failed => 'ゲートウェイはその混合構成を保存しませんでした。';
+
+  @override
+  String get rel_admin_credit_amount_required => '提示されたクレジット金額から選択してください。';
+
+  @override
+  String get rel_admin_charge_check_failed => 'その請求を確認できませんでした。';
+
+  @override
+  String get rel_admin_reload_amounts_missing =>
+      '自動チャージ金額が指定されていないため、変更されませんでした。';
+
+  @override
+  String get rel_admin_plan_required => '先にプランを選択してください。';
+
+  @override
+  String get rel_admin_plan_scheduled_only => 'ここでは予定されたプラン変更のみ確認できます。';
+
+  @override
+  String get rel_admin_billing_refused => 'ゲートウェイがこの請求リクエストを拒否しました。';
+
+  @override
+  String get rel_admin_request_refused => 'ゲートウェイがこのリクエストを拒否しました。';
+
+  @override
+  String get rel_admin_endpoint_answered => 'エンドポイントが応答しました。';
+
+  @override
+  String get rel_admin_endpoint_no_answer => 'エンドポイントが応答しませんでした。';
+
+  @override
+  String get rel_admin_charge_unknown =>
+      '請求結果が不明です。まだ決済される可能性があります。再試行する前にポータルを確認してください。';
+
+  @override
+  String get rel_admin_connect_before_billing =>
+      '請求情報を確認する前に、ゲートウェイのライブセッションに接続してください。このページからは請求されません。';
+
+  @override
+  String get rel_admin_preset_required => '適用する前にプリセットを保存してください。';
 }

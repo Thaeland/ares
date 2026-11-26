@@ -3314,5 +3314,218 @@
   "release_misc_gateway_unreachable": "Impossible de joindre le point de terminaison de la passerelle {endpoint}.",
   "release_core_schedule_invalid_delivery_target": "Destination de livraison non valide",
   "release_core_file_save_direct_only": "Seul un fichier situé directement dans le répertoire de travail peut être enregistré.",
-  "release_core_file_save_hidden": "La passerelle ne peut pas enregistrer les fichiers masqués."
+  "release_core_file_save_hidden": "La passerelle ne peut pas enregistrer les fichiers masqués.",
+  "rel_admin_choose_provider": "Choisissez un fournisseur et un modèle.",
+  "@rel_admin_choose_provider": {
+    "description": "Release administration: Choose a provider and a model."
+  },
+  "rel_admin_known_effort": "Choisissez un niveau d’effort connu.",
+  "@rel_admin_known_effort": {
+    "description": "Release administration: Choose a known effort level."
+  },
+  "rel_admin_endpoint_name_required": "Saisissez un nom pour ce point de terminaison.",
+  "@rel_admin_endpoint_name_required": {
+    "description": "Release administration: Enter a name for this endpoint."
+  },
+  "rel_admin_endpoint_model_required": "Saisissez le modèle fourni par ce point de terminaison.",
+  "@rel_admin_endpoint_model_required": {
+    "description": "Release administration: Enter the model this endpoint serves."
+  },
+  "rel_admin_known_api_mode": "Choisissez Automatique ou un mode API connu.",
+  "@rel_admin_known_api_mode": {
+    "description": "Release administration: Choose Auto or a known API mode."
+  },
+  "rel_admin_endpoint_id_invalid": "Cet identifiant de point de terminaison n’est pas utilisable.",
+  "@rel_admin_endpoint_id_invalid": {
+    "description": "Release administration: This endpoint identifier is not usable."
+  },
+  "rel_admin_endpoint_https": "Utilisez HTTPS pour un point de terminaison distant, ou HTTP sur localhost.",
+  "@rel_admin_endpoint_https": {
+    "description": "Release administration: Use HTTPS for a remote endpoint, or HTTP on localhost."
+  },
+  "rel_admin_key_invalid": "Cette clé API ne peut pas être enregistrée.",
+  "@rel_admin_key_invalid": {
+    "description": "Release administration: That API key cannot be saved."
+  },
+  "rel_admin_response_shape": "La réponse de la passerelle n’avait pas la structure attendue.",
+  "@rel_admin_response_shape": {
+    "description": "Release administration: The gateway response did not match the expected shape."
+  },
+  "rel_admin_limits_required": "Saisissez les limites d’itérations, de simultanéité et de délai avant d’enregistrer.",
+  "@rel_admin_limits_required": {
+    "description": "Release administration: Enter iteration, concurrency and timeout limits before saving."
+  },
+  "rel_admin_route_required": "Chaque route doit avoir un nom et un modèle avant d’être enregistrée.",
+  "@rel_admin_route_required": {
+    "description": "Release administration: Each route needs a name and a model before it can be saved."
+  },
+  "rel_admin_route_unique": "Les noms des routes doivent être uniques.",
+  "@rel_admin_route_unique": {
+    "description": "Release administration: Route names must be unique."
+  },
+  "rel_admin_route_default_invalid": "La route par défaut doit être l’une des routes enregistrées.",
+  "@rel_admin_route_default_invalid": {
+    "description": "Release administration: The default route has to be one of the saved routes."
+  },
+  "rel_admin_policy_required": "Choisissez une politique avec alerte ou silencieuse pour les références dégradées.",
+  "@rel_admin_policy_required": {
+    "description": "Release administration: Choose a loud or silent degraded-reference policy."
+  },
+  "rel_admin_mixture_missing": "La passerelle n’a renvoyé aucun mélange actif.",
+  "@rel_admin_mixture_missing": {
+    "description": "Release administration: The gateway did not return an active mixture."
+  },
+  "rel_admin_mixture_slots_required": "Indiquez un fournisseur et un modèle pour l’agrégateur et chaque référence.",
+  "@rel_admin_mixture_slots_required": {
+    "description": "Release administration: Name a provider and model for the aggregator and every reference."
+  },
+  "rel_admin_chat_id_required": "Saisissez l’identifiant du chat auquel ce changement s’applique.",
+  "@rel_admin_chat_id_required": {
+    "description": "Release administration: Enter the chat id this change applies to."
+  },
+  "rel_admin_http_error": "La passerelle a renvoyé HTTP {status}.",
+  "@rel_admin_http_error": {
+    "description": "Release administration: The gateway returned HTTP {status}.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_response_unreadable": "La réponse de la passerelle n’a pas pu être lue.",
+  "@rel_admin_response_unreadable": {
+    "description": "Release administration: The gateway response could not be read."
+  },
+  "rel_admin_connect_before_change": "Connectez la session active de la passerelle avant de modifier la facturation ou un chat.",
+  "@rel_admin_connect_before_change": {
+    "description": "Release administration: Connect the live gateway session before changing billing or a chat."
+  },
+  "rel_admin_operation_unavailable": "Cette passerelle ne propose pas cette opération.",
+  "@rel_admin_operation_unavailable": {
+    "description": "Release administration: This gateway does not provide that operation."
+  },
+  "rel_admin_key_required": "Saisissez la clé à enregistrer.",
+  "@rel_admin_key_required": {
+    "description": "Release administration: Enter the key to save."
+  },
+  "rel_admin_key_save_failed": "La passerelle n’a pas enregistré cette clé.",
+  "@rel_admin_key_save_failed": {
+    "description": "Release administration: The gateway did not save that key."
+  },
+  "rel_admin_key_clear_required": "Choisissez une clé de fournisseur à effacer.",
+  "@rel_admin_key_clear_required": {
+    "description": "Release administration: Choose a provider key to clear."
+  },
+  "rel_admin_key_clear_failed": "La passerelle n’a pas effacé cette clé.",
+  "@rel_admin_key_clear_failed": {
+    "description": "Release administration: The gateway did not clear that key."
+  },
+  "rel_admin_endpoint_save_failed": "La passerelle n’a pas enregistré ce point de terminaison.",
+  "@rel_admin_endpoint_save_failed": {
+    "description": "Release administration: The gateway did not save that endpoint."
+  },
+  "rel_admin_endpoint_activate_failed": "La passerelle n’a pas activé ce point de terminaison.",
+  "@rel_admin_endpoint_activate_failed": {
+    "description": "Release administration: The gateway did not activate that endpoint."
+  },
+  "rel_admin_accounts_secure_required": "Les comptes fournisseurs nécessitent une passerelle HTTPS authentifiée, ou localhost.",
+  "@rel_admin_accounts_secure_required": {
+    "description": "Release administration: Provider accounts need an authenticated HTTPS gateway, or localhost."
+  },
+  "rel_admin_accounts_read_failed": "Les comptes fournisseurs n’ont pas pu être lus.",
+  "@rel_admin_accounts_read_failed": {
+    "description": "Release administration: Provider accounts could not be read."
+  },
+  "rel_admin_account_disconnect_failed": "La passerelle n’a pas déconnecté ce compte.",
+  "@rel_admin_account_disconnect_failed": {
+    "description": "Release administration: The gateway did not disconnect that account."
+  },
+  "rel_admin_account_not_disconnectable": "Ce compte fournisseur ne peut pas être déconnecté.",
+  "@rel_admin_account_not_disconnectable": {
+    "description": "Release administration: That provider account cannot be disconnected."
+  },
+  "rel_admin_backend_required": "Choisissez l’un des moteurs de délégation disponibles.",
+  "@rel_admin_backend_required": {
+    "description": "Release administration: Choose one of the available delegation backends."
+  },
+  "rel_admin_backend_save_failed": "La passerelle n’a pas sélectionné ce moteur.",
+  "@rel_admin_backend_save_failed": {
+    "description": "Release administration: The gateway did not select that backend."
+  },
+  "rel_admin_routes_save_failed": "La passerelle n’a pas enregistré ces routes.",
+  "@rel_admin_routes_save_failed": {
+    "description": "Release administration: The gateway did not save those routes."
+  },
+  "rel_admin_profile_route_required": "Chaque route de profil doit avoir un nom de profil.",
+  "@rel_admin_profile_route_required": {
+    "description": "Release administration: Each profile route needs a profile name."
+  },
+  "rel_admin_profile_route_unique": "Les routes de profil doivent être uniques.",
+  "@rel_admin_profile_route_unique": {
+    "description": "Release administration: Profile routes must be unique."
+  },
+  "rel_admin_profile_route_default_invalid": "La route de profil par défaut doit correspondre à l’un des profils autorisés.",
+  "@rel_admin_profile_route_default_invalid": {
+    "description": "Release administration: The default profile route has to be one of the allowed profiles."
+  },
+  "rel_admin_profile_routes_save_failed": "La passerelle n’a pas enregistré ces routes de profil.",
+  "@rel_admin_profile_routes_save_failed": {
+    "description": "Release administration: The gateway did not save those profile routes."
+  },
+  "rel_admin_limits_save_failed": "La passerelle n’a pas enregistré ces limites.",
+  "@rel_admin_limits_save_failed": {
+    "description": "Release administration: The gateway did not save those limits."
+  },
+  "rel_admin_mixture_save_failed": "La passerelle n’a pas enregistré ce mélange.",
+  "@rel_admin_mixture_save_failed": {
+    "description": "Release administration: The gateway did not save that mixture."
+  },
+  "rel_admin_credit_amount_required": "Choisissez l’un des montants de crédit proposés.",
+  "@rel_admin_credit_amount_required": {
+    "description": "Release administration: Choose one of the offered credit amounts."
+  },
+  "rel_admin_charge_check_failed": "Ce débit n’a pas pu être vérifié.",
+  "@rel_admin_charge_check_failed": {
+    "description": "Release administration: That charge could not be checked."
+  },
+  "rel_admin_reload_amounts_missing": "Les montants de recharge automatique n’ont pas été fournis et n’ont donc pas été modifiés.",
+  "@rel_admin_reload_amounts_missing": {
+    "description": "Release administration: Auto-reload amounts were not provided, so they were not changed."
+  },
+  "rel_admin_plan_required": "Choisissez d’abord une offre.",
+  "@rel_admin_plan_required": {
+    "description": "Release administration: Choose a plan first."
+  },
+  "rel_admin_plan_scheduled_only": "Seul un changement d’offre programmé peut être confirmé ici.",
+  "@rel_admin_plan_scheduled_only": {
+    "description": "Release administration: Only a scheduled plan change can be confirmed from here."
+  },
+  "rel_admin_billing_refused": "La passerelle a refusé cette demande de facturation.",
+  "@rel_admin_billing_refused": {
+    "description": "Release administration: The gateway refused this billing request."
+  },
+  "rel_admin_request_refused": "La passerelle a refusé cette demande.",
+  "@rel_admin_request_refused": {
+    "description": "Release administration: The gateway refused this request."
+  },
+  "rel_admin_endpoint_answered": "Le point de terminaison a répondu.",
+  "@rel_admin_endpoint_answered": {
+    "description": "Release administration: The endpoint answered."
+  },
+  "rel_admin_endpoint_no_answer": "Le point de terminaison n’a pas répondu.",
+  "@rel_admin_endpoint_no_answer": {
+    "description": "Release administration: The endpoint did not answer."
+  },
+  "rel_admin_charge_unknown": "Le résultat du débit est inconnu. Il peut encore être finalisé. Consultez le portail avant de réessayer.",
+  "@rel_admin_charge_unknown": {
+    "description": "Release administration: Charge outcome unknown. It may still settle. Check the portal before retrying."
+  },
+  "rel_admin_connect_before_billing": "Connectez la session active de la passerelle avant de consulter la facturation. Aucun débit n’est effectué depuis cette page.",
+  "@rel_admin_connect_before_billing": {
+    "description": "Release administration: Connect the live gateway session before reading billing. Nothing is charged from this page."
+  },
+  "rel_admin_preset_required": "Enregistrez un préréglage avant de l’appliquer.",
+  "@rel_admin_preset_required": {
+    "description": "Release administration: Save a preset before applying it."
+  }
 }

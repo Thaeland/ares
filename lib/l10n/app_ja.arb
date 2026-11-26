@@ -3314,5 +3314,218 @@
   "release_misc_gateway_unreachable": "ゲートウェイのエンドポイント{endpoint}に接続できません。",
   "release_core_schedule_invalid_delivery_target": "配信先が無効です",
   "release_core_file_save_direct_only": "作業ディレクトリ直下のファイルのみ保存できます。",
-  "release_core_file_save_hidden": "ゲートウェイでは隠しファイルを保存できません。"
+  "release_core_file_save_hidden": "ゲートウェイでは隠しファイルを保存できません。",
+  "rel_admin_choose_provider": "プロバイダーとモデルを選択してください。",
+  "@rel_admin_choose_provider": {
+    "description": "Release administration: Choose a provider and a model."
+  },
+  "rel_admin_known_effort": "既知の思考レベルを選択してください。",
+  "@rel_admin_known_effort": {
+    "description": "Release administration: Choose a known effort level."
+  },
+  "rel_admin_endpoint_name_required": "このエンドポイントの名前を入力してください。",
+  "@rel_admin_endpoint_name_required": {
+    "description": "Release administration: Enter a name for this endpoint."
+  },
+  "rel_admin_endpoint_model_required": "このエンドポイントが提供するモデルを入力してください。",
+  "@rel_admin_endpoint_model_required": {
+    "description": "Release administration: Enter the model this endpoint serves."
+  },
+  "rel_admin_known_api_mode": "自動または既知のAPIモードを選択してください。",
+  "@rel_admin_known_api_mode": {
+    "description": "Release administration: Choose Auto or a known API mode."
+  },
+  "rel_admin_endpoint_id_invalid": "このエンドポイント識別子は使用できません。",
+  "@rel_admin_endpoint_id_invalid": {
+    "description": "Release administration: This endpoint identifier is not usable."
+  },
+  "rel_admin_endpoint_https": "リモートエンドポイントにはHTTPS、localhostにはHTTPを使用してください。",
+  "@rel_admin_endpoint_https": {
+    "description": "Release administration: Use HTTPS for a remote endpoint, or HTTP on localhost."
+  },
+  "rel_admin_key_invalid": "そのAPIキーは保存できません。",
+  "@rel_admin_key_invalid": {
+    "description": "Release administration: That API key cannot be saved."
+  },
+  "rel_admin_response_shape": "ゲートウェイの応答が想定された形式と一致しませんでした。",
+  "@rel_admin_response_shape": {
+    "description": "Release administration: The gateway response did not match the expected shape."
+  },
+  "rel_admin_limits_required": "保存する前に反復回数、同時実行数、タイムアウトの上限を入力してください。",
+  "@rel_admin_limits_required": {
+    "description": "Release administration: Enter iteration, concurrency and timeout limits before saving."
+  },
+  "rel_admin_route_required": "保存するには各ルートに名前とモデルが必要です。",
+  "@rel_admin_route_required": {
+    "description": "Release administration: Each route needs a name and a model before it can be saved."
+  },
+  "rel_admin_route_unique": "ルート名は一意である必要があります。",
+  "@rel_admin_route_unique": {
+    "description": "Release administration: Route names must be unique."
+  },
+  "rel_admin_route_default_invalid": "デフォルトルートは保存済みのルートである必要があります。",
+  "@rel_admin_route_default_invalid": {
+    "description": "Release administration: The default route has to be one of the saved routes."
+  },
+  "rel_admin_policy_required": "参照モデルの機能低下時のポリシーとして通知ありまたはサイレントを選択してください。",
+  "@rel_admin_policy_required": {
+    "description": "Release administration: Choose a loud or silent degraded-reference policy."
+  },
+  "rel_admin_mixture_missing": "ゲートウェイから有効な混合構成が返されませんでした。",
+  "@rel_admin_mixture_missing": {
+    "description": "Release administration: The gateway did not return an active mixture."
+  },
+  "rel_admin_mixture_slots_required": "集約モデルとすべての参照モデルのプロバイダーとモデルを指定してください。",
+  "@rel_admin_mixture_slots_required": {
+    "description": "Release administration: Name a provider and model for the aggregator and every reference."
+  },
+  "rel_admin_chat_id_required": "この変更を適用するチャットIDを入力してください。",
+  "@rel_admin_chat_id_required": {
+    "description": "Release administration: Enter the chat id this change applies to."
+  },
+  "rel_admin_http_error": "ゲートウェイがHTTP {status}を返しました。",
+  "@rel_admin_http_error": {
+    "description": "Release administration: The gateway returned HTTP {status}.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_response_unreadable": "ゲートウェイの応答を読み取れませんでした。",
+  "@rel_admin_response_unreadable": {
+    "description": "Release administration: The gateway response could not be read."
+  },
+  "rel_admin_connect_before_change": "請求またはチャットを変更する前に、ゲートウェイのライブセッションに接続してください。",
+  "@rel_admin_connect_before_change": {
+    "description": "Release administration: Connect the live gateway session before changing billing or a chat."
+  },
+  "rel_admin_operation_unavailable": "このゲートウェイはその操作に対応していません。",
+  "@rel_admin_operation_unavailable": {
+    "description": "Release administration: This gateway does not provide that operation."
+  },
+  "rel_admin_key_required": "保存するキーを入力してください。",
+  "@rel_admin_key_required": {
+    "description": "Release administration: Enter the key to save."
+  },
+  "rel_admin_key_save_failed": "ゲートウェイはそのキーを保存しませんでした。",
+  "@rel_admin_key_save_failed": {
+    "description": "Release administration: The gateway did not save that key."
+  },
+  "rel_admin_key_clear_required": "削除するプロバイダーキーを選択してください。",
+  "@rel_admin_key_clear_required": {
+    "description": "Release administration: Choose a provider key to clear."
+  },
+  "rel_admin_key_clear_failed": "ゲートウェイはそのキーを削除しませんでした。",
+  "@rel_admin_key_clear_failed": {
+    "description": "Release administration: The gateway did not clear that key."
+  },
+  "rel_admin_endpoint_save_failed": "ゲートウェイはそのエンドポイントを保存しませんでした。",
+  "@rel_admin_endpoint_save_failed": {
+    "description": "Release administration: The gateway did not save that endpoint."
+  },
+  "rel_admin_endpoint_activate_failed": "ゲートウェイはそのエンドポイントを有効にしませんでした。",
+  "@rel_admin_endpoint_activate_failed": {
+    "description": "Release administration: The gateway did not activate that endpoint."
+  },
+  "rel_admin_accounts_secure_required": "プロバイダーアカウントには認証済みのHTTPSゲートウェイまたはlocalhostが必要です。",
+  "@rel_admin_accounts_secure_required": {
+    "description": "Release administration: Provider accounts need an authenticated HTTPS gateway, or localhost."
+  },
+  "rel_admin_accounts_read_failed": "プロバイダーアカウントを読み取れませんでした。",
+  "@rel_admin_accounts_read_failed": {
+    "description": "Release administration: Provider accounts could not be read."
+  },
+  "rel_admin_account_disconnect_failed": "ゲートウェイはそのアカウントを切断しませんでした。",
+  "@rel_admin_account_disconnect_failed": {
+    "description": "Release administration: The gateway did not disconnect that account."
+  },
+  "rel_admin_account_not_disconnectable": "そのプロバイダーアカウントは切断できません。",
+  "@rel_admin_account_not_disconnectable": {
+    "description": "Release administration: That provider account cannot be disconnected."
+  },
+  "rel_admin_backend_required": "利用可能な委任バックエンドを選択してください。",
+  "@rel_admin_backend_required": {
+    "description": "Release administration: Choose one of the available delegation backends."
+  },
+  "rel_admin_backend_save_failed": "ゲートウェイはそのバックエンドを選択しませんでした。",
+  "@rel_admin_backend_save_failed": {
+    "description": "Release administration: The gateway did not select that backend."
+  },
+  "rel_admin_routes_save_failed": "ゲートウェイはそれらのルートを保存しませんでした。",
+  "@rel_admin_routes_save_failed": {
+    "description": "Release administration: The gateway did not save those routes."
+  },
+  "rel_admin_profile_route_required": "各プロファイルルートにはプロファイル名が必要です。",
+  "@rel_admin_profile_route_required": {
+    "description": "Release administration: Each profile route needs a profile name."
+  },
+  "rel_admin_profile_route_unique": "プロファイルルートは一意である必要があります。",
+  "@rel_admin_profile_route_unique": {
+    "description": "Release administration: Profile routes must be unique."
+  },
+  "rel_admin_profile_route_default_invalid": "デフォルトのプロファイルルートは許可されたプロファイルのいずれかである必要があります。",
+  "@rel_admin_profile_route_default_invalid": {
+    "description": "Release administration: The default profile route has to be one of the allowed profiles."
+  },
+  "rel_admin_profile_routes_save_failed": "ゲートウェイはそれらのプロファイルルートを保存しませんでした。",
+  "@rel_admin_profile_routes_save_failed": {
+    "description": "Release administration: The gateway did not save those profile routes."
+  },
+  "rel_admin_limits_save_failed": "ゲートウェイはそれらの上限を保存しませんでした。",
+  "@rel_admin_limits_save_failed": {
+    "description": "Release administration: The gateway did not save those limits."
+  },
+  "rel_admin_mixture_save_failed": "ゲートウェイはその混合構成を保存しませんでした。",
+  "@rel_admin_mixture_save_failed": {
+    "description": "Release administration: The gateway did not save that mixture."
+  },
+  "rel_admin_credit_amount_required": "提示されたクレジット金額から選択してください。",
+  "@rel_admin_credit_amount_required": {
+    "description": "Release administration: Choose one of the offered credit amounts."
+  },
+  "rel_admin_charge_check_failed": "その請求を確認できませんでした。",
+  "@rel_admin_charge_check_failed": {
+    "description": "Release administration: That charge could not be checked."
+  },
+  "rel_admin_reload_amounts_missing": "自動チャージ金額が指定されていないため、変更されませんでした。",
+  "@rel_admin_reload_amounts_missing": {
+    "description": "Release administration: Auto-reload amounts were not provided, so they were not changed."
+  },
+  "rel_admin_plan_required": "先にプランを選択してください。",
+  "@rel_admin_plan_required": {
+    "description": "Release administration: Choose a plan first."
+  },
+  "rel_admin_plan_scheduled_only": "ここでは予定されたプラン変更のみ確認できます。",
+  "@rel_admin_plan_scheduled_only": {
+    "description": "Release administration: Only a scheduled plan change can be confirmed from here."
+  },
+  "rel_admin_billing_refused": "ゲートウェイがこの請求リクエストを拒否しました。",
+  "@rel_admin_billing_refused": {
+    "description": "Release administration: The gateway refused this billing request."
+  },
+  "rel_admin_request_refused": "ゲートウェイがこのリクエストを拒否しました。",
+  "@rel_admin_request_refused": {
+    "description": "Release administration: The gateway refused this request."
+  },
+  "rel_admin_endpoint_answered": "エンドポイントが応答しました。",
+  "@rel_admin_endpoint_answered": {
+    "description": "Release administration: The endpoint answered."
+  },
+  "rel_admin_endpoint_no_answer": "エンドポイントが応答しませんでした。",
+  "@rel_admin_endpoint_no_answer": {
+    "description": "Release administration: The endpoint did not answer."
+  },
+  "rel_admin_charge_unknown": "請求結果が不明です。まだ決済される可能性があります。再試行する前にポータルを確認してください。",
+  "@rel_admin_charge_unknown": {
+    "description": "Release administration: Charge outcome unknown. It may still settle. Check the portal before retrying."
+  },
+  "rel_admin_connect_before_billing": "請求情報を確認する前に、ゲートウェイのライブセッションに接続してください。このページからは請求されません。",
+  "@rel_admin_connect_before_billing": {
+    "description": "Release administration: Connect the live gateway session before reading billing. Nothing is charged from this page."
+  },
+  "rel_admin_preset_required": "適用する前にプリセットを保存してください。",
+  "@rel_admin_preset_required": {
+    "description": "Release administration: Save a preset before applying it."
+  }
 }

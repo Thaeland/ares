@@ -4260,5 +4260,218 @@
   "release_misc_gateway_unreachable": "يتعذّر الوصول إلى نقطة اتصال البوابة {endpoint}.",
   "release_core_schedule_invalid_delivery_target": "وجهة التسليم غير صالحة",
   "release_core_file_save_direct_only": "لا يمكن حفظ إلا ملف موجود مباشرة في دليل العمل.",
-  "release_core_file_save_hidden": "لا يمكن للبوابة حفظ الملفات المخفية."
+  "release_core_file_save_hidden": "لا يمكن للبوابة حفظ الملفات المخفية.",
+  "rel_admin_choose_provider": "اختر موفرًا ونموذجًا.",
+  "@rel_admin_choose_provider": {
+    "description": "Release administration: Choose a provider and a model."
+  },
+  "rel_admin_known_effort": "اختر مستوى جهد معروفًا.",
+  "@rel_admin_known_effort": {
+    "description": "Release administration: Choose a known effort level."
+  },
+  "rel_admin_endpoint_name_required": "أدخل اسمًا لنقطة النهاية هذه.",
+  "@rel_admin_endpoint_name_required": {
+    "description": "Release administration: Enter a name for this endpoint."
+  },
+  "rel_admin_endpoint_model_required": "أدخل النموذج الذي تقدمه نقطة النهاية هذه.",
+  "@rel_admin_endpoint_model_required": {
+    "description": "Release administration: Enter the model this endpoint serves."
+  },
+  "rel_admin_known_api_mode": "اختر الوضع التلقائي أو وضع API معروفًا.",
+  "@rel_admin_known_api_mode": {
+    "description": "Release administration: Choose Auto or a known API mode."
+  },
+  "rel_admin_endpoint_id_invalid": "معرّف نقطة النهاية هذا غير قابل للاستخدام.",
+  "@rel_admin_endpoint_id_invalid": {
+    "description": "Release administration: This endpoint identifier is not usable."
+  },
+  "rel_admin_endpoint_https": "استخدم HTTPS لنقطة نهاية بعيدة، أو HTTP على localhost.",
+  "@rel_admin_endpoint_https": {
+    "description": "Release administration: Use HTTPS for a remote endpoint, or HTTP on localhost."
+  },
+  "rel_admin_key_invalid": "لا يمكن حفظ مفتاح API هذا.",
+  "@rel_admin_key_invalid": {
+    "description": "Release administration: That API key cannot be saved."
+  },
+  "rel_admin_response_shape": "لم تتطابق استجابة البوابة مع البنية المتوقعة.",
+  "@rel_admin_response_shape": {
+    "description": "Release administration: The gateway response did not match the expected shape."
+  },
+  "rel_admin_limits_required": "أدخل حدود التكرار والتزامن والمهلة قبل الحفظ.",
+  "@rel_admin_limits_required": {
+    "description": "Release administration: Enter iteration, concurrency and timeout limits before saving."
+  },
+  "rel_admin_route_required": "تحتاج كل قاعدة توجيه إلى اسم ونموذج قبل حفظها.",
+  "@rel_admin_route_required": {
+    "description": "Release administration: Each route needs a name and a model before it can be saved."
+  },
+  "rel_admin_route_unique": "يجب أن تكون أسماء قواعد التوجيه فريدة.",
+  "@rel_admin_route_unique": {
+    "description": "Release administration: Route names must be unique."
+  },
+  "rel_admin_route_default_invalid": "يجب أن تكون قاعدة التوجيه الافتراضية إحدى القواعد المحفوظة.",
+  "@rel_admin_route_default_invalid": {
+    "description": "Release administration: The default route has to be one of the saved routes."
+  },
+  "rel_admin_policy_required": "اختر سياسة مرجعية متدهورة مع تنبيه أو صامتة.",
+  "@rel_admin_policy_required": {
+    "description": "Release administration: Choose a loud or silent degraded-reference policy."
+  },
+  "rel_admin_mixture_missing": "لم تُرجع البوابة مزيجًا نشطًا.",
+  "@rel_admin_mixture_missing": {
+    "description": "Release administration: The gateway did not return an active mixture."
+  },
+  "rel_admin_mixture_slots_required": "حدد موفرًا ونموذجًا للمجمّع ولكل مرجع.",
+  "@rel_admin_mixture_slots_required": {
+    "description": "Release administration: Name a provider and model for the aggregator and every reference."
+  },
+  "rel_admin_chat_id_required": "أدخل معرّف المحادثة التي ينطبق عليها هذا التغيير.",
+  "@rel_admin_chat_id_required": {
+    "description": "Release administration: Enter the chat id this change applies to."
+  },
+  "rel_admin_http_error": "أرجعت البوابة HTTP {status}.",
+  "@rel_admin_http_error": {
+    "description": "Release administration: The gateway returned HTTP {status}.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_response_unreadable": "تعذّرت قراءة استجابة البوابة.",
+  "@rel_admin_response_unreadable": {
+    "description": "Release administration: The gateway response could not be read."
+  },
+  "rel_admin_connect_before_change": "صِل جلسة البوابة المباشرة قبل تغيير الفوترة أو المحادثة.",
+  "@rel_admin_connect_before_change": {
+    "description": "Release administration: Connect the live gateway session before changing billing or a chat."
+  },
+  "rel_admin_operation_unavailable": "هذه البوابة لا توفر هذه العملية.",
+  "@rel_admin_operation_unavailable": {
+    "description": "Release administration: This gateway does not provide that operation."
+  },
+  "rel_admin_key_required": "أدخل المفتاح المراد حفظه.",
+  "@rel_admin_key_required": {
+    "description": "Release administration: Enter the key to save."
+  },
+  "rel_admin_key_save_failed": "لم تحفظ البوابة هذا المفتاح.",
+  "@rel_admin_key_save_failed": {
+    "description": "Release administration: The gateway did not save that key."
+  },
+  "rel_admin_key_clear_required": "اختر مفتاح موفر لمسحه.",
+  "@rel_admin_key_clear_required": {
+    "description": "Release administration: Choose a provider key to clear."
+  },
+  "rel_admin_key_clear_failed": "لم تمسح البوابة هذا المفتاح.",
+  "@rel_admin_key_clear_failed": {
+    "description": "Release administration: The gateway did not clear that key."
+  },
+  "rel_admin_endpoint_save_failed": "لم تحفظ البوابة نقطة النهاية هذه.",
+  "@rel_admin_endpoint_save_failed": {
+    "description": "Release administration: The gateway did not save that endpoint."
+  },
+  "rel_admin_endpoint_activate_failed": "لم تُفعّل البوابة نقطة النهاية هذه.",
+  "@rel_admin_endpoint_activate_failed": {
+    "description": "Release administration: The gateway did not activate that endpoint."
+  },
+  "rel_admin_accounts_secure_required": "تحتاج حسابات الموفر إلى بوابة HTTPS موثّقة أو localhost.",
+  "@rel_admin_accounts_secure_required": {
+    "description": "Release administration: Provider accounts need an authenticated HTTPS gateway, or localhost."
+  },
+  "rel_admin_accounts_read_failed": "تعذّرت قراءة حسابات الموفر.",
+  "@rel_admin_accounts_read_failed": {
+    "description": "Release administration: Provider accounts could not be read."
+  },
+  "rel_admin_account_disconnect_failed": "لم تفصل البوابة هذا الحساب.",
+  "@rel_admin_account_disconnect_failed": {
+    "description": "Release administration: The gateway did not disconnect that account."
+  },
+  "rel_admin_account_not_disconnectable": "لا يمكن فصل حساب الموفر هذا.",
+  "@rel_admin_account_not_disconnectable": {
+    "description": "Release administration: That provider account cannot be disconnected."
+  },
+  "rel_admin_backend_required": "اختر إحدى واجهات التفويض الخلفية المتاحة.",
+  "@rel_admin_backend_required": {
+    "description": "Release administration: Choose one of the available delegation backends."
+  },
+  "rel_admin_backend_save_failed": "لم تحدد البوابة تلك الواجهة الخلفية.",
+  "@rel_admin_backend_save_failed": {
+    "description": "Release administration: The gateway did not select that backend."
+  },
+  "rel_admin_routes_save_failed": "لم تحفظ البوابة قواعد التوجيه تلك.",
+  "@rel_admin_routes_save_failed": {
+    "description": "Release administration: The gateway did not save those routes."
+  },
+  "rel_admin_profile_route_required": "تحتاج كل قاعدة توجيه لملف تعريف إلى اسم ملف التعريف.",
+  "@rel_admin_profile_route_required": {
+    "description": "Release administration: Each profile route needs a profile name."
+  },
+  "rel_admin_profile_route_unique": "يجب أن تكون قواعد توجيه ملفات التعريف فريدة.",
+  "@rel_admin_profile_route_unique": {
+    "description": "Release administration: Profile routes must be unique."
+  },
+  "rel_admin_profile_route_default_invalid": "يجب أن تكون قاعدة توجيه ملف التعريف الافتراضية أحد ملفات التعريف المسموح بها.",
+  "@rel_admin_profile_route_default_invalid": {
+    "description": "Release administration: The default profile route has to be one of the allowed profiles."
+  },
+  "rel_admin_profile_routes_save_failed": "لم تحفظ البوابة قواعد توجيه ملفات التعريف تلك.",
+  "@rel_admin_profile_routes_save_failed": {
+    "description": "Release administration: The gateway did not save those profile routes."
+  },
+  "rel_admin_limits_save_failed": "لم تحفظ البوابة تلك الحدود.",
+  "@rel_admin_limits_save_failed": {
+    "description": "Release administration: The gateway did not save those limits."
+  },
+  "rel_admin_mixture_save_failed": "لم تحفظ البوابة ذلك المزيج.",
+  "@rel_admin_mixture_save_failed": {
+    "description": "Release administration: The gateway did not save that mixture."
+  },
+  "rel_admin_credit_amount_required": "اختر أحد مبالغ الرصيد المعروضة.",
+  "@rel_admin_credit_amount_required": {
+    "description": "Release administration: Choose one of the offered credit amounts."
+  },
+  "rel_admin_charge_check_failed": "تعذّر التحقق من تلك الرسوم.",
+  "@rel_admin_charge_check_failed": {
+    "description": "Release administration: That charge could not be checked."
+  },
+  "rel_admin_reload_amounts_missing": "لم تُقدَّم مبالغ إعادة الشحن التلقائي، لذا لم تُغيَّر.",
+  "@rel_admin_reload_amounts_missing": {
+    "description": "Release administration: Auto-reload amounts were not provided, so they were not changed."
+  },
+  "rel_admin_plan_required": "اختر خطة أولًا.",
+  "@rel_admin_plan_required": {
+    "description": "Release administration: Choose a plan first."
+  },
+  "rel_admin_plan_scheduled_only": "يمكن تأكيد تغيير خطة مجدول فقط من هنا.",
+  "@rel_admin_plan_scheduled_only": {
+    "description": "Release administration: Only a scheduled plan change can be confirmed from here."
+  },
+  "rel_admin_billing_refused": "رفضت البوابة طلب الفوترة هذا.",
+  "@rel_admin_billing_refused": {
+    "description": "Release administration: The gateway refused this billing request."
+  },
+  "rel_admin_request_refused": "رفضت البوابة هذا الطلب.",
+  "@rel_admin_request_refused": {
+    "description": "Release administration: The gateway refused this request."
+  },
+  "rel_admin_endpoint_answered": "استجابت نقطة النهاية.",
+  "@rel_admin_endpoint_answered": {
+    "description": "Release administration: The endpoint answered."
+  },
+  "rel_admin_endpoint_no_answer": "لم تستجب نقطة النهاية.",
+  "@rel_admin_endpoint_no_answer": {
+    "description": "Release administration: The endpoint did not answer."
+  },
+  "rel_admin_charge_unknown": "نتيجة الرسوم غير معروفة. قد تُسوّى لاحقًا. تحقّق من البوابة الإلكترونية قبل إعادة المحاولة.",
+  "@rel_admin_charge_unknown": {
+    "description": "Release administration: Charge outcome unknown. It may still settle. Check the portal before retrying."
+  },
+  "rel_admin_connect_before_billing": "صِل جلسة البوابة المباشرة قبل قراءة الفوترة. لا تُفرض أي رسوم من هذه الصفحة.",
+  "@rel_admin_connect_before_billing": {
+    "description": "Release administration: Connect the live gateway session before reading billing. Nothing is charged from this page."
+  },
+  "rel_admin_preset_required": "احفظ إعدادًا مسبقًا قبل تطبيقه.",
+  "@rel_admin_preset_required": {
+    "description": "Release administration: Save a preset before applying it."
+  }
 }

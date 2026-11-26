@@ -12164,4 +12164,207 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'La puerta de enlace no puede guardar archivos ocultos.';
+
+  @override
+  String get rel_admin_choose_provider => 'Elige un proveedor y un modelo.';
+
+  @override
+  String get rel_admin_known_effort => 'Elige un nivel de esfuerzo conocido.';
+
+  @override
+  String get rel_admin_endpoint_name_required =>
+      'Introduce un nombre para este punto de conexión.';
+
+  @override
+  String get rel_admin_endpoint_model_required =>
+      'Introduce el modelo que ofrece este punto de conexión.';
+
+  @override
+  String get rel_admin_known_api_mode =>
+      'Elige Automático o un modo de API conocido.';
+
+  @override
+  String get rel_admin_endpoint_id_invalid =>
+      'Este identificador de punto de conexión no se puede usar.';
+
+  @override
+  String get rel_admin_endpoint_https =>
+      'Usa HTTPS para un punto de conexión remoto o HTTP en localhost.';
+
+  @override
+  String get rel_admin_key_invalid => 'No se puede guardar esa clave de API.';
+
+  @override
+  String get rel_admin_response_shape =>
+      'La respuesta de la puerta de enlace no tenía la estructura esperada.';
+
+  @override
+  String get rel_admin_limits_required =>
+      'Introduce los límites de iteraciones, concurrencia y tiempo de espera antes de guardar.';
+
+  @override
+  String get rel_admin_route_required =>
+      'Cada ruta necesita un nombre y un modelo para poder guardarse.';
+
+  @override
+  String get rel_admin_route_unique =>
+      'Los nombres de las rutas deben ser únicos.';
+
+  @override
+  String get rel_admin_route_default_invalid =>
+      'La ruta predeterminada debe ser una de las rutas guardadas.';
+
+  @override
+  String get rel_admin_policy_required =>
+      'Elige una política con avisos o silenciosa para referencias degradadas.';
+
+  @override
+  String get rel_admin_mixture_missing =>
+      'La puerta de enlace no devolvió una mezcla activa.';
+
+  @override
+  String get rel_admin_mixture_slots_required =>
+      'Indica un proveedor y un modelo para el agregador y cada referencia.';
+
+  @override
+  String get rel_admin_chat_id_required =>
+      'Introduce el ID del chat al que se aplica este cambio.';
+
+  @override
+  String rel_admin_http_error(String status) {
+    return 'La puerta de enlace devolvió HTTP $status.';
+  }
+
+  @override
+  String get rel_admin_response_unreadable =>
+      'No se pudo leer la respuesta de la puerta de enlace.';
+
+  @override
+  String get rel_admin_connect_before_change =>
+      'Conecta la sesión en vivo de la puerta de enlace antes de cambiar la facturación o un chat.';
+
+  @override
+  String get rel_admin_operation_unavailable =>
+      'Esta puerta de enlace no ofrece esa operación.';
+
+  @override
+  String get rel_admin_key_required =>
+      'Introduce la clave que quieres guardar.';
+
+  @override
+  String get rel_admin_key_save_failed =>
+      'La puerta de enlace no guardó esa clave.';
+
+  @override
+  String get rel_admin_key_clear_required =>
+      'Elige una clave de proveedor para borrarla.';
+
+  @override
+  String get rel_admin_key_clear_failed =>
+      'La puerta de enlace no borró esa clave.';
+
+  @override
+  String get rel_admin_endpoint_save_failed =>
+      'La puerta de enlace no guardó ese punto de conexión.';
+
+  @override
+  String get rel_admin_endpoint_activate_failed =>
+      'La puerta de enlace no activó ese punto de conexión.';
+
+  @override
+  String get rel_admin_accounts_secure_required =>
+      'Las cuentas de proveedores necesitan una puerta de enlace HTTPS autenticada o localhost.';
+
+  @override
+  String get rel_admin_accounts_read_failed =>
+      'No se pudieron leer las cuentas de proveedores.';
+
+  @override
+  String get rel_admin_account_disconnect_failed =>
+      'La puerta de enlace no desconectó esa cuenta.';
+
+  @override
+  String get rel_admin_account_not_disconnectable =>
+      'No se puede desconectar esa cuenta de proveedor.';
+
+  @override
+  String get rel_admin_backend_required =>
+      'Elige uno de los motores de delegación disponibles.';
+
+  @override
+  String get rel_admin_backend_save_failed =>
+      'La puerta de enlace no seleccionó ese motor.';
+
+  @override
+  String get rel_admin_routes_save_failed =>
+      'La puerta de enlace no guardó esas rutas.';
+
+  @override
+  String get rel_admin_profile_route_required =>
+      'Cada ruta de perfil necesita un nombre de perfil.';
+
+  @override
+  String get rel_admin_profile_route_unique =>
+      'Las rutas de perfil deben ser únicas.';
+
+  @override
+  String get rel_admin_profile_route_default_invalid =>
+      'La ruta de perfil predeterminada debe ser uno de los perfiles permitidos.';
+
+  @override
+  String get rel_admin_profile_routes_save_failed =>
+      'La puerta de enlace no guardó esas rutas de perfil.';
+
+  @override
+  String get rel_admin_limits_save_failed =>
+      'La puerta de enlace no guardó esos límites.';
+
+  @override
+  String get rel_admin_mixture_save_failed =>
+      'La puerta de enlace no guardó esa mezcla.';
+
+  @override
+  String get rel_admin_credit_amount_required =>
+      'Elige uno de los importes de crédito ofrecidos.';
+
+  @override
+  String get rel_admin_charge_check_failed => 'No se pudo comprobar ese cargo.';
+
+  @override
+  String get rel_admin_reload_amounts_missing =>
+      'No se proporcionaron los importes de recarga automática, por lo que no se cambiaron.';
+
+  @override
+  String get rel_admin_plan_required => 'Elige primero un plan.';
+
+  @override
+  String get rel_admin_plan_scheduled_only =>
+      'Desde aquí solo se puede confirmar un cambio de plan programado.';
+
+  @override
+  String get rel_admin_billing_refused =>
+      'La puerta de enlace rechazó esta solicitud de facturación.';
+
+  @override
+  String get rel_admin_request_refused =>
+      'La puerta de enlace rechazó esta solicitud.';
+
+  @override
+  String get rel_admin_endpoint_answered => 'El punto de conexión respondió.';
+
+  @override
+  String get rel_admin_endpoint_no_answer =>
+      'El punto de conexión no respondió.';
+
+  @override
+  String get rel_admin_charge_unknown =>
+      'Se desconoce el resultado del cargo. Aún podría liquidarse. Consulta el portal antes de reintentar.';
+
+  @override
+  String get rel_admin_connect_before_billing =>
+      'Conecta la sesión en vivo de la puerta de enlace antes de consultar la facturación. No se cobra nada desde esta página.';
+
+  @override
+  String get rel_admin_preset_required =>
+      'Guarda un preajuste antes de aplicarlo.';
 }

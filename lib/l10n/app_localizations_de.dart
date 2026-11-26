@@ -12171,4 +12171,208 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'Versteckte Dateien können vom Gateway nicht gespeichert werden.';
+
+  @override
+  String get rel_admin_choose_provider =>
+      'Wähle einen Anbieter und ein Modell.';
+
+  @override
+  String get rel_admin_known_effort => 'Wähle eine bekannte Aufwandsstufe.';
+
+  @override
+  String get rel_admin_endpoint_name_required =>
+      'Gib einen Namen für diesen Endpunkt ein.';
+
+  @override
+  String get rel_admin_endpoint_model_required =>
+      'Gib das Modell ein, das dieser Endpunkt bereitstellt.';
+
+  @override
+  String get rel_admin_known_api_mode =>
+      'Wähle Automatisch oder einen bekannten API-Modus.';
+
+  @override
+  String get rel_admin_endpoint_id_invalid =>
+      'Diese Endpunktkennung ist nicht verwendbar.';
+
+  @override
+  String get rel_admin_endpoint_https =>
+      'Verwende HTTPS für einen entfernten Endpunkt oder HTTP auf localhost.';
+
+  @override
+  String get rel_admin_key_invalid =>
+      'Dieser API-Schlüssel kann nicht gespeichert werden.';
+
+  @override
+  String get rel_admin_response_shape =>
+      'Die Gateway-Antwort hatte nicht die erwartete Struktur.';
+
+  @override
+  String get rel_admin_limits_required =>
+      'Gib vor dem Speichern Grenzen für Iterationen, Parallelität und Zeitlimit ein.';
+
+  @override
+  String get rel_admin_route_required =>
+      'Jede Route benötigt vor dem Speichern einen Namen und ein Modell.';
+
+  @override
+  String get rel_admin_route_unique => 'Routennamen müssen eindeutig sein.';
+
+  @override
+  String get rel_admin_route_default_invalid =>
+      'Die Standardroute muss eine der gespeicherten Routen sein.';
+
+  @override
+  String get rel_admin_policy_required =>
+      'Wähle eine laute oder stille Richtlinie für beeinträchtigte Referenzen.';
+
+  @override
+  String get rel_admin_mixture_missing =>
+      'Das Gateway hat keine aktive Mischung zurückgegeben.';
+
+  @override
+  String get rel_admin_mixture_slots_required =>
+      'Gib für den Aggregator und jede Referenz einen Anbieter und ein Modell an.';
+
+  @override
+  String get rel_admin_chat_id_required =>
+      'Gib die Chat-ID ein, für die diese Änderung gilt.';
+
+  @override
+  String rel_admin_http_error(String status) {
+    return 'Das Gateway hat HTTP $status zurückgegeben.';
+  }
+
+  @override
+  String get rel_admin_response_unreadable =>
+      'Die Gateway-Antwort konnte nicht gelesen werden.';
+
+  @override
+  String get rel_admin_connect_before_change =>
+      'Verbinde die Live-Gateway-Sitzung, bevor du Abrechnung oder Chat änderst.';
+
+  @override
+  String get rel_admin_operation_unavailable =>
+      'Dieses Gateway bietet diesen Vorgang nicht an.';
+
+  @override
+  String get rel_admin_key_required => 'Gib den zu speichernden Schlüssel ein.';
+
+  @override
+  String get rel_admin_key_save_failed =>
+      'Das Gateway hat diesen Schlüssel nicht gespeichert.';
+
+  @override
+  String get rel_admin_key_clear_required =>
+      'Wähle einen Anbieterschlüssel zum Löschen.';
+
+  @override
+  String get rel_admin_key_clear_failed =>
+      'Das Gateway hat diesen Schlüssel nicht gelöscht.';
+
+  @override
+  String get rel_admin_endpoint_save_failed =>
+      'Das Gateway hat diesen Endpunkt nicht gespeichert.';
+
+  @override
+  String get rel_admin_endpoint_activate_failed =>
+      'Das Gateway hat diesen Endpunkt nicht aktiviert.';
+
+  @override
+  String get rel_admin_accounts_secure_required =>
+      'Anbieterkonten benötigen ein authentifiziertes HTTPS-Gateway oder localhost.';
+
+  @override
+  String get rel_admin_accounts_read_failed =>
+      'Anbieterkonten konnten nicht gelesen werden.';
+
+  @override
+  String get rel_admin_account_disconnect_failed =>
+      'Das Gateway hat dieses Konto nicht getrennt.';
+
+  @override
+  String get rel_admin_account_not_disconnectable =>
+      'Dieses Anbieterkonto kann nicht getrennt werden.';
+
+  @override
+  String get rel_admin_backend_required =>
+      'Wähle eines der verfügbaren Delegations-Backends.';
+
+  @override
+  String get rel_admin_backend_save_failed =>
+      'Das Gateway hat dieses Backend nicht ausgewählt.';
+
+  @override
+  String get rel_admin_routes_save_failed =>
+      'Das Gateway hat diese Routen nicht gespeichert.';
+
+  @override
+  String get rel_admin_profile_route_required =>
+      'Jede Profilroute benötigt einen Profilnamen.';
+
+  @override
+  String get rel_admin_profile_route_unique =>
+      'Profilrouten müssen eindeutig sein.';
+
+  @override
+  String get rel_admin_profile_route_default_invalid =>
+      'Die Standard-Profilroute muss eines der erlaubten Profile sein.';
+
+  @override
+  String get rel_admin_profile_routes_save_failed =>
+      'Das Gateway hat diese Profilrouten nicht gespeichert.';
+
+  @override
+  String get rel_admin_limits_save_failed =>
+      'Das Gateway hat diese Grenzen nicht gespeichert.';
+
+  @override
+  String get rel_admin_mixture_save_failed =>
+      'Das Gateway hat diese Mischung nicht gespeichert.';
+
+  @override
+  String get rel_admin_credit_amount_required =>
+      'Wähle einen der angebotenen Guthabenbeträge.';
+
+  @override
+  String get rel_admin_charge_check_failed =>
+      'Diese Abbuchung konnte nicht geprüft werden.';
+
+  @override
+  String get rel_admin_reload_amounts_missing =>
+      'Es wurden keine Beträge für die automatische Aufladung angegeben, daher wurden sie nicht geändert.';
+
+  @override
+  String get rel_admin_plan_required => 'Wähle zuerst einen Tarif.';
+
+  @override
+  String get rel_admin_plan_scheduled_only =>
+      'Hier kann nur ein geplanter Tarifwechsel bestätigt werden.';
+
+  @override
+  String get rel_admin_billing_refused =>
+      'Das Gateway hat diese Abrechnungsanfrage abgelehnt.';
+
+  @override
+  String get rel_admin_request_refused =>
+      'Das Gateway hat diese Anfrage abgelehnt.';
+
+  @override
+  String get rel_admin_endpoint_answered => 'Der Endpunkt hat geantwortet.';
+
+  @override
+  String get rel_admin_endpoint_no_answer =>
+      'Der Endpunkt hat nicht geantwortet.';
+
+  @override
+  String get rel_admin_charge_unknown =>
+      'Ausgang der Abbuchung unbekannt. Sie kann noch abgeschlossen werden. Prüfe vor einem erneuten Versuch das Portal.';
+
+  @override
+  String get rel_admin_connect_before_billing =>
+      'Verbinde die Live-Gateway-Sitzung, bevor du die Abrechnung liest. Auf dieser Seite wird nichts berechnet.';
+
+  @override
+  String get rel_admin_preset_required =>
+      'Speichere eine Voreinstellung, bevor du sie anwendest.';
 }

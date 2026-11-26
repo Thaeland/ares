@@ -19675,6 +19675,318 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hidden files can\'t be saved by the gateway.'**
   String get release_core_file_save_hidden;
+
+  /// Release administration: Choose a provider and a model.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a provider and a model.'**
+  String get rel_admin_choose_provider;
+
+  /// Release administration: Choose a known effort level.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a known effort level.'**
+  String get rel_admin_known_effort;
+
+  /// Release administration: Enter a name for this endpoint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a name for this endpoint.'**
+  String get rel_admin_endpoint_name_required;
+
+  /// Release administration: Enter the model this endpoint serves.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the model this endpoint serves.'**
+  String get rel_admin_endpoint_model_required;
+
+  /// Release administration: Choose Auto or a known API mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Auto or a known API mode.'**
+  String get rel_admin_known_api_mode;
+
+  /// Release administration: This endpoint identifier is not usable.
+  ///
+  /// In en, this message translates to:
+  /// **'This endpoint identifier is not usable.'**
+  String get rel_admin_endpoint_id_invalid;
+
+  /// Release administration: Use HTTPS for a remote endpoint, or HTTP on localhost.
+  ///
+  /// In en, this message translates to:
+  /// **'Use HTTPS for a remote endpoint, or HTTP on localhost.'**
+  String get rel_admin_endpoint_https;
+
+  /// Release administration: That API key cannot be saved.
+  ///
+  /// In en, this message translates to:
+  /// **'That API key cannot be saved.'**
+  String get rel_admin_key_invalid;
+
+  /// Release administration: The gateway response did not match the expected shape.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway response did not match the expected shape.'**
+  String get rel_admin_response_shape;
+
+  /// Release administration: Enter iteration, concurrency and timeout limits before saving.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter iteration, concurrency and timeout limits before saving.'**
+  String get rel_admin_limits_required;
+
+  /// Release administration: Each route needs a name and a model before it can be saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Each route needs a name and a model before it can be saved.'**
+  String get rel_admin_route_required;
+
+  /// Release administration: Route names must be unique.
+  ///
+  /// In en, this message translates to:
+  /// **'Route names must be unique.'**
+  String get rel_admin_route_unique;
+
+  /// Release administration: The default route has to be one of the saved routes.
+  ///
+  /// In en, this message translates to:
+  /// **'The default route has to be one of the saved routes.'**
+  String get rel_admin_route_default_invalid;
+
+  /// Release administration: Choose a loud or silent degraded-reference policy.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a loud or silent degraded-reference policy.'**
+  String get rel_admin_policy_required;
+
+  /// Release administration: The gateway did not return an active mixture.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway did not return an active mixture.'**
+  String get rel_admin_mixture_missing;
+
+  /// Release administration: Name a provider and model for the aggregator and every reference.
+  ///
+  /// In en, this message translates to:
+  /// **'Name a provider and model for the aggregator and every reference.'**
+  String get rel_admin_mixture_slots_required;
+
+  /// Release administration: Enter the chat id this change applies to.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the chat id this change applies to.'**
+  String get rel_admin_chat_id_required;
+
+  /// Release administration: The gateway returned HTTP {status}.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway returned HTTP {status}.'**
+  String rel_admin_http_error(String status);
+
+  /// Release administration: The gateway response could not be read.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway response could not be read.'**
+  String get rel_admin_response_unreadable;
+
+  /// Release administration: Connect the live gateway session before changing billing or a chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect the live gateway session before changing billing or a chat.'**
+  String get rel_admin_connect_before_change;
+
+  /// Release administration: This gateway does not provide that operation.
+  ///
+  /// In en, this message translates to:
+  /// **'This gateway does not provide that operation.'**
+  String get rel_admin_operation_unavailable;
+
+  /// Release administration: Enter the key to save.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the key to save.'**
+  String get rel_admin_key_required;
+
+  /// Release administration: The gateway did not save that key.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway did not save that key.'**
+  String get rel_admin_key_save_failed;
+
+  /// Release administration: Choose a provider key to clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a provider key to clear.'**
+  String get rel_admin_key_clear_required;
+
+  /// Release administration: The gateway did not clear that key.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway did not clear that key.'**
+  String get rel_admin_key_clear_failed;
+
+  /// Release administration: The gateway did not save that endpoint.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway did not save that endpoint.'**
+  String get rel_admin_endpoint_save_failed;
+
+  /// Release administration: The gateway did not activate that endpoint.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway did not activate that endpoint.'**
+  String get rel_admin_endpoint_activate_failed;
+
+  /// Release administration: Provider accounts need an authenticated HTTPS gateway, or localhost.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider accounts need an authenticated HTTPS gateway, or localhost.'**
+  String get rel_admin_accounts_secure_required;
+
+  /// Release administration: Provider accounts could not be read.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider accounts could not be read.'**
+  String get rel_admin_accounts_read_failed;
+
+  /// Release administration: The gateway did not disconnect that account.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway did not disconnect that account.'**
+  String get rel_admin_account_disconnect_failed;
+
+  /// Release administration: That provider account cannot be disconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'That provider account cannot be disconnected.'**
+  String get rel_admin_account_not_disconnectable;
+
+  /// Release administration: Choose one of the available delegation backends.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose one of the available delegation backends.'**
+  String get rel_admin_backend_required;
+
+  /// Release administration: The gateway did not select that backend.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway did not select that backend.'**
+  String get rel_admin_backend_save_failed;
+
+  /// Release administration: The gateway did not save those routes.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway did not save those routes.'**
+  String get rel_admin_routes_save_failed;
+
+  /// Release administration: Each profile route needs a profile name.
+  ///
+  /// In en, this message translates to:
+  /// **'Each profile route needs a profile name.'**
+  String get rel_admin_profile_route_required;
+
+  /// Release administration: Profile routes must be unique.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile routes must be unique.'**
+  String get rel_admin_profile_route_unique;
+
+  /// Release administration: The default profile route has to be one of the allowed profiles.
+  ///
+  /// In en, this message translates to:
+  /// **'The default profile route has to be one of the allowed profiles.'**
+  String get rel_admin_profile_route_default_invalid;
+
+  /// Release administration: The gateway did not save those profile routes.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway did not save those profile routes.'**
+  String get rel_admin_profile_routes_save_failed;
+
+  /// Release administration: The gateway did not save those limits.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway did not save those limits.'**
+  String get rel_admin_limits_save_failed;
+
+  /// Release administration: The gateway did not save that mixture.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway did not save that mixture.'**
+  String get rel_admin_mixture_save_failed;
+
+  /// Release administration: Choose one of the offered credit amounts.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose one of the offered credit amounts.'**
+  String get rel_admin_credit_amount_required;
+
+  /// Release administration: That charge could not be checked.
+  ///
+  /// In en, this message translates to:
+  /// **'That charge could not be checked.'**
+  String get rel_admin_charge_check_failed;
+
+  /// Release administration: Auto-reload amounts were not provided, so they were not changed.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-reload amounts were not provided, so they were not changed.'**
+  String get rel_admin_reload_amounts_missing;
+
+  /// Release administration: Choose a plan first.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a plan first.'**
+  String get rel_admin_plan_required;
+
+  /// Release administration: Only a scheduled plan change can be confirmed from here.
+  ///
+  /// In en, this message translates to:
+  /// **'Only a scheduled plan change can be confirmed from here.'**
+  String get rel_admin_plan_scheduled_only;
+
+  /// Release administration: The gateway refused this billing request.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway refused this billing request.'**
+  String get rel_admin_billing_refused;
+
+  /// Release administration: The gateway refused this request.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway refused this request.'**
+  String get rel_admin_request_refused;
+
+  /// Release administration: The endpoint answered.
+  ///
+  /// In en, this message translates to:
+  /// **'The endpoint answered.'**
+  String get rel_admin_endpoint_answered;
+
+  /// Release administration: The endpoint did not answer.
+  ///
+  /// In en, this message translates to:
+  /// **'The endpoint did not answer.'**
+  String get rel_admin_endpoint_no_answer;
+
+  /// Release administration: Charge outcome unknown. It may still settle. Check the portal before retrying.
+  ///
+  /// In en, this message translates to:
+  /// **'Charge outcome unknown. It may still settle. Check the portal before retrying.'**
+  String get rel_admin_charge_unknown;
+
+  /// Release administration: Connect the live gateway session before reading billing. Nothing is charged from this page.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect the live gateway session before reading billing. Nothing is charged from this page.'**
+  String get rel_admin_connect_before_billing;
+
+  /// Release administration: Save a preset before applying it.
+  ///
+  /// In en, this message translates to:
+  /// **'Save a preset before applying it.'**
+  String get rel_admin_preset_required;
 }
 
 class _AppLocalizationsDelegate

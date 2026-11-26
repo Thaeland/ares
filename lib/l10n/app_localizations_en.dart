@@ -12025,4 +12025,199 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'Hidden files can\'t be saved by the gateway.';
+
+  @override
+  String get rel_admin_choose_provider => 'Choose a provider and a model.';
+
+  @override
+  String get rel_admin_known_effort => 'Choose a known effort level.';
+
+  @override
+  String get rel_admin_endpoint_name_required =>
+      'Enter a name for this endpoint.';
+
+  @override
+  String get rel_admin_endpoint_model_required =>
+      'Enter the model this endpoint serves.';
+
+  @override
+  String get rel_admin_known_api_mode => 'Choose Auto or a known API mode.';
+
+  @override
+  String get rel_admin_endpoint_id_invalid =>
+      'This endpoint identifier is not usable.';
+
+  @override
+  String get rel_admin_endpoint_https =>
+      'Use HTTPS for a remote endpoint, or HTTP on localhost.';
+
+  @override
+  String get rel_admin_key_invalid => 'That API key cannot be saved.';
+
+  @override
+  String get rel_admin_response_shape =>
+      'The gateway response did not match the expected shape.';
+
+  @override
+  String get rel_admin_limits_required =>
+      'Enter iteration, concurrency and timeout limits before saving.';
+
+  @override
+  String get rel_admin_route_required =>
+      'Each route needs a name and a model before it can be saved.';
+
+  @override
+  String get rel_admin_route_unique => 'Route names must be unique.';
+
+  @override
+  String get rel_admin_route_default_invalid =>
+      'The default route has to be one of the saved routes.';
+
+  @override
+  String get rel_admin_policy_required =>
+      'Choose a loud or silent degraded-reference policy.';
+
+  @override
+  String get rel_admin_mixture_missing =>
+      'The gateway did not return an active mixture.';
+
+  @override
+  String get rel_admin_mixture_slots_required =>
+      'Name a provider and model for the aggregator and every reference.';
+
+  @override
+  String get rel_admin_chat_id_required =>
+      'Enter the chat id this change applies to.';
+
+  @override
+  String rel_admin_http_error(String status) {
+    return 'The gateway returned HTTP $status.';
+  }
+
+  @override
+  String get rel_admin_response_unreadable =>
+      'The gateway response could not be read.';
+
+  @override
+  String get rel_admin_connect_before_change =>
+      'Connect the live gateway session before changing billing or a chat.';
+
+  @override
+  String get rel_admin_operation_unavailable =>
+      'This gateway does not provide that operation.';
+
+  @override
+  String get rel_admin_key_required => 'Enter the key to save.';
+
+  @override
+  String get rel_admin_key_save_failed => 'The gateway did not save that key.';
+
+  @override
+  String get rel_admin_key_clear_required => 'Choose a provider key to clear.';
+
+  @override
+  String get rel_admin_key_clear_failed =>
+      'The gateway did not clear that key.';
+
+  @override
+  String get rel_admin_endpoint_save_failed =>
+      'The gateway did not save that endpoint.';
+
+  @override
+  String get rel_admin_endpoint_activate_failed =>
+      'The gateway did not activate that endpoint.';
+
+  @override
+  String get rel_admin_accounts_secure_required =>
+      'Provider accounts need an authenticated HTTPS gateway, or localhost.';
+
+  @override
+  String get rel_admin_accounts_read_failed =>
+      'Provider accounts could not be read.';
+
+  @override
+  String get rel_admin_account_disconnect_failed =>
+      'The gateway did not disconnect that account.';
+
+  @override
+  String get rel_admin_account_not_disconnectable =>
+      'That provider account cannot be disconnected.';
+
+  @override
+  String get rel_admin_backend_required =>
+      'Choose one of the available delegation backends.';
+
+  @override
+  String get rel_admin_backend_save_failed =>
+      'The gateway did not select that backend.';
+
+  @override
+  String get rel_admin_routes_save_failed =>
+      'The gateway did not save those routes.';
+
+  @override
+  String get rel_admin_profile_route_required =>
+      'Each profile route needs a profile name.';
+
+  @override
+  String get rel_admin_profile_route_unique => 'Profile routes must be unique.';
+
+  @override
+  String get rel_admin_profile_route_default_invalid =>
+      'The default profile route has to be one of the allowed profiles.';
+
+  @override
+  String get rel_admin_profile_routes_save_failed =>
+      'The gateway did not save those profile routes.';
+
+  @override
+  String get rel_admin_limits_save_failed =>
+      'The gateway did not save those limits.';
+
+  @override
+  String get rel_admin_mixture_save_failed =>
+      'The gateway did not save that mixture.';
+
+  @override
+  String get rel_admin_credit_amount_required =>
+      'Choose one of the offered credit amounts.';
+
+  @override
+  String get rel_admin_charge_check_failed =>
+      'That charge could not be checked.';
+
+  @override
+  String get rel_admin_reload_amounts_missing =>
+      'Auto-reload amounts were not provided, so they were not changed.';
+
+  @override
+  String get rel_admin_plan_required => 'Choose a plan first.';
+
+  @override
+  String get rel_admin_plan_scheduled_only =>
+      'Only a scheduled plan change can be confirmed from here.';
+
+  @override
+  String get rel_admin_billing_refused =>
+      'The gateway refused this billing request.';
+
+  @override
+  String get rel_admin_request_refused => 'The gateway refused this request.';
+
+  @override
+  String get rel_admin_endpoint_answered => 'The endpoint answered.';
+
+  @override
+  String get rel_admin_endpoint_no_answer => 'The endpoint did not answer.';
+
+  @override
+  String get rel_admin_charge_unknown =>
+      'Charge outcome unknown. It may still settle. Check the portal before retrying.';
+
+  @override
+  String get rel_admin_connect_before_billing =>
+      'Connect the live gateway session before reading billing. Nothing is charged from this page.';
+
+  @override
+  String get rel_admin_preset_required => 'Save a preset before applying it.';
 }

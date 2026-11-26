@@ -3314,5 +3314,218 @@
   "release_misc_gateway_unreachable": "Não é possível aceder ao endpoint {endpoint} do gateway.",
   "release_core_schedule_invalid_delivery_target": "Destino de entrega inválido",
   "release_core_file_save_direct_only": "Só é possível guardar um ficheiro diretamente no diretório de trabalho.",
-  "release_core_file_save_hidden": "O gateway não pode guardar ficheiros ocultos."
+  "release_core_file_save_hidden": "O gateway não pode guardar ficheiros ocultos.",
+  "rel_admin_choose_provider": "Escolha um fornecedor e um modelo.",
+  "@rel_admin_choose_provider": {
+    "description": "Release administration: Choose a provider and a model."
+  },
+  "rel_admin_known_effort": "Escolha um nível de esforço conhecido.",
+  "@rel_admin_known_effort": {
+    "description": "Release administration: Choose a known effort level."
+  },
+  "rel_admin_endpoint_name_required": "Introduza um nome para este ponto de ligação.",
+  "@rel_admin_endpoint_name_required": {
+    "description": "Release administration: Enter a name for this endpoint."
+  },
+  "rel_admin_endpoint_model_required": "Introduza o modelo disponibilizado por este ponto de ligação.",
+  "@rel_admin_endpoint_model_required": {
+    "description": "Release administration: Enter the model this endpoint serves."
+  },
+  "rel_admin_known_api_mode": "Escolha Automático ou um modo de API conhecido.",
+  "@rel_admin_known_api_mode": {
+    "description": "Release administration: Choose Auto or a known API mode."
+  },
+  "rel_admin_endpoint_id_invalid": "Este identificador de ponto de ligação não pode ser utilizado.",
+  "@rel_admin_endpoint_id_invalid": {
+    "description": "Release administration: This endpoint identifier is not usable."
+  },
+  "rel_admin_endpoint_https": "Utilize HTTPS para um ponto de ligação remoto ou HTTP em localhost.",
+  "@rel_admin_endpoint_https": {
+    "description": "Release administration: Use HTTPS for a remote endpoint, or HTTP on localhost."
+  },
+  "rel_admin_key_invalid": "Não é possível guardar essa chave de API.",
+  "@rel_admin_key_invalid": {
+    "description": "Release administration: That API key cannot be saved."
+  },
+  "rel_admin_response_shape": "A resposta do gateway não correspondeu à estrutura esperada.",
+  "@rel_admin_response_shape": {
+    "description": "Release administration: The gateway response did not match the expected shape."
+  },
+  "rel_admin_limits_required": "Introduza os limites de iterações, simultaneidade e tempo de espera antes de guardar.",
+  "@rel_admin_limits_required": {
+    "description": "Release administration: Enter iteration, concurrency and timeout limits before saving."
+  },
+  "rel_admin_route_required": "Cada rota precisa de um nome e de um modelo antes de ser guardada.",
+  "@rel_admin_route_required": {
+    "description": "Release administration: Each route needs a name and a model before it can be saved."
+  },
+  "rel_admin_route_unique": "Os nomes das rotas têm de ser únicos.",
+  "@rel_admin_route_unique": {
+    "description": "Release administration: Route names must be unique."
+  },
+  "rel_admin_route_default_invalid": "A rota predefinida tem de ser uma das rotas guardadas.",
+  "@rel_admin_route_default_invalid": {
+    "description": "Release administration: The default route has to be one of the saved routes."
+  },
+  "rel_admin_policy_required": "Escolha uma política com aviso ou silenciosa para referências degradadas.",
+  "@rel_admin_policy_required": {
+    "description": "Release administration: Choose a loud or silent degraded-reference policy."
+  },
+  "rel_admin_mixture_missing": "O gateway não devolveu uma mistura ativa.",
+  "@rel_admin_mixture_missing": {
+    "description": "Release administration: The gateway did not return an active mixture."
+  },
+  "rel_admin_mixture_slots_required": "Indique um fornecedor e um modelo para o agregador e para cada referência.",
+  "@rel_admin_mixture_slots_required": {
+    "description": "Release administration: Name a provider and model for the aggregator and every reference."
+  },
+  "rel_admin_chat_id_required": "Introduza o ID da conversa a que esta alteração se aplica.",
+  "@rel_admin_chat_id_required": {
+    "description": "Release administration: Enter the chat id this change applies to."
+  },
+  "rel_admin_http_error": "O gateway devolveu HTTP {status}.",
+  "@rel_admin_http_error": {
+    "description": "Release administration: The gateway returned HTTP {status}.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_response_unreadable": "Não foi possível ler a resposta do gateway.",
+  "@rel_admin_response_unreadable": {
+    "description": "Release administration: The gateway response could not be read."
+  },
+  "rel_admin_connect_before_change": "Ligue a sessão ativa do gateway antes de alterar a faturação ou uma conversa.",
+  "@rel_admin_connect_before_change": {
+    "description": "Release administration: Connect the live gateway session before changing billing or a chat."
+  },
+  "rel_admin_operation_unavailable": "Este gateway não disponibiliza essa operação.",
+  "@rel_admin_operation_unavailable": {
+    "description": "Release administration: This gateway does not provide that operation."
+  },
+  "rel_admin_key_required": "Introduza a chave a guardar.",
+  "@rel_admin_key_required": {
+    "description": "Release administration: Enter the key to save."
+  },
+  "rel_admin_key_save_failed": "O gateway não guardou essa chave.",
+  "@rel_admin_key_save_failed": {
+    "description": "Release administration: The gateway did not save that key."
+  },
+  "rel_admin_key_clear_required": "Escolha uma chave de fornecedor para apagar.",
+  "@rel_admin_key_clear_required": {
+    "description": "Release administration: Choose a provider key to clear."
+  },
+  "rel_admin_key_clear_failed": "O gateway não apagou essa chave.",
+  "@rel_admin_key_clear_failed": {
+    "description": "Release administration: The gateway did not clear that key."
+  },
+  "rel_admin_endpoint_save_failed": "O gateway não guardou esse ponto de ligação.",
+  "@rel_admin_endpoint_save_failed": {
+    "description": "Release administration: The gateway did not save that endpoint."
+  },
+  "rel_admin_endpoint_activate_failed": "O gateway não ativou esse ponto de ligação.",
+  "@rel_admin_endpoint_activate_failed": {
+    "description": "Release administration: The gateway did not activate that endpoint."
+  },
+  "rel_admin_accounts_secure_required": "As contas de fornecedores requerem um gateway HTTPS autenticado ou localhost.",
+  "@rel_admin_accounts_secure_required": {
+    "description": "Release administration: Provider accounts need an authenticated HTTPS gateway, or localhost."
+  },
+  "rel_admin_accounts_read_failed": "Não foi possível ler as contas de fornecedores.",
+  "@rel_admin_accounts_read_failed": {
+    "description": "Release administration: Provider accounts could not be read."
+  },
+  "rel_admin_account_disconnect_failed": "O gateway não desligou essa conta.",
+  "@rel_admin_account_disconnect_failed": {
+    "description": "Release administration: The gateway did not disconnect that account."
+  },
+  "rel_admin_account_not_disconnectable": "Não é possível desligar essa conta de fornecedor.",
+  "@rel_admin_account_not_disconnectable": {
+    "description": "Release administration: That provider account cannot be disconnected."
+  },
+  "rel_admin_backend_required": "Escolha um dos backends de delegação disponíveis.",
+  "@rel_admin_backend_required": {
+    "description": "Release administration: Choose one of the available delegation backends."
+  },
+  "rel_admin_backend_save_failed": "O gateway não selecionou esse backend.",
+  "@rel_admin_backend_save_failed": {
+    "description": "Release administration: The gateway did not select that backend."
+  },
+  "rel_admin_routes_save_failed": "O gateway não guardou essas rotas.",
+  "@rel_admin_routes_save_failed": {
+    "description": "Release administration: The gateway did not save those routes."
+  },
+  "rel_admin_profile_route_required": "Cada rota de perfil precisa de um nome de perfil.",
+  "@rel_admin_profile_route_required": {
+    "description": "Release administration: Each profile route needs a profile name."
+  },
+  "rel_admin_profile_route_unique": "As rotas de perfil têm de ser únicas.",
+  "@rel_admin_profile_route_unique": {
+    "description": "Release administration: Profile routes must be unique."
+  },
+  "rel_admin_profile_route_default_invalid": "A rota de perfil predefinida tem de ser um dos perfis permitidos.",
+  "@rel_admin_profile_route_default_invalid": {
+    "description": "Release administration: The default profile route has to be one of the allowed profiles."
+  },
+  "rel_admin_profile_routes_save_failed": "O gateway não guardou essas rotas de perfil.",
+  "@rel_admin_profile_routes_save_failed": {
+    "description": "Release administration: The gateway did not save those profile routes."
+  },
+  "rel_admin_limits_save_failed": "O gateway não guardou esses limites.",
+  "@rel_admin_limits_save_failed": {
+    "description": "Release administration: The gateway did not save those limits."
+  },
+  "rel_admin_mixture_save_failed": "O gateway não guardou essa mistura.",
+  "@rel_admin_mixture_save_failed": {
+    "description": "Release administration: The gateway did not save that mixture."
+  },
+  "rel_admin_credit_amount_required": "Escolha um dos montantes de crédito apresentados.",
+  "@rel_admin_credit_amount_required": {
+    "description": "Release administration: Choose one of the offered credit amounts."
+  },
+  "rel_admin_charge_check_failed": "Não foi possível verificar essa cobrança.",
+  "@rel_admin_charge_check_failed": {
+    "description": "Release administration: That charge could not be checked."
+  },
+  "rel_admin_reload_amounts_missing": "Os montantes de recarga automática não foram fornecidos, pelo que não foram alterados.",
+  "@rel_admin_reload_amounts_missing": {
+    "description": "Release administration: Auto-reload amounts were not provided, so they were not changed."
+  },
+  "rel_admin_plan_required": "Escolha primeiro um plano.",
+  "@rel_admin_plan_required": {
+    "description": "Release administration: Choose a plan first."
+  },
+  "rel_admin_plan_scheduled_only": "Só é possível confirmar aqui uma alteração de plano agendada.",
+  "@rel_admin_plan_scheduled_only": {
+    "description": "Release administration: Only a scheduled plan change can be confirmed from here."
+  },
+  "rel_admin_billing_refused": "O gateway recusou este pedido de faturação.",
+  "@rel_admin_billing_refused": {
+    "description": "Release administration: The gateway refused this billing request."
+  },
+  "rel_admin_request_refused": "O gateway recusou este pedido.",
+  "@rel_admin_request_refused": {
+    "description": "Release administration: The gateway refused this request."
+  },
+  "rel_admin_endpoint_answered": "O ponto de ligação respondeu.",
+  "@rel_admin_endpoint_answered": {
+    "description": "Release administration: The endpoint answered."
+  },
+  "rel_admin_endpoint_no_answer": "O ponto de ligação não respondeu.",
+  "@rel_admin_endpoint_no_answer": {
+    "description": "Release administration: The endpoint did not answer."
+  },
+  "rel_admin_charge_unknown": "O resultado da cobrança é desconhecido. Ainda pode ser liquidada. Consulte o portal antes de tentar novamente.",
+  "@rel_admin_charge_unknown": {
+    "description": "Release administration: Charge outcome unknown. It may still settle. Check the portal before retrying."
+  },
+  "rel_admin_connect_before_billing": "Ligue a sessão ativa do gateway antes de consultar a faturação. Não é cobrado nada nesta página.",
+  "@rel_admin_connect_before_billing": {
+    "description": "Release administration: Connect the live gateway session before reading billing. Nothing is charged from this page."
+  },
+  "rel_admin_preset_required": "Guarde uma predefinição antes de a aplicar.",
+  "@rel_admin_preset_required": {
+    "description": "Release administration: Save a preset before applying it."
+  }
 }

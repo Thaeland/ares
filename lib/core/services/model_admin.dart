@@ -1,14 +1,147 @@
 import 'dart:math';
 
+import '../../l10n/app_localizations.dart';
+import '../../l10n/app_localizations_en.dart';
+
 /// Provider, route and billing decisions that do not touch the network.
 ///
 /// A route clamp is reported only when the gateway stamps both the picked
 /// effort and a different wire effort. An empty wire means the route has not
 /// said what it sends, so the pick is shown unchanged.
-class ModelAdminException implements Exception {
-  final String message;
-  const ModelAdminException(this.message);
+/// App-authored failure reasons; server detail is kept separate from UI copy.
+enum ModelAdminFailure {
+  chooseProvider,
+  knownEffort,
+  endpointNameRequired,
+  endpointModelRequired,
+  knownApiMode,
+  endpointIdInvalid,
+  endpointHttps,
+  keyInvalid,
+  responseShape,
+  limitsRequired,
+  routeRequired,
+  routeUnique,
+  routeDefaultInvalid,
+  policyRequired,
+  mixtureMissing,
+  mixtureSlotsRequired,
+  chatIdRequired,
+  httpError,
+  responseUnreadable,
+  connectBeforeChange,
+  operationUnavailable,
+  keyRequired,
+  keySaveFailed,
+  keyClearRequired,
+  keyClearFailed,
+  endpointSaveFailed,
+  endpointActivateFailed,
+  accountsSecureRequired,
+  accountsReadFailed,
+  accountDisconnectFailed,
+  accountNotDisconnectable,
+  backendRequired,
+  backendSaveFailed,
+  routesSaveFailed,
+  profileRouteRequired,
+  profileRouteUnique,
+  profileRouteDefaultInvalid,
+  profileRoutesSaveFailed,
+  limitsSaveFailed,
+  mixtureSaveFailed,
+  creditAmountRequired,
+  chargeCheckFailed,
+  reloadAmountsMissing,
+  planRequired,
+  planScheduledOnly,
+  connectBeforeBilling,
+  presetRequired,
+  billingRefused,
+  requestRefused,
+  server,
+}
 
+class ModelAdminException implements Exception {
+  final ModelAdminFailure reason;
+  final int? statusCode;
+  final String? serverMessage;
+  const ModelAdminException(this.reason, {this.statusCode})
+    : serverMessage = null;
+  const ModelAdminException.server(this.serverMessage)
+    : reason = ModelAdminFailure.server,
+      statusCode = null;
+
+  String localized(AppLocalizations l) => switch (reason) {
+    ModelAdminFailure.chooseProvider => l.rel_admin_choose_provider,
+    ModelAdminFailure.knownEffort => l.rel_admin_known_effort,
+    ModelAdminFailure.endpointNameRequired =>
+      l.rel_admin_endpoint_name_required,
+    ModelAdminFailure.endpointModelRequired =>
+      l.rel_admin_endpoint_model_required,
+    ModelAdminFailure.knownApiMode => l.rel_admin_known_api_mode,
+    ModelAdminFailure.endpointIdInvalid => l.rel_admin_endpoint_id_invalid,
+    ModelAdminFailure.endpointHttps => l.rel_admin_endpoint_https,
+    ModelAdminFailure.keyInvalid => l.rel_admin_key_invalid,
+    ModelAdminFailure.responseShape => l.rel_admin_response_shape,
+    ModelAdminFailure.limitsRequired => l.rel_admin_limits_required,
+    ModelAdminFailure.routeRequired => l.rel_admin_route_required,
+    ModelAdminFailure.routeUnique => l.rel_admin_route_unique,
+    ModelAdminFailure.routeDefaultInvalid => l.rel_admin_route_default_invalid,
+    ModelAdminFailure.policyRequired => l.rel_admin_policy_required,
+    ModelAdminFailure.mixtureMissing => l.rel_admin_mixture_missing,
+    ModelAdminFailure.mixtureSlotsRequired =>
+      l.rel_admin_mixture_slots_required,
+    ModelAdminFailure.chatIdRequired => l.rel_admin_chat_id_required,
+    ModelAdminFailure.httpError => l.rel_admin_http_error(
+      (statusCode ?? 0).toString(),
+    ),
+    ModelAdminFailure.responseUnreadable => l.rel_admin_response_unreadable,
+    ModelAdminFailure.connectBeforeChange => l.rel_admin_connect_before_change,
+    ModelAdminFailure.operationUnavailable => l.rel_admin_operation_unavailable,
+    ModelAdminFailure.keyRequired => l.rel_admin_key_required,
+    ModelAdminFailure.keySaveFailed => l.rel_admin_key_save_failed,
+    ModelAdminFailure.keyClearRequired => l.rel_admin_key_clear_required,
+    ModelAdminFailure.keyClearFailed => l.rel_admin_key_clear_failed,
+    ModelAdminFailure.endpointSaveFailed => l.rel_admin_endpoint_save_failed,
+    ModelAdminFailure.endpointActivateFailed =>
+      l.rel_admin_endpoint_activate_failed,
+    ModelAdminFailure.accountsSecureRequired =>
+      l.rel_admin_accounts_secure_required,
+    ModelAdminFailure.accountsReadFailed => l.rel_admin_accounts_read_failed,
+    ModelAdminFailure.accountDisconnectFailed =>
+      l.rel_admin_account_disconnect_failed,
+    ModelAdminFailure.accountNotDisconnectable =>
+      l.rel_admin_account_not_disconnectable,
+    ModelAdminFailure.backendRequired => l.rel_admin_backend_required,
+    ModelAdminFailure.backendSaveFailed => l.rel_admin_backend_save_failed,
+    ModelAdminFailure.routesSaveFailed => l.rel_admin_routes_save_failed,
+    ModelAdminFailure.profileRouteRequired =>
+      l.rel_admin_profile_route_required,
+    ModelAdminFailure.profileRouteUnique => l.rel_admin_profile_route_unique,
+    ModelAdminFailure.profileRouteDefaultInvalid =>
+      l.rel_admin_profile_route_default_invalid,
+    ModelAdminFailure.profileRoutesSaveFailed =>
+      l.rel_admin_profile_routes_save_failed,
+    ModelAdminFailure.limitsSaveFailed => l.rel_admin_limits_save_failed,
+    ModelAdminFailure.mixtureSaveFailed => l.rel_admin_mixture_save_failed,
+    ModelAdminFailure.creditAmountRequired =>
+      l.rel_admin_credit_amount_required,
+    ModelAdminFailure.chargeCheckFailed => l.rel_admin_charge_check_failed,
+    ModelAdminFailure.reloadAmountsMissing =>
+      l.rel_admin_reload_amounts_missing,
+    ModelAdminFailure.planRequired => l.rel_admin_plan_required,
+    ModelAdminFailure.planScheduledOnly => l.rel_admin_plan_scheduled_only,
+    ModelAdminFailure.connectBeforeBilling =>
+      l.rel_admin_connect_before_billing,
+    ModelAdminFailure.presetRequired => l.rel_admin_preset_required,
+    ModelAdminFailure.billingRefused => l.rel_admin_billing_refused,
+    ModelAdminFailure.requestRefused => l.rel_admin_request_refused,
+    ModelAdminFailure.server => safeBillingMessage(serverMessage, l: l),
+  };
+
+  /// English compatibility rendering for non-UI callers and diagnostics.
+  String get message => localized(AppLocalizationsEn());
   @override
   String toString() => message;
 }
@@ -75,11 +208,11 @@ class MemoryModelPresetStore implements ModelPresetStore {
   Future<void> save(String provider, String model, ModelPreset preset) async {
     final key = keyFor(provider, model);
     if (provider.trim().isEmpty || model.trim().isEmpty) {
-      throw const ModelAdminException('Choose a provider and a model.');
+      throw const ModelAdminException(ModelAdminFailure.chooseProvider);
     }
     if (preset.effort != null &&
         !reasoningEffortLevels.contains(preset.effort)) {
-      throw const ModelAdminException('Choose a known effort level.');
+      throw const ModelAdminException(ModelAdminFailure.knownEffort);
     }
     final previous = values[key] ?? const ModelPreset();
     values[key] = ModelPreset(
@@ -228,17 +361,17 @@ void validateEndpointDraft(EndpointDraft draft) {
   final name = draft.name.trim();
   final model = draft.model.trim();
   if (name.isEmpty || name.length > 128 || name.contains(RegExp(r'[\r\n]'))) {
-    throw const ModelAdminException('Enter a name for this endpoint.');
+    throw const ModelAdminException(ModelAdminFailure.endpointNameRequired);
   }
   if (model.isEmpty || model.length > 256) {
-    throw const ModelAdminException('Enter the model this endpoint serves.');
+    throw const ModelAdminException(ModelAdminFailure.endpointModelRequired);
   }
   if (!customEndpointApiModes.contains(draft.apiMode)) {
-    throw const ModelAdminException('Choose Auto or a known API mode.');
+    throw const ModelAdminException(ModelAdminFailure.knownApiMode);
   }
   if (draft.id != null &&
       !RegExp(r'^[A-Za-z0-9_.:-]{1,128}$').hasMatch(draft.id!)) {
-    throw const ModelAdminException('This endpoint identifier is not usable.');
+    throw const ModelAdminException(ModelAdminFailure.endpointIdInvalid);
   }
   final uri = Uri.tryParse(draft.baseUrl.trim());
   final host = uri?.host.toLowerCase() ?? '';
@@ -249,15 +382,13 @@ void validateEndpointDraft(EndpointDraft draft) {
       uri.userInfo.isNotEmpty ||
       endpointQueryHasCredential(uri) ||
       (uri.scheme != 'https' && !(uri.scheme == 'http' && loopback))) {
-    throw const ModelAdminException(
-      'Use HTTPS for a remote endpoint, or HTTP on localhost.',
-    );
+    throw const ModelAdminException(ModelAdminFailure.endpointHttps);
   }
   final key = draft.apiKey?.trim();
   if (key != null &&
       key.isNotEmpty &&
       (key.length > 4096 || key.contains('\n'))) {
-    throw const ModelAdminException('That API key cannot be saved.');
+    throw const ModelAdminException(ModelAdminFailure.keyInvalid);
   }
 }
 
@@ -279,9 +410,7 @@ Map<String, dynamic> endpointRequestBody(EndpointDraft draft) {
 List<NamedEndpoint> namedEndpoints(Map<String, dynamic> body) {
   final rows = body['endpoints'];
   if (rows is! List) {
-    throw const ModelAdminException(
-      'The gateway response did not match the expected shape.',
-    );
+    throw const ModelAdminException(ModelAdminFailure.responseShape);
   }
   return [
     for (final row in rows)
@@ -306,26 +435,34 @@ List<NamedEndpoint> namedEndpoints(Map<String, dynamic> body) {
 
 class EndpointTestResult {
   final bool reachable;
-  final String message;
+  final String? serverMessage;
+  final bool answered;
   final String transport;
   final List<String> models;
   const EndpointTestResult({
     required this.reachable,
-    required this.message,
+    required this.serverMessage,
+    required this.answered,
     required this.transport,
     required this.models,
   });
+
+  String localizedMessage(AppLocalizations l) =>
+      serverMessage ??
+      (answered
+          ? l.rel_admin_endpoint_answered
+          : l.rel_admin_endpoint_no_answer);
+  String get message => localizedMessage(AppLocalizationsEn());
 }
 
 EndpointTestResult endpointTestResult(Map<String, dynamic> body) {
   final models = body['models'];
   return EndpointTestResult(
     reachable: body['reachable'] == true && body['ok'] != false,
-    message: body['message']?.toString().trim().isNotEmpty == true
+    answered: body['reachable'] == true,
+    serverMessage: body['message']?.toString().trim().isNotEmpty == true
         ? body['message'].toString()
-        : (body['reachable'] == true
-              ? 'The endpoint answered.'
-              : 'The endpoint did not answer.'),
+        : null,
     transport: customEndpointApiModes.contains(body['transport_checked'])
         ? body['transport_checked'] as String
         : '',
@@ -354,9 +491,7 @@ class ProviderAccountRow {
 List<ProviderAccountRow> providerAccounts(Map<String, dynamic> body) {
   final rows = body['providers'];
   if (rows is! List) {
-    throw const ModelAdminException(
-      'The gateway response did not match the expected shape.',
-    );
+    throw const ModelAdminException(ModelAdminFailure.responseShape);
   }
   return [
     for (final row in rows)
@@ -423,13 +558,11 @@ Map<String, dynamic> delegationLimitsPatch(DelegationLimits limits) {
   final children = limits.maxConcurrentChildren;
   final timeout = limits.childTimeoutSeconds;
   if (iterations == null || children == null || timeout == null) {
-    throw const ModelAdminException(
-      'Enter iteration, concurrency and timeout limits before saving.',
-    );
+    throw const ModelAdminException(ModelAdminFailure.limitsRequired);
   }
   if (limits.reasoningEffort != null &&
       !reasoningEffortLevels.contains(limits.reasoningEffort)) {
-    throw const ModelAdminException('Choose a known effort level.');
+    throw const ModelAdminException(ModelAdminFailure.knownEffort);
   }
   return {
     'max_iterations': iterations,
@@ -451,12 +584,10 @@ Map<String, dynamic> modelRouteBody({
     final name = copy['name']?.toString().trim() ?? '';
     final model = copy['model']?.toString().trim() ?? '';
     if (!RegExp(r'^[A-Za-z0-9_.:-]{1,64}$').hasMatch(name) || model.isEmpty) {
-      throw const ModelAdminException(
-        'Each route needs a name and a model before it can be saved.',
-      );
+      throw const ModelAdminException(ModelAdminFailure.routeRequired);
     }
     if (!names.add(name)) {
-      throw const ModelAdminException('Route names must be unique.');
+      throw const ModelAdminException(ModelAdminFailure.routeUnique);
     }
     copy['name'] = name;
     copy['model'] = model;
@@ -464,16 +595,14 @@ Map<String, dynamic> modelRouteBody({
     if (effort == null || effort.isEmpty) {
       copy.remove('reasoning_effort');
     } else if (!reasoningEffortLevels.contains(effort)) {
-      throw const ModelAdminException('Choose a known effort level.');
+      throw const ModelAdminException(ModelAdminFailure.knownEffort);
     } else {
       copy['reasoning_effort'] = effort;
     }
     options.add(copy);
   }
   if (defaultRoute != null && !names.contains(defaultRoute)) {
-    throw const ModelAdminException(
-      'The default route has to be one of the saved routes.',
-    );
+    throw const ModelAdminException(ModelAdminFailure.routeDefaultInvalid);
   }
   return {'options': options, 'default': defaultRoute};
 }
@@ -486,17 +615,13 @@ Map<String, dynamic> editActiveMixture(
   required List<Map<String, dynamic>> references,
 }) {
   if (policy != 'loud' && policy != 'silent') {
-    throw const ModelAdminException(
-      'Choose a loud or silent degraded-reference policy.',
-    );
+    throw const ModelAdminException(ModelAdminFailure.policyRequired);
   }
   final copy = _jsonMap(source);
   final presets = copy['presets'];
   final active = copy['active_preset']?.toString() ?? '';
   if (presets is! Map || active.isEmpty || presets[active] is! Map) {
-    throw const ModelAdminException(
-      'The gateway did not return an active mixture.',
-    );
+    throw const ModelAdminException(ModelAdminFailure.mixtureMissing);
   }
   bool complete(Map slot) {
     final provider = slot['provider']?.toString().trim() ?? '';
@@ -512,9 +637,7 @@ Map<String, dynamic> editActiveMixture(
   if (!complete(nextAggregator) ||
       nextReferences.isEmpty ||
       nextReferences.any((slot) => !complete(slot))) {
-    throw const ModelAdminException(
-      'Name a provider and model for the aggregator and every reference.',
-    );
+    throw const ModelAdminException(ModelAdminFailure.mixtureSlotsRequired);
   }
   preset['enabled'] = enabled;
   preset['degraded_reference_policy'] = policy;
@@ -607,8 +730,9 @@ const chargePollInterval = Duration(seconds: 2);
 const chargePollCap = Duration(minutes: 5);
 const chargePollMaxRetryAfter = Duration(seconds: 30);
 
-const chargeOutcomeUnknownMessage =
-    'Charge outcome unknown. It may still settle. Check the portal before retrying.';
+/// English compatibility rendering; UI uses the shared catalogue.
+String get chargeOutcomeUnknownMessage =>
+    AppLocalizationsEn().rel_admin_charge_unknown;
 
 const _ambiguousChargeErrors = <String>{
   'insufficient_scope',
@@ -678,10 +802,10 @@ Duration chargeStatusWait(Map<String, dynamic> status) {
   return chargePollInterval;
 }
 
-String safeBillingMessage(Object? message) {
+String safeBillingMessage(Object? message, {AppLocalizations? l}) {
   final text = message?.toString().trim() ?? '';
   if (text.isEmpty || text.contains('http') || text.length > 240) {
-    return 'The gateway refused this billing request.';
+    return (l ?? AppLocalizationsEn()).rel_admin_billing_refused;
   }
   return text;
 }
@@ -700,9 +824,7 @@ String newIdempotencyKey() {
 String checkedSessionId(String value) {
   final id = value.trim();
   if (id.isEmpty || id.length > 256 || id.contains(RegExp(r'\s'))) {
-    throw const ModelAdminException(
-      'Enter the chat id this change applies to.',
-    );
+    throw const ModelAdminException(ModelAdminFailure.chatIdRequired);
   }
   return id;
 }

@@ -12157,4 +12157,198 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'Шлюз не может сохранять скрытые файлы.';
+
+  @override
+  String get rel_admin_choose_provider => 'Выберите провайдера и модель.';
+
+  @override
+  String get rel_admin_known_effort => 'Выберите известный уровень усилий.';
+
+  @override
+  String get rel_admin_endpoint_name_required =>
+      'Введите имя этой конечной точки.';
+
+  @override
+  String get rel_admin_endpoint_model_required =>
+      'Введите модель, которую обслуживает эта конечная точка.';
+
+  @override
+  String get rel_admin_known_api_mode =>
+      'Выберите автоматический или известный режим API.';
+
+  @override
+  String get rel_admin_endpoint_id_invalid =>
+      'Этот идентификатор конечной точки нельзя использовать.';
+
+  @override
+  String get rel_admin_endpoint_https =>
+      'Используйте HTTPS для удалённой конечной точки или HTTP на localhost.';
+
+  @override
+  String get rel_admin_key_invalid => 'Этот ключ API нельзя сохранить.';
+
+  @override
+  String get rel_admin_response_shape =>
+      'Ответ шлюза не соответствует ожидаемой структуре.';
+
+  @override
+  String get rel_admin_limits_required =>
+      'Перед сохранением укажите ограничения итераций, параллелизма и времени ожидания.';
+
+  @override
+  String get rel_admin_route_required =>
+      'Для сохранения каждого маршрута нужны имя и модель.';
+
+  @override
+  String get rel_admin_route_unique =>
+      'Имена маршрутов должны быть уникальными.';
+
+  @override
+  String get rel_admin_route_default_invalid =>
+      'Маршрут по умолчанию должен быть одним из сохранённых маршрутов.';
+
+  @override
+  String get rel_admin_policy_required =>
+      'Выберите политику уведомления или молчания при деградации референсных моделей.';
+
+  @override
+  String get rel_admin_mixture_missing => 'Шлюз не вернул активную смесь.';
+
+  @override
+  String get rel_admin_mixture_slots_required =>
+      'Укажите провайдера и модель для агрегатора и каждой референсной модели.';
+
+  @override
+  String get rel_admin_chat_id_required =>
+      'Введите ID чата, к которому применяется это изменение.';
+
+  @override
+  String rel_admin_http_error(String status) {
+    return 'Шлюз вернул HTTP $status.';
+  }
+
+  @override
+  String get rel_admin_response_unreadable =>
+      'Не удалось прочитать ответ шлюза.';
+
+  @override
+  String get rel_admin_connect_before_change =>
+      'Подключите активный сеанс шлюза перед изменением оплаты или чата.';
+
+  @override
+  String get rel_admin_operation_unavailable =>
+      'Этот шлюз не поддерживает данную операцию.';
+
+  @override
+  String get rel_admin_key_required => 'Введите ключ для сохранения.';
+
+  @override
+  String get rel_admin_key_save_failed => 'Шлюз не сохранил этот ключ.';
+
+  @override
+  String get rel_admin_key_clear_required =>
+      'Выберите ключ провайдера для удаления.';
+
+  @override
+  String get rel_admin_key_clear_failed => 'Шлюз не удалил этот ключ.';
+
+  @override
+  String get rel_admin_endpoint_save_failed =>
+      'Шлюз не сохранил эту конечную точку.';
+
+  @override
+  String get rel_admin_endpoint_activate_failed =>
+      'Шлюз не активировал эту конечную точку.';
+
+  @override
+  String get rel_admin_accounts_secure_required =>
+      'Для аккаунтов провайдеров нужен аутентифицированный шлюз HTTPS или localhost.';
+
+  @override
+  String get rel_admin_accounts_read_failed =>
+      'Не удалось прочитать аккаунты провайдеров.';
+
+  @override
+  String get rel_admin_account_disconnect_failed =>
+      'Шлюз не отключил этот аккаунт.';
+
+  @override
+  String get rel_admin_account_not_disconnectable =>
+      'Этот аккаунт провайдера нельзя отключить.';
+
+  @override
+  String get rel_admin_backend_required =>
+      'Выберите один из доступных бэкендов делегирования.';
+
+  @override
+  String get rel_admin_backend_save_failed => 'Шлюз не выбрал этот бэкенд.';
+
+  @override
+  String get rel_admin_routes_save_failed => 'Шлюз не сохранил эти маршруты.';
+
+  @override
+  String get rel_admin_profile_route_required =>
+      'Для каждого маршрута профиля нужно имя профиля.';
+
+  @override
+  String get rel_admin_profile_route_unique =>
+      'Маршруты профилей должны быть уникальными.';
+
+  @override
+  String get rel_admin_profile_route_default_invalid =>
+      'Маршрут профиля по умолчанию должен быть одним из разрешённых профилей.';
+
+  @override
+  String get rel_admin_profile_routes_save_failed =>
+      'Шлюз не сохранил эти маршруты профилей.';
+
+  @override
+  String get rel_admin_limits_save_failed =>
+      'Шлюз не сохранил эти ограничения.';
+
+  @override
+  String get rel_admin_mixture_save_failed => 'Шлюз не сохранил эту смесь.';
+
+  @override
+  String get rel_admin_credit_amount_required =>
+      'Выберите одну из предложенных сумм пополнения.';
+
+  @override
+  String get rel_admin_charge_check_failed =>
+      'Не удалось проверить это списание.';
+
+  @override
+  String get rel_admin_reload_amounts_missing =>
+      'Суммы автопополнения не указаны, поэтому они не изменены.';
+
+  @override
+  String get rel_admin_plan_required => 'Сначала выберите план.';
+
+  @override
+  String get rel_admin_plan_scheduled_only =>
+      'Здесь можно подтвердить только запланированную смену плана.';
+
+  @override
+  String get rel_admin_billing_refused => 'Шлюз отклонил этот запрос оплаты.';
+
+  @override
+  String get rel_admin_request_refused => 'Шлюз отклонил этот запрос.';
+
+  @override
+  String get rel_admin_endpoint_answered => 'Конечная точка ответила.';
+
+  @override
+  String get rel_admin_endpoint_no_answer => 'Конечная точка не ответила.';
+
+  @override
+  String get rel_admin_charge_unknown =>
+      'Результат списания неизвестен. Оно ещё может завершиться. Проверьте портал перед повторной попыткой.';
+
+  @override
+  String get rel_admin_connect_before_billing =>
+      'Подключите активный сеанс шлюза перед просмотром оплаты. На этой странице ничего не списывается.';
+
+  @override
+  String get rel_admin_preset_required =>
+      'Сохраните предустановку перед применением.';
 }

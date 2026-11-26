@@ -11498,6 +11498,165 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get release_core_file_save_hidden => '网关无法保存隐藏文件。';
+
+  @override
+  String get rel_admin_choose_provider => '请选择提供商和模型。';
+
+  @override
+  String get rel_admin_known_effort => '请选择已知的推理强度。';
+
+  @override
+  String get rel_admin_endpoint_name_required => '请输入此端点的名称。';
+
+  @override
+  String get rel_admin_endpoint_model_required => '请输入此端点提供的模型。';
+
+  @override
+  String get rel_admin_known_api_mode => '请选择自动或已知的 API 模式。';
+
+  @override
+  String get rel_admin_endpoint_id_invalid => '此端点标识符不可用。';
+
+  @override
+  String get rel_admin_endpoint_https => '远程端点请使用 HTTPS，localhost 请使用 HTTP。';
+
+  @override
+  String get rel_admin_key_invalid => '无法保存该 API 密钥。';
+
+  @override
+  String get rel_admin_response_shape => '网关响应与预期结构不符。';
+
+  @override
+  String get rel_admin_limits_required => '保存前请输入迭代次数、并发数和超时限制。';
+
+  @override
+  String get rel_admin_route_required => '每条路由都需要名称和模型才能保存。';
+
+  @override
+  String get rel_admin_route_unique => '路由名称必须唯一。';
+
+  @override
+  String get rel_admin_route_default_invalid => '默认路由必须是已保存的路由之一。';
+
+  @override
+  String get rel_admin_policy_required => '请选择有声或静默的参考模型降级策略。';
+
+  @override
+  String get rel_admin_mixture_missing => '网关未返回活动的混合配置。';
+
+  @override
+  String get rel_admin_mixture_slots_required => '请为聚合器和每个参考模型指定提供商及模型。';
+
+  @override
+  String get rel_admin_chat_id_required => '请输入要应用此更改的聊天 ID。';
+
+  @override
+  String rel_admin_http_error(String status) {
+    return '网关返回了 HTTP $status。';
+  }
+
+  @override
+  String get rel_admin_response_unreadable => '无法读取网关响应。';
+
+  @override
+  String get rel_admin_connect_before_change => '更改账单或聊天前，请连接网关实时会话。';
+
+  @override
+  String get rel_admin_operation_unavailable => '此网关不支持该操作。';
+
+  @override
+  String get rel_admin_key_required => '请输入要保存的密钥。';
+
+  @override
+  String get rel_admin_key_save_failed => '网关未保存该密钥。';
+
+  @override
+  String get rel_admin_key_clear_required => '请选择要清除的提供商密钥。';
+
+  @override
+  String get rel_admin_key_clear_failed => '网关未清除该密钥。';
+
+  @override
+  String get rel_admin_endpoint_save_failed => '网关未保存该端点。';
+
+  @override
+  String get rel_admin_endpoint_activate_failed => '网关未激活该端点。';
+
+  @override
+  String get rel_admin_accounts_secure_required =>
+      '提供商账户需要经过身份验证的 HTTPS 网关或 localhost。';
+
+  @override
+  String get rel_admin_accounts_read_failed => '无法读取提供商账户。';
+
+  @override
+  String get rel_admin_account_disconnect_failed => '网关未断开该账户。';
+
+  @override
+  String get rel_admin_account_not_disconnectable => '无法断开该提供商账户。';
+
+  @override
+  String get rel_admin_backend_required => '请选择一个可用的委派后端。';
+
+  @override
+  String get rel_admin_backend_save_failed => '网关未选择该后端。';
+
+  @override
+  String get rel_admin_routes_save_failed => '网关未保存这些路由。';
+
+  @override
+  String get rel_admin_profile_route_required => '每条配置文件路由都需要配置文件名称。';
+
+  @override
+  String get rel_admin_profile_route_unique => '配置文件路由必须唯一。';
+
+  @override
+  String get rel_admin_profile_route_default_invalid => '默认配置文件路由必须是允许的配置文件之一。';
+
+  @override
+  String get rel_admin_profile_routes_save_failed => '网关未保存这些配置文件路由。';
+
+  @override
+  String get rel_admin_limits_save_failed => '网关未保存这些限制。';
+
+  @override
+  String get rel_admin_mixture_save_failed => '网关未保存该混合配置。';
+
+  @override
+  String get rel_admin_credit_amount_required => '请选择一个提供的额度金额。';
+
+  @override
+  String get rel_admin_charge_check_failed => '无法检查该笔扣款。';
+
+  @override
+  String get rel_admin_reload_amounts_missing => '未提供自动充值金额，因此未作更改。';
+
+  @override
+  String get rel_admin_plan_required => '请先选择套餐。';
+
+  @override
+  String get rel_admin_plan_scheduled_only => '这里只能确认已安排的套餐变更。';
+
+  @override
+  String get rel_admin_billing_refused => '网关拒绝了此账单请求。';
+
+  @override
+  String get rel_admin_request_refused => '网关拒绝了此请求。';
+
+  @override
+  String get rel_admin_endpoint_answered => '端点已响应。';
+
+  @override
+  String get rel_admin_endpoint_no_answer => '端点未响应。';
+
+  @override
+  String get rel_admin_charge_unknown => '扣款结果未知，仍可能结算。重试前请检查门户。';
+
+  @override
+  String get rel_admin_connect_before_billing => '查看账单前请连接网关实时会话。此页面不会扣款。';
+
+  @override
+  String get rel_admin_preset_required => '请先保存预设再应用。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -22994,6 +23153,165 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get release_core_file_save_hidden => '网关无法保存隐藏文件。';
+
+  @override
+  String get rel_admin_choose_provider => '请选择提供商和模型。';
+
+  @override
+  String get rel_admin_known_effort => '请选择已知的推理强度。';
+
+  @override
+  String get rel_admin_endpoint_name_required => '请输入此端点的名称。';
+
+  @override
+  String get rel_admin_endpoint_model_required => '请输入此端点提供的模型。';
+
+  @override
+  String get rel_admin_known_api_mode => '请选择自动或已知的 API 模式。';
+
+  @override
+  String get rel_admin_endpoint_id_invalid => '此端点标识符不可用。';
+
+  @override
+  String get rel_admin_endpoint_https => '远程端点请使用 HTTPS，localhost 请使用 HTTP。';
+
+  @override
+  String get rel_admin_key_invalid => '无法保存该 API 密钥。';
+
+  @override
+  String get rel_admin_response_shape => '网关响应与预期结构不符。';
+
+  @override
+  String get rel_admin_limits_required => '保存前请输入迭代次数、并发数和超时限制。';
+
+  @override
+  String get rel_admin_route_required => '每条路由都需要名称和模型才能保存。';
+
+  @override
+  String get rel_admin_route_unique => '路由名称必须唯一。';
+
+  @override
+  String get rel_admin_route_default_invalid => '默认路由必须是已保存的路由之一。';
+
+  @override
+  String get rel_admin_policy_required => '请选择有声或静默的参考模型降级策略。';
+
+  @override
+  String get rel_admin_mixture_missing => '网关未返回活动的混合配置。';
+
+  @override
+  String get rel_admin_mixture_slots_required => '请为聚合器和每个参考模型指定提供商及模型。';
+
+  @override
+  String get rel_admin_chat_id_required => '请输入要应用此更改的聊天 ID。';
+
+  @override
+  String rel_admin_http_error(String status) {
+    return '网关返回了 HTTP $status。';
+  }
+
+  @override
+  String get rel_admin_response_unreadable => '无法读取网关响应。';
+
+  @override
+  String get rel_admin_connect_before_change => '更改账单或聊天前，请连接网关实时会话。';
+
+  @override
+  String get rel_admin_operation_unavailable => '此网关不支持该操作。';
+
+  @override
+  String get rel_admin_key_required => '请输入要保存的密钥。';
+
+  @override
+  String get rel_admin_key_save_failed => '网关未保存该密钥。';
+
+  @override
+  String get rel_admin_key_clear_required => '请选择要清除的提供商密钥。';
+
+  @override
+  String get rel_admin_key_clear_failed => '网关未清除该密钥。';
+
+  @override
+  String get rel_admin_endpoint_save_failed => '网关未保存该端点。';
+
+  @override
+  String get rel_admin_endpoint_activate_failed => '网关未激活该端点。';
+
+  @override
+  String get rel_admin_accounts_secure_required =>
+      '提供商账户需要经过身份验证的 HTTPS 网关或 localhost。';
+
+  @override
+  String get rel_admin_accounts_read_failed => '无法读取提供商账户。';
+
+  @override
+  String get rel_admin_account_disconnect_failed => '网关未断开该账户。';
+
+  @override
+  String get rel_admin_account_not_disconnectable => '无法断开该提供商账户。';
+
+  @override
+  String get rel_admin_backend_required => '请选择一个可用的委派后端。';
+
+  @override
+  String get rel_admin_backend_save_failed => '网关未选择该后端。';
+
+  @override
+  String get rel_admin_routes_save_failed => '网关未保存这些路由。';
+
+  @override
+  String get rel_admin_profile_route_required => '每条配置文件路由都需要配置文件名称。';
+
+  @override
+  String get rel_admin_profile_route_unique => '配置文件路由必须唯一。';
+
+  @override
+  String get rel_admin_profile_route_default_invalid => '默认配置文件路由必须是允许的配置文件之一。';
+
+  @override
+  String get rel_admin_profile_routes_save_failed => '网关未保存这些配置文件路由。';
+
+  @override
+  String get rel_admin_limits_save_failed => '网关未保存这些限制。';
+
+  @override
+  String get rel_admin_mixture_save_failed => '网关未保存该混合配置。';
+
+  @override
+  String get rel_admin_credit_amount_required => '请选择一个提供的额度金额。';
+
+  @override
+  String get rel_admin_charge_check_failed => '无法检查该笔扣款。';
+
+  @override
+  String get rel_admin_reload_amounts_missing => '未提供自动充值金额，因此未作更改。';
+
+  @override
+  String get rel_admin_plan_required => '请先选择套餐。';
+
+  @override
+  String get rel_admin_plan_scheduled_only => '这里只能确认已安排的套餐变更。';
+
+  @override
+  String get rel_admin_billing_refused => '网关拒绝了此账单请求。';
+
+  @override
+  String get rel_admin_request_refused => '网关拒绝了此请求。';
+
+  @override
+  String get rel_admin_endpoint_answered => '端点已响应。';
+
+  @override
+  String get rel_admin_endpoint_no_answer => '端点未响应。';
+
+  @override
+  String get rel_admin_charge_unknown => '扣款结果未知，仍可能结算。重试前请检查门户。';
+
+  @override
+  String get rel_admin_connect_before_billing => '查看账单前请连接网关实时会话。此页面不会扣款。';
+
+  @override
+  String get rel_admin_preset_required => '请先保存预设再应用。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -34494,4 +34812,163 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get release_core_file_save_hidden => '閘道無法儲存隱藏檔案。';
+
+  @override
+  String get rel_admin_choose_provider => '請選擇供應商和模型。';
+
+  @override
+  String get rel_admin_known_effort => '請選擇已知的推理強度。';
+
+  @override
+  String get rel_admin_endpoint_name_required => '請輸入此端點的名稱。';
+
+  @override
+  String get rel_admin_endpoint_model_required => '請輸入此端點提供的模型。';
+
+  @override
+  String get rel_admin_known_api_mode => '請選擇自動或已知的 API 模式。';
+
+  @override
+  String get rel_admin_endpoint_id_invalid => '此端點識別碼無法使用。';
+
+  @override
+  String get rel_admin_endpoint_https => '遠端端點請使用 HTTPS，localhost 請使用 HTTP。';
+
+  @override
+  String get rel_admin_key_invalid => '無法儲存該 API 金鑰。';
+
+  @override
+  String get rel_admin_response_shape => '閘道回應與預期結構不符。';
+
+  @override
+  String get rel_admin_limits_required => '儲存前請輸入迭代次數、並行數和逾時限制。';
+
+  @override
+  String get rel_admin_route_required => '每條路由都需要名稱和模型才能儲存。';
+
+  @override
+  String get rel_admin_route_unique => '路由名稱必須唯一。';
+
+  @override
+  String get rel_admin_route_default_invalid => '預設路由必須是已儲存的路由之一。';
+
+  @override
+  String get rel_admin_policy_required => '請選擇有聲或靜默的參考模型降級策略。';
+
+  @override
+  String get rel_admin_mixture_missing => '閘道未傳回作用中的混合設定。';
+
+  @override
+  String get rel_admin_mixture_slots_required => '請為聚合器和每個參考模型指定供應商及模型。';
+
+  @override
+  String get rel_admin_chat_id_required => '請輸入要套用此變更的聊天 ID。';
+
+  @override
+  String rel_admin_http_error(String status) {
+    return '閘道傳回了 HTTP $status。';
+  }
+
+  @override
+  String get rel_admin_response_unreadable => '無法讀取閘道回應。';
+
+  @override
+  String get rel_admin_connect_before_change => '變更帳單或聊天前，請連接閘道即時工作階段。';
+
+  @override
+  String get rel_admin_operation_unavailable => '此閘道不支援該操作。';
+
+  @override
+  String get rel_admin_key_required => '請輸入要儲存的金鑰。';
+
+  @override
+  String get rel_admin_key_save_failed => '閘道未儲存該金鑰。';
+
+  @override
+  String get rel_admin_key_clear_required => '請選擇要清除的供應商金鑰。';
+
+  @override
+  String get rel_admin_key_clear_failed => '閘道未清除該金鑰。';
+
+  @override
+  String get rel_admin_endpoint_save_failed => '閘道未儲存該端點。';
+
+  @override
+  String get rel_admin_endpoint_activate_failed => '閘道未啟用該端點。';
+
+  @override
+  String get rel_admin_accounts_secure_required =>
+      '供應商帳戶需要經過驗證的 HTTPS 閘道或 localhost。';
+
+  @override
+  String get rel_admin_accounts_read_failed => '無法讀取供應商帳戶。';
+
+  @override
+  String get rel_admin_account_disconnect_failed => '閘道未中斷該帳戶連線。';
+
+  @override
+  String get rel_admin_account_not_disconnectable => '無法中斷該供應商帳戶連線。';
+
+  @override
+  String get rel_admin_backend_required => '請選擇一個可用的委派後端。';
+
+  @override
+  String get rel_admin_backend_save_failed => '閘道未選擇該後端。';
+
+  @override
+  String get rel_admin_routes_save_failed => '閘道未儲存這些路由。';
+
+  @override
+  String get rel_admin_profile_route_required => '每條設定檔路由都需要設定檔名稱。';
+
+  @override
+  String get rel_admin_profile_route_unique => '設定檔路由必須唯一。';
+
+  @override
+  String get rel_admin_profile_route_default_invalid => '預設設定檔路由必須是允許的設定檔之一。';
+
+  @override
+  String get rel_admin_profile_routes_save_failed => '閘道未儲存這些設定檔路由。';
+
+  @override
+  String get rel_admin_limits_save_failed => '閘道未儲存這些限制。';
+
+  @override
+  String get rel_admin_mixture_save_failed => '閘道未儲存該混合設定。';
+
+  @override
+  String get rel_admin_credit_amount_required => '請選擇一個提供的額度金額。';
+
+  @override
+  String get rel_admin_charge_check_failed => '無法檢查該筆扣款。';
+
+  @override
+  String get rel_admin_reload_amounts_missing => '未提供自動儲值金額，因此未作變更。';
+
+  @override
+  String get rel_admin_plan_required => '請先選擇方案。';
+
+  @override
+  String get rel_admin_plan_scheduled_only => '這裡只能確認已排程的方案變更。';
+
+  @override
+  String get rel_admin_billing_refused => '閘道拒絕了此帳單請求。';
+
+  @override
+  String get rel_admin_request_refused => '閘道拒絕了此請求。';
+
+  @override
+  String get rel_admin_endpoint_answered => '端點已回應。';
+
+  @override
+  String get rel_admin_endpoint_no_answer => '端點未回應。';
+
+  @override
+  String get rel_admin_charge_unknown => '扣款結果未知，仍可能結算。重試前請檢查入口網站。';
+
+  @override
+  String get rel_admin_connect_before_billing => '查看帳單前請連接閘道即時工作階段。此頁面不會扣款。';
+
+  @override
+  String get rel_admin_preset_required => '請先儲存預設再套用。';
 }

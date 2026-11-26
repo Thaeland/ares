@@ -11718,4 +11718,174 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get release_core_file_save_hidden => '게이트웨이는 숨김 파일을 저장할 수 없습니다.';
+
+  @override
+  String get rel_admin_choose_provider => '공급자와 모델을 선택하세요.';
+
+  @override
+  String get rel_admin_known_effort => '알려진 추론 수준을 선택하세요.';
+
+  @override
+  String get rel_admin_endpoint_name_required => '이 엔드포인트의 이름을 입력하세요.';
+
+  @override
+  String get rel_admin_endpoint_model_required => '이 엔드포인트가 제공하는 모델을 입력하세요.';
+
+  @override
+  String get rel_admin_known_api_mode => '자동 또는 알려진 API 모드를 선택하세요.';
+
+  @override
+  String get rel_admin_endpoint_id_invalid => '이 엔드포인트 식별자는 사용할 수 없습니다.';
+
+  @override
+  String get rel_admin_endpoint_https =>
+      '원격 엔드포인트에는 HTTPS를, localhost에는 HTTP를 사용하세요.';
+
+  @override
+  String get rel_admin_key_invalid => '해당 API 키를 저장할 수 없습니다.';
+
+  @override
+  String get rel_admin_response_shape => '게이트웨이 응답이 예상한 구조와 일치하지 않았습니다.';
+
+  @override
+  String get rel_admin_limits_required => '저장하기 전에 반복, 동시 실행 및 시간 제한을 입력하세요.';
+
+  @override
+  String get rel_admin_route_required => '각 경로를 저장하려면 이름과 모델이 필요합니다.';
+
+  @override
+  String get rel_admin_route_unique => '경로 이름은 고유해야 합니다.';
+
+  @override
+  String get rel_admin_route_default_invalid => '기본 경로는 저장된 경로 중 하나여야 합니다.';
+
+  @override
+  String get rel_admin_policy_required => '참조 모델 성능 저하 정책으로 알림 또는 무음을 선택하세요.';
+
+  @override
+  String get rel_admin_mixture_missing => '게이트웨이가 활성 혼합 구성을 반환하지 않았습니다.';
+
+  @override
+  String get rel_admin_mixture_slots_required =>
+      '집계 모델과 모든 참조 모델의 공급자 및 모델을 지정하세요.';
+
+  @override
+  String get rel_admin_chat_id_required => '이 변경을 적용할 채팅 ID를 입력하세요.';
+
+  @override
+  String rel_admin_http_error(String status) {
+    return '게이트웨이가 HTTP $status를 반환했습니다.';
+  }
+
+  @override
+  String get rel_admin_response_unreadable => '게이트웨이 응답을 읽을 수 없습니다.';
+
+  @override
+  String get rel_admin_connect_before_change =>
+      '결제 또는 채팅을 변경하기 전에 실시간 게이트웨이 세션에 연결하세요.';
+
+  @override
+  String get rel_admin_operation_unavailable => '이 게이트웨이는 해당 작업을 제공하지 않습니다.';
+
+  @override
+  String get rel_admin_key_required => '저장할 키를 입력하세요.';
+
+  @override
+  String get rel_admin_key_save_failed => '게이트웨이가 해당 키를 저장하지 않았습니다.';
+
+  @override
+  String get rel_admin_key_clear_required => '지울 공급자 키를 선택하세요.';
+
+  @override
+  String get rel_admin_key_clear_failed => '게이트웨이가 해당 키를 지우지 않았습니다.';
+
+  @override
+  String get rel_admin_endpoint_save_failed => '게이트웨이가 해당 엔드포인트를 저장하지 않았습니다.';
+
+  @override
+  String get rel_admin_endpoint_activate_failed =>
+      '게이트웨이가 해당 엔드포인트를 활성화하지 않았습니다.';
+
+  @override
+  String get rel_admin_accounts_secure_required =>
+      '공급자 계정에는 인증된 HTTPS 게이트웨이 또는 localhost가 필요합니다.';
+
+  @override
+  String get rel_admin_accounts_read_failed => '공급자 계정을 읽을 수 없습니다.';
+
+  @override
+  String get rel_admin_account_disconnect_failed =>
+      '게이트웨이가 해당 계정을 연결 해제하지 않았습니다.';
+
+  @override
+  String get rel_admin_account_not_disconnectable =>
+      '해당 공급자 계정은 연결 해제할 수 없습니다.';
+
+  @override
+  String get rel_admin_backend_required => '사용 가능한 위임 백엔드 중 하나를 선택하세요.';
+
+  @override
+  String get rel_admin_backend_save_failed => '게이트웨이가 해당 백엔드를 선택하지 않았습니다.';
+
+  @override
+  String get rel_admin_routes_save_failed => '게이트웨이가 해당 경로를 저장하지 않았습니다.';
+
+  @override
+  String get rel_admin_profile_route_required => '각 프로필 경로에는 프로필 이름이 필요합니다.';
+
+  @override
+  String get rel_admin_profile_route_unique => '프로필 경로는 고유해야 합니다.';
+
+  @override
+  String get rel_admin_profile_route_default_invalid =>
+      '기본 프로필 경로는 허용된 프로필 중 하나여야 합니다.';
+
+  @override
+  String get rel_admin_profile_routes_save_failed =>
+      '게이트웨이가 해당 프로필 경로를 저장하지 않았습니다.';
+
+  @override
+  String get rel_admin_limits_save_failed => '게이트웨이가 해당 제한을 저장하지 않았습니다.';
+
+  @override
+  String get rel_admin_mixture_save_failed => '게이트웨이가 해당 혼합 구성을 저장하지 않았습니다.';
+
+  @override
+  String get rel_admin_credit_amount_required => '제공된 크레딧 금액 중 하나를 선택하세요.';
+
+  @override
+  String get rel_admin_charge_check_failed => '해당 결제를 확인할 수 없습니다.';
+
+  @override
+  String get rel_admin_reload_amounts_missing =>
+      '자동 충전 금액이 제공되지 않아 변경되지 않았습니다.';
+
+  @override
+  String get rel_admin_plan_required => '먼저 요금제를 선택하세요.';
+
+  @override
+  String get rel_admin_plan_scheduled_only => '여기서는 예약된 요금제 변경만 확정할 수 있습니다.';
+
+  @override
+  String get rel_admin_billing_refused => '게이트웨이가 이 결제 요청을 거부했습니다.';
+
+  @override
+  String get rel_admin_request_refused => '게이트웨이가 이 요청을 거부했습니다.';
+
+  @override
+  String get rel_admin_endpoint_answered => '엔드포인트가 응답했습니다.';
+
+  @override
+  String get rel_admin_endpoint_no_answer => '엔드포인트가 응답하지 않았습니다.';
+
+  @override
+  String get rel_admin_charge_unknown =>
+      '결제 결과를 알 수 없습니다. 아직 정산될 수 있습니다. 재시도 전에 포털을 확인하세요.';
+
+  @override
+  String get rel_admin_connect_before_billing =>
+      '결제 정보를 읽기 전에 실시간 게이트웨이 세션에 연결하세요. 이 페이지에서는 청구되지 않습니다.';
+
+  @override
+  String get rel_admin_preset_required => '프리셋을 적용하기 전에 저장하세요.';
 }

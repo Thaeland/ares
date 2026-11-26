@@ -12025,4 +12025,193 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'لا يمكن للبوابة حفظ الملفات المخفية.';
+
+  @override
+  String get rel_admin_choose_provider => 'اختر موفرًا ونموذجًا.';
+
+  @override
+  String get rel_admin_known_effort => 'اختر مستوى جهد معروفًا.';
+
+  @override
+  String get rel_admin_endpoint_name_required =>
+      'أدخل اسمًا لنقطة النهاية هذه.';
+
+  @override
+  String get rel_admin_endpoint_model_required =>
+      'أدخل النموذج الذي تقدمه نقطة النهاية هذه.';
+
+  @override
+  String get rel_admin_known_api_mode =>
+      'اختر الوضع التلقائي أو وضع API معروفًا.';
+
+  @override
+  String get rel_admin_endpoint_id_invalid =>
+      'معرّف نقطة النهاية هذا غير قابل للاستخدام.';
+
+  @override
+  String get rel_admin_endpoint_https =>
+      'استخدم HTTPS لنقطة نهاية بعيدة، أو HTTP على localhost.';
+
+  @override
+  String get rel_admin_key_invalid => 'لا يمكن حفظ مفتاح API هذا.';
+
+  @override
+  String get rel_admin_response_shape =>
+      'لم تتطابق استجابة البوابة مع البنية المتوقعة.';
+
+  @override
+  String get rel_admin_limits_required =>
+      'أدخل حدود التكرار والتزامن والمهلة قبل الحفظ.';
+
+  @override
+  String get rel_admin_route_required =>
+      'تحتاج كل قاعدة توجيه إلى اسم ونموذج قبل حفظها.';
+
+  @override
+  String get rel_admin_route_unique => 'يجب أن تكون أسماء قواعد التوجيه فريدة.';
+
+  @override
+  String get rel_admin_route_default_invalid =>
+      'يجب أن تكون قاعدة التوجيه الافتراضية إحدى القواعد المحفوظة.';
+
+  @override
+  String get rel_admin_policy_required =>
+      'اختر سياسة مرجعية متدهورة مع تنبيه أو صامتة.';
+
+  @override
+  String get rel_admin_mixture_missing => 'لم تُرجع البوابة مزيجًا نشطًا.';
+
+  @override
+  String get rel_admin_mixture_slots_required =>
+      'حدد موفرًا ونموذجًا للمجمّع ولكل مرجع.';
+
+  @override
+  String get rel_admin_chat_id_required =>
+      'أدخل معرّف المحادثة التي ينطبق عليها هذا التغيير.';
+
+  @override
+  String rel_admin_http_error(String status) {
+    return 'أرجعت البوابة HTTP $status.';
+  }
+
+  @override
+  String get rel_admin_response_unreadable => 'تعذّرت قراءة استجابة البوابة.';
+
+  @override
+  String get rel_admin_connect_before_change =>
+      'صِل جلسة البوابة المباشرة قبل تغيير الفوترة أو المحادثة.';
+
+  @override
+  String get rel_admin_operation_unavailable =>
+      'هذه البوابة لا توفر هذه العملية.';
+
+  @override
+  String get rel_admin_key_required => 'أدخل المفتاح المراد حفظه.';
+
+  @override
+  String get rel_admin_key_save_failed => 'لم تحفظ البوابة هذا المفتاح.';
+
+  @override
+  String get rel_admin_key_clear_required => 'اختر مفتاح موفر لمسحه.';
+
+  @override
+  String get rel_admin_key_clear_failed => 'لم تمسح البوابة هذا المفتاح.';
+
+  @override
+  String get rel_admin_endpoint_save_failed =>
+      'لم تحفظ البوابة نقطة النهاية هذه.';
+
+  @override
+  String get rel_admin_endpoint_activate_failed =>
+      'لم تُفعّل البوابة نقطة النهاية هذه.';
+
+  @override
+  String get rel_admin_accounts_secure_required =>
+      'تحتاج حسابات الموفر إلى بوابة HTTPS موثّقة أو localhost.';
+
+  @override
+  String get rel_admin_accounts_read_failed => 'تعذّرت قراءة حسابات الموفر.';
+
+  @override
+  String get rel_admin_account_disconnect_failed =>
+      'لم تفصل البوابة هذا الحساب.';
+
+  @override
+  String get rel_admin_account_not_disconnectable =>
+      'لا يمكن فصل حساب الموفر هذا.';
+
+  @override
+  String get rel_admin_backend_required =>
+      'اختر إحدى واجهات التفويض الخلفية المتاحة.';
+
+  @override
+  String get rel_admin_backend_save_failed =>
+      'لم تحدد البوابة تلك الواجهة الخلفية.';
+
+  @override
+  String get rel_admin_routes_save_failed =>
+      'لم تحفظ البوابة قواعد التوجيه تلك.';
+
+  @override
+  String get rel_admin_profile_route_required =>
+      'تحتاج كل قاعدة توجيه لملف تعريف إلى اسم ملف التعريف.';
+
+  @override
+  String get rel_admin_profile_route_unique =>
+      'يجب أن تكون قواعد توجيه ملفات التعريف فريدة.';
+
+  @override
+  String get rel_admin_profile_route_default_invalid =>
+      'يجب أن تكون قاعدة توجيه ملف التعريف الافتراضية أحد ملفات التعريف المسموح بها.';
+
+  @override
+  String get rel_admin_profile_routes_save_failed =>
+      'لم تحفظ البوابة قواعد توجيه ملفات التعريف تلك.';
+
+  @override
+  String get rel_admin_limits_save_failed => 'لم تحفظ البوابة تلك الحدود.';
+
+  @override
+  String get rel_admin_mixture_save_failed => 'لم تحفظ البوابة ذلك المزيج.';
+
+  @override
+  String get rel_admin_credit_amount_required =>
+      'اختر أحد مبالغ الرصيد المعروضة.';
+
+  @override
+  String get rel_admin_charge_check_failed => 'تعذّر التحقق من تلك الرسوم.';
+
+  @override
+  String get rel_admin_reload_amounts_missing =>
+      'لم تُقدَّم مبالغ إعادة الشحن التلقائي، لذا لم تُغيَّر.';
+
+  @override
+  String get rel_admin_plan_required => 'اختر خطة أولًا.';
+
+  @override
+  String get rel_admin_plan_scheduled_only =>
+      'يمكن تأكيد تغيير خطة مجدول فقط من هنا.';
+
+  @override
+  String get rel_admin_billing_refused => 'رفضت البوابة طلب الفوترة هذا.';
+
+  @override
+  String get rel_admin_request_refused => 'رفضت البوابة هذا الطلب.';
+
+  @override
+  String get rel_admin_endpoint_answered => 'استجابت نقطة النهاية.';
+
+  @override
+  String get rel_admin_endpoint_no_answer => 'لم تستجب نقطة النهاية.';
+
+  @override
+  String get rel_admin_charge_unknown =>
+      'نتيجة الرسوم غير معروفة. قد تُسوّى لاحقًا. تحقّق من البوابة الإلكترونية قبل إعادة المحاولة.';
+
+  @override
+  String get rel_admin_connect_before_billing =>
+      'صِل جلسة البوابة المباشرة قبل قراءة الفوترة. لا تُفرض أي رسوم من هذه الصفحة.';
+
+  @override
+  String get rel_admin_preset_required => 'احفظ إعدادًا مسبقًا قبل تطبيقه.';
 }

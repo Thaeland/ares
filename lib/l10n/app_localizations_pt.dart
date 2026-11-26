@@ -12169,6 +12169,206 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'O gateway não pode guardar ficheiros ocultos.';
+
+  @override
+  String get rel_admin_choose_provider => 'Escolha um fornecedor e um modelo.';
+
+  @override
+  String get rel_admin_known_effort => 'Escolha um nível de esforço conhecido.';
+
+  @override
+  String get rel_admin_endpoint_name_required =>
+      'Introduza um nome para este ponto de ligação.';
+
+  @override
+  String get rel_admin_endpoint_model_required =>
+      'Introduza o modelo disponibilizado por este ponto de ligação.';
+
+  @override
+  String get rel_admin_known_api_mode =>
+      'Escolha Automático ou um modo de API conhecido.';
+
+  @override
+  String get rel_admin_endpoint_id_invalid =>
+      'Este identificador de ponto de ligação não pode ser utilizado.';
+
+  @override
+  String get rel_admin_endpoint_https =>
+      'Utilize HTTPS para um ponto de ligação remoto ou HTTP em localhost.';
+
+  @override
+  String get rel_admin_key_invalid =>
+      'Não é possível guardar essa chave de API.';
+
+  @override
+  String get rel_admin_response_shape =>
+      'A resposta do gateway não correspondeu à estrutura esperada.';
+
+  @override
+  String get rel_admin_limits_required =>
+      'Introduza os limites de iterações, simultaneidade e tempo de espera antes de guardar.';
+
+  @override
+  String get rel_admin_route_required =>
+      'Cada rota precisa de um nome e de um modelo antes de ser guardada.';
+
+  @override
+  String get rel_admin_route_unique => 'Os nomes das rotas têm de ser únicos.';
+
+  @override
+  String get rel_admin_route_default_invalid =>
+      'A rota predefinida tem de ser uma das rotas guardadas.';
+
+  @override
+  String get rel_admin_policy_required =>
+      'Escolha uma política com aviso ou silenciosa para referências degradadas.';
+
+  @override
+  String get rel_admin_mixture_missing =>
+      'O gateway não devolveu uma mistura ativa.';
+
+  @override
+  String get rel_admin_mixture_slots_required =>
+      'Indique um fornecedor e um modelo para o agregador e para cada referência.';
+
+  @override
+  String get rel_admin_chat_id_required =>
+      'Introduza o ID da conversa a que esta alteração se aplica.';
+
+  @override
+  String rel_admin_http_error(String status) {
+    return 'O gateway devolveu HTTP $status.';
+  }
+
+  @override
+  String get rel_admin_response_unreadable =>
+      'Não foi possível ler a resposta do gateway.';
+
+  @override
+  String get rel_admin_connect_before_change =>
+      'Ligue a sessão ativa do gateway antes de alterar a faturação ou uma conversa.';
+
+  @override
+  String get rel_admin_operation_unavailable =>
+      'Este gateway não disponibiliza essa operação.';
+
+  @override
+  String get rel_admin_key_required => 'Introduza a chave a guardar.';
+
+  @override
+  String get rel_admin_key_save_failed => 'O gateway não guardou essa chave.';
+
+  @override
+  String get rel_admin_key_clear_required =>
+      'Escolha uma chave de fornecedor para apagar.';
+
+  @override
+  String get rel_admin_key_clear_failed => 'O gateway não apagou essa chave.';
+
+  @override
+  String get rel_admin_endpoint_save_failed =>
+      'O gateway não guardou esse ponto de ligação.';
+
+  @override
+  String get rel_admin_endpoint_activate_failed =>
+      'O gateway não ativou esse ponto de ligação.';
+
+  @override
+  String get rel_admin_accounts_secure_required =>
+      'As contas de fornecedores requerem um gateway HTTPS autenticado ou localhost.';
+
+  @override
+  String get rel_admin_accounts_read_failed =>
+      'Não foi possível ler as contas de fornecedores.';
+
+  @override
+  String get rel_admin_account_disconnect_failed =>
+      'O gateway não desligou essa conta.';
+
+  @override
+  String get rel_admin_account_not_disconnectable =>
+      'Não é possível desligar essa conta de fornecedor.';
+
+  @override
+  String get rel_admin_backend_required =>
+      'Escolha um dos backends de delegação disponíveis.';
+
+  @override
+  String get rel_admin_backend_save_failed =>
+      'O gateway não selecionou esse backend.';
+
+  @override
+  String get rel_admin_routes_save_failed =>
+      'O gateway não guardou essas rotas.';
+
+  @override
+  String get rel_admin_profile_route_required =>
+      'Cada rota de perfil precisa de um nome de perfil.';
+
+  @override
+  String get rel_admin_profile_route_unique =>
+      'As rotas de perfil têm de ser únicas.';
+
+  @override
+  String get rel_admin_profile_route_default_invalid =>
+      'A rota de perfil predefinida tem de ser um dos perfis permitidos.';
+
+  @override
+  String get rel_admin_profile_routes_save_failed =>
+      'O gateway não guardou essas rotas de perfil.';
+
+  @override
+  String get rel_admin_limits_save_failed =>
+      'O gateway não guardou esses limites.';
+
+  @override
+  String get rel_admin_mixture_save_failed =>
+      'O gateway não guardou essa mistura.';
+
+  @override
+  String get rel_admin_credit_amount_required =>
+      'Escolha um dos montantes de crédito apresentados.';
+
+  @override
+  String get rel_admin_charge_check_failed =>
+      'Não foi possível verificar essa cobrança.';
+
+  @override
+  String get rel_admin_reload_amounts_missing =>
+      'Os montantes de recarga automática não foram fornecidos, pelo que não foram alterados.';
+
+  @override
+  String get rel_admin_plan_required => 'Escolha primeiro um plano.';
+
+  @override
+  String get rel_admin_plan_scheduled_only =>
+      'Só é possível confirmar aqui uma alteração de plano agendada.';
+
+  @override
+  String get rel_admin_billing_refused =>
+      'O gateway recusou este pedido de faturação.';
+
+  @override
+  String get rel_admin_request_refused => 'O gateway recusou este pedido.';
+
+  @override
+  String get rel_admin_endpoint_answered => 'O ponto de ligação respondeu.';
+
+  @override
+  String get rel_admin_endpoint_no_answer =>
+      'O ponto de ligação não respondeu.';
+
+  @override
+  String get rel_admin_charge_unknown =>
+      'O resultado da cobrança é desconhecido. Ainda pode ser liquidada. Consulte o portal antes de tentar novamente.';
+
+  @override
+  String get rel_admin_connect_before_billing =>
+      'Ligue a sessão ativa do gateway antes de consultar a faturação. Não é cobrado nada nesta página.';
+
+  @override
+  String get rel_admin_preset_required =>
+      'Guarde uma predefinição antes de a aplicar.';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -24319,4 +24519,203 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get release_core_file_save_hidden =>
       'O gateway não pode salvar arquivos ocultos.';
+
+  @override
+  String get rel_admin_choose_provider => 'Escolha um provedor e um modelo.';
+
+  @override
+  String get rel_admin_known_effort => 'Escolha um nível de esforço conhecido.';
+
+  @override
+  String get rel_admin_endpoint_name_required =>
+      'Insira um nome para este endpoint.';
+
+  @override
+  String get rel_admin_endpoint_model_required =>
+      'Insira o modelo oferecido por este endpoint.';
+
+  @override
+  String get rel_admin_known_api_mode =>
+      'Escolha Automático ou um modo de API conhecido.';
+
+  @override
+  String get rel_admin_endpoint_id_invalid =>
+      'Este identificador de endpoint não pode ser usado.';
+
+  @override
+  String get rel_admin_endpoint_https =>
+      'Use HTTPS para um endpoint remoto ou HTTP em localhost.';
+
+  @override
+  String get rel_admin_key_invalid =>
+      'Não é possível salvar essa chave de API.';
+
+  @override
+  String get rel_admin_response_shape =>
+      'A resposta do gateway não correspondeu à estrutura esperada.';
+
+  @override
+  String get rel_admin_limits_required =>
+      'Insira os limites de iterações, simultaneidade e tempo limite antes de salvar.';
+
+  @override
+  String get rel_admin_route_required =>
+      'Cada rota precisa de um nome e de um modelo antes de ser salva.';
+
+  @override
+  String get rel_admin_route_unique => 'Os nomes das rotas devem ser únicos.';
+
+  @override
+  String get rel_admin_route_default_invalid =>
+      'A rota padrão deve ser uma das rotas salvas.';
+
+  @override
+  String get rel_admin_policy_required =>
+      'Escolha uma política com aviso ou silenciosa para referências degradadas.';
+
+  @override
+  String get rel_admin_mixture_missing =>
+      'O gateway não retornou uma mistura ativa.';
+
+  @override
+  String get rel_admin_mixture_slots_required =>
+      'Indique um provedor e um modelo para o agregador e para cada referência.';
+
+  @override
+  String get rel_admin_chat_id_required =>
+      'Insira o ID da conversa à qual esta alteração se aplica.';
+
+  @override
+  String rel_admin_http_error(String status) {
+    return 'O gateway retornou HTTP $status.';
+  }
+
+  @override
+  String get rel_admin_response_unreadable =>
+      'Não foi possível ler a resposta do gateway.';
+
+  @override
+  String get rel_admin_connect_before_change =>
+      'Conecte a sessão ativa do gateway antes de alterar o faturamento ou uma conversa.';
+
+  @override
+  String get rel_admin_operation_unavailable =>
+      'Este gateway não oferece essa operação.';
+
+  @override
+  String get rel_admin_key_required => 'Insira a chave a salvar.';
+
+  @override
+  String get rel_admin_key_save_failed => 'O gateway não salvou essa chave.';
+
+  @override
+  String get rel_admin_key_clear_required =>
+      'Escolha uma chave de provedor para apagar.';
+
+  @override
+  String get rel_admin_key_clear_failed => 'O gateway não apagou essa chave.';
+
+  @override
+  String get rel_admin_endpoint_save_failed =>
+      'O gateway não salvou esse endpoint.';
+
+  @override
+  String get rel_admin_endpoint_activate_failed =>
+      'O gateway não ativou esse endpoint.';
+
+  @override
+  String get rel_admin_accounts_secure_required =>
+      'As contas de provedores exigem um gateway HTTPS autenticado ou localhost.';
+
+  @override
+  String get rel_admin_accounts_read_failed =>
+      'Não foi possível ler as contas de provedores.';
+
+  @override
+  String get rel_admin_account_disconnect_failed =>
+      'O gateway não desconectou essa conta.';
+
+  @override
+  String get rel_admin_account_not_disconnectable =>
+      'Não é possível desconectar essa conta de provedor.';
+
+  @override
+  String get rel_admin_backend_required =>
+      'Escolha um dos backends de delegação disponíveis.';
+
+  @override
+  String get rel_admin_backend_save_failed =>
+      'O gateway não selecionou esse backend.';
+
+  @override
+  String get rel_admin_routes_save_failed =>
+      'O gateway não salvou essas rotas.';
+
+  @override
+  String get rel_admin_profile_route_required =>
+      'Cada rota de perfil precisa de um nome de perfil.';
+
+  @override
+  String get rel_admin_profile_route_unique =>
+      'As rotas de perfil devem ser únicas.';
+
+  @override
+  String get rel_admin_profile_route_default_invalid =>
+      'A rota de perfil padrão deve ser um dos perfis permitidos.';
+
+  @override
+  String get rel_admin_profile_routes_save_failed =>
+      'O gateway não salvou essas rotas de perfil.';
+
+  @override
+  String get rel_admin_limits_save_failed =>
+      'O gateway não salvou esses limites.';
+
+  @override
+  String get rel_admin_mixture_save_failed =>
+      'O gateway não salvou essa mistura.';
+
+  @override
+  String get rel_admin_credit_amount_required =>
+      'Escolha um dos valores de crédito oferecidos.';
+
+  @override
+  String get rel_admin_charge_check_failed =>
+      'Não foi possível verificar essa cobrança.';
+
+  @override
+  String get rel_admin_reload_amounts_missing =>
+      'Os valores de recarga automática não foram fornecidos, portanto não foram alterados.';
+
+  @override
+  String get rel_admin_plan_required => 'Escolha um plano primeiro.';
+
+  @override
+  String get rel_admin_plan_scheduled_only =>
+      'Só é possível confirmar aqui uma alteração de plano agendada.';
+
+  @override
+  String get rel_admin_billing_refused =>
+      'O gateway recusou esta solicitação de faturamento.';
+
+  @override
+  String get rel_admin_request_refused => 'O gateway recusou esta solicitação.';
+
+  @override
+  String get rel_admin_endpoint_answered => 'O endpoint respondeu.';
+
+  @override
+  String get rel_admin_endpoint_no_answer => 'O endpoint não respondeu.';
+
+  @override
+  String get rel_admin_charge_unknown =>
+      'O resultado da cobrança é desconhecido. Ela ainda pode ser liquidada. Consulte o portal antes de tentar novamente.';
+
+  @override
+  String get rel_admin_connect_before_billing =>
+      'Conecte a sessão ativa do gateway antes de consultar o faturamento. Nada é cobrado nesta página.';
+
+  @override
+  String get rel_admin_preset_required =>
+      'Salve uma predefinição antes de aplicá-la.';
 }
