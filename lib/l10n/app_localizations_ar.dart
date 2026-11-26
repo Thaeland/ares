@@ -9,6 +9,13 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
+  String get attachment_audio_failed =>
+      'تعذر تشغيل هذا الصوت. قد يكون التنسيق أو الترميز غير مدعوم، أو تم تجاوز حد حجم المعاينة. أعد المحاولة أو احفظ الملف الأصلي أو شاركه.';
+
+  @override
+  String get attachment_audio_seek => 'موضع الصوت';
+
+  @override
   String get workspace_workers => 'العمّال النشطون';
 
   @override

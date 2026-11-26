@@ -114,6 +114,7 @@ final class RemoteWorkspaceOwner {
 
   WorkspacePane pane() => WorkspacePane._(this);
   final Object _issuer = Object();
+  final _targetObservers = <void Function()>{};
   WorkspaceRoute route({String? storedSessionId}) => (
     issuer: _issuer,
     connectionId: connectionId,
@@ -122,6 +123,13 @@ final class RemoteWorkspaceOwner {
   );
   void close() {
     _closed = true;
+    for (final changed in List.of(_targetObservers)) {
+      try {
+        changed();
+      } catch (_) {
+        /* Observer failure must not prevent close. */
+      }
+    }
     WorkspaceKanban._cancelNudge(this);
   }
 
@@ -325,6 +333,27 @@ final class WorkspaceTarget {
             (_binding.cwd != null && _binding.cwd != canonicalCwd))) {
       _fail(WorkspaceFailure.mismatch);
     }
+  }
+
+  /// Observe this exact target becoming stale, including same-owner runtime
+  /// replacement. Cleanup detaches from the captured socket, never a successor.
+  void Function() observeInvalidation(void Function() invalidated) {
+    var active = true;
+    void changed() {
+      if (active && !isCurrent) {
+        active = false;
+        invalidated();
+      }
+    }
+
+    final detach = _socket.observeWorkspaceBindings(changed);
+    _owner._targetObservers.add(changed);
+    changed();
+    return () {
+      active = false;
+      detach();
+      _owner._targetObservers.remove(changed);
+    };
   }
 
   /// Refresh the authenticated session owner before an independently confirmed

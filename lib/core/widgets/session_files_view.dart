@@ -8,6 +8,10 @@ import '../services/connection_mutation_barrier.dart';
 import '../services/remote_workspace.dart';
 import 'git_review_pane.dart';
 import 'markdown_file_preview.dart';
+import 'media_artifact_card.dart';
+import '../services/remote_files_client.dart';
+import '../utils/attachment_types.dart';
+import '../utils/media_tags.dart';
 
 /// Same tree beside either chat; on a phone it takes the body while the live
 /// transcript stays mounted. No second session or local filesystem is opened.
@@ -23,7 +27,10 @@ class SessionFilesLayout extends StatelessWidget {
         children: [
           Positioned.fill(
             right: files != null && wide ? 360 : 0,
-            child: Offstage(offstage: files != null && !wide, child: child),
+            child: TickerMode(
+              enabled: files == null || wide,
+              child: Offstage(offstage: files != null && !wide, child: child),
+            ),
           ),
           if (files != null)
             Positioned(
@@ -101,6 +108,7 @@ class SessionFilesView extends StatefulWidget {
     this.startOnGit = false,
     this.focusGitFile,
     this.turnBaseline,
+    this.audioFilesClient,
   });
   final RemoteWorkspaceOwner owner;
   final WorkspaceRoute route;
@@ -111,6 +119,7 @@ class SessionFilesView extends StatefulWidget {
   final bool startOnGit;
   final String? focusGitFile;
   final String? turnBaseline;
+  final RemoteFilesDataSource Function()? audioFilesClient;
   @override
   State<SessionFilesView> createState() => _FilesState();
 }
@@ -119,6 +128,8 @@ class _FilesState extends State<SessionFilesView> {
   late WorkspacePane _pane;
   Object? _account;
   WorkspaceTarget? _target;
+  ValueNotifier<bool> _audioValidity = ValueNotifier(true);
+  void Function()? _detachAudioTarget;
   final _rows = <String, List<WorkspaceEntry>>{};
   final _expanded = <String>{};
   Set<String> _changed = {};
@@ -162,6 +173,9 @@ class _FilesState extends State<SessionFilesView> {
   }
 
   void _clear() {
+    _audioValidity.value = false;
+    _detachAudioTarget?.call();
+    _detachAudioTarget = null;
     _epoch++;
     _rows.clear();
     _expanded.clear();
@@ -193,6 +207,9 @@ class _FilesState extends State<SessionFilesView> {
   void dispose() {
     ConnectionMutationBarrier.removeListener(_revoked);
     _pane.close();
+    _audioValidity.value = false;
+    _detachAudioTarget?.call();
+    _audioValidity.dispose();
     _epoch++;
     _source.dispose();
     super.dispose();
@@ -222,6 +239,9 @@ class _FilesState extends State<SessionFilesView> {
       : l10n.release_core_session_files_view_gateway_operation_could_not_be_confirmed;
 
   Future<void> _reload() async {
+    _audioValidity.value = false;
+    _detachAudioTarget?.call();
+    _detachAudioTarget = null;
     final previous = {..._expanded};
     final e = ++_epoch;
     setState(() {
@@ -264,6 +284,18 @@ class _FilesState extends State<SessionFilesView> {
       }
       if (!_owns(e)) return;
       t.checkCurrent();
+      _audioValidity.dispose();
+      final validity = _audioValidity = ValueNotifier(true);
+      _detachAudioTarget = t.observeInvalidation(() {
+        validity.value = false;
+        if (mounted) {
+          setState(
+            () => _message = _failure(
+              const WorkspaceException(WorkspaceFailure.stale),
+            ),
+          );
+        }
+      });
       setState(() {
         _target = t;
         _rows.addAll(fresh);
@@ -733,6 +765,26 @@ class _FilesState extends State<SessionFilesView> {
     );
   }
 
+  Widget _audioDocument(WorkspaceDocument file) {
+    final target = file.entry.owner;
+    final files = widget.audioFilesClient!;
+    return SingleChildScrollView(
+      child: MediaArtifactCard(
+        ref: MediaTagRef(
+          path: file.entry.path,
+          suggestedFilename: file.entry.name,
+        ),
+        sourceIdentity: (target, file),
+        ownerValidity: _audioValidity,
+        isOwnerCurrent: () => target.isCurrent,
+        filesClient: () {
+          target.checkCurrent();
+          return files();
+        },
+      ),
+    );
+  }
+
   Widget _document(WorkspaceDocument file) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
@@ -804,7 +856,11 @@ class _FilesState extends State<SessionFilesView> {
         ],
       ),
       Expanded(
-        child: file.binary
+        child:
+            widget.audioFilesClient != null &&
+                attachmentIsAudio(file.entry.name.split('.').last)
+            ? _audioDocument(file)
+            : file.binary
             ? Center(
                 child: Text(
                   context

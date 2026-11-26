@@ -9,6 +9,13 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
+  String get attachment_audio_failed =>
+      'No se pudo reproducir este audio. Puede que el formato o códec no sea compatible o que se haya superado el límite de tamaño de la vista previa. Reintenta, guarda o comparte el archivo original.';
+
+  @override
+  String get attachment_audio_seek => 'Posición del audio';
+
+  @override
   String get workspace_workers => 'Subagentes activos';
 
   @override

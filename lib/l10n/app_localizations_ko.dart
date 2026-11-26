@@ -9,6 +9,13 @@ class AppLocalizationsKo extends AppLocalizations {
   AppLocalizationsKo([String locale = 'ko']) : super(locale);
 
   @override
+  String get attachment_audio_failed =>
+      '이 오디오를 재생할 수 없습니다. 형식 또는 코덱이 지원되지 않거나 미리 보기 크기 제한을 초과했을 수 있습니다. 다시 시도하거나 원본 파일을 저장 또는 공유하세요.';
+
+  @override
+  String get attachment_audio_seek => '오디오 재생 위치';
+
+  @override
   String get workspace_workers => '실행 중인 하위 에이전트';
 
   @override

@@ -205,6 +205,9 @@ class NgUserItem extends NgItem {
   /// Names of files a stored prompt referenced (`@file:` lines).
   final List<String> files;
 
+  /// Original prompt refs before filename-only display projection.
+  final String? fileReferenceText;
+
   /// Client-generated UUID for `prompt.submit` idempotency on modern gateways.
   String? submissionId;
   bool recoverInComposer = false;
@@ -234,6 +237,7 @@ class NgUserItem extends NgItem {
     this.pending = false,
     this.attachments = const [],
     this.files = const [],
+    this.fileReferenceText,
     this.submissionId,
     this.composerImageText,
     this.sentText,
@@ -1457,6 +1461,7 @@ class NgChatController extends ChangeNotifier {
                 body,
                 time: _time(m['timestamp']),
                 files: files,
+                fileReferenceText: split.$2,
               ),
             );
           } else {
@@ -1489,6 +1494,7 @@ class NgChatController extends ChangeNotifier {
             time: _time(m['timestamp']),
             steered: displayKind == 'steer',
             files: files,
+            fileReferenceText: text,
           ),
         );
       } else if (role == 'assistant') {

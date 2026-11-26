@@ -58,6 +58,8 @@ import '../../core/widgets/resume_session_picker.dart';
 import '../../core/widgets/orphan_draft_recovery.dart';
 import '../../core/widgets/markdown_code_block.dart';
 import '../../core/widgets/media_artifact_card.dart';
+import '../../core/widgets/attachment_audio_preview.dart';
+import '../../core/utils/audio_file_references.dart';
 import '../../core/widgets/slash_command_highlight.dart';
 import '../../core/presentation/companion_draft.dart';
 import '../../core/presentation/petdex.dart';
@@ -2611,6 +2613,7 @@ class _NgChatViewState extends State<NgChatView>
                     : SessionFilesView(
                         owner: fileOwner,
                         route: fileOwner.route(storedSessionId: fileId),
+                        audioFilesClient: _filesClient,
                         startOnGit: _openGit,
                         focusGitFile: _gitFocus,
                         onGitClosed: () => setState(() => _openGit = false),
@@ -3225,6 +3228,8 @@ class _NgChatViewState extends State<NgChatView>
     return switch (item) {
       NgUserItem() => _UserBubble(
         item: item,
+        files: _filesClient,
+        filesIdentity: (NgScope.of(context).gateway, chat.storedId),
         onRetry: i == lastUserIndex && !chat.running && !item.recoverInComposer
             ? () => unawaited(_retry())
             : null,
@@ -3406,6 +3411,13 @@ class _NgChatViewState extends State<NgChatView>
                             ),
                         ],
                       ),
+                    ),
+                  for (final draft in _drafts)
+                    AttachmentDraftAudioPreview(
+                      key: ValueKey(('audio', draft.id)),
+                      draft: draft,
+                      showName: true,
+                      owner: chat,
                     ),
                   // Stacked above the editor: bounded by the keyboard-aware
                   // share and scrolling inside, so the editor stays above the
@@ -3943,11 +3955,15 @@ class _CommandCardState extends State<_CommandCard> {
 class _UserBubble extends StatelessWidget {
   const _UserBubble({
     required this.item,
+    required this.files,
+    required this.filesIdentity,
     this.onRetry,
     this.onEdit,
     this.onRestore,
   });
   final NgUserItem item;
+  final RemoteFilesDataSource Function() files;
+  final Object filesIdentity;
   final VoidCallback? onRetry;
   final VoidCallback? onEdit;
   final VoidCallback? onRestore;
@@ -4042,6 +4058,21 @@ class _UserBubble extends StatelessWidget {
                       ),
                   ],
                 ),
+              ),
+            for (final ref in {
+              for (final ref in audioPromptFileRefs(
+                item.fileReferenceText ?? item.text,
+              ))
+                ref.path: ref,
+              for (final attachment in item.attachments)
+                for (final ref in audioPromptFileRefs(attachment.refText ?? ''))
+                  ref.path: ref,
+            }.values)
+              MediaArtifactCard(
+                key: ValueKey((filesIdentity, ref.path)),
+                ref: ref,
+                filesClient: files,
+                sourceIdentity: filesIdentity,
               ),
             // One footer line: the history actions sit to the left of the
             // time, not stacked underneath it. A narrow screen or large text
@@ -4248,6 +4279,7 @@ class _AssistantBlock extends StatefulWidget {
 }
 
 class _AssistantBlockState extends State<_AssistantBlock> {
+  final _previewOwner = GlobalKey<InlineMediaPreviewOwner>();
   bool _showThinking = false;
   bool _showTools = false;
 
@@ -4442,24 +4474,31 @@ class _AssistantBlockState extends State<_AssistantBlock> {
   bool _openDelivered(String? href) {
     final path = href == null ? null : deliveredFilePathFromHref(href);
     if (path == null) return false;
-    showNgSheet<void>(
-      context,
-      builder: (_) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-          child: MediaArtifactCard(
-            ref: MediaTagRef(path: path),
-            filesClient: widget.files,
-            sourceIdentity: widget.filesIdentity,
-          ),
-        ),
+    unawaited(
+      openMediaFilePreview(
+        context: context,
+        filesClient: widget.files,
+        ref: MediaTagRef(path: path),
+        sourceIdentity: widget.filesIdentity,
+        owner: _previewOwner.currentState,
       ),
     );
     return true;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => InlineMediaPreviewScope(
+    key: _previewOwner,
+    filesClient: widget.files,
+    sourceIdentity: widget.filesIdentity,
+    references: extractDeliveredFileRefs(
+      widget.item.text,
+      isFinal: !widget.item.open,
+    ),
+    builder: _build,
+  );
+
+  Widget _build(BuildContext context) {
     final c = NgColors.of(context);
     final item = widget.item;
     final tools = item.tools;

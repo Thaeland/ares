@@ -9,6 +9,13 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
+  String get attachment_audio_failed =>
+      'この音声を再生できませんでした。形式やコーデックが非対応か、プレビューのサイズ制限を超えています。再試行するか、元のファイルを保存または共有してください。';
+
+  @override
+  String get attachment_audio_seek => '音声の再生位置';
+
+  @override
   String get workspace_workers => '実行中のサブエージェント';
 
   @override

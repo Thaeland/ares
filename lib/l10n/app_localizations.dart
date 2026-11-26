@@ -119,6 +119,18 @@ abstract class AppLocalizations {
     Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
   ];
 
+  /// No description provided for @attachment_audio_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'This audio could not be played. Its format or codec may not be supported, or the preview size limit was exceeded. Retry, or save or share the original file.'**
+  String get attachment_audio_failed;
+
+  /// No description provided for @attachment_audio_seek.
+  ///
+  /// In en, this message translates to:
+  /// **'Audio position'**
+  String get attachment_audio_seek;
+
   /// No description provided for @workspace_workers.
   ///
   /// In en, this message translates to:

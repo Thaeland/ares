@@ -1,4 +1,6 @@
 {
+  "attachment_audio_failed": "No se pudo reproducir este audio. Puede que el formato o códec no sea compatible o que se haya superado el límite de tamaño de la vista previa. Reintenta, guarda o comparte el archivo original.",
+  "attachment_audio_seek": "Posición del audio",
   "@@locale": "es",
   "workspace_workers": "Subagentes activos",
   "workers_unattached": "Solo se muestran cantidades. Para dirigir un subagente, elige Subagentes activos en el chat principal conectado.",

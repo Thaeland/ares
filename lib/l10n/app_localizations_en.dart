@@ -9,6 +9,13 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get attachment_audio_failed =>
+      'This audio could not be played. Its format or codec may not be supported, or the preview size limit was exceeded. Retry, or save or share the original file.';
+
+  @override
+  String get attachment_audio_seek => 'Audio position';
+
+  @override
   String get workspace_workers => 'Live workers';
 
   @override

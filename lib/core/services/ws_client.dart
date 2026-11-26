@@ -330,6 +330,24 @@ class WsClient {
   final previewPeers = PreviewPeers();
   int get socketEpoch => _connectionGeneration;
   final _workspaceBindings = <String, WorkspaceRuntime>{};
+  final _workspaceObservers = <void Function()>{};
+
+  /// Invalidation only; observers never receive another profile's payload.
+  void Function() observeWorkspaceBindings(void Function() changed) {
+    _workspaceObservers.add(changed);
+    return () => _workspaceObservers.remove(changed);
+  }
+
+  void _notifyWorkspaceBindings() {
+    for (final changed in List.of(_workspaceObservers)) {
+      try {
+        changed();
+      } catch (_) {
+        /* Optional observers do not own RPC progress. */
+      }
+    }
+  }
+
   // Retain per-socket fences even after close/rebinding: a delayed older
   // acknowledgement cannot resurrect authority cleared by the newer one.
   final _workspaceReceipt = <String, int>{};
@@ -348,6 +366,7 @@ class WsClient {
       cwd,
       old.backend,
     );
+    _notifyWorkspaceBindings();
   }
 
   final String baseUrl;
@@ -620,6 +639,7 @@ class WsClient {
     _connected = false;
     _channel = null;
     _workspaceBindings.clear();
+    _notifyWorkspaceBindings();
     previewPeers.clear();
     _workspaceReceipt.clear();
     // Reject all pending request-response calls.
@@ -1522,6 +1542,7 @@ class WsClient {
         requestedProfile,
       );
     }
+    _notifyWorkspaceBindings();
     return reply;
   }
 

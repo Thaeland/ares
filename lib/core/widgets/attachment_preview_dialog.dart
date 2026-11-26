@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart'
-    show defaultTargetPlatform, kIsWeb, TargetPlatform;
+    show defaultTargetPlatform, kIsWeb, TargetPlatform, ValueListenable;
 import 'package:flutter/material.dart';
 import 'package:hermes_android/core/l10n/l10n.dart';
 
@@ -14,6 +14,7 @@ import '../services/attachment_pdf_service.dart';
 import '../utils/attachment_types.dart';
 import 'attachment_document_preview.dart';
 import 'attachment_video_preview.dart';
+import 'attachment_audio_preview.dart';
 import 'hermes_system_ui.dart';
 import 'markdown_file_preview.dart';
 
@@ -175,12 +176,17 @@ class AttachmentActions extends StatelessWidget {
 DialogRoute<void> attachmentPreviewRoute({
   required BuildContext context,
   required AttachmentController controller,
+  ValueListenable<bool>? ownerValidity,
 }) {
   final chat = RenderScope.maybeOf(context)?.chatKey;
   return DialogRoute<void>(
     context: context,
     builder: (_) => controller.active
-        ? AttachmentPreviewDialog(controller: controller, playbackScope: chat)
+        ? AttachmentPreviewDialog(
+            controller: controller,
+            playbackScope: chat,
+            ownerValidity: ownerValidity,
+          )
         : const SizedBox.shrink(),
   );
 }
@@ -190,8 +196,10 @@ class AttachmentPreviewDialog extends StatelessWidget {
     super.key,
     required this.controller,
     this.playbackScope,
+    this.ownerValidity,
   });
   final AttachmentController controller;
+  final ValueListenable<bool>? ownerValidity;
 
   /// The chat a video remembers its position and speed for, if any.
   final String? playbackScope;
@@ -297,6 +305,19 @@ class AttachmentPreviewDialog extends StatelessWidget {
         minScale: 0.5,
         maxScale: 8,
         child: Center(child: attachmentImage(context, bytes)),
+      );
+    }
+    if (attachmentIsAudio(extension)) {
+      return Center(
+        child: SingleChildScrollView(
+          child: AttachmentAudioPreview(
+            key: ObjectKey(controller),
+            sourceIdentity: controller,
+            extension: extension,
+            loadBytes: controller.ensureBytes,
+            ownerValidity: ownerValidity,
+          ),
+        ),
       );
     }
     if (!isParkedAutomotive && attachmentIsVideo(extension)) {

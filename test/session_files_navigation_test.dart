@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -21,6 +22,7 @@ import 'support/fake_voice_composer_adapter.dart';
 import 'support/markdown_file_fixture.dart';
 import 'support/pump_chat_updates.dart';
 import 'support/session_files_gateway.dart';
+import 'support/audio_preview_fixture.dart';
 
 enum _Chat { classic, nextGen }
 
@@ -68,6 +70,16 @@ Future<void> _wait(WidgetTester tester, Finder match) async {
   expect(match, findsOneWidget);
 }
 
+Future<void> _waitCondition(WidgetTester tester, bool Function() done) async {
+  for (var i = 0; i < 250 && !done(); i++) {
+    await tester.pump(const Duration(milliseconds: 16));
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 10)),
+    );
+  }
+  expect(done(), isTrue);
+}
+
 Future<void> _tap(WidgetTester tester, Finder match) async {
   await _wait(tester, match.hitTestable());
   await tester.tap(match.hitTestable());
@@ -81,12 +93,14 @@ Future<void> _withChat(
   Future<void> Function(SessionFilesGateway wire) exercise, {
   String terminalBackend = 'local',
   bool draft = false,
+  AudioFixture? audio,
 }) async {
   tester.view.devicePixelRatio = 1;
   tester.view.physicalSize = const Size(412, 900);
   addTearDown(tester.view.reset);
   final wire = (await tester.runAsync(SessionFilesGateway.start))!;
   wire.terminalBackend = terminalBackend;
+  wire.audioFiles = audio != null;
   final connection = wire.connection;
   final previous = HttpOverrides.current;
   final network = _FixtureOnly(connection.port);
@@ -112,9 +126,29 @@ Future<void> _withChat(
       ),
       turnApplicationController: owner,
       testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
+      testDesktopGateway: (gateway) {
+        wire.rebindClient = () async {
+          wire.runtime = 'live-field-rebound';
+          await gateway.call('session.resume', {
+            'session_id': SessionFilesGateway.session,
+            'source': 'desktop',
+            'omit_messages': true,
+            'defer_history': true,
+          });
+        };
+      },
     );
   } else {
     final gateway = NextGenGateway(connection);
+    wire.rebindClient = () async {
+      wire.runtime = 'live-field-rebound';
+      await gateway.call('session.resume', {
+        'session_id': SessionFilesGateway.session,
+        'source': 'desktop',
+        'omit_messages': true,
+        'defer_history': true,
+      });
+    };
     final chat = NgChatController(
       gateway,
       sessionId: SessionFilesGateway.session,
@@ -145,6 +179,7 @@ Future<void> _withChat(
         theme: shell == _Chat.nextGen
             ? nextGenTheme(Brightness.light, NextGenLook.instance)
             : null,
+        builder: (context, child) => audio?.wrap(child!) ?? child!,
         home: home,
       ),
     );
@@ -167,6 +202,8 @@ Future<void> _withChat(
     );
     expect(tester.takeException(), isNull);
   } finally {
+    final gate = wire.audioGate;
+    if (gate != null && !gate.isCompleted) gate.complete();
     await tester.pumpWidget(const SizedBox.shrink());
     await close();
     await tester.runAsync(wire.close);
@@ -199,6 +236,94 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({'verbose_mode': false}));
 
   for (final shell in _Chat.values) {
+    for (final held in [true, false]) {
+      testWidgets(
+        '${shell.name}: audio rejects same-owner same-route runtime replacement (held=$held)',
+        (tester) async {
+          final audio = AudioFixture();
+          await _withChat(tester, shell, (wire) async {
+            if (held) wire.audioGate = Completer<void>();
+            await _openNamed(tester, SessionFilesGateway.audioName);
+            final original = tester.widget<SessionFilesView>(_pane);
+            final play = _inside(
+              find.byKey(const Key('attachment-audio-play-pause')),
+            );
+            await _wait(tester, play);
+            await _tap(tester, play);
+            await _waitCondition(tester, () => wire.audioEntered.isCompleted);
+            if (!held) await _wait(tester, _inside(find.byTooltip('Pause')));
+            var rebound = false;
+            Object? rebindError;
+            unawaited(
+              wire.rebindClient!().then<void>(
+                (_) => rebound = true,
+                onError: (Object error) {
+                  rebindError = error;
+                  rebound = true;
+                },
+              ),
+            );
+            await _waitCondition(tester, () => rebound);
+            expect(rebindError, isNull);
+            final replacement = tester.widget<SessionFilesView>(_pane);
+            expect(identical(original.owner, replacement.owner), isTrue);
+            expect(original.route, replacement.route);
+            wire.audioGate?.complete();
+            await pumpChatUpdates(tester);
+            if (held) {
+              expect(
+                audio.players,
+                isEmpty,
+                reason: 'The old download must never create a native player.',
+              );
+            } else {
+              expect(audio.players.single.disposals, 1);
+              expect(audio.store.files.single.closes, 1);
+            }
+            final control = tester.widget<IconButton>(play);
+            expect(control.onPressed, isNull);
+          }, audio: audio);
+        },
+      );
+    }
+
+    testWidgets(
+      '${shell.name}: session file audio uses the owning gateway and stops when returning to the tree',
+      (tester) async {
+        final audio = AudioFixture();
+        await _withChat(tester, shell, (wire) async {
+          await _openNamed(tester, SessionFilesGateway.audioName);
+          final play = _inside(
+            find.byKey(const Key('attachment-audio-play-pause')),
+          );
+          await _wait(tester, play);
+          expect(audio.players, isEmpty);
+          expect(
+            wire.requests.where((r) => r.$2.path == '/api/fs/download'),
+            isEmpty,
+          );
+          await _tap(tester, play);
+          await _wait(tester, _inside(find.byTooltip('Pause')));
+          expect(audio.players.single.plays, 1);
+          final download = wire.requests
+              .singleWhere((r) => r.$2.path == '/api/fs/download')
+              .$2;
+          expect(
+            download.queryParameters['profile'],
+            SessionFilesGateway.profile,
+          );
+          expect(
+            download.queryParameters['session_id'],
+            SessionFilesGateway.session,
+          );
+          await _tap(tester, _inside(find.byType(IconButton)).first);
+          await pumpChatUpdates(tester);
+          expect(audio.players.single.disposals, 1);
+          expect(audio.store.files.single.closes, 1);
+        }, audio: audio);
+      },
+    );
+
     testWidgets(
       '${shell.name}: Session files refreshes an expanded tree, previews Markdown and attaches to the existing draft across a resize',
       (tester) async {

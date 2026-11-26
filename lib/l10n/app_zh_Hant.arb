@@ -1,4 +1,6 @@
 {
+  "attachment_audio_failed": "無法播放此音訊。格式或編解碼器可能不受支援，或超出了預覽大小限制。請重試，或儲存、分享原始檔案。",
+  "attachment_audio_seek": "音訊位置",
   "@@locale": "zh_Hant",
   "workspace_workers": "即時工作者",
   "workers_unattached": "僅顯示數量。若要引導工作者，請在其所屬的上層聊天中選擇「即時工作者」。",
