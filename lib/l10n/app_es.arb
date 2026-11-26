@@ -1915,6 +1915,7 @@
   "wake_word_capture_auto": "Automático",
   "wake_word_capture_client": "Micrófono de este dispositivo",
   "wake_word_capture_local": "Micrófono del host de la pasarela",
+  "wake_word_capture_unavailable": "Esta pasarela no permite que las aplicaciones cambien el modo de captura. Configura wake_word.capture en la configuración de Hermes del host de la pasarela.",
   "wake_word_input_device": "Micrófono de entrada",
   "wake_word_default_device": "Predeterminado del sistema",
   "ng_wake_word_title": "Palabra de activación",

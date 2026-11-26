@@ -2982,6 +2982,7 @@
   "wake_word_capture_auto": "自動",
   "wake_word_capture_client": "此裝置麥克風",
   "wake_word_capture_local": "閘道器主機麥克風",
+  "wake_word_capture_unavailable": "此閘道器不允許應用程式變更擷取模式。請在閘道器主機的 Hermes 設定中設定 wake_word.capture。",
   "wake_word_input_device": "輸入麥克風",
   "wake_word_default_device": "系統預設",
   "ng_wake_word_title": "喚醒詞",

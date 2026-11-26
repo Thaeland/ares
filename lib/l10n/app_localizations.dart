@@ -12495,6 +12495,12 @@ abstract class AppLocalizations {
   /// **'Gateway host microphone'**
   String get wake_word_capture_local;
 
+  /// No description provided for @wake_word_capture_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This gateway doesn\'t let apps change the capture mode. Set wake_word.capture in the Hermes config on the gateway host.'**
+  String get wake_word_capture_unavailable;
+
   /// No description provided for @wake_word_input_device.
   ///
   /// In en, this message translates to:

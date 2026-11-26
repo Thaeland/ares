@@ -1915,6 +1915,7 @@
   "wake_word_capture_auto": "자동",
   "wake_word_capture_client": "이 기기의 마이크",
   "wake_word_capture_local": "게이트웨이 호스트 마이크",
+  "wake_word_capture_unavailable": "이 게이트웨이에서는 앱이 캡처 모드를 변경할 수 없습니다. 게이트웨이 호스트의 Hermes 설정에서 wake_word.capture를 지정하세요.",
   "wake_word_input_device": "입력 마이크",
   "wake_word_default_device": "시스템 기본값",
   "ng_wake_word_title": "호출어",

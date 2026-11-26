@@ -7469,6 +7469,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get wake_word_capture_local => 'Microfone do anfitrião do gateway';
 
   @override
+  String get wake_word_capture_unavailable =>
+      'Este gateway não permite que as aplicações alterem o modo de captura. Defina wake_word.capture na configuração do Hermes no anfitrião do gateway.';
+
+  @override
   String get wake_word_input_device => 'Microfone de entrada';
 
   @override
@@ -14632,6 +14636,10 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get wake_word_capture_local => 'Microfone do host do gateway';
+
+  @override
+  String get wake_word_capture_unavailable =>
+      'Este gateway não permite que os apps alterem o modo de captura. Defina wake_word.capture na configuração do Hermes no host do gateway.';
 
   @override
   String get wake_word_input_device => 'Microfone de entrada';

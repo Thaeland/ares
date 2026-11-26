@@ -7483,6 +7483,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get wake_word_capture_local => 'Microphone de l’hôte passerelle';
 
   @override
+  String get wake_word_capture_unavailable =>
+      'Cette passerelle ne permet pas aux applications de changer le mode de capture. Définissez wake_word.capture dans la configuration Hermes de l’hôte passerelle.';
+
+  @override
   String get wake_word_input_device => 'Microphone d’entrée';
 
   @override

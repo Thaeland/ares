@@ -7261,6 +7261,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get wake_word_capture_local => '게이트웨이 호스트 마이크';
 
   @override
+  String get wake_word_capture_unavailable =>
+      '이 게이트웨이에서는 앱이 캡처 모드를 변경할 수 없습니다. 게이트웨이 호스트의 Hermes 설정에서 wake_word.capture를 지정하세요.';
+
+  @override
   String get wake_word_input_device => '입력 마이크';
 
   @override

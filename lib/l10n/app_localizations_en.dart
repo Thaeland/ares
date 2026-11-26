@@ -7411,6 +7411,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wake_word_capture_local => 'Gateway host microphone';
 
   @override
+  String get wake_word_capture_unavailable =>
+      'This gateway doesn\'t let apps change the capture mode. Set wake_word.capture in the Hermes config on the gateway host.';
+
+  @override
   String get wake_word_input_device => 'Input microphone';
 
   @override

@@ -2970,6 +2970,7 @@
   "wake_word_capture_auto": "تلقائي",
   "wake_word_capture_client": "ميكروفون هذا الجهاز",
   "wake_word_capture_local": "ميكروفون مضيف البوابة",
+  "wake_word_capture_unavailable": "لا تسمح هذه البوابة للتطبيقات بتغيير وضع الالتقاط. اضبط wake_word.capture في إعدادات Hermes على مضيف البوابة.",
   "wake_word_input_device": "ميكروفون الإدخال",
   "wake_word_default_device": "الافتراضي للنظام",
   "ng_wake_word_title": "كلمة التنبيه",

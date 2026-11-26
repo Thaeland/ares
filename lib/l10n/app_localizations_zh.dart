@@ -7153,6 +7153,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get wake_word_capture_local => '网关主机麦克风';
 
   @override
+  String get wake_word_capture_unavailable =>
+      '此网关不允许应用更改采集模式。请在网关主机的 Hermes 配置中设置 wake_word.capture。';
+
+  @override
   String get wake_word_input_device => '输入麦克风';
 
   @override
@@ -13966,6 +13970,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get wake_word_capture_local => '网关主机麦克风';
+
+  @override
+  String get wake_word_capture_unavailable =>
+      '此网关不允许应用更改采集模式。请在网关主机的 Hermes 配置中设置 wake_word.capture。';
 
   @override
   String get wake_word_input_device => '输入麦克风';
@@ -21180,6 +21188,10 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get wake_word_capture_local => '閘道器主機麥克風';
+
+  @override
+  String get wake_word_capture_unavailable =>
+      '此閘道器不允許應用程式變更擷取模式。請在閘道器主機的 Hermes 設定中設定 wake_word.capture。';
 
   @override
   String get wake_word_input_device => '輸入麥克風';

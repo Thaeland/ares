@@ -407,6 +407,10 @@ class GatewayWakeSettingsPanel extends StatelessWidget {
           'local' => 'local',
           _ => 'auto',
         };
+        // A session authority does not take `wake_word.capture`: the chips
+        // show the host's mode but cannot change it.
+        final captureConfigurable = controller.captureConfigurable;
+        final captureLocked = state.pending || !captureConfigurable;
         final devices = controller.clientDevices;
         final selected = controller.selectedClientDevice;
         final serverDevice = state.serverInputDevice;
@@ -448,7 +452,7 @@ class GatewayWakeSettingsPanel extends StatelessWidget {
                   key: const ValueKey('gateway-wake-capture-auto'),
                   label: Text(l10n.wake_word_capture_auto),
                   selected: captureChoice == 'auto',
-                  onSelected: state.pending
+                  onSelected: captureLocked
                       ? null
                       : (_) =>
                             unawaited(controller.setCapturePreference('auto')),
@@ -457,7 +461,7 @@ class GatewayWakeSettingsPanel extends StatelessWidget {
                   key: const ValueKey('gateway-wake-capture-client'),
                   label: Text(l10n.wake_word_capture_client),
                   selected: captureChoice == 'client',
-                  onSelected: state.pending
+                  onSelected: captureLocked
                       ? null
                       : (_) => unawaited(
                           controller.setCapturePreference('client'),
@@ -467,13 +471,21 @@ class GatewayWakeSettingsPanel extends StatelessWidget {
                   key: const ValueKey('gateway-wake-capture-local'),
                   label: Text(l10n.wake_word_capture_local),
                   selected: captureChoice == 'local',
-                  onSelected: state.pending
+                  onSelected: captureLocked
                       ? null
                       : (_) =>
                             unawaited(controller.setCapturePreference('local')),
                 ),
               ],
             ),
+            if (!captureConfigurable) ...[
+              const SizedBox(height: 6),
+              Text(
+                l10n.wake_word_capture_unavailable,
+                key: const ValueKey('gateway-wake-capture-unavailable'),
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
             if (devices.isNotEmpty) ...[
               const SizedBox(height: 12),
               DropdownButtonFormField<WakeClientInputDevice?>(

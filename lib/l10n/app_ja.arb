@@ -1915,6 +1915,7 @@
   "wake_word_capture_auto": "自動",
   "wake_word_capture_client": "このデバイスのマイク",
   "wake_word_capture_local": "ゲートウェイホストのマイク",
+  "wake_word_capture_unavailable": "このゲートウェイでは、アプリから収音モードを変更できません。ゲートウェイホストの Hermes 設定で wake_word.capture を設定してください。",
   "wake_word_input_device": "入力マイク",
   "wake_word_default_device": "システム既定",
   "ng_wake_word_title": "ウェイクワード",

@@ -7407,6 +7407,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get wake_word_capture_local => 'ميكروفون مضيف البوابة';
 
   @override
+  String get wake_word_capture_unavailable =>
+      'لا تسمح هذه البوابة للتطبيقات بتغيير وضع الالتقاط. اضبط wake_word.capture في إعدادات Hermes على مضيف البوابة.';
+
+  @override
   String get wake_word_input_device => 'ميكروفون الإدخال';
 
   @override

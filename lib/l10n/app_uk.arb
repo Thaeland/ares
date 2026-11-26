@@ -2068,6 +2068,7 @@
   "wake_word_capture_auto": "Автоматично",
   "wake_word_capture_client": "Мікрофон цього пристрою",
   "wake_word_capture_local": "Мікрофон хоста шлюзу",
+  "wake_word_capture_unavailable": "Цей шлюз не дозволяє застосункам змінювати режим захоплення. Задайте wake_word.capture у конфігурації Hermes на хості шлюзу.",
   "wake_word_input_device": "Вхідний мікрофон",
   "wake_word_default_device": "Системний за замовчуванням",
   "ng_wake_word_title": "Ключова фраза",

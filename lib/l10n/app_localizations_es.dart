@@ -7467,6 +7467,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get wake_word_capture_local => 'Micrófono del host de la pasarela';
 
   @override
+  String get wake_word_capture_unavailable =>
+      'Esta pasarela no permite que las aplicaciones cambien el modo de captura. Configura wake_word.capture en la configuración de Hermes del host de la pasarela.';
+
+  @override
   String get wake_word_input_device => 'Micrófono de entrada';
 
   @override

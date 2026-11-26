@@ -7253,6 +7253,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get wake_word_capture_local => 'ゲートウェイホストのマイク';
 
   @override
+  String get wake_word_capture_unavailable =>
+      'このゲートウェイでは、アプリから収音モードを変更できません。ゲートウェイホストの Hermes 設定で wake_word.capture を設定してください。';
+
+  @override
   String get wake_word_input_device => '入力マイク';
 
   @override

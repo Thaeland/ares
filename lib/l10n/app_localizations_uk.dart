@@ -7467,6 +7467,10 @@ class AppLocalizationsUk extends AppLocalizations {
   String get wake_word_capture_local => 'Мікрофон хоста шлюзу';
 
   @override
+  String get wake_word_capture_unavailable =>
+      'Цей шлюз не дозволяє застосункам змінювати режим захоплення. Задайте wake_word.capture у конфігурації Hermes на хості шлюзу.';
+
+  @override
   String get wake_word_input_device => 'Вхідний мікрофон';
 
   @override

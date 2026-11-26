@@ -1915,6 +1915,7 @@
   "wake_word_capture_auto": "Automático",
   "wake_word_capture_client": "Microfone deste dispositivo",
   "wake_word_capture_local": "Microfone do anfitrião do gateway",
+  "wake_word_capture_unavailable": "Este gateway não permite que as aplicações alterem o modo de captura. Defina wake_word.capture na configuração do Hermes no anfitrião do gateway.",
   "wake_word_input_device": "Microfone de entrada",
   "wake_word_default_device": "Predefinição do sistema",
   "ng_wake_word_title": "Palavra de ativação",

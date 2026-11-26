@@ -7472,6 +7472,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get wake_word_capture_local => 'Mikrofon des Gateway-Hosts';
 
   @override
+  String get wake_word_capture_unavailable =>
+      'Dieses Gateway lässt Apps den Aufnahmemodus nicht ändern. Lege wake_word.capture in der Hermes-Konfiguration auf dem Gateway-Host fest.';
+
+  @override
   String get wake_word_input_device => 'Eingabemikrofon';
 
   @override

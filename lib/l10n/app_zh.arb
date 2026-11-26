@@ -1915,6 +1915,7 @@
   "wake_word_capture_auto": "自动",
   "wake_word_capture_client": "此设备麦克风",
   "wake_word_capture_local": "网关主机麦克风",
+  "wake_word_capture_unavailable": "此网关不允许应用更改采集模式。请在网关主机的 Hermes 配置中设置 wake_word.capture。",
   "wake_word_input_device": "输入麦克风",
   "wake_word_default_device": "系统默认",
   "ng_wake_word_title": "唤醒词",

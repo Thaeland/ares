@@ -9,6 +9,7 @@ import 'package:record/record.dart';
 import '../../l10n/app_localizations.dart';
 import '../../nextgen/data/nextgen_gateway.dart';
 import '../l10n/service_strings.dart';
+import 'canonical_wire.dart' show canonicalConfigAvailable;
 import 'connection_mutation_barrier.dart';
 import 'desktop_gateway_client.dart';
 import 'ws_client.dart';
@@ -327,11 +328,14 @@ class GatewayWakeTransport {
     })
     call,
     void Function()? disposeHook,
+    bool Function()? sessionAuthority,
   }) : profile = (profile == null || profile.trim().isEmpty)
            ? null
            : profile.trim(),
        // ignore: prefer_initializing_formals
        _isConnected = isConnected,
+       // ignore: prefer_initializing_formals
+       _sessionAuthority = sessionAuthority,
        // ignore: prefer_initializing_formals
        _call = call,
        // ignore: prefer_initializing_formals
@@ -344,6 +348,7 @@ class GatewayWakeTransport {
       events: client.gatewayEvents,
       ready: client.socketReady,
       isConnected: () => client.isSocketConnected,
+      sessionAuthority: () => client.sessionAuthority,
       call: (method, params, {timeout = const Duration(seconds: 30)}) =>
           client.call(method, params, timeout: timeout),
     );
@@ -370,6 +375,7 @@ class GatewayWakeTransport {
       events: gateway.events,
       ready: readyController.stream,
       isConnected: () => gateway.state.isConnected,
+      sessionAuthority: () => gateway.sessionAuthority,
       call: (method, params, {timeout = const Duration(seconds: 30)}) async {
         if (!gateway.state.isConnected) {
           await gateway.connected(
@@ -393,6 +399,7 @@ class GatewayWakeTransport {
   final Stream<StreamEvent> events;
   final Stream<void> ready;
   final bool Function() _isConnected;
+  final bool Function()? _sessionAuthority;
   final Future<Map<String, dynamic>> Function(
     String method,
     Map<String, dynamic> params, {
@@ -402,6 +409,11 @@ class GatewayWakeTransport {
   final void Function()? _disposeHook;
 
   bool get isConnected => _isConnected();
+
+  /// Whether the socket's gateway is a 0.23+ session authority
+  /// (`gateway.ready` advertised `session_authority`), whose closed
+  /// `config.set` contract decides which settings Ares may change.
+  bool get sessionAuthority => _sessionAuthority?.call() ?? false;
 
   Future<Map<String, dynamic>> call(
     String method,
@@ -1060,12 +1072,22 @@ class GatewayWakeWordController extends ChangeNotifier {
     }
   }
 
+  /// Whether `wake_word.capture` can be changed from this app. A 0.23+
+  /// session authority's closed `config.set` contract has no such key
+  /// (Desktop has no capture control either), so Settings disables the
+  /// choice there and says why instead of sending a request the wire guard
+  /// refuses.
+  bool get captureConfigurable =>
+      !transport.sessionAuthority ||
+      canonicalConfigAvailable('wake_word.capture');
+
   /// Updates `wake_word.capture` (`auto` | `client` | `local`) on the owning
-  /// profile via `config.set`, then reconciles status / capture.
+  /// profile via `config.set`, then reconciles status / capture. Sends
+  /// nothing where [captureConfigurable] is false.
   Future<void> setCapturePreference(String mode) async {
     final normalized = mode.trim().toLowerCase();
     if (!const {'auto', 'client', 'local'}.contains(normalized)) return;
-    if (!isOwnerCurrent) return;
+    if (!isOwnerCurrent || !captureConfigurable) return;
     await transport.call(
       'config.set',
       _scopedParams({'key': 'wake_word.capture', 'value': normalized}),
