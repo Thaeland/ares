@@ -16,6 +16,7 @@
 //   `NextGenGateway.call` (strict_nextgen_gateway.dart wraps it with the
 //   client's own guard).
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:hermes_android/core/services/ws_client.dart';
 
@@ -115,7 +116,27 @@ Map<String, dynamic>? strictAuthorityReply(
   Object? params,
 ) {
   final error = strictAuthorityRefusal(method, params);
+  strictAuthorityTap(method, params, error);
   return error == null ? null : {'jsonrpc': '2.0', 'id': id, 'error': error};
+}
+
+/// With `ARES_WIRE_TAP_FILE` set, every frame an existing suite's authority
+/// fake receives is appended there (one JSON object per line) with this
+/// fake's verdict, so `tool/canonical_wire_check.py` can validate what the
+/// suite's real producers sent, and check this fake against the gateway.
+void strictAuthorityTap(
+  String method,
+  Object? params,
+  Map<String, dynamic>? refusal,
+) {
+  final path = Platform.environment['ARES_WIRE_TAP_FILE'];
+  if (path == null || path.isEmpty || method == 'gateway.ping') return;
+  File(path)
+    ..parent.createSync(recursive: true)
+    ..writeAsStringSync(
+      '${jsonEncode({'socket': 'authority', 'method': method, 'params': params, 'strict_fake': refusal == null ? 'accepted' : 'refused'})}\n',
+      mode: FileMode.append,
+    );
 }
 
 /// For a fake socket's frame handler: the encoded reply to write back when
@@ -135,6 +156,7 @@ String? strictAuthorityFrame(Object? frame) {
 /// gateway would answer, exactly as the real `call` surfaces it.
 void strictAuthorityCheck(String method, Map<String, dynamic> params) {
   final error = strictAuthorityRefusal(method, params);
+  strictAuthorityTap(method, params, error);
   if (error == null) return;
   throw JsonRpcError.fromGateway(
     method,

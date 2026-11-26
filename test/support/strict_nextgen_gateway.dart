@@ -68,6 +68,7 @@ Future<Map<String, dynamic>> strictCall(
     params,
     wire: (wireMethod, wireParams, {required bool own}) async {
       final refusal = strictAuthorityRefusal(wireMethod, wireParams);
+      strictAuthorityTap(wireMethod, wireParams, refusal);
       if (refusal != null) return {'error': refusal};
       try {
         return {'result': await answer(wireMethod, wireParams)};

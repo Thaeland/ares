@@ -38,7 +38,7 @@ class WireCaptureLog {
         'socket': 'authority',
         'method': frame.method,
         'params': frame.params,
-        if (frame.refusal != null) 'strict_fake': frame.refusal,
+        'strict_fake': frame.refusal == null ? 'accepted' : 'refused',
       });
     }
   }

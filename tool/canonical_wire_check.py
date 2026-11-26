@@ -398,10 +398,17 @@ def check(ctx, method, params):
 
 
 def _captures(paths):
+    """Rows of the capture files: a JSON document with `captures`, or (a suite's tap) one JSON
+    object per line, whose producer is the file's name."""
     for path in paths:
         with open(path, encoding='utf-8') as fh:
-            data = json.load(fh)
-        rows = data.get('captures') if isinstance(data, dict) else data
+            if path.endswith('.jsonl'):
+                stem = os.path.basename(path)[:-len('.jsonl')]
+                rows = [{'layout': 'shared', 'producer': f'suite {stem}', **json.loads(line)}
+                        for line in fh if line.strip()]
+            else:
+                data = json.load(fh)
+                rows = data.get('captures') if isinstance(data, dict) else data
         for index, row in enumerate(rows or ()):
             yield path, index, row
 
@@ -611,7 +618,7 @@ def main(argv):
     if args.emit_dart:
         with open(args.emit_dart, 'w', encoding='utf-8') as fh:
             fh.write(emit_dart(ctx, args.pin))
-    verdicts = []
+    verdicts, parity = [], []
     for path, index, row in _captures(args.captures):
         if row.get('refused_before_wire'):
             verdicts.append({'file': os.path.basename(path), 'index': index, **{
@@ -620,15 +627,29 @@ def main(argv):
                 'verdict': 'refused before the wire', 'problems': [row.get('message') or '']})
             continue
         verdict = check(ctx, row.get('method'), row.get('params'))
+        fake = row.get('strict_fake')
+        if fake in ('accepted', 'refused') and (fake == 'accepted') != verdict['ok']:
+            # The Dart strict fake and the gateway disagree: the fake is what the suites trust.
+            parity.append(f"{row.get('producer') or row.get('id')}: {row.get('method')} "
+                          f"{json.dumps(row.get('params'), sort_keys=True)}: strict fake {fake}, "
+                          f"gateway {verdict['verdict']} {verdict['problems']}")
         verdicts.append({'file': os.path.basename(path), 'index': index, **{
             key: row.get(key) for key in ('id', 'layout', 'producer', 'socket')}, **verdict,
-            'params': row.get('params')})
+            'params': row.get('params'), 'strict_fake': fake, 'expect': row.get('expect')})
     by_method = {}
     for verdict in verdicts:
-        entry = by_method.setdefault(verdict['method'], {'pass': 0, 'fail': 0, 'refused': 0, 'routes': set(),
-                                                         'problems': []})
+        entry = by_method.setdefault(verdict['method'], {'pass': 0, 'fail': 0, 'refused': 0, 'expected': 0,
+                                                         'routes': set(), 'problems': []})
         if verdict['verdict'] == 'refused before the wire':
             entry['refused'] += 1
+        elif verdict.get('expect') == 'refused':
+            # A deliberately wrong frame (the strict fake's own corpus): the gateway must refuse it.
+            if verdict['ok']:
+                entry['fail'] += 1
+                entry['problems'].append(f"{verdict.get('id') or verdict.get('producer')}: the gateway accepts "
+                                         f"a frame the corpus expects it to refuse")
+            else:
+                entry['expected'] += 1
         elif verdict['ok']:
             entry['pass'] += 1
         else:
@@ -649,6 +670,8 @@ def main(argv):
         counts = f"{entry['pass']} accepted"
         if entry['refused']:
             counts += f", {entry['refused']} refused before the wire"
+        if entry['expected']:
+            counts += f", {entry['expected']} refused as the corpus expects"
         if entry['fail']:
             counts += f", {entry['fail']} rejected"
         table.append(f"| `{method}` | {'; '.join(sorted(entry['routes']))} | {counts} | {result} |")
@@ -659,11 +682,14 @@ def main(argv):
         entry = by_method[method]
         status = 'FAIL' if entry['fail'] else 'pass'
         print(f"{status}  {method}  accepted={entry['pass']} refused_before_wire={entry['refused']} "
-              f"rejected={entry['fail']}")
+              f"rejected={entry['fail']}" + (f" corpus_refusals={entry['expected']}" if entry['expected'] else ''))
         for problem in entry['problems']:
             print('      ' + problem)
-    print(f"{len(verdicts)} frames, {len(by_method)} methods, {failed} rejected (pin {args.pin})")
-    return 1 if failed else 0
+    for line in parity:
+        print('PARITY  ' + line)
+    print(f"{len(verdicts)} frames, {len(by_method)} methods, {failed} rejected, "
+          f"{len(parity)} strict-fake disagreements (pin {args.pin})")
+    return 1 if failed or parity else 0
 
 
 if __name__ == '__main__':
