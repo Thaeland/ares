@@ -121,11 +121,11 @@ Debug builds use the separate `com.hermesagent.hermes_android.dev` package and A
 - Assets is partial discovery of shared files, not a complete attachment or filesystem catalogue. Classic downloads are limited to 25 MiB per file. NextGen Save and Share stream delivered files up to 1 GiB; previews retain the 25 MiB budget.
 - Protect encrypted backups and their passwords. Backups can contain connection secrets and imported client private keys. See the [upgrade notes and compatibility limits](docs/releases/3.0.3.md#compatibility-and-delivery-limits).
 
-### Update checks
+### Updates
 
-The app checks GitHub Releases on ordinary launches. An answered check limits requests to once every 12 hours; offline attempts may retry on the next launch. On supported Android installs, **Update now** downloads the matching official APK, verifies its SHA-256, package, signing certificate and version, and opens the Android installer. You may need to allow Hermes to install apps and confirm the update; after granting permission, return to the app and tap **Install update**. Android may offer **Open** after installation. The original **View release** link remains available when an in-app update cannot be used. **Later** asks again on the next launch; **Skip this version** stays quiet until another version appears. Shares and Quick Chat shortcuts are not interrupted. In **Settings → About**, use **Check for updates** or disable **Check for updates on launch**. Backups include these choices, not HTTP response caches.
+Ares does not check for updates and cannot install them. Update through the store you installed it from (Google Play or F-Droid), or download the APK for your device from the [GitHub releases page](https://github.com/rusty4444/ares/releases) and install it over the existing app. Builds up to 4.0.17 not installed from Google Play checked GitHub Releases on launch and could download and install an update; later versions have no update check, no installer and no Android permission to install packages. A GitHub APK installs over an existing copy only when that copy also came from GitHub releases: other channels may sign with a different key.
 
-In-app installation is for the official GitHub APK distribution; other distribution channels may use different signing keys or update policies. A local debug build cannot update the production package. The separate Play AAB is built with `ARES_PLAY_BUILD=true` and `--dart-define=ARES_PLAY_BUILD=true`: it removes the GitHub install permission, provider, update checks and prompts, and uses Play-managed updates. Both distributions link the [privacy policy](PRIVACY.md) and provide an AI-output report action.
+The separate Play AAB is built with `ARES_PLAY_BUILD=true` and `--dart-define=ARES_PLAY_BUILD=true`. Every distribution links the [privacy policy](PRIVACY.md) and provides an AI-output report action.
 
 ## Background notifications: server setup required
 
@@ -320,9 +320,9 @@ sanitized implementation and validation record.
 - **Provider filters and code controls.** The NextGen model picker has
   tap-to-filter provider chips and readable dark-mode labels. Fenced code blocks
   in Classic and NextGen offer copy and line-wrap controls.
-- **Play distribution and safety.** A separate Play AAB removes the GitHub
-  self-updater and uses Play-managed updates. Both builds link the
-  [privacy policy](PRIVACY.md), and assistant replies offer **Report AI output**.
+- **Play distribution and safety.** A separate Play AAB is published on Google
+  Play. Both builds link the [privacy policy](PRIVACY.md), and assistant replies
+  offer **Report AI output**.
 
 NextGen adapts [Kyllene](https://github.com/Giton22/kyllene) by Giton22 (MIT).
 See [4.0.0 release notes](docs/releases/4.0.0.md).
@@ -865,7 +865,7 @@ ARES_PLAY_BUILD=true flutter build appbundle --release --no-pub \
 ```
 
 The Play bundle is `build/app/outputs/bundle/release/app-release.aab`. CI verifies
-its package, base version code, target API, removed updater permission/provider
+its package, base version code, target API, absent package-install permission
 and production upload signer, then uploads it as the `ares-play-app-bundle`
 workflow artifact. It is not added to the GitHub APK release asset set.
 
