@@ -12866,4 +12866,493 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get rel_admin_auto_lower => 'Automático';
+
+  @override
+  String get rel_admin_create => 'Crear';
+
+  @override
+  String get rel_admin_prompt => 'Instrucción';
+
+  @override
+  String get rel_admin_new_profile_id => 'ID del nuevo perfil';
+
+  @override
+  String get rel_admin_this_operation_is_unavailable_on_this_gateway =>
+      'Esta operación no está disponible en esta puerta de enlace.';
+
+  @override
+  String get rel_admin_access_denied_by_the_gateway =>
+      'Acceso denegado por la puerta de enlace.';
+
+  @override
+  String get rel_admin_connection_changed_reopen_profiles =>
+      'La conexión cambió. Vuelve a abrir Perfiles.';
+
+  @override
+  String
+  get rel_admin_invalid_input_or_gateway_response_check_the_target_before =>
+      'Entrada o respuesta de la puerta de enlace no válida. Comprueba el destino antes de reintentar.';
+
+  @override
+  String get rel_admin_could_not_verify_the_result_refresh_the_target_before =>
+      'No se pudo verificar el resultado. Actualiza el destino antes de volver a intentarlo.';
+
+  @override
+  String get rel_admin_edit_soul_md => 'Editar SOUL.md';
+
+  @override
+  String get rel_admin_persona => 'Personalidad';
+
+  @override
+  String get rel_admin_persona_saved => 'Personalidad guardada.';
+
+  @override
+  String get rel_admin_not_set => 'sin establecer';
+
+  @override
+  String get rel_admin_enabled => 'Activado';
+
+  @override
+  String get rel_admin_keys_to_remove_comma_separated =>
+      'Claves que quitar (separadas por comas)';
+
+  @override
+  String get rel_admin_saved_and_applied_by_the_gateway =>
+      'Guardado y aplicado por la puerta de enlace.';
+
+  @override
+  String get rel_admin_saved_a_gateway_restart_may_be_required =>
+      'Guardado. Puede ser necesario reiniciar la puerta de enlace.';
+
+  @override
+  String get rel_admin_create_signed_route => 'Crear ruta firmada';
+
+  @override
+  String get rel_admin_route_id => 'ID de ruta';
+
+  @override
+  String get rel_admin_signature => 'Firma';
+
+  @override
+  String get rel_admin_events_comma_separated =>
+      'Eventos (separados por comas)';
+
+  @override
+  String get rel_admin_delivery_target => 'Destino de entrega';
+
+  @override
+  String get rel_admin_skills_comma_separated =>
+      'Habilidades (separadas por comas)';
+
+  @override
+  String get rel_admin_delivery_mode => 'Modo de entrega';
+
+  @override
+  String get rel_admin_delivery_chat_id_optional =>
+      'ID del chat de entrega (opcional)';
+
+  @override
+  String get rel_admin_hide_signing_secret => 'Ocultar secreto de firma';
+
+  @override
+  String get rel_admin_reveal_signing_secret => 'Mostrar secreto de firma';
+
+  @override
+  String get rel_admin_edit_persona => 'Editar personalidad';
+
+  @override
+  String get rel_admin_portable_profile_bundle => 'Paquete de perfil portátil';
+
+  @override
+  String get rel_admin_clone_profile => 'Clonar perfil';
+
+  @override
+  String get rel_admin_rename_display_label => 'Cambiar etiqueta visible';
+
+  @override
+  String get rel_admin_rename_profile => 'Renombrar perfil';
+
+  @override
+  String get rel_admin_new_name => 'Nuevo nombre';
+
+  @override
+  String get rel_admin_rename_verified => 'Cambio de nombre verificado.';
+
+  @override
+  String get rel_admin_delete_profile => 'Eliminar perfil';
+
+  @override
+  String get rel_admin_profile_id_to_delete => 'ID del perfil que eliminar';
+
+  @override
+  String get rel_admin_profile_deleted => 'Perfil eliminado.';
+
+  @override
+  String
+  get rel_admin_profile_deleted_server_identity_cleanup_is_still_pending =>
+      'Perfil eliminado. La limpieza de identidad del servidor sigue pendiente.';
+
+  @override
+  String get rel_admin_export_profile_archive => 'Exportar archivo de perfil';
+
+  @override
+  String get rel_admin_import_profile_archive => 'Importar archivo de perfil';
+
+  @override
+  String get rel_admin_import_a_trusted_profile =>
+      'Importar un perfil de confianza';
+
+  @override
+  String get rel_admin_absolute_archive_path_on_gateway =>
+      'Ruta absoluta del archivo en la puerta de enlace';
+
+  @override
+  String get rel_admin_messaging_channels => 'Canales de mensajería';
+
+  @override
+  String get rel_admin_dm_pairing_requests =>
+      'Solicitudes de vinculación por mensaje directo';
+
+  @override
+  String get rel_admin_no_pending_or_approved_users =>
+      'No hay usuarios pendientes ni aprobados.';
+
+  @override
+  String get rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user =>
+      'Vinculación antigua: no hay un ID de solicitud verificable. Pide al usuario que se vincule de nuevo.';
+
+  @override
+  String get rel_admin_pairing_change_verified =>
+      'Cambio de vinculación verificado.';
+
+  @override
+  String get rel_admin_create_telegram_bot_by_qr =>
+      'Crear bot de Telegram por QR';
+
+  @override
+  String get rel_admin_create_telegram_bot => 'Crear bot de Telegram';
+
+  @override
+  String get rel_admin_bot_name => 'Nombre del bot';
+
+  @override
+  String get rel_admin_telegram_bot_creation_qr_code =>
+      'Código QR de creación de bot de Telegram';
+
+  @override
+  String get rel_admin_check_telegram_pairing =>
+      'Comprobar vinculación de Telegram';
+
+  @override
+  String get rel_admin_waiting_for_telegram => 'Esperando a Telegram.';
+
+  @override
+  String get rel_admin_apply_telegram_bot => 'Aplicar bot de Telegram';
+
+  @override
+  String get rel_admin_allowed_numeric_user_ids =>
+      'ID numéricos de usuarios permitidos';
+
+  @override
+  String get rel_admin_saved_restart_still_required =>
+      'Guardado. Aún se requiere reiniciar.';
+
+  @override
+  String get rel_admin_saved_gateway_restart_requested =>
+      'Guardado; se solicitó reiniciar la puerta de enlace.';
+
+  @override
+  String get rel_admin_cancel_telegram_setup =>
+      'Cancelar configuración de Telegram';
+
+  @override
+  String get rel_admin_inbound_webhooks => 'Webhooks entrantes';
+
+  @override
+  String get rel_admin_enable_webhook_service => 'Activar servicio de webhooks';
+
+  @override
+  String get rel_admin_enable_webhooks => 'Activar webhooks';
+
+  @override
+  String get rel_admin_enabled_restart_still_required =>
+      'Activado. Aún se requiere reiniciar.';
+
+  @override
+  String get rel_admin_enabled_restart_requested =>
+      'Activado; se solicitó reiniciar.';
+
+  @override
+  String get rel_admin_route_change_verified => 'Cambio de ruta verificado.';
+
+  @override
+  String get rel_admin_delete_route => 'Eliminar ruta';
+
+  @override
+  String get rel_admin_disable_route => 'Desactivar ruta';
+
+  @override
+  String get rel_admin_enable_route => 'Activar ruta';
+
+  @override
+  String get rel_admin_back_up_entire_agent_home =>
+      'Crear copia de todo el directorio del agente';
+
+  @override
+  String get rel_admin_transfer_to_a_cloud_agent =>
+      'Transferir a un agente de Cloud';
+
+  @override
+  String get rel_admin_check_backup_progress =>
+      'Comprobar progreso de copia de seguridad';
+
+  @override
+  String get rel_admin_save_backup_to_this_device =>
+      'Guardar copia de seguridad en este dispositivo';
+
+  @override
+  String get rel_admin_save_sensitive_full_home_archive =>
+      'Guardar archivo confidencial de todo el directorio personal';
+
+  @override
+  String get rel_admin_save_cancelled => 'Guardado cancelado.';
+
+  @override
+  String get rel_admin_backup_saved => 'Copia de seguridad guardada.';
+
+  @override
+  String get rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway =>
+      'Hasta 32 MiB. Los archivos mayores permanecen en la puerta de enlace.';
+
+  @override
+  String rel_admin_persona_scope(String scope) {
+    return 'Guarda la personalidad de $scope.';
+  }
+
+  @override
+  String rel_admin_configure_channel(String name) {
+    return 'Configurar $name';
+  }
+
+  @override
+  String rel_admin_channel_warning(String scope) {
+    return 'Se aplica a $scope. Dejarlo en blanco conserva el valor existente. Para quitar un valor, indica su clave abajo.';
+  }
+
+  @override
+  String rel_admin_hook_warning(String scope) {
+    return 'Se aplica a $scope. Usa un nombre único. La puerta de enlace crea un secreto de firma. Si otro operador crea el nombre simultáneamente, el host puede sustituir esa ruta.';
+  }
+
+  @override
+  String rel_admin_hook_created(String url) {
+    return 'Se creó $url. Guarda el secreto de firma antes de salir.';
+  }
+
+  @override
+  String rel_admin_clone_warning(String scope) {
+    return 'Copia ajustes, habilidades, personalidad y posiblemente credenciales de proveedores de $scope. No se solicitan tokens de mensajería.';
+  }
+
+  @override
+  String rel_admin_cloned(String source, String destination) {
+    return 'Se clonó $source a $destination.';
+  }
+
+  @override
+  String rel_admin_rename_target(String name) {
+    return 'Renombrar $name';
+  }
+
+  @override
+  String rel_admin_rename_label_warning(String scope) {
+    return 'Cambia la etiqueta visible de $scope. Su ID sigue siendo default.';
+  }
+
+  @override
+  String rel_admin_rename_warning(String scope) {
+    return 'Renombra $scope en el servidor. Una puerta de enlace en ejecución puede detenerse.';
+  }
+
+  @override
+  String rel_admin_delete_target(String name) {
+    return 'Eliminar $name';
+  }
+
+  @override
+  String rel_admin_delete_profile_warning(String scope) {
+    return 'Elimina permanentemente $scope, incluidas sesiones y credenciales. Escribe el ID exacto del perfil.';
+  }
+
+  @override
+  String rel_admin_export_target(String name) {
+    return 'Exportar $name';
+  }
+
+  @override
+  String rel_admin_export_warning(String scope) {
+    return 'Crea un .tar.gz en $scope. Se excluyen los almacenes de credenciales conocidos, pero pueden quedar datos privados. Revisa antes de compartir.';
+  }
+
+  @override
+  String rel_admin_archive_on(String gateway, String path) {
+    return 'Archivo en $gateway: $path';
+  }
+
+  @override
+  String rel_admin_import_warning(String gateway) {
+    return 'Usa un .tar.gz revisado que ya esté en $gateway. Puede contener complementos, scripts y programaciones. Se requiere un ID de perfil nuevo.';
+  }
+
+  @override
+  String rel_admin_imported(String name) {
+    return 'Se importó $name.';
+  }
+
+  @override
+  String rel_admin_approve_user(String user) {
+    return 'Aprobar a $user';
+  }
+
+  @override
+  String rel_admin_revoke_user(String user) {
+    return 'Revocar a $user';
+  }
+
+  @override
+  String rel_admin_allow_pair(String platform, String scope) {
+    return '$platform en $scope: permitir el acceso de mensajería de este usuario.';
+  }
+
+  @override
+  String rel_admin_remove_pair(String platform, String scope) {
+    return '$platform en $scope: quitar el acceso de mensajería de este usuario.';
+  }
+
+  @override
+  String rel_admin_telegram_start(String scope) {
+    return 'Inicia una vinculación de Telegram en $scope con el servicio de configuración de la puerta de enlace.';
+  }
+
+  @override
+  String rel_admin_expires(String time) {
+    return 'Caduca: $time';
+  }
+
+  @override
+  String rel_admin_telegram_apply(String bot, String scope) {
+    return 'Activa @$bot en $scope e intenta reiniciar la puerta de enlace. Solo los usuarios indicados pueden enviarle mensajes.';
+  }
+
+  @override
+  String rel_admin_hooks_enable(String scope) {
+    return 'Activa los webhooks entrantes en $scope e intenta reiniciar la puerta de enlace.';
+  }
+
+  @override
+  String rel_admin_disable_target(String name) {
+    return 'Desactivar $name';
+  }
+
+  @override
+  String rel_admin_enable_target(String name) {
+    return 'Activar $name';
+  }
+
+  @override
+  String rel_admin_hook_change(String name, String scope) {
+    return 'Cambia exactamente $name en $scope.';
+  }
+
+  @override
+  String rel_admin_backup_warning(String gateway) {
+    return 'Esto no es una copia de los ajustes de Ares. Guarda todos los perfiles, sesiones y credenciales de $gateway. El archivo es confidencial.';
+  }
+
+  @override
+  String rel_admin_backup_started(String gateway) {
+    return 'Copia de seguridad iniciada en $gateway.';
+  }
+
+  @override
+  String rel_admin_backup_verified(String gateway, String path) {
+    return 'Copia de seguridad verificada en $gateway: $path';
+  }
+
+  @override
+  String rel_admin_backup_running(String gateway) {
+    return 'La copia de seguridad sigue en curso en $gateway.';
+  }
+
+  @override
+  String get rel_admin_choice_yes => 'sí';
+
+  @override
+  String get rel_admin_choice_no => 'no';
+
+  @override
+  String get rel_admin_choice_generic => 'genérico';
+
+  @override
+  String get rel_admin_choice_log => 'registro';
+
+  @override
+  String get rel_admin_choice_email => 'correo electrónico';
+
+  @override
+  String get rel_admin_choice_github_comment => 'comentario de GitHub';
+
+  @override
+  String get rel_admin_choice_agent => 'El agente procesa el evento';
+
+  @override
+  String get rel_admin_choice_direct => 'Entrega directa';
+
+  @override
+  String get rel_admin_configured => 'configurado';
+
+  @override
+  String get rel_admin_state_pending_restart => 'reinicio pendiente';
+
+  @override
+  String get rel_admin_state_unknown => 'desconocido';
+
+  @override
+  String get rel_admin_state_connected => 'conectado';
+
+  @override
+  String get rel_admin_state_disconnected => 'desconectado';
+
+  @override
+  String get rel_admin_state_disabled => 'desactivado';
+
+  @override
+  String get rel_admin_state_enabled => 'activado';
+
+  @override
+  String get rel_admin_state_running => 'en ejecución';
+
+  @override
+  String get rel_admin_state_stopped => 'detenido';
+
+  @override
+  String get rel_admin_state_error => 'error';
+
+  @override
+  String get rel_admin_state_not_configured => 'sin configurar';
+
+  @override
+  String get rel_admin_state_startup_failed => 'inicio fallido';
+
+  @override
+  String get rel_admin_state_gateway_stopped => 'puerta de enlace detenida';
+
+  @override
+  String get rel_admin_state_connecting => 'conectando';
+
+  @override
+  String get rel_admin_state_retrying => 'reintentando';
+
+  @override
+  String get rel_admin_state_fatal => 'error fatal';
 }

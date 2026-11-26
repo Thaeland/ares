@@ -20838,6 +20838,787 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'auto'**
   String get rel_admin_auto_lower;
+
+  /// Release administration: Create
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get rel_admin_create;
+
+  /// Release administration: Prompt
+  ///
+  /// In en, this message translates to:
+  /// **'Prompt'**
+  String get rel_admin_prompt;
+
+  /// Release administration: New profile ID
+  ///
+  /// In en, this message translates to:
+  /// **'New profile ID'**
+  String get rel_admin_new_profile_id;
+
+  /// Release administration: This operation is unavailable on this gateway.
+  ///
+  /// In en, this message translates to:
+  /// **'This operation is unavailable on this gateway.'**
+  String get rel_admin_this_operation_is_unavailable_on_this_gateway;
+
+  /// Release administration: Access denied by the gateway.
+  ///
+  /// In en, this message translates to:
+  /// **'Access denied by the gateway.'**
+  String get rel_admin_access_denied_by_the_gateway;
+
+  /// Release administration: Connection changed. Reopen Profiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection changed. Reopen Profiles.'**
+  String get rel_admin_connection_changed_reopen_profiles;
+
+  /// Release administration: Invalid input or gateway response. Check the target before retrying.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid input or gateway response. Check the target before retrying.'**
+  String
+  get rel_admin_invalid_input_or_gateway_response_check_the_target_before;
+
+  /// Release administration: Could not verify the result. Refresh the target before trying again.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not verify the result. Refresh the target before trying again.'**
+  String get rel_admin_could_not_verify_the_result_refresh_the_target_before;
+
+  /// Release administration: Edit SOUL.md
+  ///
+  /// In en, this message translates to:
+  /// **'Edit SOUL.md'**
+  String get rel_admin_edit_soul_md;
+
+  /// Release administration: Persona
+  ///
+  /// In en, this message translates to:
+  /// **'Persona'**
+  String get rel_admin_persona;
+
+  /// Release administration: Persona saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Persona saved.'**
+  String get rel_admin_persona_saved;
+
+  /// Release administration: not set
+  ///
+  /// In en, this message translates to:
+  /// **'not set'**
+  String get rel_admin_not_set;
+
+  /// Release administration: Enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get rel_admin_enabled;
+
+  /// Release administration: Keys to remove (comma-separated)
+  ///
+  /// In en, this message translates to:
+  /// **'Keys to remove (comma-separated)'**
+  String get rel_admin_keys_to_remove_comma_separated;
+
+  /// Release administration: Saved and applied by the gateway.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved and applied by the gateway.'**
+  String get rel_admin_saved_and_applied_by_the_gateway;
+
+  /// Release administration: Saved. A gateway restart may be required.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved. A gateway restart may be required.'**
+  String get rel_admin_saved_a_gateway_restart_may_be_required;
+
+  /// Release administration: Create signed route
+  ///
+  /// In en, this message translates to:
+  /// **'Create signed route'**
+  String get rel_admin_create_signed_route;
+
+  /// Release administration: Route ID
+  ///
+  /// In en, this message translates to:
+  /// **'Route ID'**
+  String get rel_admin_route_id;
+
+  /// Release administration: Signature
+  ///
+  /// In en, this message translates to:
+  /// **'Signature'**
+  String get rel_admin_signature;
+
+  /// Release administration: Events (comma-separated)
+  ///
+  /// In en, this message translates to:
+  /// **'Events (comma-separated)'**
+  String get rel_admin_events_comma_separated;
+
+  /// Release administration: Delivery target
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery target'**
+  String get rel_admin_delivery_target;
+
+  /// Release administration: Skills (comma-separated)
+  ///
+  /// In en, this message translates to:
+  /// **'Skills (comma-separated)'**
+  String get rel_admin_skills_comma_separated;
+
+  /// Release administration: Delivery mode
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery mode'**
+  String get rel_admin_delivery_mode;
+
+  /// Release administration: Delivery chat ID (optional)
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery chat ID (optional)'**
+  String get rel_admin_delivery_chat_id_optional;
+
+  /// Release administration: Hide signing secret
+  ///
+  /// In en, this message translates to:
+  /// **'Hide signing secret'**
+  String get rel_admin_hide_signing_secret;
+
+  /// Release administration: Reveal signing secret
+  ///
+  /// In en, this message translates to:
+  /// **'Reveal signing secret'**
+  String get rel_admin_reveal_signing_secret;
+
+  /// Release administration: Edit persona
+  ///
+  /// In en, this message translates to:
+  /// **'Edit persona'**
+  String get rel_admin_edit_persona;
+
+  /// Release administration: Portable profile bundle
+  ///
+  /// In en, this message translates to:
+  /// **'Portable profile bundle'**
+  String get rel_admin_portable_profile_bundle;
+
+  /// Release administration: Clone profile
+  ///
+  /// In en, this message translates to:
+  /// **'Clone profile'**
+  String get rel_admin_clone_profile;
+
+  /// Release administration: Rename display label
+  ///
+  /// In en, this message translates to:
+  /// **'Rename display label'**
+  String get rel_admin_rename_display_label;
+
+  /// Release administration: Rename profile
+  ///
+  /// In en, this message translates to:
+  /// **'Rename profile'**
+  String get rel_admin_rename_profile;
+
+  /// Release administration: New name
+  ///
+  /// In en, this message translates to:
+  /// **'New name'**
+  String get rel_admin_new_name;
+
+  /// Release administration: Rename verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename verified.'**
+  String get rel_admin_rename_verified;
+
+  /// Release administration: Delete profile
+  ///
+  /// In en, this message translates to:
+  /// **'Delete profile'**
+  String get rel_admin_delete_profile;
+
+  /// Release administration: Profile ID to delete
+  ///
+  /// In en, this message translates to:
+  /// **'Profile ID to delete'**
+  String get rel_admin_profile_id_to_delete;
+
+  /// Release administration: Profile deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile deleted.'**
+  String get rel_admin_profile_deleted;
+
+  /// Release administration: Profile deleted. Server identity cleanup is still pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile deleted. Server identity cleanup is still pending.'**
+  String get rel_admin_profile_deleted_server_identity_cleanup_is_still_pending;
+
+  /// Release administration: Export profile archive
+  ///
+  /// In en, this message translates to:
+  /// **'Export profile archive'**
+  String get rel_admin_export_profile_archive;
+
+  /// Release administration: Import profile archive
+  ///
+  /// In en, this message translates to:
+  /// **'Import profile archive'**
+  String get rel_admin_import_profile_archive;
+
+  /// Release administration: Import a trusted profile
+  ///
+  /// In en, this message translates to:
+  /// **'Import a trusted profile'**
+  String get rel_admin_import_a_trusted_profile;
+
+  /// Release administration: Absolute archive path on gateway
+  ///
+  /// In en, this message translates to:
+  /// **'Absolute archive path on gateway'**
+  String get rel_admin_absolute_archive_path_on_gateway;
+
+  /// Release administration: Messaging channels
+  ///
+  /// In en, this message translates to:
+  /// **'Messaging channels'**
+  String get rel_admin_messaging_channels;
+
+  /// Release administration: DM pairing requests
+  ///
+  /// In en, this message translates to:
+  /// **'DM pairing requests'**
+  String get rel_admin_dm_pairing_requests;
+
+  /// Release administration: No pending or approved users.
+  ///
+  /// In en, this message translates to:
+  /// **'No pending or approved users.'**
+  String get rel_admin_no_pending_or_approved_users;
+
+  /// Release administration: Legacy pairing: no verifiable request ID. Ask the user to pair again.
+  ///
+  /// In en, this message translates to:
+  /// **'Legacy pairing: no verifiable request ID. Ask the user to pair again.'**
+  String get rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user;
+
+  /// Release administration: Pairing change verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Pairing change verified.'**
+  String get rel_admin_pairing_change_verified;
+
+  /// Release administration: Create Telegram bot by QR
+  ///
+  /// In en, this message translates to:
+  /// **'Create Telegram bot by QR'**
+  String get rel_admin_create_telegram_bot_by_qr;
+
+  /// Release administration: Create Telegram bot
+  ///
+  /// In en, this message translates to:
+  /// **'Create Telegram bot'**
+  String get rel_admin_create_telegram_bot;
+
+  /// Release administration: Bot name
+  ///
+  /// In en, this message translates to:
+  /// **'Bot name'**
+  String get rel_admin_bot_name;
+
+  /// Release administration: Telegram bot creation QR code
+  ///
+  /// In en, this message translates to:
+  /// **'Telegram bot creation QR code'**
+  String get rel_admin_telegram_bot_creation_qr_code;
+
+  /// Release administration: Check Telegram pairing
+  ///
+  /// In en, this message translates to:
+  /// **'Check Telegram pairing'**
+  String get rel_admin_check_telegram_pairing;
+
+  /// Release administration: Waiting for Telegram.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for Telegram.'**
+  String get rel_admin_waiting_for_telegram;
+
+  /// Release administration: Apply Telegram bot
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Telegram bot'**
+  String get rel_admin_apply_telegram_bot;
+
+  /// Release administration: Allowed numeric user IDs
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed numeric user IDs'**
+  String get rel_admin_allowed_numeric_user_ids;
+
+  /// Release administration: Saved. Restart still required.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved. Restart still required.'**
+  String get rel_admin_saved_restart_still_required;
+
+  /// Release administration: Saved; gateway restart requested.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved; gateway restart requested.'**
+  String get rel_admin_saved_gateway_restart_requested;
+
+  /// Release administration: Cancel Telegram setup
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Telegram setup'**
+  String get rel_admin_cancel_telegram_setup;
+
+  /// Release administration: Inbound webhooks
+  ///
+  /// In en, this message translates to:
+  /// **'Inbound webhooks'**
+  String get rel_admin_inbound_webhooks;
+
+  /// Release administration: Enable webhook service
+  ///
+  /// In en, this message translates to:
+  /// **'Enable webhook service'**
+  String get rel_admin_enable_webhook_service;
+
+  /// Release administration: Enable webhooks
+  ///
+  /// In en, this message translates to:
+  /// **'Enable webhooks'**
+  String get rel_admin_enable_webhooks;
+
+  /// Release administration: Enabled. Restart still required.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled. Restart still required.'**
+  String get rel_admin_enabled_restart_still_required;
+
+  /// Release administration: Enabled; restart requested.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled; restart requested.'**
+  String get rel_admin_enabled_restart_requested;
+
+  /// Release administration: Route change verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Route change verified.'**
+  String get rel_admin_route_change_verified;
+
+  /// Release administration: Delete route
+  ///
+  /// In en, this message translates to:
+  /// **'Delete route'**
+  String get rel_admin_delete_route;
+
+  /// Release administration: Disable route
+  ///
+  /// In en, this message translates to:
+  /// **'Disable route'**
+  String get rel_admin_disable_route;
+
+  /// Release administration: Enable route
+  ///
+  /// In en, this message translates to:
+  /// **'Enable route'**
+  String get rel_admin_enable_route;
+
+  /// Release administration: Back up entire agent home
+  ///
+  /// In en, this message translates to:
+  /// **'Back up entire agent home'**
+  String get rel_admin_back_up_entire_agent_home;
+
+  /// Release administration: Transfer to a Cloud agent
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer to a Cloud agent'**
+  String get rel_admin_transfer_to_a_cloud_agent;
+
+  /// Release administration: Check backup progress
+  ///
+  /// In en, this message translates to:
+  /// **'Check backup progress'**
+  String get rel_admin_check_backup_progress;
+
+  /// Release administration: Save backup to this device
+  ///
+  /// In en, this message translates to:
+  /// **'Save backup to this device'**
+  String get rel_admin_save_backup_to_this_device;
+
+  /// Release administration: Save sensitive full-home archive
+  ///
+  /// In en, this message translates to:
+  /// **'Save sensitive full-home archive'**
+  String get rel_admin_save_sensitive_full_home_archive;
+
+  /// Release administration: Save cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Save cancelled.'**
+  String get rel_admin_save_cancelled;
+
+  /// Release administration: Backup saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup saved.'**
+  String get rel_admin_backup_saved;
+
+  /// Release administration: Up to 32 MiB. Larger archives remain on the gateway.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to 32 MiB. Larger archives remain on the gateway.'**
+  String get rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway;
+
+  /// Release administration: Save the persona for {scope}.
+  ///
+  /// In en, this message translates to:
+  /// **'Save the persona for {scope}.'**
+  String rel_admin_persona_scope(String scope);
+
+  /// Release administration: Configure {name}
+  ///
+  /// In en, this message translates to:
+  /// **'Configure {name}'**
+  String rel_admin_configure_channel(String name);
+
+  /// Release administration: Applies to {scope}. Blank keeps an existing value. To remove a value, list its key below.
+  ///
+  /// In en, this message translates to:
+  /// **'Applies to {scope}. Blank keeps an existing value. To remove a value, list its key below.'**
+  String rel_admin_channel_warning(String scope);
+
+  /// Release administration: Applies to {scope}. Use a unique name. The gateway creates a signing secret. If another operator creates the name simultaneously the host may replace that route.
+  ///
+  /// In en, this message translates to:
+  /// **'Applies to {scope}. Use a unique name. The gateway creates a signing secret. If another operator creates the name simultaneously the host may replace that route.'**
+  String rel_admin_hook_warning(String scope);
+
+  /// Release administration: Created {url}. Store the signing secret before leaving.
+  ///
+  /// In en, this message translates to:
+  /// **'Created {url}. Store the signing secret before leaving.'**
+  String rel_admin_hook_created(String url);
+
+  /// Release administration: Copy settings, skills, persona and potentially provider credentials from {scope}. Messaging tokens are not requested.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy settings, skills, persona and potentially provider credentials from {scope}. Messaging tokens are not requested.'**
+  String rel_admin_clone_warning(String scope);
+
+  /// Release administration: Cloned {source} to {destination}.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloned {source} to {destination}.'**
+  String rel_admin_cloned(String source, String destination);
+
+  /// Release administration: Rename {name}
+  ///
+  /// In en, this message translates to:
+  /// **'Rename {name}'**
+  String rel_admin_rename_target(String name);
+
+  /// Release administration: Change the presentation label for {scope}. Its ID stays default.
+  ///
+  /// In en, this message translates to:
+  /// **'Change the presentation label for {scope}. Its ID stays default.'**
+  String rel_admin_rename_label_warning(String scope);
+
+  /// Release administration: Rename {scope} on the server. A running gateway may stop.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename {scope} on the server. A running gateway may stop.'**
+  String rel_admin_rename_warning(String scope);
+
+  /// Release administration: Delete {name}
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {name}'**
+  String rel_admin_delete_target(String name);
+
+  /// Release administration: Permanently delete {scope}, including sessions and credentials. Type the exact profile ID.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanently delete {scope}, including sessions and credentials. Type the exact profile ID.'**
+  String rel_admin_delete_profile_warning(String scope);
+
+  /// Release administration: Export {name}
+  ///
+  /// In en, this message translates to:
+  /// **'Export {name}'**
+  String rel_admin_export_target(String name);
+
+  /// Release administration: Create a .tar.gz on {scope}. Known credential stores are excluded, but private data can remain. Review before sharing.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a .tar.gz on {scope}. Known credential stores are excluded, but private data can remain. Review before sharing.'**
+  String rel_admin_export_warning(String scope);
+
+  /// Release administration: Archive on {gateway}: {path}
+  ///
+  /// In en, this message translates to:
+  /// **'Archive on {gateway}: {path}'**
+  String rel_admin_archive_on(String gateway, String path);
+
+  /// Release administration: Use a reviewed .tar.gz already on {gateway}. It can contain plugins, scripts and schedules. A new profile ID is required.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a reviewed .tar.gz already on {gateway}. It can contain plugins, scripts and schedules. A new profile ID is required.'**
+  String rel_admin_import_warning(String gateway);
+
+  /// Release administration: Imported {name}.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported {name}.'**
+  String rel_admin_imported(String name);
+
+  /// Release administration: Approve {user}
+  ///
+  /// In en, this message translates to:
+  /// **'Approve {user}'**
+  String rel_admin_approve_user(String user);
+
+  /// Release administration: Revoke {user}
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke {user}'**
+  String rel_admin_revoke_user(String user);
+
+  /// Release administration: {platform} on {scope}: allow this user’s messaging access.
+  ///
+  /// In en, this message translates to:
+  /// **'{platform} on {scope}: allow this user’s messaging access.'**
+  String rel_admin_allow_pair(String platform, String scope);
+
+  /// Release administration: {platform} on {scope}: remove this user’s messaging access.
+  ///
+  /// In en, this message translates to:
+  /// **'{platform} on {scope}: remove this user’s messaging access.'**
+  String rel_admin_remove_pair(String platform, String scope);
+
+  /// Release administration: Start a Telegram pairing on {scope} using the gateway’s setup service.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a Telegram pairing on {scope} using the gateway’s setup service.'**
+  String rel_admin_telegram_start(String scope);
+
+  /// Release administration: Expires: {time}
+  ///
+  /// In en, this message translates to:
+  /// **'Expires: {time}'**
+  String rel_admin_expires(String time);
+
+  /// Release administration: Enable @{bot} on {scope} and attempt a gateway restart. Only the listed users may message it.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable @{bot} on {scope} and attempt a gateway restart. Only the listed users may message it.'**
+  String rel_admin_telegram_apply(String bot, String scope);
+
+  /// Release administration: Enable inbound webhooks on {scope} and attempt a gateway restart.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable inbound webhooks on {scope} and attempt a gateway restart.'**
+  String rel_admin_hooks_enable(String scope);
+
+  /// Release administration: Disable {name}
+  ///
+  /// In en, this message translates to:
+  /// **'Disable {name}'**
+  String rel_admin_disable_target(String name);
+
+  /// Release administration: Enable {name}
+  ///
+  /// In en, this message translates to:
+  /// **'Enable {name}'**
+  String rel_admin_enable_target(String name);
+
+  /// Release administration: Change exactly {name} on {scope}.
+  ///
+  /// In en, this message translates to:
+  /// **'Change exactly {name} on {scope}.'**
+  String rel_admin_hook_change(String name, String scope);
+
+  /// Release administration: This is not an Ares settings backup. Save all profiles, sessions and credentials on {gateway}. The archive is sensitive.
+  ///
+  /// In en, this message translates to:
+  /// **'This is not an Ares settings backup. Save all profiles, sessions and credentials on {gateway}. The archive is sensitive.'**
+  String rel_admin_backup_warning(String gateway);
+
+  /// Release administration: Backup started on {gateway}.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup started on {gateway}.'**
+  String rel_admin_backup_started(String gateway);
+
+  /// Release administration: Backup verified on {gateway}: {path}
+  ///
+  /// In en, this message translates to:
+  /// **'Backup verified on {gateway}: {path}'**
+  String rel_admin_backup_verified(String gateway, String path);
+
+  /// Release administration: Backup still running on {gateway}.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup still running on {gateway}.'**
+  String rel_admin_backup_running(String gateway);
+
+  /// Release administration: yes
+  ///
+  /// In en, this message translates to:
+  /// **'yes'**
+  String get rel_admin_choice_yes;
+
+  /// Release administration: no
+  ///
+  /// In en, this message translates to:
+  /// **'no'**
+  String get rel_admin_choice_no;
+
+  /// Release administration: generic
+  ///
+  /// In en, this message translates to:
+  /// **'generic'**
+  String get rel_admin_choice_generic;
+
+  /// Release administration: log
+  ///
+  /// In en, this message translates to:
+  /// **'log'**
+  String get rel_admin_choice_log;
+
+  /// Release administration: email
+  ///
+  /// In en, this message translates to:
+  /// **'email'**
+  String get rel_admin_choice_email;
+
+  /// Release administration: github_comment
+  ///
+  /// In en, this message translates to:
+  /// **'github_comment'**
+  String get rel_admin_choice_github_comment;
+
+  /// Release administration: Agent processes event
+  ///
+  /// In en, this message translates to:
+  /// **'Agent processes event'**
+  String get rel_admin_choice_agent;
+
+  /// Release administration: Direct delivery
+  ///
+  /// In en, this message translates to:
+  /// **'Direct delivery'**
+  String get rel_admin_choice_direct;
+
+  /// Release administration: configured
+  ///
+  /// In en, this message translates to:
+  /// **'configured'**
+  String get rel_admin_configured;
+
+  /// Release administration: pending_restart
+  ///
+  /// In en, this message translates to:
+  /// **'pending_restart'**
+  String get rel_admin_state_pending_restart;
+
+  /// Release administration: unknown
+  ///
+  /// In en, this message translates to:
+  /// **'unknown'**
+  String get rel_admin_state_unknown;
+
+  /// Release administration: connected
+  ///
+  /// In en, this message translates to:
+  /// **'connected'**
+  String get rel_admin_state_connected;
+
+  /// Release administration: disconnected
+  ///
+  /// In en, this message translates to:
+  /// **'disconnected'**
+  String get rel_admin_state_disconnected;
+
+  /// Release administration: disabled
+  ///
+  /// In en, this message translates to:
+  /// **'disabled'**
+  String get rel_admin_state_disabled;
+
+  /// Release administration: enabled
+  ///
+  /// In en, this message translates to:
+  /// **'enabled'**
+  String get rel_admin_state_enabled;
+
+  /// Release administration: running
+  ///
+  /// In en, this message translates to:
+  /// **'running'**
+  String get rel_admin_state_running;
+
+  /// Release administration: stopped
+  ///
+  /// In en, this message translates to:
+  /// **'stopped'**
+  String get rel_admin_state_stopped;
+
+  /// Release administration: error
+  ///
+  /// In en, this message translates to:
+  /// **'error'**
+  String get rel_admin_state_error;
+
+  /// Release administration: not_configured
+  ///
+  /// In en, this message translates to:
+  /// **'not_configured'**
+  String get rel_admin_state_not_configured;
+
+  /// Release administration: startup_failed
+  ///
+  /// In en, this message translates to:
+  /// **'startup_failed'**
+  String get rel_admin_state_startup_failed;
+
+  /// Release administration: gateway_stopped
+  ///
+  /// In en, this message translates to:
+  /// **'gateway_stopped'**
+  String get rel_admin_state_gateway_stopped;
+
+  /// Release administration: connecting
+  ///
+  /// In en, this message translates to:
+  /// **'connecting'**
+  String get rel_admin_state_connecting;
+
+  /// Release administration: retrying
+  ///
+  /// In en, this message translates to:
+  /// **'retrying'**
+  String get rel_admin_state_retrying;
+
+  /// Release administration: fatal
+  ///
+  /// In en, this message translates to:
+  /// **'fatal'**
+  String get rel_admin_state_fatal;
 }
 
 class _AppLocalizationsDelegate

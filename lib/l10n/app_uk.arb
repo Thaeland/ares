@@ -4315,5 +4315,706 @@
   "rel_admin_auto_lower": "Авто",
   "@rel_admin_auto_lower": {
     "description": "Release administration: auto"
+  },
+  "rel_admin_create": "Створити",
+  "@rel_admin_create": {
+    "description": "Release administration: Create"
+  },
+  "rel_admin_prompt": "Запит",
+  "@rel_admin_prompt": {
+    "description": "Release administration: Prompt"
+  },
+  "rel_admin_new_profile_id": "ID нового профілю",
+  "@rel_admin_new_profile_id": {
+    "description": "Release administration: New profile ID"
+  },
+  "rel_admin_this_operation_is_unavailable_on_this_gateway": "Ця операція недоступна на цьому шлюзі.",
+  "@rel_admin_this_operation_is_unavailable_on_this_gateway": {
+    "description": "Release administration: This operation is unavailable on this gateway."
+  },
+  "rel_admin_access_denied_by_the_gateway": "Шлюз відмовив у доступі.",
+  "@rel_admin_access_denied_by_the_gateway": {
+    "description": "Release administration: Access denied by the gateway."
+  },
+  "rel_admin_connection_changed_reopen_profiles": "Підключення змінилося. Відкрийте профілі знову.",
+  "@rel_admin_connection_changed_reopen_profiles": {
+    "description": "Release administration: Connection changed. Reopen Profiles."
+  },
+  "rel_admin_invalid_input_or_gateway_response_check_the_target_before": "Неприпустиме введення або відповідь шлюзу. Перевірте ціль перед повторною спробою.",
+  "@rel_admin_invalid_input_or_gateway_response_check_the_target_before": {
+    "description": "Release administration: Invalid input or gateway response. Check the target before retrying."
+  },
+  "rel_admin_could_not_verify_the_result_refresh_the_target_before": "Не вдалося перевірити результат. Оновіть ціль перед повторною спробою.",
+  "@rel_admin_could_not_verify_the_result_refresh_the_target_before": {
+    "description": "Release administration: Could not verify the result. Refresh the target before trying again."
+  },
+  "rel_admin_edit_soul_md": "Редагувати SOUL.md",
+  "@rel_admin_edit_soul_md": {
+    "description": "Release administration: Edit SOUL.md"
+  },
+  "rel_admin_persona": "Персона",
+  "@rel_admin_persona": {
+    "description": "Release administration: Persona"
+  },
+  "rel_admin_persona_saved": "Персону збережено.",
+  "@rel_admin_persona_saved": {
+    "description": "Release administration: Persona saved."
+  },
+  "rel_admin_not_set": "не задано",
+  "@rel_admin_not_set": {
+    "description": "Release administration: not set"
+  },
+  "rel_admin_enabled": "Увімкнено",
+  "@rel_admin_enabled": {
+    "description": "Release administration: Enabled"
+  },
+  "rel_admin_keys_to_remove_comma_separated": "Ключі для видалення (через кому)",
+  "@rel_admin_keys_to_remove_comma_separated": {
+    "description": "Release administration: Keys to remove (comma-separated)"
+  },
+  "rel_admin_saved_and_applied_by_the_gateway": "Збережено й застосовано шлюзом.",
+  "@rel_admin_saved_and_applied_by_the_gateway": {
+    "description": "Release administration: Saved and applied by the gateway."
+  },
+  "rel_admin_saved_a_gateway_restart_may_be_required": "Збережено. Може знадобитися перезапуск шлюзу.",
+  "@rel_admin_saved_a_gateway_restart_may_be_required": {
+    "description": "Release administration: Saved. A gateway restart may be required."
+  },
+  "rel_admin_create_signed_route": "Створити підписаний маршрут",
+  "@rel_admin_create_signed_route": {
+    "description": "Release administration: Create signed route"
+  },
+  "rel_admin_route_id": "ID маршруту",
+  "@rel_admin_route_id": {
+    "description": "Release administration: Route ID"
+  },
+  "rel_admin_signature": "Підпис",
+  "@rel_admin_signature": {
+    "description": "Release administration: Signature"
+  },
+  "rel_admin_events_comma_separated": "Події (через кому)",
+  "@rel_admin_events_comma_separated": {
+    "description": "Release administration: Events (comma-separated)"
+  },
+  "rel_admin_delivery_target": "Ціль доставки",
+  "@rel_admin_delivery_target": {
+    "description": "Release administration: Delivery target"
+  },
+  "rel_admin_skills_comma_separated": "Навички (через кому)",
+  "@rel_admin_skills_comma_separated": {
+    "description": "Release administration: Skills (comma-separated)"
+  },
+  "rel_admin_delivery_mode": "Режим доставки",
+  "@rel_admin_delivery_mode": {
+    "description": "Release administration: Delivery mode"
+  },
+  "rel_admin_delivery_chat_id_optional": "ID чату доставки (необов’язково)",
+  "@rel_admin_delivery_chat_id_optional": {
+    "description": "Release administration: Delivery chat ID (optional)"
+  },
+  "rel_admin_hide_signing_secret": "Приховати секрет підпису",
+  "@rel_admin_hide_signing_secret": {
+    "description": "Release administration: Hide signing secret"
+  },
+  "rel_admin_reveal_signing_secret": "Показати секрет підпису",
+  "@rel_admin_reveal_signing_secret": {
+    "description": "Release administration: Reveal signing secret"
+  },
+  "rel_admin_edit_persona": "Редагувати персону",
+  "@rel_admin_edit_persona": {
+    "description": "Release administration: Edit persona"
+  },
+  "rel_admin_portable_profile_bundle": "Переносний пакет профілю",
+  "@rel_admin_portable_profile_bundle": {
+    "description": "Release administration: Portable profile bundle"
+  },
+  "rel_admin_clone_profile": "Клонувати профіль",
+  "@rel_admin_clone_profile": {
+    "description": "Release administration: Clone profile"
+  },
+  "rel_admin_rename_display_label": "Перейменувати відображувану мітку",
+  "@rel_admin_rename_display_label": {
+    "description": "Release administration: Rename display label"
+  },
+  "rel_admin_rename_profile": "Перейменувати профіль",
+  "@rel_admin_rename_profile": {
+    "description": "Release administration: Rename profile"
+  },
+  "rel_admin_new_name": "Нова назва",
+  "@rel_admin_new_name": {
+    "description": "Release administration: New name"
+  },
+  "rel_admin_rename_verified": "Перейменування перевірено.",
+  "@rel_admin_rename_verified": {
+    "description": "Release administration: Rename verified."
+  },
+  "rel_admin_delete_profile": "Видалити профіль",
+  "@rel_admin_delete_profile": {
+    "description": "Release administration: Delete profile"
+  },
+  "rel_admin_profile_id_to_delete": "ID профілю для видалення",
+  "@rel_admin_profile_id_to_delete": {
+    "description": "Release administration: Profile ID to delete"
+  },
+  "rel_admin_profile_deleted": "Профіль видалено.",
+  "@rel_admin_profile_deleted": {
+    "description": "Release administration: Profile deleted."
+  },
+  "rel_admin_profile_deleted_server_identity_cleanup_is_still_pending": "Профіль видалено. Очищення ідентифікаційних даних сервера ще очікується.",
+  "@rel_admin_profile_deleted_server_identity_cleanup_is_still_pending": {
+    "description": "Release administration: Profile deleted. Server identity cleanup is still pending."
+  },
+  "rel_admin_export_profile_archive": "Експортувати архів профілю",
+  "@rel_admin_export_profile_archive": {
+    "description": "Release administration: Export profile archive"
+  },
+  "rel_admin_import_profile_archive": "Імпортувати архів профілю",
+  "@rel_admin_import_profile_archive": {
+    "description": "Release administration: Import profile archive"
+  },
+  "rel_admin_import_a_trusted_profile": "Імпортувати довірений профіль",
+  "@rel_admin_import_a_trusted_profile": {
+    "description": "Release administration: Import a trusted profile"
+  },
+  "rel_admin_absolute_archive_path_on_gateway": "Абсолютний шлях до архіву на шлюзі",
+  "@rel_admin_absolute_archive_path_on_gateway": {
+    "description": "Release administration: Absolute archive path on gateway"
+  },
+  "rel_admin_messaging_channels": "Канали повідомлень",
+  "@rel_admin_messaging_channels": {
+    "description": "Release administration: Messaging channels"
+  },
+  "rel_admin_dm_pairing_requests": "Запити сполучення в особистих повідомленнях",
+  "@rel_admin_dm_pairing_requests": {
+    "description": "Release administration: DM pairing requests"
+  },
+  "rel_admin_no_pending_or_approved_users": "Немає користувачів, що очікують або схвалені.",
+  "@rel_admin_no_pending_or_approved_users": {
+    "description": "Release administration: No pending or approved users."
+  },
+  "rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user": "Застаріле сполучення: немає перевірного ID запиту. Попросіть користувача виконати сполучення знову.",
+  "@rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user": {
+    "description": "Release administration: Legacy pairing: no verifiable request ID. Ask the user to pair again."
+  },
+  "rel_admin_pairing_change_verified": "Зміну сполучення перевірено.",
+  "@rel_admin_pairing_change_verified": {
+    "description": "Release administration: Pairing change verified."
+  },
+  "rel_admin_create_telegram_bot_by_qr": "Створити бота Telegram через QR",
+  "@rel_admin_create_telegram_bot_by_qr": {
+    "description": "Release administration: Create Telegram bot by QR"
+  },
+  "rel_admin_create_telegram_bot": "Створити бота Telegram",
+  "@rel_admin_create_telegram_bot": {
+    "description": "Release administration: Create Telegram bot"
+  },
+  "rel_admin_bot_name": "Назва бота",
+  "@rel_admin_bot_name": {
+    "description": "Release administration: Bot name"
+  },
+  "rel_admin_telegram_bot_creation_qr_code": "QR-код створення бота Telegram",
+  "@rel_admin_telegram_bot_creation_qr_code": {
+    "description": "Release administration: Telegram bot creation QR code"
+  },
+  "rel_admin_check_telegram_pairing": "Перевірити сполучення Telegram",
+  "@rel_admin_check_telegram_pairing": {
+    "description": "Release administration: Check Telegram pairing"
+  },
+  "rel_admin_waiting_for_telegram": "Очікування Telegram.",
+  "@rel_admin_waiting_for_telegram": {
+    "description": "Release administration: Waiting for Telegram."
+  },
+  "rel_admin_apply_telegram_bot": "Застосувати бота Telegram",
+  "@rel_admin_apply_telegram_bot": {
+    "description": "Release administration: Apply Telegram bot"
+  },
+  "rel_admin_allowed_numeric_user_ids": "Дозволені числові ID користувачів",
+  "@rel_admin_allowed_numeric_user_ids": {
+    "description": "Release administration: Allowed numeric user IDs"
+  },
+  "rel_admin_saved_restart_still_required": "Збережено. Перезапуск усе ще потрібен.",
+  "@rel_admin_saved_restart_still_required": {
+    "description": "Release administration: Saved. Restart still required."
+  },
+  "rel_admin_saved_gateway_restart_requested": "Збережено; запитано перезапуск шлюзу.",
+  "@rel_admin_saved_gateway_restart_requested": {
+    "description": "Release administration: Saved; gateway restart requested."
+  },
+  "rel_admin_cancel_telegram_setup": "Скасувати налаштування Telegram",
+  "@rel_admin_cancel_telegram_setup": {
+    "description": "Release administration: Cancel Telegram setup"
+  },
+  "rel_admin_inbound_webhooks": "Вхідні вебхуки",
+  "@rel_admin_inbound_webhooks": {
+    "description": "Release administration: Inbound webhooks"
+  },
+  "rel_admin_enable_webhook_service": "Увімкнути службу вебхуків",
+  "@rel_admin_enable_webhook_service": {
+    "description": "Release administration: Enable webhook service"
+  },
+  "rel_admin_enable_webhooks": "Увімкнути вебхуки",
+  "@rel_admin_enable_webhooks": {
+    "description": "Release administration: Enable webhooks"
+  },
+  "rel_admin_enabled_restart_still_required": "Увімкнено. Перезапуск усе ще потрібен.",
+  "@rel_admin_enabled_restart_still_required": {
+    "description": "Release administration: Enabled. Restart still required."
+  },
+  "rel_admin_enabled_restart_requested": "Увімкнено; запитано перезапуск.",
+  "@rel_admin_enabled_restart_requested": {
+    "description": "Release administration: Enabled; restart requested."
+  },
+  "rel_admin_route_change_verified": "Зміну маршруту перевірено.",
+  "@rel_admin_route_change_verified": {
+    "description": "Release administration: Route change verified."
+  },
+  "rel_admin_delete_route": "Видалити маршрут",
+  "@rel_admin_delete_route": {
+    "description": "Release administration: Delete route"
+  },
+  "rel_admin_disable_route": "Вимкнути маршрут",
+  "@rel_admin_disable_route": {
+    "description": "Release administration: Disable route"
+  },
+  "rel_admin_enable_route": "Увімкнути маршрут",
+  "@rel_admin_enable_route": {
+    "description": "Release administration: Enable route"
+  },
+  "rel_admin_back_up_entire_agent_home": "Створити резервну копію всього домашнього каталогу агента",
+  "@rel_admin_back_up_entire_agent_home": {
+    "description": "Release administration: Back up entire agent home"
+  },
+  "rel_admin_transfer_to_a_cloud_agent": "Перенести до агента Cloud",
+  "@rel_admin_transfer_to_a_cloud_agent": {
+    "description": "Release administration: Transfer to a Cloud agent"
+  },
+  "rel_admin_check_backup_progress": "Перевірити хід резервного копіювання",
+  "@rel_admin_check_backup_progress": {
+    "description": "Release administration: Check backup progress"
+  },
+  "rel_admin_save_backup_to_this_device": "Зберегти резервну копію на цьому пристрої",
+  "@rel_admin_save_backup_to_this_device": {
+    "description": "Release administration: Save backup to this device"
+  },
+  "rel_admin_save_sensitive_full_home_archive": "Зберегти конфіденційний архів усього домашнього каталогу",
+  "@rel_admin_save_sensitive_full_home_archive": {
+    "description": "Release administration: Save sensitive full-home archive"
+  },
+  "rel_admin_save_cancelled": "Збереження скасовано.",
+  "@rel_admin_save_cancelled": {
+    "description": "Release administration: Save cancelled."
+  },
+  "rel_admin_backup_saved": "Резервну копію збережено.",
+  "@rel_admin_backup_saved": {
+    "description": "Release administration: Backup saved."
+  },
+  "rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway": "До 32 MiB. Більші архіви залишаються на шлюзі.",
+  "@rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway": {
+    "description": "Release administration: Up to 32 MiB. Larger archives remain on the gateway."
+  },
+  "rel_admin_persona_scope": "Зберегти персону для {scope}.",
+  "@rel_admin_persona_scope": {
+    "description": "Release administration: Save the persona for {scope}.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_configure_channel": "Налаштувати {name}",
+  "@rel_admin_configure_channel": {
+    "description": "Release administration: Configure {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_channel_warning": "Застосовується до {scope}. Порожнє поле зберігає поточне значення. Для видалення значення вкажіть його ключ нижче.",
+  "@rel_admin_channel_warning": {
+    "description": "Release administration: Applies to {scope}. Blank keeps an existing value. To remove a value, list its key below.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_hook_warning": "Застосовується до {scope}. Використовуйте унікальну назву. Шлюз створює секрет підпису. Якщо інший оператор одночасно створить цю назву, хост може замінити цей маршрут.",
+  "@rel_admin_hook_warning": {
+    "description": "Release administration: Applies to {scope}. Use a unique name. The gateway creates a signing secret. If another operator creates the name simultaneously the host may replace that route.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_hook_created": "Створено: {url}. Збережіть секрет підпису перед виходом.",
+  "@rel_admin_hook_created": {
+    "description": "Release administration: Created {url}. Store the signing secret before leaving.",
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_clone_warning": "Скопіювати налаштування, навички, персону та, можливо, облікові дані постачальників із {scope}. Токени повідомлень не запитуються.",
+  "@rel_admin_clone_warning": {
+    "description": "Release administration: Copy settings, skills, persona and potentially provider credentials from {scope}. Messaging tokens are not requested.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_cloned": "{source} клоновано в {destination}.",
+  "@rel_admin_cloned": {
+    "description": "Release administration: Cloned {source} to {destination}.",
+    "placeholders": {
+      "source": {
+        "type": "String"
+      },
+      "destination": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_rename_target": "Перейменувати {name}",
+  "@rel_admin_rename_target": {
+    "description": "Release administration: Rename {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_rename_label_warning": "Змінити відображувану мітку {scope}. ID залишиться default.",
+  "@rel_admin_rename_label_warning": {
+    "description": "Release administration: Change the presentation label for {scope}. Its ID stays default.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_rename_warning": "Перейменувати {scope} на сервері. Запущений шлюз може зупинитися.",
+  "@rel_admin_rename_warning": {
+    "description": "Release administration: Rename {scope} on the server. A running gateway may stop.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_delete_target": "Видалити {name}",
+  "@rel_admin_delete_target": {
+    "description": "Release administration: Delete {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_delete_profile_warning": "Назавжди видалити {scope}, включно із сеансами й обліковими даними. Введіть точний ID профілю.",
+  "@rel_admin_delete_profile_warning": {
+    "description": "Release administration: Permanently delete {scope}, including sessions and credentials. Type the exact profile ID.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_export_target": "Експортувати {name}",
+  "@rel_admin_export_target": {
+    "description": "Release administration: Export {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_export_warning": "Створити .tar.gz на {scope}. Відомі сховища облікових даних виключаються, але приватні дані можуть залишитися. Перевірте перед поширенням.",
+  "@rel_admin_export_warning": {
+    "description": "Release administration: Create a .tar.gz on {scope}. Known credential stores are excluded, but private data can remain. Review before sharing.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_archive_on": "Архів на {gateway}: {path}",
+  "@rel_admin_archive_on": {
+    "description": "Release administration: Archive on {gateway}: {path}",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      },
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_import_warning": "Використовуйте перевірений .tar.gz, що вже є на {gateway}. Він може містити плагіни, скрипти й розклади. Потрібен новий ID профілю.",
+  "@rel_admin_import_warning": {
+    "description": "Release administration: Use a reviewed .tar.gz already on {gateway}. It can contain plugins, scripts and schedules. A new profile ID is required.",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_imported": "Імпортовано: {name}.",
+  "@rel_admin_imported": {
+    "description": "Release administration: Imported {name}.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_approve_user": "Схвалити {user}",
+  "@rel_admin_approve_user": {
+    "description": "Release administration: Approve {user}",
+    "placeholders": {
+      "user": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_revoke_user": "Відкликати {user}",
+  "@rel_admin_revoke_user": {
+    "description": "Release administration: Revoke {user}",
+    "placeholders": {
+      "user": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_allow_pair": "{platform} на {scope}: дозволити цьому користувачу доступ до повідомлень.",
+  "@rel_admin_allow_pair": {
+    "description": "Release administration: {platform} on {scope}: allow this user’s messaging access.",
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      },
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_remove_pair": "{platform} на {scope}: видалити доступ цього користувача до повідомлень.",
+  "@rel_admin_remove_pair": {
+    "description": "Release administration: {platform} on {scope}: remove this user’s messaging access.",
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      },
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_telegram_start": "Почати сполучення Telegram на {scope} через службу налаштування шлюзу.",
+  "@rel_admin_telegram_start": {
+    "description": "Release administration: Start a Telegram pairing on {scope} using the gateway’s setup service.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_expires": "Спливає: {time}",
+  "@rel_admin_expires": {
+    "description": "Release administration: Expires: {time}",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_telegram_apply": "Увімкнути @{bot} на {scope} і спробувати перезапустити шлюз. Лише перелічені користувачі зможуть писати йому.",
+  "@rel_admin_telegram_apply": {
+    "description": "Release administration: Enable @{bot} on {scope} and attempt a gateway restart. Only the listed users may message it.",
+    "placeholders": {
+      "bot": {
+        "type": "String"
+      },
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_hooks_enable": "Увімкнути вхідні вебхуки на {scope} і спробувати перезапустити шлюз.",
+  "@rel_admin_hooks_enable": {
+    "description": "Release administration: Enable inbound webhooks on {scope} and attempt a gateway restart.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_disable_target": "Вимкнути {name}",
+  "@rel_admin_disable_target": {
+    "description": "Release administration: Disable {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_enable_target": "Увімкнути {name}",
+  "@rel_admin_enable_target": {
+    "description": "Release administration: Enable {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_hook_change": "Змінити саме {name} на {scope}.",
+  "@rel_admin_hook_change": {
+    "description": "Release administration: Change exactly {name} on {scope}.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_backup_warning": "Це не резервна копія налаштувань Ares. Збережіть усі профілі, сеанси й облікові дані на {gateway}. Архів містить конфіденційні дані.",
+  "@rel_admin_backup_warning": {
+    "description": "Release administration: This is not an Ares settings backup. Save all profiles, sessions and credentials on {gateway}. The archive is sensitive.",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_backup_started": "Резервне копіювання розпочато на {gateway}.",
+  "@rel_admin_backup_started": {
+    "description": "Release administration: Backup started on {gateway}.",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_backup_verified": "Резервну копію перевірено на {gateway}: {path}",
+  "@rel_admin_backup_verified": {
+    "description": "Release administration: Backup verified on {gateway}: {path}",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      },
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_backup_running": "Резервне копіювання ще триває на {gateway}.",
+  "@rel_admin_backup_running": {
+    "description": "Release administration: Backup still running on {gateway}.",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_choice_yes": "так",
+  "@rel_admin_choice_yes": {
+    "description": "Release administration: yes"
+  },
+  "rel_admin_choice_no": "ні",
+  "@rel_admin_choice_no": {
+    "description": "Release administration: no"
+  },
+  "rel_admin_choice_generic": "загальна",
+  "@rel_admin_choice_generic": {
+    "description": "Release administration: generic"
+  },
+  "rel_admin_choice_log": "журнал",
+  "@rel_admin_choice_log": {
+    "description": "Release administration: log"
+  },
+  "rel_admin_choice_email": "електронна пошта",
+  "@rel_admin_choice_email": {
+    "description": "Release administration: email"
+  },
+  "rel_admin_choice_github_comment": "коментар GitHub",
+  "@rel_admin_choice_github_comment": {
+    "description": "Release administration: github_comment"
+  },
+  "rel_admin_choice_agent": "Агент обробляє подію",
+  "@rel_admin_choice_agent": {
+    "description": "Release administration: Agent processes event"
+  },
+  "rel_admin_choice_direct": "Пряма доставка",
+  "@rel_admin_choice_direct": {
+    "description": "Release administration: Direct delivery"
+  },
+  "rel_admin_configured": "налаштовано",
+  "@rel_admin_configured": {
+    "description": "Release administration: configured"
+  },
+  "rel_admin_state_pending_restart": "очікує перезапуску",
+  "@rel_admin_state_pending_restart": {
+    "description": "Release administration: pending_restart"
+  },
+  "rel_admin_state_unknown": "невідомо",
+  "@rel_admin_state_unknown": {
+    "description": "Release administration: unknown"
+  },
+  "rel_admin_state_connected": "підключено",
+  "@rel_admin_state_connected": {
+    "description": "Release administration: connected"
+  },
+  "rel_admin_state_disconnected": "відключено",
+  "@rel_admin_state_disconnected": {
+    "description": "Release administration: disconnected"
+  },
+  "rel_admin_state_disabled": "вимкнено",
+  "@rel_admin_state_disabled": {
+    "description": "Release administration: disabled"
+  },
+  "rel_admin_state_enabled": "увімкнено",
+  "@rel_admin_state_enabled": {
+    "description": "Release administration: enabled"
+  },
+  "rel_admin_state_running": "працює",
+  "@rel_admin_state_running": {
+    "description": "Release administration: running"
+  },
+  "rel_admin_state_stopped": "зупинено",
+  "@rel_admin_state_stopped": {
+    "description": "Release administration: stopped"
+  },
+  "rel_admin_state_error": "помилка",
+  "@rel_admin_state_error": {
+    "description": "Release administration: error"
+  },
+  "rel_admin_state_not_configured": "не налаштовано",
+  "@rel_admin_state_not_configured": {
+    "description": "Release administration: not_configured"
+  },
+  "rel_admin_state_startup_failed": "помилка запуску",
+  "@rel_admin_state_startup_failed": {
+    "description": "Release administration: startup_failed"
+  },
+  "rel_admin_state_gateway_stopped": "шлюз зупинено",
+  "@rel_admin_state_gateway_stopped": {
+    "description": "Release administration: gateway_stopped"
+  },
+  "rel_admin_state_connecting": "підключення",
+  "@rel_admin_state_connecting": {
+    "description": "Release administration: connecting"
+  },
+  "rel_admin_state_retrying": "повторна спроба",
+  "@rel_admin_state_retrying": {
+    "description": "Release administration: retrying"
+  },
+  "rel_admin_state_fatal": "критична помилка",
+  "@rel_admin_state_fatal": {
+    "description": "Release administration: fatal"
   }
 }

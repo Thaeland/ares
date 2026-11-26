@@ -12903,4 +12903,496 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get rel_admin_auto_lower => 'Automatique';
+
+  @override
+  String get rel_admin_create => 'Créer';
+
+  @override
+  String get rel_admin_prompt => 'Instruction';
+
+  @override
+  String get rel_admin_new_profile_id => 'Identifiant du nouveau profil';
+
+  @override
+  String get rel_admin_this_operation_is_unavailable_on_this_gateway =>
+      'Cette opération n’est pas disponible sur cette passerelle.';
+
+  @override
+  String get rel_admin_access_denied_by_the_gateway =>
+      'Accès refusé par la passerelle.';
+
+  @override
+  String get rel_admin_connection_changed_reopen_profiles =>
+      'La connexion a changé. Rouvrez Profils.';
+
+  @override
+  String
+  get rel_admin_invalid_input_or_gateway_response_check_the_target_before =>
+      'Saisie ou réponse de la passerelle invalide. Vérifiez la cible avant de réessayer.';
+
+  @override
+  String get rel_admin_could_not_verify_the_result_refresh_the_target_before =>
+      'Le résultat n’a pas pu être vérifié. Actualisez la cible avant de réessayer.';
+
+  @override
+  String get rel_admin_edit_soul_md => 'Modifier SOUL.md';
+
+  @override
+  String get rel_admin_persona => 'Personnalité';
+
+  @override
+  String get rel_admin_persona_saved => 'Personnalité enregistrée.';
+
+  @override
+  String get rel_admin_not_set => 'non défini';
+
+  @override
+  String get rel_admin_enabled => 'Activé';
+
+  @override
+  String get rel_admin_keys_to_remove_comma_separated =>
+      'Clés à retirer (séparées par des virgules)';
+
+  @override
+  String get rel_admin_saved_and_applied_by_the_gateway =>
+      'Enregistré et appliqué par la passerelle.';
+
+  @override
+  String get rel_admin_saved_a_gateway_restart_may_be_required =>
+      'Enregistré. Un redémarrage de la passerelle peut être nécessaire.';
+
+  @override
+  String get rel_admin_create_signed_route => 'Créer une route signée';
+
+  @override
+  String get rel_admin_route_id => 'Identifiant de route';
+
+  @override
+  String get rel_admin_signature => 'Signature';
+
+  @override
+  String get rel_admin_events_comma_separated =>
+      'Événements (séparés par des virgules)';
+
+  @override
+  String get rel_admin_delivery_target => 'Destination de livraison';
+
+  @override
+  String get rel_admin_skills_comma_separated =>
+      'Compétences (séparées par des virgules)';
+
+  @override
+  String get rel_admin_delivery_mode => 'Mode de livraison';
+
+  @override
+  String get rel_admin_delivery_chat_id_optional =>
+      'Identifiant du chat de livraison (facultatif)';
+
+  @override
+  String get rel_admin_hide_signing_secret => 'Masquer le secret de signature';
+
+  @override
+  String get rel_admin_reveal_signing_secret =>
+      'Afficher le secret de signature';
+
+  @override
+  String get rel_admin_edit_persona => 'Modifier la personnalité';
+
+  @override
+  String get rel_admin_portable_profile_bundle => 'Paquet de profil portable';
+
+  @override
+  String get rel_admin_clone_profile => 'Cloner le profil';
+
+  @override
+  String get rel_admin_rename_display_label => 'Renommer le libellé affiché';
+
+  @override
+  String get rel_admin_rename_profile => 'Renommer le profil';
+
+  @override
+  String get rel_admin_new_name => 'Nouveau nom';
+
+  @override
+  String get rel_admin_rename_verified => 'Renommage vérifié.';
+
+  @override
+  String get rel_admin_delete_profile => 'Supprimer le profil';
+
+  @override
+  String get rel_admin_profile_id_to_delete =>
+      'Identifiant du profil à supprimer';
+
+  @override
+  String get rel_admin_profile_deleted => 'Profil supprimé.';
+
+  @override
+  String
+  get rel_admin_profile_deleted_server_identity_cleanup_is_still_pending =>
+      'Profil supprimé. Le nettoyage de l’identité du serveur est toujours en attente.';
+
+  @override
+  String get rel_admin_export_profile_archive => 'Exporter l’archive du profil';
+
+  @override
+  String get rel_admin_import_profile_archive => 'Importer l’archive du profil';
+
+  @override
+  String get rel_admin_import_a_trusted_profile =>
+      'Importer un profil de confiance';
+
+  @override
+  String get rel_admin_absolute_archive_path_on_gateway =>
+      'Chemin absolu de l’archive sur la passerelle';
+
+  @override
+  String get rel_admin_messaging_channels => 'Canaux de messagerie';
+
+  @override
+  String get rel_admin_dm_pairing_requests =>
+      'Demandes d’association par message privé';
+
+  @override
+  String get rel_admin_no_pending_or_approved_users =>
+      'Aucun utilisateur en attente ou approuvé.';
+
+  @override
+  String get rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user =>
+      'Ancienne association : aucun identifiant de demande vérifiable. Demandez à l’utilisateur de s’associer à nouveau.';
+
+  @override
+  String get rel_admin_pairing_change_verified =>
+      'Changement d’association vérifié.';
+
+  @override
+  String get rel_admin_create_telegram_bot_by_qr =>
+      'Créer un bot Telegram par QR';
+
+  @override
+  String get rel_admin_create_telegram_bot => 'Créer un bot Telegram';
+
+  @override
+  String get rel_admin_bot_name => 'Nom du bot';
+
+  @override
+  String get rel_admin_telegram_bot_creation_qr_code =>
+      'Code QR de création d’un bot Telegram';
+
+  @override
+  String get rel_admin_check_telegram_pairing =>
+      'Vérifier l’association Telegram';
+
+  @override
+  String get rel_admin_waiting_for_telegram => 'En attente de Telegram.';
+
+  @override
+  String get rel_admin_apply_telegram_bot => 'Appliquer le bot Telegram';
+
+  @override
+  String get rel_admin_allowed_numeric_user_ids =>
+      'Identifiants numériques des utilisateurs autorisés';
+
+  @override
+  String get rel_admin_saved_restart_still_required =>
+      'Enregistré. Un redémarrage reste nécessaire.';
+
+  @override
+  String get rel_admin_saved_gateway_restart_requested =>
+      'Enregistré ; redémarrage de la passerelle demandé.';
+
+  @override
+  String get rel_admin_cancel_telegram_setup =>
+      'Annuler la configuration Telegram';
+
+  @override
+  String get rel_admin_inbound_webhooks => 'Webhooks entrants';
+
+  @override
+  String get rel_admin_enable_webhook_service =>
+      'Activer le service de webhooks';
+
+  @override
+  String get rel_admin_enable_webhooks => 'Activer les webhooks';
+
+  @override
+  String get rel_admin_enabled_restart_still_required =>
+      'Activé. Un redémarrage reste nécessaire.';
+
+  @override
+  String get rel_admin_enabled_restart_requested =>
+      'Activé ; redémarrage demandé.';
+
+  @override
+  String get rel_admin_route_change_verified => 'Changement de route vérifié.';
+
+  @override
+  String get rel_admin_delete_route => 'Supprimer la route';
+
+  @override
+  String get rel_admin_disable_route => 'Désactiver la route';
+
+  @override
+  String get rel_admin_enable_route => 'Activer la route';
+
+  @override
+  String get rel_admin_back_up_entire_agent_home =>
+      'Sauvegarder tout le répertoire personnel de l’agent';
+
+  @override
+  String get rel_admin_transfer_to_a_cloud_agent =>
+      'Transférer vers un agent Cloud';
+
+  @override
+  String get rel_admin_check_backup_progress =>
+      'Vérifier l’avancement de la sauvegarde';
+
+  @override
+  String get rel_admin_save_backup_to_this_device =>
+      'Enregistrer la sauvegarde sur cet appareil';
+
+  @override
+  String get rel_admin_save_sensitive_full_home_archive =>
+      'Enregistrer l’archive sensible de tout le répertoire personnel';
+
+  @override
+  String get rel_admin_save_cancelled => 'Enregistrement annulé.';
+
+  @override
+  String get rel_admin_backup_saved => 'Sauvegarde enregistrée.';
+
+  @override
+  String get rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway =>
+      'Jusqu’à 32 MiB. Les archives plus volumineuses restent sur la passerelle.';
+
+  @override
+  String rel_admin_persona_scope(String scope) {
+    return 'Enregistrez la personnalité de $scope.';
+  }
+
+  @override
+  String rel_admin_configure_channel(String name) {
+    return 'Configurer $name';
+  }
+
+  @override
+  String rel_admin_channel_warning(String scope) {
+    return 'S’applique à $scope. Un champ vide conserve la valeur existante. Pour supprimer une valeur, indiquez sa clé ci-dessous.';
+  }
+
+  @override
+  String rel_admin_hook_warning(String scope) {
+    return 'S’applique à $scope. Utilisez un nom unique. La passerelle crée un secret de signature. Si un autre opérateur crée ce nom en même temps, l’hôte peut remplacer cette route.';
+  }
+
+  @override
+  String rel_admin_hook_created(String url) {
+    return '$url créé. Conservez le secret de signature avant de quitter.';
+  }
+
+  @override
+  String rel_admin_clone_warning(String scope) {
+    return 'Copiez les paramètres, compétences, personnalité et éventuellement les identifiants fournisseurs de $scope. Les jetons de messagerie ne sont pas demandés.';
+  }
+
+  @override
+  String rel_admin_cloned(String source, String destination) {
+    return '$source cloné vers $destination.';
+  }
+
+  @override
+  String rel_admin_rename_target(String name) {
+    return 'Renommer $name';
+  }
+
+  @override
+  String rel_admin_rename_label_warning(String scope) {
+    return 'Modifiez le libellé affiché de $scope. Son identifiant reste default.';
+  }
+
+  @override
+  String rel_admin_rename_warning(String scope) {
+    return 'Renommez $scope sur le serveur. Une passerelle en cours d’exécution peut s’arrêter.';
+  }
+
+  @override
+  String rel_admin_delete_target(String name) {
+    return 'Supprimer $name';
+  }
+
+  @override
+  String rel_admin_delete_profile_warning(String scope) {
+    return 'Supprimez définitivement $scope, y compris les sessions et identifiants. Saisissez l’identifiant exact du profil.';
+  }
+
+  @override
+  String rel_admin_export_target(String name) {
+    return 'Exporter $name';
+  }
+
+  @override
+  String rel_admin_export_warning(String scope) {
+    return 'Créez un .tar.gz sur $scope. Les magasins d’identifiants connus sont exclus, mais des données privées peuvent rester. Examinez avant de partager.';
+  }
+
+  @override
+  String rel_admin_archive_on(String gateway, String path) {
+    return 'Archive sur $gateway : $path';
+  }
+
+  @override
+  String rel_admin_import_warning(String gateway) {
+    return 'Utilisez un .tar.gz examiné déjà présent sur $gateway. Il peut contenir des plugins, scripts et programmations. Un nouvel identifiant de profil est requis.';
+  }
+
+  @override
+  String rel_admin_imported(String name) {
+    return '$name importé.';
+  }
+
+  @override
+  String rel_admin_approve_user(String user) {
+    return 'Approuver $user';
+  }
+
+  @override
+  String rel_admin_revoke_user(String user) {
+    return 'Révoquer $user';
+  }
+
+  @override
+  String rel_admin_allow_pair(String platform, String scope) {
+    return '$platform sur $scope : autoriser l’accès de cet utilisateur à la messagerie.';
+  }
+
+  @override
+  String rel_admin_remove_pair(String platform, String scope) {
+    return '$platform sur $scope : retirer l’accès de cet utilisateur à la messagerie.';
+  }
+
+  @override
+  String rel_admin_telegram_start(String scope) {
+    return 'Démarrez une association Telegram sur $scope via le service de configuration de la passerelle.';
+  }
+
+  @override
+  String rel_admin_expires(String time) {
+    return 'Expire : $time';
+  }
+
+  @override
+  String rel_admin_telegram_apply(String bot, String scope) {
+    return 'Activez @$bot sur $scope et tentez un redémarrage de la passerelle. Seuls les utilisateurs indiqués peuvent lui envoyer des messages.';
+  }
+
+  @override
+  String rel_admin_hooks_enable(String scope) {
+    return 'Activez les webhooks entrants sur $scope et tentez un redémarrage de la passerelle.';
+  }
+
+  @override
+  String rel_admin_disable_target(String name) {
+    return 'Désactiver $name';
+  }
+
+  @override
+  String rel_admin_enable_target(String name) {
+    return 'Activer $name';
+  }
+
+  @override
+  String rel_admin_hook_change(String name, String scope) {
+    return 'Modifiez précisément $name sur $scope.';
+  }
+
+  @override
+  String rel_admin_backup_warning(String gateway) {
+    return 'Ce n’est pas une sauvegarde des paramètres d’Ares. Sauvegardez tous les profils, sessions et identifiants sur $gateway. L’archive est sensible.';
+  }
+
+  @override
+  String rel_admin_backup_started(String gateway) {
+    return 'Sauvegarde démarrée sur $gateway.';
+  }
+
+  @override
+  String rel_admin_backup_verified(String gateway, String path) {
+    return 'Sauvegarde vérifiée sur $gateway : $path';
+  }
+
+  @override
+  String rel_admin_backup_running(String gateway) {
+    return 'La sauvegarde est toujours en cours sur $gateway.';
+  }
+
+  @override
+  String get rel_admin_choice_yes => 'oui';
+
+  @override
+  String get rel_admin_choice_no => 'non';
+
+  @override
+  String get rel_admin_choice_generic => 'générique';
+
+  @override
+  String get rel_admin_choice_log => 'journal';
+
+  @override
+  String get rel_admin_choice_email => 'e-mail';
+
+  @override
+  String get rel_admin_choice_github_comment => 'commentaire GitHub';
+
+  @override
+  String get rel_admin_choice_agent => 'L’agent traite l’événement';
+
+  @override
+  String get rel_admin_choice_direct => 'Livraison directe';
+
+  @override
+  String get rel_admin_configured => 'configuré';
+
+  @override
+  String get rel_admin_state_pending_restart => 'redémarrage en attente';
+
+  @override
+  String get rel_admin_state_unknown => 'inconnu';
+
+  @override
+  String get rel_admin_state_connected => 'connecté';
+
+  @override
+  String get rel_admin_state_disconnected => 'déconnecté';
+
+  @override
+  String get rel_admin_state_disabled => 'désactivé';
+
+  @override
+  String get rel_admin_state_enabled => 'activé';
+
+  @override
+  String get rel_admin_state_running => 'en cours';
+
+  @override
+  String get rel_admin_state_stopped => 'arrêté';
+
+  @override
+  String get rel_admin_state_error => 'erreur';
+
+  @override
+  String get rel_admin_state_not_configured => 'non configuré';
+
+  @override
+  String get rel_admin_state_startup_failed => 'échec du démarrage';
+
+  @override
+  String get rel_admin_state_gateway_stopped => 'passerelle arrêtée';
+
+  @override
+  String get rel_admin_state_connecting => 'connexion en cours';
+
+  @override
+  String get rel_admin_state_retrying => 'nouvelle tentative';
+
+  @override
+  String get rel_admin_state_fatal => 'erreur fatale';
 }

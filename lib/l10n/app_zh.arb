@@ -4199,5 +4199,706 @@
   "rel_admin_auto_lower": "自动",
   "@rel_admin_auto_lower": {
     "description": "Release administration: auto"
+  },
+  "rel_admin_create": "创建",
+  "@rel_admin_create": {
+    "description": "Release administration: Create"
+  },
+  "rel_admin_prompt": "提示词",
+  "@rel_admin_prompt": {
+    "description": "Release administration: Prompt"
+  },
+  "rel_admin_new_profile_id": "新配置档案 ID",
+  "@rel_admin_new_profile_id": {
+    "description": "Release administration: New profile ID"
+  },
+  "rel_admin_this_operation_is_unavailable_on_this_gateway": "此网关不支持此操作。",
+  "@rel_admin_this_operation_is_unavailable_on_this_gateway": {
+    "description": "Release administration: This operation is unavailable on this gateway."
+  },
+  "rel_admin_access_denied_by_the_gateway": "网关拒绝访问。",
+  "@rel_admin_access_denied_by_the_gateway": {
+    "description": "Release administration: Access denied by the gateway."
+  },
+  "rel_admin_connection_changed_reopen_profiles": "连接已更改。请重新打开配置文件。",
+  "@rel_admin_connection_changed_reopen_profiles": {
+    "description": "Release administration: Connection changed. Reopen Profiles."
+  },
+  "rel_admin_invalid_input_or_gateway_response_check_the_target_before": "输入或网关响应无效。重试前请检查目标。",
+  "@rel_admin_invalid_input_or_gateway_response_check_the_target_before": {
+    "description": "Release administration: Invalid input or gateway response. Check the target before retrying."
+  },
+  "rel_admin_could_not_verify_the_result_refresh_the_target_before": "无法验证结果。请刷新目标后重试。",
+  "@rel_admin_could_not_verify_the_result_refresh_the_target_before": {
+    "description": "Release administration: Could not verify the result. Refresh the target before trying again."
+  },
+  "rel_admin_edit_soul_md": "编辑 SOUL.md",
+  "@rel_admin_edit_soul_md": {
+    "description": "Release administration: Edit SOUL.md"
+  },
+  "rel_admin_persona": "角色设定",
+  "@rel_admin_persona": {
+    "description": "Release administration: Persona"
+  },
+  "rel_admin_persona_saved": "角色设定已保存。",
+  "@rel_admin_persona_saved": {
+    "description": "Release administration: Persona saved."
+  },
+  "rel_admin_not_set": "未设置",
+  "@rel_admin_not_set": {
+    "description": "Release administration: not set"
+  },
+  "rel_admin_enabled": "已启用",
+  "@rel_admin_enabled": {
+    "description": "Release administration: Enabled"
+  },
+  "rel_admin_keys_to_remove_comma_separated": "要移除的键（逗号分隔）",
+  "@rel_admin_keys_to_remove_comma_separated": {
+    "description": "Release administration: Keys to remove (comma-separated)"
+  },
+  "rel_admin_saved_and_applied_by_the_gateway": "网关已保存并应用。",
+  "@rel_admin_saved_and_applied_by_the_gateway": {
+    "description": "Release administration: Saved and applied by the gateway."
+  },
+  "rel_admin_saved_a_gateway_restart_may_be_required": "已保存。可能需要重启网关。",
+  "@rel_admin_saved_a_gateway_restart_may_be_required": {
+    "description": "Release administration: Saved. A gateway restart may be required."
+  },
+  "rel_admin_create_signed_route": "创建签名路由",
+  "@rel_admin_create_signed_route": {
+    "description": "Release administration: Create signed route"
+  },
+  "rel_admin_route_id": "路由 ID",
+  "@rel_admin_route_id": {
+    "description": "Release administration: Route ID"
+  },
+  "rel_admin_signature": "签名",
+  "@rel_admin_signature": {
+    "description": "Release administration: Signature"
+  },
+  "rel_admin_events_comma_separated": "事件（逗号分隔）",
+  "@rel_admin_events_comma_separated": {
+    "description": "Release administration: Events (comma-separated)"
+  },
+  "rel_admin_delivery_target": "投递目标",
+  "@rel_admin_delivery_target": {
+    "description": "Release administration: Delivery target"
+  },
+  "rel_admin_skills_comma_separated": "技能（逗号分隔）",
+  "@rel_admin_skills_comma_separated": {
+    "description": "Release administration: Skills (comma-separated)"
+  },
+  "rel_admin_delivery_mode": "投递模式",
+  "@rel_admin_delivery_mode": {
+    "description": "Release administration: Delivery mode"
+  },
+  "rel_admin_delivery_chat_id_optional": "投递聊天 ID（可选）",
+  "@rel_admin_delivery_chat_id_optional": {
+    "description": "Release administration: Delivery chat ID (optional)"
+  },
+  "rel_admin_hide_signing_secret": "隐藏签名密钥",
+  "@rel_admin_hide_signing_secret": {
+    "description": "Release administration: Hide signing secret"
+  },
+  "rel_admin_reveal_signing_secret": "显示签名密钥",
+  "@rel_admin_reveal_signing_secret": {
+    "description": "Release administration: Reveal signing secret"
+  },
+  "rel_admin_edit_persona": "编辑角色设定",
+  "@rel_admin_edit_persona": {
+    "description": "Release administration: Edit persona"
+  },
+  "rel_admin_portable_profile_bundle": "可移植配置文件包",
+  "@rel_admin_portable_profile_bundle": {
+    "description": "Release administration: Portable profile bundle"
+  },
+  "rel_admin_clone_profile": "克隆配置文件",
+  "@rel_admin_clone_profile": {
+    "description": "Release administration: Clone profile"
+  },
+  "rel_admin_rename_display_label": "重命名显示标签",
+  "@rel_admin_rename_display_label": {
+    "description": "Release administration: Rename display label"
+  },
+  "rel_admin_rename_profile": "重命名配置文件",
+  "@rel_admin_rename_profile": {
+    "description": "Release administration: Rename profile"
+  },
+  "rel_admin_new_name": "新名称",
+  "@rel_admin_new_name": {
+    "description": "Release administration: New name"
+  },
+  "rel_admin_rename_verified": "重命名已验证。",
+  "@rel_admin_rename_verified": {
+    "description": "Release administration: Rename verified."
+  },
+  "rel_admin_delete_profile": "删除配置文件",
+  "@rel_admin_delete_profile": {
+    "description": "Release administration: Delete profile"
+  },
+  "rel_admin_profile_id_to_delete": "要删除的配置文件 ID",
+  "@rel_admin_profile_id_to_delete": {
+    "description": "Release administration: Profile ID to delete"
+  },
+  "rel_admin_profile_deleted": "配置文件已删除。",
+  "@rel_admin_profile_deleted": {
+    "description": "Release administration: Profile deleted."
+  },
+  "rel_admin_profile_deleted_server_identity_cleanup_is_still_pending": "配置文件已删除。服务器身份清理仍待完成。",
+  "@rel_admin_profile_deleted_server_identity_cleanup_is_still_pending": {
+    "description": "Release administration: Profile deleted. Server identity cleanup is still pending."
+  },
+  "rel_admin_export_profile_archive": "导出配置文件归档",
+  "@rel_admin_export_profile_archive": {
+    "description": "Release administration: Export profile archive"
+  },
+  "rel_admin_import_profile_archive": "导入配置文件归档",
+  "@rel_admin_import_profile_archive": {
+    "description": "Release administration: Import profile archive"
+  },
+  "rel_admin_import_a_trusted_profile": "导入可信配置文件",
+  "@rel_admin_import_a_trusted_profile": {
+    "description": "Release administration: Import a trusted profile"
+  },
+  "rel_admin_absolute_archive_path_on_gateway": "网关上的归档绝对路径",
+  "@rel_admin_absolute_archive_path_on_gateway": {
+    "description": "Release administration: Absolute archive path on gateway"
+  },
+  "rel_admin_messaging_channels": "消息渠道",
+  "@rel_admin_messaging_channels": {
+    "description": "Release administration: Messaging channels"
+  },
+  "rel_admin_dm_pairing_requests": "私信配对请求",
+  "@rel_admin_dm_pairing_requests": {
+    "description": "Release administration: DM pairing requests"
+  },
+  "rel_admin_no_pending_or_approved_users": "没有待处理或已批准的用户。",
+  "@rel_admin_no_pending_or_approved_users": {
+    "description": "Release administration: No pending or approved users."
+  },
+  "rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user": "旧版配对：没有可验证的请求 ID。请让用户重新配对。",
+  "@rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user": {
+    "description": "Release administration: Legacy pairing: no verifiable request ID. Ask the user to pair again."
+  },
+  "rel_admin_pairing_change_verified": "配对变更已验证。",
+  "@rel_admin_pairing_change_verified": {
+    "description": "Release administration: Pairing change verified."
+  },
+  "rel_admin_create_telegram_bot_by_qr": "通过二维码创建 Telegram 机器人",
+  "@rel_admin_create_telegram_bot_by_qr": {
+    "description": "Release administration: Create Telegram bot by QR"
+  },
+  "rel_admin_create_telegram_bot": "创建 Telegram 机器人",
+  "@rel_admin_create_telegram_bot": {
+    "description": "Release administration: Create Telegram bot"
+  },
+  "rel_admin_bot_name": "机器人名称",
+  "@rel_admin_bot_name": {
+    "description": "Release administration: Bot name"
+  },
+  "rel_admin_telegram_bot_creation_qr_code": "Telegram 机器人创建二维码",
+  "@rel_admin_telegram_bot_creation_qr_code": {
+    "description": "Release administration: Telegram bot creation QR code"
+  },
+  "rel_admin_check_telegram_pairing": "检查 Telegram 配对",
+  "@rel_admin_check_telegram_pairing": {
+    "description": "Release administration: Check Telegram pairing"
+  },
+  "rel_admin_waiting_for_telegram": "正在等待 Telegram。",
+  "@rel_admin_waiting_for_telegram": {
+    "description": "Release administration: Waiting for Telegram."
+  },
+  "rel_admin_apply_telegram_bot": "应用 Telegram 机器人",
+  "@rel_admin_apply_telegram_bot": {
+    "description": "Release administration: Apply Telegram bot"
+  },
+  "rel_admin_allowed_numeric_user_ids": "允许的数字用户 ID",
+  "@rel_admin_allowed_numeric_user_ids": {
+    "description": "Release administration: Allowed numeric user IDs"
+  },
+  "rel_admin_saved_restart_still_required": "已保存。仍需重启。",
+  "@rel_admin_saved_restart_still_required": {
+    "description": "Release administration: Saved. Restart still required."
+  },
+  "rel_admin_saved_gateway_restart_requested": "已保存；已请求重启网关。",
+  "@rel_admin_saved_gateway_restart_requested": {
+    "description": "Release administration: Saved; gateway restart requested."
+  },
+  "rel_admin_cancel_telegram_setup": "取消 Telegram 设置",
+  "@rel_admin_cancel_telegram_setup": {
+    "description": "Release administration: Cancel Telegram setup"
+  },
+  "rel_admin_inbound_webhooks": "入站 Webhook",
+  "@rel_admin_inbound_webhooks": {
+    "description": "Release administration: Inbound webhooks"
+  },
+  "rel_admin_enable_webhook_service": "启用 Webhook 服务",
+  "@rel_admin_enable_webhook_service": {
+    "description": "Release administration: Enable webhook service"
+  },
+  "rel_admin_enable_webhooks": "启用 Webhook",
+  "@rel_admin_enable_webhooks": {
+    "description": "Release administration: Enable webhooks"
+  },
+  "rel_admin_enabled_restart_still_required": "已启用。仍需重启。",
+  "@rel_admin_enabled_restart_still_required": {
+    "description": "Release administration: Enabled. Restart still required."
+  },
+  "rel_admin_enabled_restart_requested": "已启用；已请求重启。",
+  "@rel_admin_enabled_restart_requested": {
+    "description": "Release administration: Enabled; restart requested."
+  },
+  "rel_admin_route_change_verified": "路由变更已验证。",
+  "@rel_admin_route_change_verified": {
+    "description": "Release administration: Route change verified."
+  },
+  "rel_admin_delete_route": "删除路由",
+  "@rel_admin_delete_route": {
+    "description": "Release administration: Delete route"
+  },
+  "rel_admin_disable_route": "禁用路由",
+  "@rel_admin_disable_route": {
+    "description": "Release administration: Disable route"
+  },
+  "rel_admin_enable_route": "启用路由",
+  "@rel_admin_enable_route": {
+    "description": "Release administration: Enable route"
+  },
+  "rel_admin_back_up_entire_agent_home": "备份整个智能体主目录",
+  "@rel_admin_back_up_entire_agent_home": {
+    "description": "Release administration: Back up entire agent home"
+  },
+  "rel_admin_transfer_to_a_cloud_agent": "传输到 Cloud 智能体",
+  "@rel_admin_transfer_to_a_cloud_agent": {
+    "description": "Release administration: Transfer to a Cloud agent"
+  },
+  "rel_admin_check_backup_progress": "检查备份进度",
+  "@rel_admin_check_backup_progress": {
+    "description": "Release administration: Check backup progress"
+  },
+  "rel_admin_save_backup_to_this_device": "将备份保存到此设备",
+  "@rel_admin_save_backup_to_this_device": {
+    "description": "Release administration: Save backup to this device"
+  },
+  "rel_admin_save_sensitive_full_home_archive": "保存含敏感信息的完整主目录归档",
+  "@rel_admin_save_sensitive_full_home_archive": {
+    "description": "Release administration: Save sensitive full-home archive"
+  },
+  "rel_admin_save_cancelled": "已取消保存。",
+  "@rel_admin_save_cancelled": {
+    "description": "Release administration: Save cancelled."
+  },
+  "rel_admin_backup_saved": "备份已保存。",
+  "@rel_admin_backup_saved": {
+    "description": "Release administration: Backup saved."
+  },
+  "rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway": "最大 32 MiB。更大的归档保留在网关上。",
+  "@rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway": {
+    "description": "Release administration: Up to 32 MiB. Larger archives remain on the gateway."
+  },
+  "rel_admin_persona_scope": "保存 {scope} 的角色设定。",
+  "@rel_admin_persona_scope": {
+    "description": "Release administration: Save the persona for {scope}.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_configure_channel": "配置 {name}",
+  "@rel_admin_configure_channel": {
+    "description": "Release administration: Configure {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_channel_warning": "应用于 {scope}。留空保留现有值。要移除值，请在下方列出其键。",
+  "@rel_admin_channel_warning": {
+    "description": "Release administration: Applies to {scope}. Blank keeps an existing value. To remove a value, list its key below.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_hook_warning": "应用于 {scope}。请使用唯一名称。网关会创建签名密钥。如果其他操作员同时创建该名称，主机可能替换该路由。",
+  "@rel_admin_hook_warning": {
+    "description": "Release administration: Applies to {scope}. Use a unique name. The gateway creates a signing secret. If another operator creates the name simultaneously the host may replace that route.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_hook_created": "已创建 {url}。离开前请保存签名密钥。",
+  "@rel_admin_hook_created": {
+    "description": "Release administration: Created {url}. Store the signing secret before leaving.",
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_clone_warning": "从 {scope} 复制设置、技能、角色设定，以及可能的提供商凭据。不请求消息令牌。",
+  "@rel_admin_clone_warning": {
+    "description": "Release administration: Copy settings, skills, persona and potentially provider credentials from {scope}. Messaging tokens are not requested.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_cloned": "已将 {source} 克隆到 {destination}。",
+  "@rel_admin_cloned": {
+    "description": "Release administration: Cloned {source} to {destination}.",
+    "placeholders": {
+      "source": {
+        "type": "String"
+      },
+      "destination": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_rename_target": "重命名 {name}",
+  "@rel_admin_rename_target": {
+    "description": "Release administration: Rename {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_rename_label_warning": "更改 {scope} 的显示标签。其 ID 保持为 default。",
+  "@rel_admin_rename_label_warning": {
+    "description": "Release administration: Change the presentation label for {scope}. Its ID stays default.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_rename_warning": "在服务器上重命名 {scope}。正在运行的网关可能停止。",
+  "@rel_admin_rename_warning": {
+    "description": "Release administration: Rename {scope} on the server. A running gateway may stop.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_delete_target": "删除 {name}",
+  "@rel_admin_delete_target": {
+    "description": "Release administration: Delete {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_delete_profile_warning": "永久删除 {scope}，包括会话和凭据。请输入准确的配置文件 ID。",
+  "@rel_admin_delete_profile_warning": {
+    "description": "Release administration: Permanently delete {scope}, including sessions and credentials. Type the exact profile ID.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_export_target": "导出 {name}",
+  "@rel_admin_export_target": {
+    "description": "Release administration: Export {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_export_warning": "在 {scope} 上创建 .tar.gz。已知凭据存储会被排除，但可能仍含私人数据。分享前请检查。",
+  "@rel_admin_export_warning": {
+    "description": "Release administration: Create a .tar.gz on {scope}. Known credential stores are excluded, but private data can remain. Review before sharing.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_archive_on": "{gateway} 上的归档：{path}",
+  "@rel_admin_archive_on": {
+    "description": "Release administration: Archive on {gateway}: {path}",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      },
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_import_warning": "使用已在 {gateway} 上且已检查的 .tar.gz。它可能包含插件、脚本和计划。需要新的配置文件 ID。",
+  "@rel_admin_import_warning": {
+    "description": "Release administration: Use a reviewed .tar.gz already on {gateway}. It can contain plugins, scripts and schedules. A new profile ID is required.",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_imported": "已导入 {name}。",
+  "@rel_admin_imported": {
+    "description": "Release administration: Imported {name}.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_approve_user": "批准 {user}",
+  "@rel_admin_approve_user": {
+    "description": "Release administration: Approve {user}",
+    "placeholders": {
+      "user": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_revoke_user": "撤销 {user}",
+  "@rel_admin_revoke_user": {
+    "description": "Release administration: Revoke {user}",
+    "placeholders": {
+      "user": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_allow_pair": "{scope} 上的 {platform}：允许此用户的消息访问权限。",
+  "@rel_admin_allow_pair": {
+    "description": "Release administration: {platform} on {scope}: allow this user’s messaging access.",
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      },
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_remove_pair": "{scope} 上的 {platform}：移除此用户的消息访问权限。",
+  "@rel_admin_remove_pair": {
+    "description": "Release administration: {platform} on {scope}: remove this user’s messaging access.",
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      },
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_telegram_start": "使用网关的设置服务在 {scope} 上开始 Telegram 配对。",
+  "@rel_admin_telegram_start": {
+    "description": "Release administration: Start a Telegram pairing on {scope} using the gateway’s setup service.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_expires": "到期时间：{time}",
+  "@rel_admin_expires": {
+    "description": "Release administration: Expires: {time}",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_telegram_apply": "在 {scope} 上启用 @{bot} 并尝试重启网关。只有列出的用户可以向其发送消息。",
+  "@rel_admin_telegram_apply": {
+    "description": "Release administration: Enable @{bot} on {scope} and attempt a gateway restart. Only the listed users may message it.",
+    "placeholders": {
+      "bot": {
+        "type": "String"
+      },
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_hooks_enable": "在 {scope} 上启用入站 Webhook 并尝试重启网关。",
+  "@rel_admin_hooks_enable": {
+    "description": "Release administration: Enable inbound webhooks on {scope} and attempt a gateway restart.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_disable_target": "禁用 {name}",
+  "@rel_admin_disable_target": {
+    "description": "Release administration: Disable {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_enable_target": "启用 {name}",
+  "@rel_admin_enable_target": {
+    "description": "Release administration: Enable {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_hook_change": "仅更改 {scope} 上的 {name}。",
+  "@rel_admin_hook_change": {
+    "description": "Release administration: Change exactly {name} on {scope}.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_backup_warning": "这不是 Ares 设置备份。保存 {gateway} 上的所有配置文件、会话和凭据。此归档含有敏感信息。",
+  "@rel_admin_backup_warning": {
+    "description": "Release administration: This is not an Ares settings backup. Save all profiles, sessions and credentials on {gateway}. The archive is sensitive.",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_backup_started": "已在 {gateway} 上开始备份。",
+  "@rel_admin_backup_started": {
+    "description": "Release administration: Backup started on {gateway}.",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_backup_verified": "已验证 {gateway} 上的备份：{path}",
+  "@rel_admin_backup_verified": {
+    "description": "Release administration: Backup verified on {gateway}: {path}",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      },
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_backup_running": "备份仍在 {gateway} 上运行。",
+  "@rel_admin_backup_running": {
+    "description": "Release administration: Backup still running on {gateway}.",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_choice_yes": "是",
+  "@rel_admin_choice_yes": {
+    "description": "Release administration: yes"
+  },
+  "rel_admin_choice_no": "否",
+  "@rel_admin_choice_no": {
+    "description": "Release administration: no"
+  },
+  "rel_admin_choice_generic": "通用",
+  "@rel_admin_choice_generic": {
+    "description": "Release administration: generic"
+  },
+  "rel_admin_choice_log": "日志",
+  "@rel_admin_choice_log": {
+    "description": "Release administration: log"
+  },
+  "rel_admin_choice_email": "电子邮件",
+  "@rel_admin_choice_email": {
+    "description": "Release administration: email"
+  },
+  "rel_admin_choice_github_comment": "GitHub 评论",
+  "@rel_admin_choice_github_comment": {
+    "description": "Release administration: github_comment"
+  },
+  "rel_admin_choice_agent": "智能体处理事件",
+  "@rel_admin_choice_agent": {
+    "description": "Release administration: Agent processes event"
+  },
+  "rel_admin_choice_direct": "直接投递",
+  "@rel_admin_choice_direct": {
+    "description": "Release administration: Direct delivery"
+  },
+  "rel_admin_configured": "已配置",
+  "@rel_admin_configured": {
+    "description": "Release administration: configured"
+  },
+  "rel_admin_state_pending_restart": "等待重启",
+  "@rel_admin_state_pending_restart": {
+    "description": "Release administration: pending_restart"
+  },
+  "rel_admin_state_unknown": "未知",
+  "@rel_admin_state_unknown": {
+    "description": "Release administration: unknown"
+  },
+  "rel_admin_state_connected": "已连接",
+  "@rel_admin_state_connected": {
+    "description": "Release administration: connected"
+  },
+  "rel_admin_state_disconnected": "已断开",
+  "@rel_admin_state_disconnected": {
+    "description": "Release administration: disconnected"
+  },
+  "rel_admin_state_disabled": "已禁用",
+  "@rel_admin_state_disabled": {
+    "description": "Release administration: disabled"
+  },
+  "rel_admin_state_enabled": "已启用",
+  "@rel_admin_state_enabled": {
+    "description": "Release administration: enabled"
+  },
+  "rel_admin_state_running": "运行中",
+  "@rel_admin_state_running": {
+    "description": "Release administration: running"
+  },
+  "rel_admin_state_stopped": "已停止",
+  "@rel_admin_state_stopped": {
+    "description": "Release administration: stopped"
+  },
+  "rel_admin_state_error": "错误",
+  "@rel_admin_state_error": {
+    "description": "Release administration: error"
+  },
+  "rel_admin_state_not_configured": "未配置",
+  "@rel_admin_state_not_configured": {
+    "description": "Release administration: not_configured"
+  },
+  "rel_admin_state_startup_failed": "启动失败",
+  "@rel_admin_state_startup_failed": {
+    "description": "Release administration: startup_failed"
+  },
+  "rel_admin_state_gateway_stopped": "网关已停止",
+  "@rel_admin_state_gateway_stopped": {
+    "description": "Release administration: gateway_stopped"
+  },
+  "rel_admin_state_connecting": "连接中",
+  "@rel_admin_state_connecting": {
+    "description": "Release administration: connecting"
+  },
+  "rel_admin_state_retrying": "重试中",
+  "@rel_admin_state_retrying": {
+    "description": "Release administration: retrying"
+  },
+  "rel_admin_state_fatal": "严重错误",
+  "@rel_admin_state_fatal": {
+    "description": "Release administration: fatal"
   }
 }

@@ -12137,6 +12137,469 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get rel_admin_auto_lower => '自动';
+
+  @override
+  String get rel_admin_create => '创建';
+
+  @override
+  String get rel_admin_prompt => '提示词';
+
+  @override
+  String get rel_admin_new_profile_id => '新配置档案 ID';
+
+  @override
+  String get rel_admin_this_operation_is_unavailable_on_this_gateway =>
+      '此网关不支持此操作。';
+
+  @override
+  String get rel_admin_access_denied_by_the_gateway => '网关拒绝访问。';
+
+  @override
+  String get rel_admin_connection_changed_reopen_profiles => '连接已更改。请重新打开配置文件。';
+
+  @override
+  String
+  get rel_admin_invalid_input_or_gateway_response_check_the_target_before =>
+      '输入或网关响应无效。重试前请检查目标。';
+
+  @override
+  String get rel_admin_could_not_verify_the_result_refresh_the_target_before =>
+      '无法验证结果。请刷新目标后重试。';
+
+  @override
+  String get rel_admin_edit_soul_md => '编辑 SOUL.md';
+
+  @override
+  String get rel_admin_persona => '角色设定';
+
+  @override
+  String get rel_admin_persona_saved => '角色设定已保存。';
+
+  @override
+  String get rel_admin_not_set => '未设置';
+
+  @override
+  String get rel_admin_enabled => '已启用';
+
+  @override
+  String get rel_admin_keys_to_remove_comma_separated => '要移除的键（逗号分隔）';
+
+  @override
+  String get rel_admin_saved_and_applied_by_the_gateway => '网关已保存并应用。';
+
+  @override
+  String get rel_admin_saved_a_gateway_restart_may_be_required =>
+      '已保存。可能需要重启网关。';
+
+  @override
+  String get rel_admin_create_signed_route => '创建签名路由';
+
+  @override
+  String get rel_admin_route_id => '路由 ID';
+
+  @override
+  String get rel_admin_signature => '签名';
+
+  @override
+  String get rel_admin_events_comma_separated => '事件（逗号分隔）';
+
+  @override
+  String get rel_admin_delivery_target => '投递目标';
+
+  @override
+  String get rel_admin_skills_comma_separated => '技能（逗号分隔）';
+
+  @override
+  String get rel_admin_delivery_mode => '投递模式';
+
+  @override
+  String get rel_admin_delivery_chat_id_optional => '投递聊天 ID（可选）';
+
+  @override
+  String get rel_admin_hide_signing_secret => '隐藏签名密钥';
+
+  @override
+  String get rel_admin_reveal_signing_secret => '显示签名密钥';
+
+  @override
+  String get rel_admin_edit_persona => '编辑角色设定';
+
+  @override
+  String get rel_admin_portable_profile_bundle => '可移植配置文件包';
+
+  @override
+  String get rel_admin_clone_profile => '克隆配置文件';
+
+  @override
+  String get rel_admin_rename_display_label => '重命名显示标签';
+
+  @override
+  String get rel_admin_rename_profile => '重命名配置文件';
+
+  @override
+  String get rel_admin_new_name => '新名称';
+
+  @override
+  String get rel_admin_rename_verified => '重命名已验证。';
+
+  @override
+  String get rel_admin_delete_profile => '删除配置文件';
+
+  @override
+  String get rel_admin_profile_id_to_delete => '要删除的配置文件 ID';
+
+  @override
+  String get rel_admin_profile_deleted => '配置文件已删除。';
+
+  @override
+  String
+  get rel_admin_profile_deleted_server_identity_cleanup_is_still_pending =>
+      '配置文件已删除。服务器身份清理仍待完成。';
+
+  @override
+  String get rel_admin_export_profile_archive => '导出配置文件归档';
+
+  @override
+  String get rel_admin_import_profile_archive => '导入配置文件归档';
+
+  @override
+  String get rel_admin_import_a_trusted_profile => '导入可信配置文件';
+
+  @override
+  String get rel_admin_absolute_archive_path_on_gateway => '网关上的归档绝对路径';
+
+  @override
+  String get rel_admin_messaging_channels => '消息渠道';
+
+  @override
+  String get rel_admin_dm_pairing_requests => '私信配对请求';
+
+  @override
+  String get rel_admin_no_pending_or_approved_users => '没有待处理或已批准的用户。';
+
+  @override
+  String get rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user =>
+      '旧版配对：没有可验证的请求 ID。请让用户重新配对。';
+
+  @override
+  String get rel_admin_pairing_change_verified => '配对变更已验证。';
+
+  @override
+  String get rel_admin_create_telegram_bot_by_qr => '通过二维码创建 Telegram 机器人';
+
+  @override
+  String get rel_admin_create_telegram_bot => '创建 Telegram 机器人';
+
+  @override
+  String get rel_admin_bot_name => '机器人名称';
+
+  @override
+  String get rel_admin_telegram_bot_creation_qr_code => 'Telegram 机器人创建二维码';
+
+  @override
+  String get rel_admin_check_telegram_pairing => '检查 Telegram 配对';
+
+  @override
+  String get rel_admin_waiting_for_telegram => '正在等待 Telegram。';
+
+  @override
+  String get rel_admin_apply_telegram_bot => '应用 Telegram 机器人';
+
+  @override
+  String get rel_admin_allowed_numeric_user_ids => '允许的数字用户 ID';
+
+  @override
+  String get rel_admin_saved_restart_still_required => '已保存。仍需重启。';
+
+  @override
+  String get rel_admin_saved_gateway_restart_requested => '已保存；已请求重启网关。';
+
+  @override
+  String get rel_admin_cancel_telegram_setup => '取消 Telegram 设置';
+
+  @override
+  String get rel_admin_inbound_webhooks => '入站 Webhook';
+
+  @override
+  String get rel_admin_enable_webhook_service => '启用 Webhook 服务';
+
+  @override
+  String get rel_admin_enable_webhooks => '启用 Webhook';
+
+  @override
+  String get rel_admin_enabled_restart_still_required => '已启用。仍需重启。';
+
+  @override
+  String get rel_admin_enabled_restart_requested => '已启用；已请求重启。';
+
+  @override
+  String get rel_admin_route_change_verified => '路由变更已验证。';
+
+  @override
+  String get rel_admin_delete_route => '删除路由';
+
+  @override
+  String get rel_admin_disable_route => '禁用路由';
+
+  @override
+  String get rel_admin_enable_route => '启用路由';
+
+  @override
+  String get rel_admin_back_up_entire_agent_home => '备份整个智能体主目录';
+
+  @override
+  String get rel_admin_transfer_to_a_cloud_agent => '传输到 Cloud 智能体';
+
+  @override
+  String get rel_admin_check_backup_progress => '检查备份进度';
+
+  @override
+  String get rel_admin_save_backup_to_this_device => '将备份保存到此设备';
+
+  @override
+  String get rel_admin_save_sensitive_full_home_archive => '保存含敏感信息的完整主目录归档';
+
+  @override
+  String get rel_admin_save_cancelled => '已取消保存。';
+
+  @override
+  String get rel_admin_backup_saved => '备份已保存。';
+
+  @override
+  String get rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway =>
+      '最大 32 MiB。更大的归档保留在网关上。';
+
+  @override
+  String rel_admin_persona_scope(String scope) {
+    return '保存 $scope 的角色设定。';
+  }
+
+  @override
+  String rel_admin_configure_channel(String name) {
+    return '配置 $name';
+  }
+
+  @override
+  String rel_admin_channel_warning(String scope) {
+    return '应用于 $scope。留空保留现有值。要移除值，请在下方列出其键。';
+  }
+
+  @override
+  String rel_admin_hook_warning(String scope) {
+    return '应用于 $scope。请使用唯一名称。网关会创建签名密钥。如果其他操作员同时创建该名称，主机可能替换该路由。';
+  }
+
+  @override
+  String rel_admin_hook_created(String url) {
+    return '已创建 $url。离开前请保存签名密钥。';
+  }
+
+  @override
+  String rel_admin_clone_warning(String scope) {
+    return '从 $scope 复制设置、技能、角色设定，以及可能的提供商凭据。不请求消息令牌。';
+  }
+
+  @override
+  String rel_admin_cloned(String source, String destination) {
+    return '已将 $source 克隆到 $destination。';
+  }
+
+  @override
+  String rel_admin_rename_target(String name) {
+    return '重命名 $name';
+  }
+
+  @override
+  String rel_admin_rename_label_warning(String scope) {
+    return '更改 $scope 的显示标签。其 ID 保持为 default。';
+  }
+
+  @override
+  String rel_admin_rename_warning(String scope) {
+    return '在服务器上重命名 $scope。正在运行的网关可能停止。';
+  }
+
+  @override
+  String rel_admin_delete_target(String name) {
+    return '删除 $name';
+  }
+
+  @override
+  String rel_admin_delete_profile_warning(String scope) {
+    return '永久删除 $scope，包括会话和凭据。请输入准确的配置文件 ID。';
+  }
+
+  @override
+  String rel_admin_export_target(String name) {
+    return '导出 $name';
+  }
+
+  @override
+  String rel_admin_export_warning(String scope) {
+    return '在 $scope 上创建 .tar.gz。已知凭据存储会被排除，但可能仍含私人数据。分享前请检查。';
+  }
+
+  @override
+  String rel_admin_archive_on(String gateway, String path) {
+    return '$gateway 上的归档：$path';
+  }
+
+  @override
+  String rel_admin_import_warning(String gateway) {
+    return '使用已在 $gateway 上且已检查的 .tar.gz。它可能包含插件、脚本和计划。需要新的配置文件 ID。';
+  }
+
+  @override
+  String rel_admin_imported(String name) {
+    return '已导入 $name。';
+  }
+
+  @override
+  String rel_admin_approve_user(String user) {
+    return '批准 $user';
+  }
+
+  @override
+  String rel_admin_revoke_user(String user) {
+    return '撤销 $user';
+  }
+
+  @override
+  String rel_admin_allow_pair(String platform, String scope) {
+    return '$scope 上的 $platform：允许此用户的消息访问权限。';
+  }
+
+  @override
+  String rel_admin_remove_pair(String platform, String scope) {
+    return '$scope 上的 $platform：移除此用户的消息访问权限。';
+  }
+
+  @override
+  String rel_admin_telegram_start(String scope) {
+    return '使用网关的设置服务在 $scope 上开始 Telegram 配对。';
+  }
+
+  @override
+  String rel_admin_expires(String time) {
+    return '到期时间：$time';
+  }
+
+  @override
+  String rel_admin_telegram_apply(String bot, String scope) {
+    return '在 $scope 上启用 @$bot 并尝试重启网关。只有列出的用户可以向其发送消息。';
+  }
+
+  @override
+  String rel_admin_hooks_enable(String scope) {
+    return '在 $scope 上启用入站 Webhook 并尝试重启网关。';
+  }
+
+  @override
+  String rel_admin_disable_target(String name) {
+    return '禁用 $name';
+  }
+
+  @override
+  String rel_admin_enable_target(String name) {
+    return '启用 $name';
+  }
+
+  @override
+  String rel_admin_hook_change(String name, String scope) {
+    return '仅更改 $scope 上的 $name。';
+  }
+
+  @override
+  String rel_admin_backup_warning(String gateway) {
+    return '这不是 Ares 设置备份。保存 $gateway 上的所有配置文件、会话和凭据。此归档含有敏感信息。';
+  }
+
+  @override
+  String rel_admin_backup_started(String gateway) {
+    return '已在 $gateway 上开始备份。';
+  }
+
+  @override
+  String rel_admin_backup_verified(String gateway, String path) {
+    return '已验证 $gateway 上的备份：$path';
+  }
+
+  @override
+  String rel_admin_backup_running(String gateway) {
+    return '备份仍在 $gateway 上运行。';
+  }
+
+  @override
+  String get rel_admin_choice_yes => '是';
+
+  @override
+  String get rel_admin_choice_no => '否';
+
+  @override
+  String get rel_admin_choice_generic => '通用';
+
+  @override
+  String get rel_admin_choice_log => '日志';
+
+  @override
+  String get rel_admin_choice_email => '电子邮件';
+
+  @override
+  String get rel_admin_choice_github_comment => 'GitHub 评论';
+
+  @override
+  String get rel_admin_choice_agent => '智能体处理事件';
+
+  @override
+  String get rel_admin_choice_direct => '直接投递';
+
+  @override
+  String get rel_admin_configured => '已配置';
+
+  @override
+  String get rel_admin_state_pending_restart => '等待重启';
+
+  @override
+  String get rel_admin_state_unknown => '未知';
+
+  @override
+  String get rel_admin_state_connected => '已连接';
+
+  @override
+  String get rel_admin_state_disconnected => '已断开';
+
+  @override
+  String get rel_admin_state_disabled => '已禁用';
+
+  @override
+  String get rel_admin_state_enabled => '已启用';
+
+  @override
+  String get rel_admin_state_running => '运行中';
+
+  @override
+  String get rel_admin_state_stopped => '已停止';
+
+  @override
+  String get rel_admin_state_error => '错误';
+
+  @override
+  String get rel_admin_state_not_configured => '未配置';
+
+  @override
+  String get rel_admin_state_startup_failed => '启动失败';
+
+  @override
+  String get rel_admin_state_gateway_stopped => '网关已停止';
+
+  @override
+  String get rel_admin_state_connecting => '连接中';
+
+  @override
+  String get rel_admin_state_retrying => '重试中';
+
+  @override
+  String get rel_admin_state_fatal => '严重错误';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -24272,6 +24735,469 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get rel_admin_auto_lower => '自动';
+
+  @override
+  String get rel_admin_create => '创建';
+
+  @override
+  String get rel_admin_prompt => '提示词';
+
+  @override
+  String get rel_admin_new_profile_id => '新配置档案 ID';
+
+  @override
+  String get rel_admin_this_operation_is_unavailable_on_this_gateway =>
+      '此网关不支持此操作。';
+
+  @override
+  String get rel_admin_access_denied_by_the_gateway => '网关拒绝访问。';
+
+  @override
+  String get rel_admin_connection_changed_reopen_profiles => '连接已更改。请重新打开配置文件。';
+
+  @override
+  String
+  get rel_admin_invalid_input_or_gateway_response_check_the_target_before =>
+      '输入或网关响应无效。重试前请检查目标。';
+
+  @override
+  String get rel_admin_could_not_verify_the_result_refresh_the_target_before =>
+      '无法验证结果。请刷新目标后重试。';
+
+  @override
+  String get rel_admin_edit_soul_md => '编辑 SOUL.md';
+
+  @override
+  String get rel_admin_persona => '角色设定';
+
+  @override
+  String get rel_admin_persona_saved => '角色设定已保存。';
+
+  @override
+  String get rel_admin_not_set => '未设置';
+
+  @override
+  String get rel_admin_enabled => '已启用';
+
+  @override
+  String get rel_admin_keys_to_remove_comma_separated => '要移除的键（逗号分隔）';
+
+  @override
+  String get rel_admin_saved_and_applied_by_the_gateway => '网关已保存并应用。';
+
+  @override
+  String get rel_admin_saved_a_gateway_restart_may_be_required =>
+      '已保存。可能需要重启网关。';
+
+  @override
+  String get rel_admin_create_signed_route => '创建签名路由';
+
+  @override
+  String get rel_admin_route_id => '路由 ID';
+
+  @override
+  String get rel_admin_signature => '签名';
+
+  @override
+  String get rel_admin_events_comma_separated => '事件（逗号分隔）';
+
+  @override
+  String get rel_admin_delivery_target => '投递目标';
+
+  @override
+  String get rel_admin_skills_comma_separated => '技能（逗号分隔）';
+
+  @override
+  String get rel_admin_delivery_mode => '投递模式';
+
+  @override
+  String get rel_admin_delivery_chat_id_optional => '投递聊天 ID（可选）';
+
+  @override
+  String get rel_admin_hide_signing_secret => '隐藏签名密钥';
+
+  @override
+  String get rel_admin_reveal_signing_secret => '显示签名密钥';
+
+  @override
+  String get rel_admin_edit_persona => '编辑角色设定';
+
+  @override
+  String get rel_admin_portable_profile_bundle => '可移植配置文件包';
+
+  @override
+  String get rel_admin_clone_profile => '克隆配置文件';
+
+  @override
+  String get rel_admin_rename_display_label => '重命名显示标签';
+
+  @override
+  String get rel_admin_rename_profile => '重命名配置文件';
+
+  @override
+  String get rel_admin_new_name => '新名称';
+
+  @override
+  String get rel_admin_rename_verified => '重命名已验证。';
+
+  @override
+  String get rel_admin_delete_profile => '删除配置文件';
+
+  @override
+  String get rel_admin_profile_id_to_delete => '要删除的配置文件 ID';
+
+  @override
+  String get rel_admin_profile_deleted => '配置文件已删除。';
+
+  @override
+  String
+  get rel_admin_profile_deleted_server_identity_cleanup_is_still_pending =>
+      '配置文件已删除。服务器身份清理仍待完成。';
+
+  @override
+  String get rel_admin_export_profile_archive => '导出配置文件归档';
+
+  @override
+  String get rel_admin_import_profile_archive => '导入配置文件归档';
+
+  @override
+  String get rel_admin_import_a_trusted_profile => '导入可信配置文件';
+
+  @override
+  String get rel_admin_absolute_archive_path_on_gateway => '网关上的归档绝对路径';
+
+  @override
+  String get rel_admin_messaging_channels => '消息渠道';
+
+  @override
+  String get rel_admin_dm_pairing_requests => '私信配对请求';
+
+  @override
+  String get rel_admin_no_pending_or_approved_users => '没有待处理或已批准的用户。';
+
+  @override
+  String get rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user =>
+      '旧版配对：没有可验证的请求 ID。请让用户重新配对。';
+
+  @override
+  String get rel_admin_pairing_change_verified => '配对变更已验证。';
+
+  @override
+  String get rel_admin_create_telegram_bot_by_qr => '通过二维码创建 Telegram 机器人';
+
+  @override
+  String get rel_admin_create_telegram_bot => '创建 Telegram 机器人';
+
+  @override
+  String get rel_admin_bot_name => '机器人名称';
+
+  @override
+  String get rel_admin_telegram_bot_creation_qr_code => 'Telegram 机器人创建二维码';
+
+  @override
+  String get rel_admin_check_telegram_pairing => '检查 Telegram 配对';
+
+  @override
+  String get rel_admin_waiting_for_telegram => '正在等待 Telegram。';
+
+  @override
+  String get rel_admin_apply_telegram_bot => '应用 Telegram 机器人';
+
+  @override
+  String get rel_admin_allowed_numeric_user_ids => '允许的数字用户 ID';
+
+  @override
+  String get rel_admin_saved_restart_still_required => '已保存。仍需重启。';
+
+  @override
+  String get rel_admin_saved_gateway_restart_requested => '已保存；已请求重启网关。';
+
+  @override
+  String get rel_admin_cancel_telegram_setup => '取消 Telegram 设置';
+
+  @override
+  String get rel_admin_inbound_webhooks => '入站 Webhook';
+
+  @override
+  String get rel_admin_enable_webhook_service => '启用 Webhook 服务';
+
+  @override
+  String get rel_admin_enable_webhooks => '启用 Webhook';
+
+  @override
+  String get rel_admin_enabled_restart_still_required => '已启用。仍需重启。';
+
+  @override
+  String get rel_admin_enabled_restart_requested => '已启用；已请求重启。';
+
+  @override
+  String get rel_admin_route_change_verified => '路由变更已验证。';
+
+  @override
+  String get rel_admin_delete_route => '删除路由';
+
+  @override
+  String get rel_admin_disable_route => '禁用路由';
+
+  @override
+  String get rel_admin_enable_route => '启用路由';
+
+  @override
+  String get rel_admin_back_up_entire_agent_home => '备份整个智能体主目录';
+
+  @override
+  String get rel_admin_transfer_to_a_cloud_agent => '传输到 Cloud 智能体';
+
+  @override
+  String get rel_admin_check_backup_progress => '检查备份进度';
+
+  @override
+  String get rel_admin_save_backup_to_this_device => '将备份保存到此设备';
+
+  @override
+  String get rel_admin_save_sensitive_full_home_archive => '保存含敏感信息的完整主目录归档';
+
+  @override
+  String get rel_admin_save_cancelled => '已取消保存。';
+
+  @override
+  String get rel_admin_backup_saved => '备份已保存。';
+
+  @override
+  String get rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway =>
+      '最大 32 MiB。更大的归档保留在网关上。';
+
+  @override
+  String rel_admin_persona_scope(String scope) {
+    return '保存 $scope 的角色设定。';
+  }
+
+  @override
+  String rel_admin_configure_channel(String name) {
+    return '配置 $name';
+  }
+
+  @override
+  String rel_admin_channel_warning(String scope) {
+    return '应用于 $scope。留空保留现有值。要移除值，请在下方列出其键。';
+  }
+
+  @override
+  String rel_admin_hook_warning(String scope) {
+    return '应用于 $scope。请使用唯一名称。网关会创建签名密钥。如果其他操作员同时创建该名称，主机可能替换该路由。';
+  }
+
+  @override
+  String rel_admin_hook_created(String url) {
+    return '已创建 $url。离开前请保存签名密钥。';
+  }
+
+  @override
+  String rel_admin_clone_warning(String scope) {
+    return '从 $scope 复制设置、技能、角色设定，以及可能的提供商凭据。不请求消息令牌。';
+  }
+
+  @override
+  String rel_admin_cloned(String source, String destination) {
+    return '已将 $source 克隆到 $destination。';
+  }
+
+  @override
+  String rel_admin_rename_target(String name) {
+    return '重命名 $name';
+  }
+
+  @override
+  String rel_admin_rename_label_warning(String scope) {
+    return '更改 $scope 的显示标签。其 ID 保持为 default。';
+  }
+
+  @override
+  String rel_admin_rename_warning(String scope) {
+    return '在服务器上重命名 $scope。正在运行的网关可能停止。';
+  }
+
+  @override
+  String rel_admin_delete_target(String name) {
+    return '删除 $name';
+  }
+
+  @override
+  String rel_admin_delete_profile_warning(String scope) {
+    return '永久删除 $scope，包括会话和凭据。请输入准确的配置文件 ID。';
+  }
+
+  @override
+  String rel_admin_export_target(String name) {
+    return '导出 $name';
+  }
+
+  @override
+  String rel_admin_export_warning(String scope) {
+    return '在 $scope 上创建 .tar.gz。已知凭据存储会被排除，但可能仍含私人数据。分享前请检查。';
+  }
+
+  @override
+  String rel_admin_archive_on(String gateway, String path) {
+    return '$gateway 上的归档：$path';
+  }
+
+  @override
+  String rel_admin_import_warning(String gateway) {
+    return '使用已在 $gateway 上且已检查的 .tar.gz。它可能包含插件、脚本和计划。需要新的配置文件 ID。';
+  }
+
+  @override
+  String rel_admin_imported(String name) {
+    return '已导入 $name。';
+  }
+
+  @override
+  String rel_admin_approve_user(String user) {
+    return '批准 $user';
+  }
+
+  @override
+  String rel_admin_revoke_user(String user) {
+    return '撤销 $user';
+  }
+
+  @override
+  String rel_admin_allow_pair(String platform, String scope) {
+    return '$scope 上的 $platform：允许此用户的消息访问权限。';
+  }
+
+  @override
+  String rel_admin_remove_pair(String platform, String scope) {
+    return '$scope 上的 $platform：移除此用户的消息访问权限。';
+  }
+
+  @override
+  String rel_admin_telegram_start(String scope) {
+    return '使用网关的设置服务在 $scope 上开始 Telegram 配对。';
+  }
+
+  @override
+  String rel_admin_expires(String time) {
+    return '到期时间：$time';
+  }
+
+  @override
+  String rel_admin_telegram_apply(String bot, String scope) {
+    return '在 $scope 上启用 @$bot 并尝试重启网关。只有列出的用户可以向其发送消息。';
+  }
+
+  @override
+  String rel_admin_hooks_enable(String scope) {
+    return '在 $scope 上启用入站 Webhook 并尝试重启网关。';
+  }
+
+  @override
+  String rel_admin_disable_target(String name) {
+    return '禁用 $name';
+  }
+
+  @override
+  String rel_admin_enable_target(String name) {
+    return '启用 $name';
+  }
+
+  @override
+  String rel_admin_hook_change(String name, String scope) {
+    return '仅更改 $scope 上的 $name。';
+  }
+
+  @override
+  String rel_admin_backup_warning(String gateway) {
+    return '这不是 Ares 设置备份。保存 $gateway 上的所有配置文件、会话和凭据。此归档含有敏感信息。';
+  }
+
+  @override
+  String rel_admin_backup_started(String gateway) {
+    return '已在 $gateway 上开始备份。';
+  }
+
+  @override
+  String rel_admin_backup_verified(String gateway, String path) {
+    return '已验证 $gateway 上的备份：$path';
+  }
+
+  @override
+  String rel_admin_backup_running(String gateway) {
+    return '备份仍在 $gateway 上运行。';
+  }
+
+  @override
+  String get rel_admin_choice_yes => '是';
+
+  @override
+  String get rel_admin_choice_no => '否';
+
+  @override
+  String get rel_admin_choice_generic => '通用';
+
+  @override
+  String get rel_admin_choice_log => '日志';
+
+  @override
+  String get rel_admin_choice_email => '电子邮件';
+
+  @override
+  String get rel_admin_choice_github_comment => 'GitHub 评论';
+
+  @override
+  String get rel_admin_choice_agent => '智能体处理事件';
+
+  @override
+  String get rel_admin_choice_direct => '直接投递';
+
+  @override
+  String get rel_admin_configured => '已配置';
+
+  @override
+  String get rel_admin_state_pending_restart => '等待重启';
+
+  @override
+  String get rel_admin_state_unknown => '未知';
+
+  @override
+  String get rel_admin_state_connected => '已连接';
+
+  @override
+  String get rel_admin_state_disconnected => '已断开';
+
+  @override
+  String get rel_admin_state_disabled => '已禁用';
+
+  @override
+  String get rel_admin_state_enabled => '已启用';
+
+  @override
+  String get rel_admin_state_running => '运行中';
+
+  @override
+  String get rel_admin_state_stopped => '已停止';
+
+  @override
+  String get rel_admin_state_error => '错误';
+
+  @override
+  String get rel_admin_state_not_configured => '未配置';
+
+  @override
+  String get rel_admin_state_startup_failed => '启动失败';
+
+  @override
+  String get rel_admin_state_gateway_stopped => '网关已停止';
+
+  @override
+  String get rel_admin_state_connecting => '连接中';
+
+  @override
+  String get rel_admin_state_retrying => '重试中';
+
+  @override
+  String get rel_admin_state_fatal => '严重错误';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -36411,4 +37337,467 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get rel_admin_auto_lower => '自動';
+
+  @override
+  String get rel_admin_create => '建立';
+
+  @override
+  String get rel_admin_prompt => '提示詞';
+
+  @override
+  String get rel_admin_new_profile_id => '新設定檔 ID';
+
+  @override
+  String get rel_admin_this_operation_is_unavailable_on_this_gateway =>
+      '此閘道不支援此操作。';
+
+  @override
+  String get rel_admin_access_denied_by_the_gateway => '閘道拒絕存取。';
+
+  @override
+  String get rel_admin_connection_changed_reopen_profiles => '連線已變更。請重新開啟設定檔。';
+
+  @override
+  String
+  get rel_admin_invalid_input_or_gateway_response_check_the_target_before =>
+      '輸入或閘道回應無效。重試前請檢查目標。';
+
+  @override
+  String get rel_admin_could_not_verify_the_result_refresh_the_target_before =>
+      '無法驗證結果。請重新整理目標後重試。';
+
+  @override
+  String get rel_admin_edit_soul_md => '編輯 SOUL.md';
+
+  @override
+  String get rel_admin_persona => '角色設定';
+
+  @override
+  String get rel_admin_persona_saved => '角色設定已儲存。';
+
+  @override
+  String get rel_admin_not_set => '未設定';
+
+  @override
+  String get rel_admin_enabled => '已啟用';
+
+  @override
+  String get rel_admin_keys_to_remove_comma_separated => '要移除的鍵（逗號分隔）';
+
+  @override
+  String get rel_admin_saved_and_applied_by_the_gateway => '閘道已儲存並套用。';
+
+  @override
+  String get rel_admin_saved_a_gateway_restart_may_be_required =>
+      '已儲存。可能需要重新啟動閘道。';
+
+  @override
+  String get rel_admin_create_signed_route => '建立簽署路由';
+
+  @override
+  String get rel_admin_route_id => '路由 ID';
+
+  @override
+  String get rel_admin_signature => '簽章';
+
+  @override
+  String get rel_admin_events_comma_separated => '事件（逗號分隔）';
+
+  @override
+  String get rel_admin_delivery_target => '傳遞目標';
+
+  @override
+  String get rel_admin_skills_comma_separated => '技能（逗號分隔）';
+
+  @override
+  String get rel_admin_delivery_mode => '傳遞模式';
+
+  @override
+  String get rel_admin_delivery_chat_id_optional => '傳遞聊天 ID（選填）';
+
+  @override
+  String get rel_admin_hide_signing_secret => '隱藏簽署密鑰';
+
+  @override
+  String get rel_admin_reveal_signing_secret => '顯示簽署密鑰';
+
+  @override
+  String get rel_admin_edit_persona => '編輯角色設定';
+
+  @override
+  String get rel_admin_portable_profile_bundle => '可攜式設定檔套件';
+
+  @override
+  String get rel_admin_clone_profile => '複製設定檔';
+
+  @override
+  String get rel_admin_rename_display_label => '重新命名顯示標籤';
+
+  @override
+  String get rel_admin_rename_profile => '重新命名設定檔';
+
+  @override
+  String get rel_admin_new_name => '新名稱';
+
+  @override
+  String get rel_admin_rename_verified => '重新命名已驗證。';
+
+  @override
+  String get rel_admin_delete_profile => '刪除設定檔';
+
+  @override
+  String get rel_admin_profile_id_to_delete => '要刪除的設定檔 ID';
+
+  @override
+  String get rel_admin_profile_deleted => '設定檔已刪除。';
+
+  @override
+  String
+  get rel_admin_profile_deleted_server_identity_cleanup_is_still_pending =>
+      '設定檔已刪除。伺服器身分清理仍待完成。';
+
+  @override
+  String get rel_admin_export_profile_archive => '匯出設定檔封存檔';
+
+  @override
+  String get rel_admin_import_profile_archive => '匯入設定檔封存檔';
+
+  @override
+  String get rel_admin_import_a_trusted_profile => '匯入可信任的設定檔';
+
+  @override
+  String get rel_admin_absolute_archive_path_on_gateway => '閘道上的封存檔絕對路徑';
+
+  @override
+  String get rel_admin_messaging_channels => '訊息管道';
+
+  @override
+  String get rel_admin_dm_pairing_requests => '私訊配對請求';
+
+  @override
+  String get rel_admin_no_pending_or_approved_users => '沒有待處理或已核准的使用者。';
+
+  @override
+  String get rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user =>
+      '舊版配對：沒有可驗證的請求 ID。請讓使用者重新配對。';
+
+  @override
+  String get rel_admin_pairing_change_verified => '配對變更已驗證。';
+
+  @override
+  String get rel_admin_create_telegram_bot_by_qr => '透過 QR 碼建立 Telegram 機器人';
+
+  @override
+  String get rel_admin_create_telegram_bot => '建立 Telegram 機器人';
+
+  @override
+  String get rel_admin_bot_name => '機器人名稱';
+
+  @override
+  String get rel_admin_telegram_bot_creation_qr_code => 'Telegram 機器人建立 QR 碼';
+
+  @override
+  String get rel_admin_check_telegram_pairing => '檢查 Telegram 配對';
+
+  @override
+  String get rel_admin_waiting_for_telegram => '正在等待 Telegram。';
+
+  @override
+  String get rel_admin_apply_telegram_bot => '套用 Telegram 機器人';
+
+  @override
+  String get rel_admin_allowed_numeric_user_ids => '允許的數字使用者 ID';
+
+  @override
+  String get rel_admin_saved_restart_still_required => '已儲存。仍需重新啟動。';
+
+  @override
+  String get rel_admin_saved_gateway_restart_requested => '已儲存；已請求重新啟動閘道。';
+
+  @override
+  String get rel_admin_cancel_telegram_setup => '取消 Telegram 設定';
+
+  @override
+  String get rel_admin_inbound_webhooks => '傳入 Webhook';
+
+  @override
+  String get rel_admin_enable_webhook_service => '啟用 Webhook 服務';
+
+  @override
+  String get rel_admin_enable_webhooks => '啟用 Webhook';
+
+  @override
+  String get rel_admin_enabled_restart_still_required => '已啟用。仍需重新啟動。';
+
+  @override
+  String get rel_admin_enabled_restart_requested => '已啟用；已請求重新啟動。';
+
+  @override
+  String get rel_admin_route_change_verified => '路由變更已驗證。';
+
+  @override
+  String get rel_admin_delete_route => '刪除路由';
+
+  @override
+  String get rel_admin_disable_route => '停用路由';
+
+  @override
+  String get rel_admin_enable_route => '啟用路由';
+
+  @override
+  String get rel_admin_back_up_entire_agent_home => '備份整個代理主目錄';
+
+  @override
+  String get rel_admin_transfer_to_a_cloud_agent => '傳輸至 Cloud 代理';
+
+  @override
+  String get rel_admin_check_backup_progress => '檢查備份進度';
+
+  @override
+  String get rel_admin_save_backup_to_this_device => '將備份儲存至此裝置';
+
+  @override
+  String get rel_admin_save_sensitive_full_home_archive => '儲存含敏感資訊的完整主目錄封存檔';
+
+  @override
+  String get rel_admin_save_cancelled => '已取消儲存。';
+
+  @override
+  String get rel_admin_backup_saved => '備份已儲存。';
+
+  @override
+  String get rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway =>
+      '最大 32 MiB。更大的封存檔保留在閘道上。';
+
+  @override
+  String rel_admin_persona_scope(String scope) {
+    return '儲存 $scope 的角色設定。';
+  }
+
+  @override
+  String rel_admin_configure_channel(String name) {
+    return '設定 $name';
+  }
+
+  @override
+  String rel_admin_channel_warning(String scope) {
+    return '套用至 $scope。留空保留現有值。要移除值，請在下方列出其鍵。';
+  }
+
+  @override
+  String rel_admin_hook_warning(String scope) {
+    return '套用至 $scope。請使用唯一名稱。閘道會建立簽署密鑰。如果其他操作員同時建立該名稱，主機可能取代該路由。';
+  }
+
+  @override
+  String rel_admin_hook_created(String url) {
+    return '已建立 $url。離開前請儲存簽署密鑰。';
+  }
+
+  @override
+  String rel_admin_clone_warning(String scope) {
+    return '從 $scope 複製設定、技能、角色設定，以及可能的供應商憑證。不請求訊息權杖。';
+  }
+
+  @override
+  String rel_admin_cloned(String source, String destination) {
+    return '已將 $source 複製至 $destination。';
+  }
+
+  @override
+  String rel_admin_rename_target(String name) {
+    return '重新命名 $name';
+  }
+
+  @override
+  String rel_admin_rename_label_warning(String scope) {
+    return '變更 $scope 的顯示標籤。其 ID 保持為 default。';
+  }
+
+  @override
+  String rel_admin_rename_warning(String scope) {
+    return '在伺服器上重新命名 $scope。正在執行的閘道可能停止。';
+  }
+
+  @override
+  String rel_admin_delete_target(String name) {
+    return '刪除 $name';
+  }
+
+  @override
+  String rel_admin_delete_profile_warning(String scope) {
+    return '永久刪除 $scope，包括工作階段和憑證。請輸入正確的設定檔 ID。';
+  }
+
+  @override
+  String rel_admin_export_target(String name) {
+    return '匯出 $name';
+  }
+
+  @override
+  String rel_admin_export_warning(String scope) {
+    return '在 $scope 上建立 .tar.gz。已知憑證儲存區會被排除，但可能仍含私人資料。分享前請檢查。';
+  }
+
+  @override
+  String rel_admin_archive_on(String gateway, String path) {
+    return '$gateway 上的封存檔：$path';
+  }
+
+  @override
+  String rel_admin_import_warning(String gateway) {
+    return '使用已在 $gateway 上且已檢查的 .tar.gz。它可能包含外掛、指令碼和排程。需要新的設定檔 ID。';
+  }
+
+  @override
+  String rel_admin_imported(String name) {
+    return '已匯入 $name。';
+  }
+
+  @override
+  String rel_admin_approve_user(String user) {
+    return '核准 $user';
+  }
+
+  @override
+  String rel_admin_revoke_user(String user) {
+    return '撤銷 $user';
+  }
+
+  @override
+  String rel_admin_allow_pair(String platform, String scope) {
+    return '$scope 上的 $platform：允許此使用者的訊息存取權。';
+  }
+
+  @override
+  String rel_admin_remove_pair(String platform, String scope) {
+    return '$scope 上的 $platform：移除此使用者的訊息存取權。';
+  }
+
+  @override
+  String rel_admin_telegram_start(String scope) {
+    return '使用閘道的設定服務在 $scope 上開始 Telegram 配對。';
+  }
+
+  @override
+  String rel_admin_expires(String time) {
+    return '到期時間：$time';
+  }
+
+  @override
+  String rel_admin_telegram_apply(String bot, String scope) {
+    return '在 $scope 上啟用 @$bot 並嘗試重新啟動閘道。只有列出的使用者可以向其傳送訊息。';
+  }
+
+  @override
+  String rel_admin_hooks_enable(String scope) {
+    return '在 $scope 上啟用傳入 Webhook 並嘗試重新啟動閘道。';
+  }
+
+  @override
+  String rel_admin_disable_target(String name) {
+    return '停用 $name';
+  }
+
+  @override
+  String rel_admin_enable_target(String name) {
+    return '啟用 $name';
+  }
+
+  @override
+  String rel_admin_hook_change(String name, String scope) {
+    return '僅變更 $scope 上的 $name。';
+  }
+
+  @override
+  String rel_admin_backup_warning(String gateway) {
+    return '這不是 Ares 設定備份。儲存 $gateway 上的所有設定檔、工作階段和憑證。此封存檔含有敏感資訊。';
+  }
+
+  @override
+  String rel_admin_backup_started(String gateway) {
+    return '已在 $gateway 上開始備份。';
+  }
+
+  @override
+  String rel_admin_backup_verified(String gateway, String path) {
+    return '已驗證 $gateway 上的備份：$path';
+  }
+
+  @override
+  String rel_admin_backup_running(String gateway) {
+    return '備份仍在 $gateway 上執行。';
+  }
+
+  @override
+  String get rel_admin_choice_yes => '是';
+
+  @override
+  String get rel_admin_choice_no => '否';
+
+  @override
+  String get rel_admin_choice_generic => '通用';
+
+  @override
+  String get rel_admin_choice_log => '記錄';
+
+  @override
+  String get rel_admin_choice_email => '電子郵件';
+
+  @override
+  String get rel_admin_choice_github_comment => 'GitHub 留言';
+
+  @override
+  String get rel_admin_choice_agent => '代理處理事件';
+
+  @override
+  String get rel_admin_choice_direct => '直接傳遞';
+
+  @override
+  String get rel_admin_configured => '已設定';
+
+  @override
+  String get rel_admin_state_pending_restart => '等待重新啟動';
+
+  @override
+  String get rel_admin_state_unknown => '未知';
+
+  @override
+  String get rel_admin_state_connected => '已連線';
+
+  @override
+  String get rel_admin_state_disconnected => '已中斷連線';
+
+  @override
+  String get rel_admin_state_disabled => '已停用';
+
+  @override
+  String get rel_admin_state_enabled => '已啟用';
+
+  @override
+  String get rel_admin_state_running => '執行中';
+
+  @override
+  String get rel_admin_state_stopped => '已停止';
+
+  @override
+  String get rel_admin_state_error => '錯誤';
+
+  @override
+  String get rel_admin_state_not_configured => '未設定';
+
+  @override
+  String get rel_admin_state_startup_failed => '啟動失敗';
+
+  @override
+  String get rel_admin_state_gateway_stopped => '閘道已停止';
+
+  @override
+  String get rel_admin_state_connecting => '連線中';
+
+  @override
+  String get rel_admin_state_retrying => '重試中';
+
+  @override
+  String get rel_admin_state_fatal => '嚴重錯誤';
 }

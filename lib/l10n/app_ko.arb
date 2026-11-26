@@ -4199,5 +4199,706 @@
   "rel_admin_auto_lower": "자동",
   "@rel_admin_auto_lower": {
     "description": "Release administration: auto"
+  },
+  "rel_admin_create": "만들기",
+  "@rel_admin_create": {
+    "description": "Release administration: Create"
+  },
+  "rel_admin_prompt": "프롬프트",
+  "@rel_admin_prompt": {
+    "description": "Release administration: Prompt"
+  },
+  "rel_admin_new_profile_id": "새 프로필 ID",
+  "@rel_admin_new_profile_id": {
+    "description": "Release administration: New profile ID"
+  },
+  "rel_admin_this_operation_is_unavailable_on_this_gateway": "이 게이트웨이에서는 이 작업을 사용할 수 없습니다.",
+  "@rel_admin_this_operation_is_unavailable_on_this_gateway": {
+    "description": "Release administration: This operation is unavailable on this gateway."
+  },
+  "rel_admin_access_denied_by_the_gateway": "게이트웨이가 접근을 거부했습니다.",
+  "@rel_admin_access_denied_by_the_gateway": {
+    "description": "Release administration: Access denied by the gateway."
+  },
+  "rel_admin_connection_changed_reopen_profiles": "연결이 변경되었습니다. 프로필을 다시 여세요.",
+  "@rel_admin_connection_changed_reopen_profiles": {
+    "description": "Release administration: Connection changed. Reopen Profiles."
+  },
+  "rel_admin_invalid_input_or_gateway_response_check_the_target_before": "입력 또는 게이트웨이 응답이 잘못되었습니다. 재시도 전에 대상을 확인하세요.",
+  "@rel_admin_invalid_input_or_gateway_response_check_the_target_before": {
+    "description": "Release administration: Invalid input or gateway response. Check the target before retrying."
+  },
+  "rel_admin_could_not_verify_the_result_refresh_the_target_before": "결과를 확인할 수 없습니다. 다시 시도하기 전에 대상을 새로 고치세요.",
+  "@rel_admin_could_not_verify_the_result_refresh_the_target_before": {
+    "description": "Release administration: Could not verify the result. Refresh the target before trying again."
+  },
+  "rel_admin_edit_soul_md": "SOUL.md 편집",
+  "@rel_admin_edit_soul_md": {
+    "description": "Release administration: Edit SOUL.md"
+  },
+  "rel_admin_persona": "페르소나",
+  "@rel_admin_persona": {
+    "description": "Release administration: Persona"
+  },
+  "rel_admin_persona_saved": "페르소나를 저장했습니다.",
+  "@rel_admin_persona_saved": {
+    "description": "Release administration: Persona saved."
+  },
+  "rel_admin_not_set": "설정되지 않음",
+  "@rel_admin_not_set": {
+    "description": "Release administration: not set"
+  },
+  "rel_admin_enabled": "활성화됨",
+  "@rel_admin_enabled": {
+    "description": "Release administration: Enabled"
+  },
+  "rel_admin_keys_to_remove_comma_separated": "제거할 키(쉼표로 구분)",
+  "@rel_admin_keys_to_remove_comma_separated": {
+    "description": "Release administration: Keys to remove (comma-separated)"
+  },
+  "rel_admin_saved_and_applied_by_the_gateway": "게이트웨이가 저장하고 적용했습니다.",
+  "@rel_admin_saved_and_applied_by_the_gateway": {
+    "description": "Release administration: Saved and applied by the gateway."
+  },
+  "rel_admin_saved_a_gateway_restart_may_be_required": "저장했습니다. 게이트웨이를 다시 시작해야 할 수 있습니다.",
+  "@rel_admin_saved_a_gateway_restart_may_be_required": {
+    "description": "Release administration: Saved. A gateway restart may be required."
+  },
+  "rel_admin_create_signed_route": "서명된 경로 만들기",
+  "@rel_admin_create_signed_route": {
+    "description": "Release administration: Create signed route"
+  },
+  "rel_admin_route_id": "경로 ID",
+  "@rel_admin_route_id": {
+    "description": "Release administration: Route ID"
+  },
+  "rel_admin_signature": "서명",
+  "@rel_admin_signature": {
+    "description": "Release administration: Signature"
+  },
+  "rel_admin_events_comma_separated": "이벤트(쉼표로 구분)",
+  "@rel_admin_events_comma_separated": {
+    "description": "Release administration: Events (comma-separated)"
+  },
+  "rel_admin_delivery_target": "전달 대상",
+  "@rel_admin_delivery_target": {
+    "description": "Release administration: Delivery target"
+  },
+  "rel_admin_skills_comma_separated": "스킬(쉼표로 구분)",
+  "@rel_admin_skills_comma_separated": {
+    "description": "Release administration: Skills (comma-separated)"
+  },
+  "rel_admin_delivery_mode": "전달 모드",
+  "@rel_admin_delivery_mode": {
+    "description": "Release administration: Delivery mode"
+  },
+  "rel_admin_delivery_chat_id_optional": "전달 채팅 ID(선택 사항)",
+  "@rel_admin_delivery_chat_id_optional": {
+    "description": "Release administration: Delivery chat ID (optional)"
+  },
+  "rel_admin_hide_signing_secret": "서명 비밀키 숨기기",
+  "@rel_admin_hide_signing_secret": {
+    "description": "Release administration: Hide signing secret"
+  },
+  "rel_admin_reveal_signing_secret": "서명 비밀키 표시",
+  "@rel_admin_reveal_signing_secret": {
+    "description": "Release administration: Reveal signing secret"
+  },
+  "rel_admin_edit_persona": "페르소나 편집",
+  "@rel_admin_edit_persona": {
+    "description": "Release administration: Edit persona"
+  },
+  "rel_admin_portable_profile_bundle": "이동식 프로필 번들",
+  "@rel_admin_portable_profile_bundle": {
+    "description": "Release administration: Portable profile bundle"
+  },
+  "rel_admin_clone_profile": "프로필 복제",
+  "@rel_admin_clone_profile": {
+    "description": "Release administration: Clone profile"
+  },
+  "rel_admin_rename_display_label": "표시 이름 바꾸기",
+  "@rel_admin_rename_display_label": {
+    "description": "Release administration: Rename display label"
+  },
+  "rel_admin_rename_profile": "프로필 이름 바꾸기",
+  "@rel_admin_rename_profile": {
+    "description": "Release administration: Rename profile"
+  },
+  "rel_admin_new_name": "새 이름",
+  "@rel_admin_new_name": {
+    "description": "Release administration: New name"
+  },
+  "rel_admin_rename_verified": "이름 변경을 확인했습니다.",
+  "@rel_admin_rename_verified": {
+    "description": "Release administration: Rename verified."
+  },
+  "rel_admin_delete_profile": "프로필 삭제",
+  "@rel_admin_delete_profile": {
+    "description": "Release administration: Delete profile"
+  },
+  "rel_admin_profile_id_to_delete": "삭제할 프로필 ID",
+  "@rel_admin_profile_id_to_delete": {
+    "description": "Release administration: Profile ID to delete"
+  },
+  "rel_admin_profile_deleted": "프로필을 삭제했습니다.",
+  "@rel_admin_profile_deleted": {
+    "description": "Release administration: Profile deleted."
+  },
+  "rel_admin_profile_deleted_server_identity_cleanup_is_still_pending": "프로필을 삭제했습니다. 서버 ID 정리는 아직 대기 중입니다.",
+  "@rel_admin_profile_deleted_server_identity_cleanup_is_still_pending": {
+    "description": "Release administration: Profile deleted. Server identity cleanup is still pending."
+  },
+  "rel_admin_export_profile_archive": "프로필 압축 파일 내보내기",
+  "@rel_admin_export_profile_archive": {
+    "description": "Release administration: Export profile archive"
+  },
+  "rel_admin_import_profile_archive": "프로필 압축 파일 가져오기",
+  "@rel_admin_import_profile_archive": {
+    "description": "Release administration: Import profile archive"
+  },
+  "rel_admin_import_a_trusted_profile": "신뢰할 수 있는 프로필 가져오기",
+  "@rel_admin_import_a_trusted_profile": {
+    "description": "Release administration: Import a trusted profile"
+  },
+  "rel_admin_absolute_archive_path_on_gateway": "게이트웨이의 압축 파일 절대 경로",
+  "@rel_admin_absolute_archive_path_on_gateway": {
+    "description": "Release administration: Absolute archive path on gateway"
+  },
+  "rel_admin_messaging_channels": "메시징 채널",
+  "@rel_admin_messaging_channels": {
+    "description": "Release administration: Messaging channels"
+  },
+  "rel_admin_dm_pairing_requests": "DM 페어링 요청",
+  "@rel_admin_dm_pairing_requests": {
+    "description": "Release administration: DM pairing requests"
+  },
+  "rel_admin_no_pending_or_approved_users": "대기 중이거나 승인된 사용자가 없습니다.",
+  "@rel_admin_no_pending_or_approved_users": {
+    "description": "Release administration: No pending or approved users."
+  },
+  "rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user": "이전 페어링: 확인 가능한 요청 ID가 없습니다. 사용자에게 다시 페어링하도록 요청하세요.",
+  "@rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user": {
+    "description": "Release administration: Legacy pairing: no verifiable request ID. Ask the user to pair again."
+  },
+  "rel_admin_pairing_change_verified": "페어링 변경을 확인했습니다.",
+  "@rel_admin_pairing_change_verified": {
+    "description": "Release administration: Pairing change verified."
+  },
+  "rel_admin_create_telegram_bot_by_qr": "QR로 Telegram 봇 만들기",
+  "@rel_admin_create_telegram_bot_by_qr": {
+    "description": "Release administration: Create Telegram bot by QR"
+  },
+  "rel_admin_create_telegram_bot": "Telegram 봇 만들기",
+  "@rel_admin_create_telegram_bot": {
+    "description": "Release administration: Create Telegram bot"
+  },
+  "rel_admin_bot_name": "봇 이름",
+  "@rel_admin_bot_name": {
+    "description": "Release administration: Bot name"
+  },
+  "rel_admin_telegram_bot_creation_qr_code": "Telegram 봇 생성 QR 코드",
+  "@rel_admin_telegram_bot_creation_qr_code": {
+    "description": "Release administration: Telegram bot creation QR code"
+  },
+  "rel_admin_check_telegram_pairing": "Telegram 페어링 확인",
+  "@rel_admin_check_telegram_pairing": {
+    "description": "Release administration: Check Telegram pairing"
+  },
+  "rel_admin_waiting_for_telegram": "Telegram 대기 중.",
+  "@rel_admin_waiting_for_telegram": {
+    "description": "Release administration: Waiting for Telegram."
+  },
+  "rel_admin_apply_telegram_bot": "Telegram 봇 적용",
+  "@rel_admin_apply_telegram_bot": {
+    "description": "Release administration: Apply Telegram bot"
+  },
+  "rel_admin_allowed_numeric_user_ids": "허용된 숫자 사용자 ID",
+  "@rel_admin_allowed_numeric_user_ids": {
+    "description": "Release administration: Allowed numeric user IDs"
+  },
+  "rel_admin_saved_restart_still_required": "저장했습니다. 여전히 다시 시작해야 합니다.",
+  "@rel_admin_saved_restart_still_required": {
+    "description": "Release administration: Saved. Restart still required."
+  },
+  "rel_admin_saved_gateway_restart_requested": "저장했습니다. 게이트웨이 다시 시작을 요청했습니다.",
+  "@rel_admin_saved_gateway_restart_requested": {
+    "description": "Release administration: Saved; gateway restart requested."
+  },
+  "rel_admin_cancel_telegram_setup": "Telegram 설정 취소",
+  "@rel_admin_cancel_telegram_setup": {
+    "description": "Release administration: Cancel Telegram setup"
+  },
+  "rel_admin_inbound_webhooks": "수신 웹훅",
+  "@rel_admin_inbound_webhooks": {
+    "description": "Release administration: Inbound webhooks"
+  },
+  "rel_admin_enable_webhook_service": "웹훅 서비스 활성화",
+  "@rel_admin_enable_webhook_service": {
+    "description": "Release administration: Enable webhook service"
+  },
+  "rel_admin_enable_webhooks": "웹훅 활성화",
+  "@rel_admin_enable_webhooks": {
+    "description": "Release administration: Enable webhooks"
+  },
+  "rel_admin_enabled_restart_still_required": "활성화했습니다. 여전히 다시 시작해야 합니다.",
+  "@rel_admin_enabled_restart_still_required": {
+    "description": "Release administration: Enabled. Restart still required."
+  },
+  "rel_admin_enabled_restart_requested": "활성화했습니다. 다시 시작을 요청했습니다.",
+  "@rel_admin_enabled_restart_requested": {
+    "description": "Release administration: Enabled; restart requested."
+  },
+  "rel_admin_route_change_verified": "경로 변경을 확인했습니다.",
+  "@rel_admin_route_change_verified": {
+    "description": "Release administration: Route change verified."
+  },
+  "rel_admin_delete_route": "경로 삭제",
+  "@rel_admin_delete_route": {
+    "description": "Release administration: Delete route"
+  },
+  "rel_admin_disable_route": "경로 비활성화",
+  "@rel_admin_disable_route": {
+    "description": "Release administration: Disable route"
+  },
+  "rel_admin_enable_route": "경로 활성화",
+  "@rel_admin_enable_route": {
+    "description": "Release administration: Enable route"
+  },
+  "rel_admin_back_up_entire_agent_home": "전체 에이전트 홈 백업",
+  "@rel_admin_back_up_entire_agent_home": {
+    "description": "Release administration: Back up entire agent home"
+  },
+  "rel_admin_transfer_to_a_cloud_agent": "Cloud 에이전트로 전송",
+  "@rel_admin_transfer_to_a_cloud_agent": {
+    "description": "Release administration: Transfer to a Cloud agent"
+  },
+  "rel_admin_check_backup_progress": "백업 진행 상황 확인",
+  "@rel_admin_check_backup_progress": {
+    "description": "Release administration: Check backup progress"
+  },
+  "rel_admin_save_backup_to_this_device": "이 기기에 백업 저장",
+  "@rel_admin_save_backup_to_this_device": {
+    "description": "Release administration: Save backup to this device"
+  },
+  "rel_admin_save_sensitive_full_home_archive": "민감한 전체 홈 압축 파일 저장",
+  "@rel_admin_save_sensitive_full_home_archive": {
+    "description": "Release administration: Save sensitive full-home archive"
+  },
+  "rel_admin_save_cancelled": "저장을 취소했습니다.",
+  "@rel_admin_save_cancelled": {
+    "description": "Release administration: Save cancelled."
+  },
+  "rel_admin_backup_saved": "백업을 저장했습니다.",
+  "@rel_admin_backup_saved": {
+    "description": "Release administration: Backup saved."
+  },
+  "rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway": "최대 32 MiB. 더 큰 압축 파일은 게이트웨이에 남습니다.",
+  "@rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway": {
+    "description": "Release administration: Up to 32 MiB. Larger archives remain on the gateway."
+  },
+  "rel_admin_persona_scope": "{scope}의 페르소나를 저장합니다.",
+  "@rel_admin_persona_scope": {
+    "description": "Release administration: Save the persona for {scope}.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_configure_channel": "{name} 설정",
+  "@rel_admin_configure_channel": {
+    "description": "Release administration: Configure {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_channel_warning": "{scope}에 적용됩니다. 비워 두면 기존 값이 유지됩니다. 값을 제거하려면 아래에 해당 키를 나열하세요.",
+  "@rel_admin_channel_warning": {
+    "description": "Release administration: Applies to {scope}. Blank keeps an existing value. To remove a value, list its key below.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_hook_warning": "{scope}에 적용됩니다. 고유한 이름을 사용하세요. 게이트웨이가 서명 비밀키를 만듭니다. 다른 운영자가 동시에 같은 이름을 만들면 호스트가 해당 경로를 대체할 수 있습니다.",
+  "@rel_admin_hook_warning": {
+    "description": "Release administration: Applies to {scope}. Use a unique name. The gateway creates a signing secret. If another operator creates the name simultaneously the host may replace that route.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_hook_created": "{url}을(를) 만들었습니다. 떠나기 전에 서명 비밀키를 보관하세요.",
+  "@rel_admin_hook_created": {
+    "description": "Release administration: Created {url}. Store the signing secret before leaving.",
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_clone_warning": "{scope}에서 설정, 스킬, 페르소나 및 공급자 자격 증명을 복사할 수 있습니다. 메시징 토큰은 요청하지 않습니다.",
+  "@rel_admin_clone_warning": {
+    "description": "Release administration: Copy settings, skills, persona and potentially provider credentials from {scope}. Messaging tokens are not requested.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_cloned": "{source}을(를) {destination}(으)로 복제했습니다.",
+  "@rel_admin_cloned": {
+    "description": "Release administration: Cloned {source} to {destination}.",
+    "placeholders": {
+      "source": {
+        "type": "String"
+      },
+      "destination": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_rename_target": "{name} 이름 바꾸기",
+  "@rel_admin_rename_target": {
+    "description": "Release administration: Rename {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_rename_label_warning": "{scope}의 표시 이름을 변경합니다. ID는 default로 유지됩니다.",
+  "@rel_admin_rename_label_warning": {
+    "description": "Release administration: Change the presentation label for {scope}. Its ID stays default.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_rename_warning": "서버에서 {scope}의 이름을 변경합니다. 실행 중인 게이트웨이가 중지될 수 있습니다.",
+  "@rel_admin_rename_warning": {
+    "description": "Release administration: Rename {scope} on the server. A running gateway may stop.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_delete_target": "{name} 삭제",
+  "@rel_admin_delete_target": {
+    "description": "Release administration: Delete {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_delete_profile_warning": "세션과 자격 증명을 포함한 {scope}을(를) 영구 삭제합니다. 정확한 프로필 ID를 입력하세요.",
+  "@rel_admin_delete_profile_warning": {
+    "description": "Release administration: Permanently delete {scope}, including sessions and credentials. Type the exact profile ID.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_export_target": "{name} 내보내기",
+  "@rel_admin_export_target": {
+    "description": "Release administration: Export {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_export_warning": "{scope}에 .tar.gz를 만듭니다. 알려진 자격 증명 저장소는 제외되지만 개인 데이터가 남을 수 있습니다. 공유하기 전에 검토하세요.",
+  "@rel_admin_export_warning": {
+    "description": "Release administration: Create a .tar.gz on {scope}. Known credential stores are excluded, but private data can remain. Review before sharing.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_archive_on": "{gateway}의 압축 파일: {path}",
+  "@rel_admin_archive_on": {
+    "description": "Release administration: Archive on {gateway}: {path}",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      },
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_import_warning": "{gateway}에 이미 있는 검토된 .tar.gz를 사용하세요. 플러그인, 스크립트 및 일정이 포함될 수 있습니다. 새 프로필 ID가 필요합니다.",
+  "@rel_admin_import_warning": {
+    "description": "Release administration: Use a reviewed .tar.gz already on {gateway}. It can contain plugins, scripts and schedules. A new profile ID is required.",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_imported": "{name}을(를) 가져왔습니다.",
+  "@rel_admin_imported": {
+    "description": "Release administration: Imported {name}.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_approve_user": "{user} 승인",
+  "@rel_admin_approve_user": {
+    "description": "Release administration: Approve {user}",
+    "placeholders": {
+      "user": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_revoke_user": "{user} 철회",
+  "@rel_admin_revoke_user": {
+    "description": "Release administration: Revoke {user}",
+    "placeholders": {
+      "user": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_allow_pair": "{scope}의 {platform}: 이 사용자의 메시징 접근을 허용합니다.",
+  "@rel_admin_allow_pair": {
+    "description": "Release administration: {platform} on {scope}: allow this user’s messaging access.",
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      },
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_remove_pair": "{scope}의 {platform}: 이 사용자의 메시징 접근을 제거합니다.",
+  "@rel_admin_remove_pair": {
+    "description": "Release administration: {platform} on {scope}: remove this user’s messaging access.",
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      },
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_telegram_start": "게이트웨이 설정 서비스를 사용하여 {scope}에서 Telegram 페어링을 시작합니다.",
+  "@rel_admin_telegram_start": {
+    "description": "Release administration: Start a Telegram pairing on {scope} using the gateway’s setup service.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_expires": "만료: {time}",
+  "@rel_admin_expires": {
+    "description": "Release administration: Expires: {time}",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_telegram_apply": "{scope}에서 @{bot}을(를) 활성화하고 게이트웨이 다시 시작을 시도합니다. 나열된 사용자만 메시지를 보낼 수 있습니다.",
+  "@rel_admin_telegram_apply": {
+    "description": "Release administration: Enable @{bot} on {scope} and attempt a gateway restart. Only the listed users may message it.",
+    "placeholders": {
+      "bot": {
+        "type": "String"
+      },
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_hooks_enable": "{scope}에서 수신 웹훅을 활성화하고 게이트웨이 다시 시작을 시도합니다.",
+  "@rel_admin_hooks_enable": {
+    "description": "Release administration: Enable inbound webhooks on {scope} and attempt a gateway restart.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_disable_target": "{name} 비활성화",
+  "@rel_admin_disable_target": {
+    "description": "Release administration: Disable {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_enable_target": "{name} 활성화",
+  "@rel_admin_enable_target": {
+    "description": "Release administration: Enable {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_hook_change": "{scope}의 {name}만 변경합니다.",
+  "@rel_admin_hook_change": {
+    "description": "Release administration: Change exactly {name} on {scope}.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_backup_warning": "Ares 설정 백업이 아닙니다. {gateway}의 모든 프로필, 세션 및 자격 증명을 저장합니다. 압축 파일에는 민감한 정보가 있습니다.",
+  "@rel_admin_backup_warning": {
+    "description": "Release administration: This is not an Ares settings backup. Save all profiles, sessions and credentials on {gateway}. The archive is sensitive.",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_backup_started": "{gateway}에서 백업을 시작했습니다.",
+  "@rel_admin_backup_started": {
+    "description": "Release administration: Backup started on {gateway}.",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_backup_verified": "{gateway}에서 백업을 확인했습니다: {path}",
+  "@rel_admin_backup_verified": {
+    "description": "Release administration: Backup verified on {gateway}: {path}",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      },
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_backup_running": "{gateway}에서 백업이 아직 실행 중입니다.",
+  "@rel_admin_backup_running": {
+    "description": "Release administration: Backup still running on {gateway}.",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_choice_yes": "예",
+  "@rel_admin_choice_yes": {
+    "description": "Release administration: yes"
+  },
+  "rel_admin_choice_no": "아니요",
+  "@rel_admin_choice_no": {
+    "description": "Release administration: no"
+  },
+  "rel_admin_choice_generic": "일반",
+  "@rel_admin_choice_generic": {
+    "description": "Release administration: generic"
+  },
+  "rel_admin_choice_log": "로그",
+  "@rel_admin_choice_log": {
+    "description": "Release administration: log"
+  },
+  "rel_admin_choice_email": "이메일",
+  "@rel_admin_choice_email": {
+    "description": "Release administration: email"
+  },
+  "rel_admin_choice_github_comment": "GitHub 댓글",
+  "@rel_admin_choice_github_comment": {
+    "description": "Release administration: github_comment"
+  },
+  "rel_admin_choice_agent": "에이전트가 이벤트 처리",
+  "@rel_admin_choice_agent": {
+    "description": "Release administration: Agent processes event"
+  },
+  "rel_admin_choice_direct": "직접 전달",
+  "@rel_admin_choice_direct": {
+    "description": "Release administration: Direct delivery"
+  },
+  "rel_admin_configured": "구성됨",
+  "@rel_admin_configured": {
+    "description": "Release administration: configured"
+  },
+  "rel_admin_state_pending_restart": "다시 시작 대기 중",
+  "@rel_admin_state_pending_restart": {
+    "description": "Release administration: pending_restart"
+  },
+  "rel_admin_state_unknown": "알 수 없음",
+  "@rel_admin_state_unknown": {
+    "description": "Release administration: unknown"
+  },
+  "rel_admin_state_connected": "연결됨",
+  "@rel_admin_state_connected": {
+    "description": "Release administration: connected"
+  },
+  "rel_admin_state_disconnected": "연결 해제됨",
+  "@rel_admin_state_disconnected": {
+    "description": "Release administration: disconnected"
+  },
+  "rel_admin_state_disabled": "비활성화됨",
+  "@rel_admin_state_disabled": {
+    "description": "Release administration: disabled"
+  },
+  "rel_admin_state_enabled": "활성화됨",
+  "@rel_admin_state_enabled": {
+    "description": "Release administration: enabled"
+  },
+  "rel_admin_state_running": "실행 중",
+  "@rel_admin_state_running": {
+    "description": "Release administration: running"
+  },
+  "rel_admin_state_stopped": "중지됨",
+  "@rel_admin_state_stopped": {
+    "description": "Release administration: stopped"
+  },
+  "rel_admin_state_error": "오류",
+  "@rel_admin_state_error": {
+    "description": "Release administration: error"
+  },
+  "rel_admin_state_not_configured": "구성되지 않음",
+  "@rel_admin_state_not_configured": {
+    "description": "Release administration: not_configured"
+  },
+  "rel_admin_state_startup_failed": "시작 실패",
+  "@rel_admin_state_startup_failed": {
+    "description": "Release administration: startup_failed"
+  },
+  "rel_admin_state_gateway_stopped": "게이트웨이 중지됨",
+  "@rel_admin_state_gateway_stopped": {
+    "description": "Release administration: gateway_stopped"
+  },
+  "rel_admin_state_connecting": "연결 중",
+  "@rel_admin_state_connecting": {
+    "description": "Release administration: connecting"
+  },
+  "rel_admin_state_retrying": "재시도 중",
+  "@rel_admin_state_retrying": {
+    "description": "Release administration: retrying"
+  },
+  "rel_admin_state_fatal": "치명적 오류",
+  "@rel_admin_state_fatal": {
+    "description": "Release administration: fatal"
   }
 }

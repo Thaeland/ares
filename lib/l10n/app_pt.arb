@@ -4199,5 +4199,706 @@
   "rel_admin_auto_lower": "Automático",
   "@rel_admin_auto_lower": {
     "description": "Release administration: auto"
+  },
+  "rel_admin_create": "Criar",
+  "@rel_admin_create": {
+    "description": "Release administration: Create"
+  },
+  "rel_admin_prompt": "Instrução",
+  "@rel_admin_prompt": {
+    "description": "Release administration: Prompt"
+  },
+  "rel_admin_new_profile_id": "ID do novo perfil",
+  "@rel_admin_new_profile_id": {
+    "description": "Release administration: New profile ID"
+  },
+  "rel_admin_this_operation_is_unavailable_on_this_gateway": "Esta operação não está disponível neste gateway.",
+  "@rel_admin_this_operation_is_unavailable_on_this_gateway": {
+    "description": "Release administration: This operation is unavailable on this gateway."
+  },
+  "rel_admin_access_denied_by_the_gateway": "Acesso negado pelo gateway.",
+  "@rel_admin_access_denied_by_the_gateway": {
+    "description": "Release administration: Access denied by the gateway."
+  },
+  "rel_admin_connection_changed_reopen_profiles": "A ligação mudou. Volte a abrir Perfis.",
+  "@rel_admin_connection_changed_reopen_profiles": {
+    "description": "Release administration: Connection changed. Reopen Profiles."
+  },
+  "rel_admin_invalid_input_or_gateway_response_check_the_target_before": "Entrada ou resposta do gateway inválida. Verifique o destino antes de tentar novamente.",
+  "@rel_admin_invalid_input_or_gateway_response_check_the_target_before": {
+    "description": "Release administration: Invalid input or gateway response. Check the target before retrying."
+  },
+  "rel_admin_could_not_verify_the_result_refresh_the_target_before": "Não foi possível verificar o resultado. Atualize o destino antes de tentar novamente.",
+  "@rel_admin_could_not_verify_the_result_refresh_the_target_before": {
+    "description": "Release administration: Could not verify the result. Refresh the target before trying again."
+  },
+  "rel_admin_edit_soul_md": "Editar SOUL.md",
+  "@rel_admin_edit_soul_md": {
+    "description": "Release administration: Edit SOUL.md"
+  },
+  "rel_admin_persona": "Personalidade",
+  "@rel_admin_persona": {
+    "description": "Release administration: Persona"
+  },
+  "rel_admin_persona_saved": "Personalidade guardada.",
+  "@rel_admin_persona_saved": {
+    "description": "Release administration: Persona saved."
+  },
+  "rel_admin_not_set": "não definido",
+  "@rel_admin_not_set": {
+    "description": "Release administration: not set"
+  },
+  "rel_admin_enabled": "Ativado",
+  "@rel_admin_enabled": {
+    "description": "Release administration: Enabled"
+  },
+  "rel_admin_keys_to_remove_comma_separated": "Chaves a remover (separadas por vírgulas)",
+  "@rel_admin_keys_to_remove_comma_separated": {
+    "description": "Release administration: Keys to remove (comma-separated)"
+  },
+  "rel_admin_saved_and_applied_by_the_gateway": "Guardado e aplicado pelo gateway.",
+  "@rel_admin_saved_and_applied_by_the_gateway": {
+    "description": "Release administration: Saved and applied by the gateway."
+  },
+  "rel_admin_saved_a_gateway_restart_may_be_required": "Guardado. Poderá ser necessário reiniciar o gateway.",
+  "@rel_admin_saved_a_gateway_restart_may_be_required": {
+    "description": "Release administration: Saved. A gateway restart may be required."
+  },
+  "rel_admin_create_signed_route": "Criar rota assinada",
+  "@rel_admin_create_signed_route": {
+    "description": "Release administration: Create signed route"
+  },
+  "rel_admin_route_id": "ID da rota",
+  "@rel_admin_route_id": {
+    "description": "Release administration: Route ID"
+  },
+  "rel_admin_signature": "Assinatura",
+  "@rel_admin_signature": {
+    "description": "Release administration: Signature"
+  },
+  "rel_admin_events_comma_separated": "Eventos (separados por vírgulas)",
+  "@rel_admin_events_comma_separated": {
+    "description": "Release administration: Events (comma-separated)"
+  },
+  "rel_admin_delivery_target": "Destino de entrega",
+  "@rel_admin_delivery_target": {
+    "description": "Release administration: Delivery target"
+  },
+  "rel_admin_skills_comma_separated": "Competências (separadas por vírgulas)",
+  "@rel_admin_skills_comma_separated": {
+    "description": "Release administration: Skills (comma-separated)"
+  },
+  "rel_admin_delivery_mode": "Modo de entrega",
+  "@rel_admin_delivery_mode": {
+    "description": "Release administration: Delivery mode"
+  },
+  "rel_admin_delivery_chat_id_optional": "ID da conversa de entrega (opcional)",
+  "@rel_admin_delivery_chat_id_optional": {
+    "description": "Release administration: Delivery chat ID (optional)"
+  },
+  "rel_admin_hide_signing_secret": "Ocultar segredo de assinatura",
+  "@rel_admin_hide_signing_secret": {
+    "description": "Release administration: Hide signing secret"
+  },
+  "rel_admin_reveal_signing_secret": "Mostrar segredo de assinatura",
+  "@rel_admin_reveal_signing_secret": {
+    "description": "Release administration: Reveal signing secret"
+  },
+  "rel_admin_edit_persona": "Editar personalidade",
+  "@rel_admin_edit_persona": {
+    "description": "Release administration: Edit persona"
+  },
+  "rel_admin_portable_profile_bundle": "Pacote de perfil portátil",
+  "@rel_admin_portable_profile_bundle": {
+    "description": "Release administration: Portable profile bundle"
+  },
+  "rel_admin_clone_profile": "Clonar perfil",
+  "@rel_admin_clone_profile": {
+    "description": "Release administration: Clone profile"
+  },
+  "rel_admin_rename_display_label": "Mudar o nome da etiqueta de apresentação",
+  "@rel_admin_rename_display_label": {
+    "description": "Release administration: Rename display label"
+  },
+  "rel_admin_rename_profile": "Mudar o nome do perfil",
+  "@rel_admin_rename_profile": {
+    "description": "Release administration: Rename profile"
+  },
+  "rel_admin_new_name": "Novo nome",
+  "@rel_admin_new_name": {
+    "description": "Release administration: New name"
+  },
+  "rel_admin_rename_verified": "Alteração de nome verificada.",
+  "@rel_admin_rename_verified": {
+    "description": "Release administration: Rename verified."
+  },
+  "rel_admin_delete_profile": "Eliminar perfil",
+  "@rel_admin_delete_profile": {
+    "description": "Release administration: Delete profile"
+  },
+  "rel_admin_profile_id_to_delete": "ID do perfil a eliminar",
+  "@rel_admin_profile_id_to_delete": {
+    "description": "Release administration: Profile ID to delete"
+  },
+  "rel_admin_profile_deleted": "Perfil eliminado.",
+  "@rel_admin_profile_deleted": {
+    "description": "Release administration: Profile deleted."
+  },
+  "rel_admin_profile_deleted_server_identity_cleanup_is_still_pending": "Perfil eliminado. A limpeza da identidade do servidor ainda está pendente.",
+  "@rel_admin_profile_deleted_server_identity_cleanup_is_still_pending": {
+    "description": "Release administration: Profile deleted. Server identity cleanup is still pending."
+  },
+  "rel_admin_export_profile_archive": "Exportar arquivo de perfil",
+  "@rel_admin_export_profile_archive": {
+    "description": "Release administration: Export profile archive"
+  },
+  "rel_admin_import_profile_archive": "Importar arquivo de perfil",
+  "@rel_admin_import_profile_archive": {
+    "description": "Release administration: Import profile archive"
+  },
+  "rel_admin_import_a_trusted_profile": "Importar um perfil de confiança",
+  "@rel_admin_import_a_trusted_profile": {
+    "description": "Release administration: Import a trusted profile"
+  },
+  "rel_admin_absolute_archive_path_on_gateway": "Caminho absoluto do arquivo no gateway",
+  "@rel_admin_absolute_archive_path_on_gateway": {
+    "description": "Release administration: Absolute archive path on gateway"
+  },
+  "rel_admin_messaging_channels": "Canais de mensagens",
+  "@rel_admin_messaging_channels": {
+    "description": "Release administration: Messaging channels"
+  },
+  "rel_admin_dm_pairing_requests": "Pedidos de associação por mensagem direta",
+  "@rel_admin_dm_pairing_requests": {
+    "description": "Release administration: DM pairing requests"
+  },
+  "rel_admin_no_pending_or_approved_users": "Não há utilizadores pendentes ou aprovados.",
+  "@rel_admin_no_pending_or_approved_users": {
+    "description": "Release administration: No pending or approved users."
+  },
+  "rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user": "Associação antiga: sem ID de pedido verificável. Peça ao utilizador que volte a associar-se.",
+  "@rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user": {
+    "description": "Release administration: Legacy pairing: no verifiable request ID. Ask the user to pair again."
+  },
+  "rel_admin_pairing_change_verified": "Alteração de associação verificada.",
+  "@rel_admin_pairing_change_verified": {
+    "description": "Release administration: Pairing change verified."
+  },
+  "rel_admin_create_telegram_bot_by_qr": "Criar bot do Telegram por QR",
+  "@rel_admin_create_telegram_bot_by_qr": {
+    "description": "Release administration: Create Telegram bot by QR"
+  },
+  "rel_admin_create_telegram_bot": "Criar bot do Telegram",
+  "@rel_admin_create_telegram_bot": {
+    "description": "Release administration: Create Telegram bot"
+  },
+  "rel_admin_bot_name": "Nome do bot",
+  "@rel_admin_bot_name": {
+    "description": "Release administration: Bot name"
+  },
+  "rel_admin_telegram_bot_creation_qr_code": "Código QR para criar um bot do Telegram",
+  "@rel_admin_telegram_bot_creation_qr_code": {
+    "description": "Release administration: Telegram bot creation QR code"
+  },
+  "rel_admin_check_telegram_pairing": "Verificar associação do Telegram",
+  "@rel_admin_check_telegram_pairing": {
+    "description": "Release administration: Check Telegram pairing"
+  },
+  "rel_admin_waiting_for_telegram": "A aguardar o Telegram.",
+  "@rel_admin_waiting_for_telegram": {
+    "description": "Release administration: Waiting for Telegram."
+  },
+  "rel_admin_apply_telegram_bot": "Aplicar bot do Telegram",
+  "@rel_admin_apply_telegram_bot": {
+    "description": "Release administration: Apply Telegram bot"
+  },
+  "rel_admin_allowed_numeric_user_ids": "IDs numéricos dos utilizadores permitidos",
+  "@rel_admin_allowed_numeric_user_ids": {
+    "description": "Release administration: Allowed numeric user IDs"
+  },
+  "rel_admin_saved_restart_still_required": "Guardado. Ainda é necessário reiniciar.",
+  "@rel_admin_saved_restart_still_required": {
+    "description": "Release administration: Saved. Restart still required."
+  },
+  "rel_admin_saved_gateway_restart_requested": "Guardado; reinício do gateway solicitado.",
+  "@rel_admin_saved_gateway_restart_requested": {
+    "description": "Release administration: Saved; gateway restart requested."
+  },
+  "rel_admin_cancel_telegram_setup": "Cancelar configuração do Telegram",
+  "@rel_admin_cancel_telegram_setup": {
+    "description": "Release administration: Cancel Telegram setup"
+  },
+  "rel_admin_inbound_webhooks": "Webhooks de entrada",
+  "@rel_admin_inbound_webhooks": {
+    "description": "Release administration: Inbound webhooks"
+  },
+  "rel_admin_enable_webhook_service": "Ativar serviço de webhooks",
+  "@rel_admin_enable_webhook_service": {
+    "description": "Release administration: Enable webhook service"
+  },
+  "rel_admin_enable_webhooks": "Ativar webhooks",
+  "@rel_admin_enable_webhooks": {
+    "description": "Release administration: Enable webhooks"
+  },
+  "rel_admin_enabled_restart_still_required": "Ativado. Ainda é necessário reiniciar.",
+  "@rel_admin_enabled_restart_still_required": {
+    "description": "Release administration: Enabled. Restart still required."
+  },
+  "rel_admin_enabled_restart_requested": "Ativado; reinício solicitado.",
+  "@rel_admin_enabled_restart_requested": {
+    "description": "Release administration: Enabled; restart requested."
+  },
+  "rel_admin_route_change_verified": "Alteração de rota verificada.",
+  "@rel_admin_route_change_verified": {
+    "description": "Release administration: Route change verified."
+  },
+  "rel_admin_delete_route": "Eliminar rota",
+  "@rel_admin_delete_route": {
+    "description": "Release administration: Delete route"
+  },
+  "rel_admin_disable_route": "Desativar rota",
+  "@rel_admin_disable_route": {
+    "description": "Release administration: Disable route"
+  },
+  "rel_admin_enable_route": "Ativar rota",
+  "@rel_admin_enable_route": {
+    "description": "Release administration: Enable route"
+  },
+  "rel_admin_back_up_entire_agent_home": "Criar cópia de segurança de toda a pasta pessoal do agente",
+  "@rel_admin_back_up_entire_agent_home": {
+    "description": "Release administration: Back up entire agent home"
+  },
+  "rel_admin_transfer_to_a_cloud_agent": "Transferir para um agente Cloud",
+  "@rel_admin_transfer_to_a_cloud_agent": {
+    "description": "Release administration: Transfer to a Cloud agent"
+  },
+  "rel_admin_check_backup_progress": "Verificar progresso da cópia de segurança",
+  "@rel_admin_check_backup_progress": {
+    "description": "Release administration: Check backup progress"
+  },
+  "rel_admin_save_backup_to_this_device": "Guardar cópia de segurança neste dispositivo",
+  "@rel_admin_save_backup_to_this_device": {
+    "description": "Release administration: Save backup to this device"
+  },
+  "rel_admin_save_sensitive_full_home_archive": "Guardar arquivo sensível de toda a pasta pessoal",
+  "@rel_admin_save_sensitive_full_home_archive": {
+    "description": "Release administration: Save sensitive full-home archive"
+  },
+  "rel_admin_save_cancelled": "Gravação cancelada.",
+  "@rel_admin_save_cancelled": {
+    "description": "Release administration: Save cancelled."
+  },
+  "rel_admin_backup_saved": "Cópia de segurança guardada.",
+  "@rel_admin_backup_saved": {
+    "description": "Release administration: Backup saved."
+  },
+  "rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway": "Até 32 MiB. Os arquivos maiores permanecem no gateway.",
+  "@rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway": {
+    "description": "Release administration: Up to 32 MiB. Larger archives remain on the gateway."
+  },
+  "rel_admin_persona_scope": "Guarde a personalidade de {scope}.",
+  "@rel_admin_persona_scope": {
+    "description": "Release administration: Save the persona for {scope}.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_configure_channel": "Configurar {name}",
+  "@rel_admin_configure_channel": {
+    "description": "Release administration: Configure {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_channel_warning": "Aplica-se a {scope}. Em branco mantém o valor existente. Para remover um valor, indique a chave abaixo.",
+  "@rel_admin_channel_warning": {
+    "description": "Release administration: Applies to {scope}. Blank keeps an existing value. To remove a value, list its key below.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_hook_warning": "Aplica-se a {scope}. Use um nome único. O gateway cria um segredo de assinatura. Se outro operador criar o nome em simultâneo, o anfitrião pode substituir essa rota.",
+  "@rel_admin_hook_warning": {
+    "description": "Release administration: Applies to {scope}. Use a unique name. The gateway creates a signing secret. If another operator creates the name simultaneously the host may replace that route.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_hook_created": "Criado {url}. Guarde o segredo de assinatura antes de sair.",
+  "@rel_admin_hook_created": {
+    "description": "Release administration: Created {url}. Store the signing secret before leaving.",
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_clone_warning": "Copie definições, competências, personalidade e possivelmente credenciais de fornecedores de {scope}. Os tokens de mensagens não são pedidos.",
+  "@rel_admin_clone_warning": {
+    "description": "Release administration: Copy settings, skills, persona and potentially provider credentials from {scope}. Messaging tokens are not requested.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_cloned": "{source} clonado para {destination}.",
+  "@rel_admin_cloned": {
+    "description": "Release administration: Cloned {source} to {destination}.",
+    "placeholders": {
+      "source": {
+        "type": "String"
+      },
+      "destination": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_rename_target": "Mudar o nome de {name}",
+  "@rel_admin_rename_target": {
+    "description": "Release administration: Rename {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_rename_label_warning": "Altere a etiqueta de apresentação de {scope}. O ID mantém-se default.",
+  "@rel_admin_rename_label_warning": {
+    "description": "Release administration: Change the presentation label for {scope}. Its ID stays default.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_rename_warning": "Mude o nome de {scope} no servidor. Um gateway em execução pode parar.",
+  "@rel_admin_rename_warning": {
+    "description": "Release administration: Rename {scope} on the server. A running gateway may stop.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_delete_target": "Eliminar {name}",
+  "@rel_admin_delete_target": {
+    "description": "Release administration: Delete {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_delete_profile_warning": "Elimine permanentemente {scope}, incluindo sessões e credenciais. Introduza o ID exato do perfil.",
+  "@rel_admin_delete_profile_warning": {
+    "description": "Release administration: Permanently delete {scope}, including sessions and credentials. Type the exact profile ID.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_export_target": "Exportar {name}",
+  "@rel_admin_export_target": {
+    "description": "Release administration: Export {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_export_warning": "Crie um .tar.gz em {scope}. Os repositórios de credenciais conhecidos são excluídos, mas podem restar dados privados. Reveja antes de partilhar.",
+  "@rel_admin_export_warning": {
+    "description": "Release administration: Create a .tar.gz on {scope}. Known credential stores are excluded, but private data can remain. Review before sharing.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_archive_on": "Arquivo em {gateway}: {path}",
+  "@rel_admin_archive_on": {
+    "description": "Release administration: Archive on {gateway}: {path}",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      },
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_import_warning": "Utilize um .tar.gz revisto que já esteja em {gateway}. Pode conter plugins, scripts e agendamentos. É necessário um novo ID de perfil.",
+  "@rel_admin_import_warning": {
+    "description": "Release administration: Use a reviewed .tar.gz already on {gateway}. It can contain plugins, scripts and schedules. A new profile ID is required.",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_imported": "{name} importado.",
+  "@rel_admin_imported": {
+    "description": "Release administration: Imported {name}.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_approve_user": "Aprovar {user}",
+  "@rel_admin_approve_user": {
+    "description": "Release administration: Approve {user}",
+    "placeholders": {
+      "user": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_revoke_user": "Revogar {user}",
+  "@rel_admin_revoke_user": {
+    "description": "Release administration: Revoke {user}",
+    "placeholders": {
+      "user": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_allow_pair": "{platform} em {scope}: permitir o acesso deste utilizador às mensagens.",
+  "@rel_admin_allow_pair": {
+    "description": "Release administration: {platform} on {scope}: allow this user’s messaging access.",
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      },
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_remove_pair": "{platform} em {scope}: remover o acesso deste utilizador às mensagens.",
+  "@rel_admin_remove_pair": {
+    "description": "Release administration: {platform} on {scope}: remove this user’s messaging access.",
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      },
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_telegram_start": "Inicie uma associação do Telegram em {scope} com o serviço de configuração do gateway.",
+  "@rel_admin_telegram_start": {
+    "description": "Release administration: Start a Telegram pairing on {scope} using the gateway’s setup service.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_expires": "Expira: {time}",
+  "@rel_admin_expires": {
+    "description": "Release administration: Expires: {time}",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_telegram_apply": "Ative @{bot} em {scope} e tente reiniciar o gateway. Só os utilizadores indicados podem enviar-lhe mensagens.",
+  "@rel_admin_telegram_apply": {
+    "description": "Release administration: Enable @{bot} on {scope} and attempt a gateway restart. Only the listed users may message it.",
+    "placeholders": {
+      "bot": {
+        "type": "String"
+      },
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_hooks_enable": "Ative os webhooks de entrada em {scope} e tente reiniciar o gateway.",
+  "@rel_admin_hooks_enable": {
+    "description": "Release administration: Enable inbound webhooks on {scope} and attempt a gateway restart.",
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_disable_target": "Desativar {name}",
+  "@rel_admin_disable_target": {
+    "description": "Release administration: Disable {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_enable_target": "Ativar {name}",
+  "@rel_admin_enable_target": {
+    "description": "Release administration: Enable {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_hook_change": "Altere exatamente {name} em {scope}.",
+  "@rel_admin_hook_change": {
+    "description": "Release administration: Change exactly {name} on {scope}.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_backup_warning": "Isto não é uma cópia de segurança das definições do Ares. Guarde todos os perfis, sessões e credenciais em {gateway}. O arquivo é sensível.",
+  "@rel_admin_backup_warning": {
+    "description": "Release administration: This is not an Ares settings backup. Save all profiles, sessions and credentials on {gateway}. The archive is sensitive.",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_backup_started": "Cópia de segurança iniciada em {gateway}.",
+  "@rel_admin_backup_started": {
+    "description": "Release administration: Backup started on {gateway}.",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_backup_verified": "Cópia de segurança verificada em {gateway}: {path}",
+  "@rel_admin_backup_verified": {
+    "description": "Release administration: Backup verified on {gateway}: {path}",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      },
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_backup_running": "A cópia de segurança ainda está em curso em {gateway}.",
+  "@rel_admin_backup_running": {
+    "description": "Release administration: Backup still running on {gateway}.",
+    "placeholders": {
+      "gateway": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_admin_choice_yes": "sim",
+  "@rel_admin_choice_yes": {
+    "description": "Release administration: yes"
+  },
+  "rel_admin_choice_no": "não",
+  "@rel_admin_choice_no": {
+    "description": "Release administration: no"
+  },
+  "rel_admin_choice_generic": "genérico",
+  "@rel_admin_choice_generic": {
+    "description": "Release administration: generic"
+  },
+  "rel_admin_choice_log": "registo",
+  "@rel_admin_choice_log": {
+    "description": "Release administration: log"
+  },
+  "rel_admin_choice_email": "correio eletrónico",
+  "@rel_admin_choice_email": {
+    "description": "Release administration: email"
+  },
+  "rel_admin_choice_github_comment": "comentário no GitHub",
+  "@rel_admin_choice_github_comment": {
+    "description": "Release administration: github_comment"
+  },
+  "rel_admin_choice_agent": "O agente processa o evento",
+  "@rel_admin_choice_agent": {
+    "description": "Release administration: Agent processes event"
+  },
+  "rel_admin_choice_direct": "Entrega direta",
+  "@rel_admin_choice_direct": {
+    "description": "Release administration: Direct delivery"
+  },
+  "rel_admin_configured": "configurado",
+  "@rel_admin_configured": {
+    "description": "Release administration: configured"
+  },
+  "rel_admin_state_pending_restart": "reinício pendente",
+  "@rel_admin_state_pending_restart": {
+    "description": "Release administration: pending_restart"
+  },
+  "rel_admin_state_unknown": "desconhecido",
+  "@rel_admin_state_unknown": {
+    "description": "Release administration: unknown"
+  },
+  "rel_admin_state_connected": "ligado",
+  "@rel_admin_state_connected": {
+    "description": "Release administration: connected"
+  },
+  "rel_admin_state_disconnected": "desligado",
+  "@rel_admin_state_disconnected": {
+    "description": "Release administration: disconnected"
+  },
+  "rel_admin_state_disabled": "desativado",
+  "@rel_admin_state_disabled": {
+    "description": "Release administration: disabled"
+  },
+  "rel_admin_state_enabled": "ativado",
+  "@rel_admin_state_enabled": {
+    "description": "Release administration: enabled"
+  },
+  "rel_admin_state_running": "em execução",
+  "@rel_admin_state_running": {
+    "description": "Release administration: running"
+  },
+  "rel_admin_state_stopped": "parado",
+  "@rel_admin_state_stopped": {
+    "description": "Release administration: stopped"
+  },
+  "rel_admin_state_error": "erro",
+  "@rel_admin_state_error": {
+    "description": "Release administration: error"
+  },
+  "rel_admin_state_not_configured": "não configurado",
+  "@rel_admin_state_not_configured": {
+    "description": "Release administration: not_configured"
+  },
+  "rel_admin_state_startup_failed": "falha no arranque",
+  "@rel_admin_state_startup_failed": {
+    "description": "Release administration: startup_failed"
+  },
+  "rel_admin_state_gateway_stopped": "gateway parado",
+  "@rel_admin_state_gateway_stopped": {
+    "description": "Release administration: gateway_stopped"
+  },
+  "rel_admin_state_connecting": "a ligar",
+  "@rel_admin_state_connecting": {
+    "description": "Release administration: connecting"
+  },
+  "rel_admin_state_retrying": "a tentar novamente",
+  "@rel_admin_state_retrying": {
+    "description": "Release administration: retrying"
+  },
+  "rel_admin_state_fatal": "erro fatal",
+  "@rel_admin_state_fatal": {
+    "description": "Release administration: fatal"
   }
 }

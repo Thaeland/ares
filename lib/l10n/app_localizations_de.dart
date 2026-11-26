@@ -12873,4 +12873,488 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get rel_admin_auto_lower => 'Automatisch';
+
+  @override
+  String get rel_admin_create => 'Erstellen';
+
+  @override
+  String get rel_admin_prompt => 'Prompt';
+
+  @override
+  String get rel_admin_new_profile_id => 'Neue Profil-ID';
+
+  @override
+  String get rel_admin_this_operation_is_unavailable_on_this_gateway =>
+      'Dieser Vorgang ist auf diesem Gateway nicht verfügbar.';
+
+  @override
+  String get rel_admin_access_denied_by_the_gateway =>
+      'Zugriff vom Gateway verweigert.';
+
+  @override
+  String get rel_admin_connection_changed_reopen_profiles =>
+      'Verbindung geändert. Öffne Profile erneut.';
+
+  @override
+  String
+  get rel_admin_invalid_input_or_gateway_response_check_the_target_before =>
+      'Ungültige Eingabe oder Gateway-Antwort. Prüfe das Ziel vor einem erneuten Versuch.';
+
+  @override
+  String get rel_admin_could_not_verify_the_result_refresh_the_target_before =>
+      'Das Ergebnis konnte nicht überprüft werden. Aktualisiere das Ziel vor einem erneuten Versuch.';
+
+  @override
+  String get rel_admin_edit_soul_md => 'SOUL.md bearbeiten';
+
+  @override
+  String get rel_admin_persona => 'Persona';
+
+  @override
+  String get rel_admin_persona_saved => 'Persona gespeichert.';
+
+  @override
+  String get rel_admin_not_set => 'nicht gesetzt';
+
+  @override
+  String get rel_admin_enabled => 'Aktiviert';
+
+  @override
+  String get rel_admin_keys_to_remove_comma_separated =>
+      'Zu entfernende Schlüssel (kommagetrennt)';
+
+  @override
+  String get rel_admin_saved_and_applied_by_the_gateway =>
+      'Vom Gateway gespeichert und angewendet.';
+
+  @override
+  String get rel_admin_saved_a_gateway_restart_may_be_required =>
+      'Gespeichert. Ein Gateway-Neustart kann erforderlich sein.';
+
+  @override
+  String get rel_admin_create_signed_route => 'Signierte Route erstellen';
+
+  @override
+  String get rel_admin_route_id => 'Routen-ID';
+
+  @override
+  String get rel_admin_signature => 'Signatur';
+
+  @override
+  String get rel_admin_events_comma_separated => 'Ereignisse (kommagetrennt)';
+
+  @override
+  String get rel_admin_delivery_target => 'Zustellziel';
+
+  @override
+  String get rel_admin_skills_comma_separated => 'Skills (kommagetrennt)';
+
+  @override
+  String get rel_admin_delivery_mode => 'Zustellmodus';
+
+  @override
+  String get rel_admin_delivery_chat_id_optional =>
+      'Zustell-Chat-ID (optional)';
+
+  @override
+  String get rel_admin_hide_signing_secret => 'Signiergeheimnis ausblenden';
+
+  @override
+  String get rel_admin_reveal_signing_secret => 'Signiergeheimnis anzeigen';
+
+  @override
+  String get rel_admin_edit_persona => 'Persona bearbeiten';
+
+  @override
+  String get rel_admin_portable_profile_bundle => 'Portables Profilpaket';
+
+  @override
+  String get rel_admin_clone_profile => 'Profil klonen';
+
+  @override
+  String get rel_admin_rename_display_label => 'Anzeigenamen umbenennen';
+
+  @override
+  String get rel_admin_rename_profile => 'Profil umbenennen';
+
+  @override
+  String get rel_admin_new_name => 'Neuer Name';
+
+  @override
+  String get rel_admin_rename_verified => 'Umbenennung bestätigt.';
+
+  @override
+  String get rel_admin_delete_profile => 'Profil löschen';
+
+  @override
+  String get rel_admin_profile_id_to_delete => 'Zu löschende Profil-ID';
+
+  @override
+  String get rel_admin_profile_deleted => 'Profil gelöscht.';
+
+  @override
+  String
+  get rel_admin_profile_deleted_server_identity_cleanup_is_still_pending =>
+      'Profil gelöscht. Die Bereinigung der Serveridentität steht noch aus.';
+
+  @override
+  String get rel_admin_export_profile_archive => 'Profilarchiv exportieren';
+
+  @override
+  String get rel_admin_import_profile_archive => 'Profilarchiv importieren';
+
+  @override
+  String get rel_admin_import_a_trusted_profile =>
+      'Vertrauenswürdiges Profil importieren';
+
+  @override
+  String get rel_admin_absolute_archive_path_on_gateway =>
+      'Absoluter Archivpfad auf dem Gateway';
+
+  @override
+  String get rel_admin_messaging_channels => 'Nachrichtenkanäle';
+
+  @override
+  String get rel_admin_dm_pairing_requests => 'DM-Kopplungsanfragen';
+
+  @override
+  String get rel_admin_no_pending_or_approved_users =>
+      'Keine ausstehenden oder genehmigten Nutzer.';
+
+  @override
+  String get rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user =>
+      'Alte Kopplung: keine überprüfbare Anfrage-ID. Bitte den Nutzer, sich erneut zu koppeln.';
+
+  @override
+  String get rel_admin_pairing_change_verified =>
+      'Kopplungsänderung bestätigt.';
+
+  @override
+  String get rel_admin_create_telegram_bot_by_qr =>
+      'Telegram-Bot per QR erstellen';
+
+  @override
+  String get rel_admin_create_telegram_bot => 'Telegram-Bot erstellen';
+
+  @override
+  String get rel_admin_bot_name => 'Bot-Name';
+
+  @override
+  String get rel_admin_telegram_bot_creation_qr_code =>
+      'QR-Code zum Erstellen eines Telegram-Bots';
+
+  @override
+  String get rel_admin_check_telegram_pairing => 'Telegram-Kopplung prüfen';
+
+  @override
+  String get rel_admin_waiting_for_telegram => 'Warte auf Telegram.';
+
+  @override
+  String get rel_admin_apply_telegram_bot => 'Telegram-Bot anwenden';
+
+  @override
+  String get rel_admin_allowed_numeric_user_ids =>
+      'Erlaubte numerische Nutzer-IDs';
+
+  @override
+  String get rel_admin_saved_restart_still_required =>
+      'Gespeichert. Neustart weiterhin erforderlich.';
+
+  @override
+  String get rel_admin_saved_gateway_restart_requested =>
+      'Gespeichert; Gateway-Neustart angefordert.';
+
+  @override
+  String get rel_admin_cancel_telegram_setup =>
+      'Telegram-Einrichtung abbrechen';
+
+  @override
+  String get rel_admin_inbound_webhooks => 'Eingehende Webhooks';
+
+  @override
+  String get rel_admin_enable_webhook_service => 'Webhook-Dienst aktivieren';
+
+  @override
+  String get rel_admin_enable_webhooks => 'Webhooks aktivieren';
+
+  @override
+  String get rel_admin_enabled_restart_still_required =>
+      'Aktiviert. Neustart weiterhin erforderlich.';
+
+  @override
+  String get rel_admin_enabled_restart_requested =>
+      'Aktiviert; Neustart angefordert.';
+
+  @override
+  String get rel_admin_route_change_verified => 'Routenänderung bestätigt.';
+
+  @override
+  String get rel_admin_delete_route => 'Route löschen';
+
+  @override
+  String get rel_admin_disable_route => 'Route deaktivieren';
+
+  @override
+  String get rel_admin_enable_route => 'Route aktivieren';
+
+  @override
+  String get rel_admin_back_up_entire_agent_home =>
+      'Gesamtes Agenten-Home sichern';
+
+  @override
+  String get rel_admin_transfer_to_a_cloud_agent =>
+      'Zu einem Cloud-Agenten übertragen';
+
+  @override
+  String get rel_admin_check_backup_progress => 'Sicherungsfortschritt prüfen';
+
+  @override
+  String get rel_admin_save_backup_to_this_device =>
+      'Sicherung auf diesem Gerät speichern';
+
+  @override
+  String get rel_admin_save_sensitive_full_home_archive =>
+      'Vertrauliches vollständiges Home-Archiv speichern';
+
+  @override
+  String get rel_admin_save_cancelled => 'Speichern abgebrochen.';
+
+  @override
+  String get rel_admin_backup_saved => 'Sicherung gespeichert.';
+
+  @override
+  String get rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway =>
+      'Bis zu 32 MiB. Größere Archive bleiben auf dem Gateway.';
+
+  @override
+  String rel_admin_persona_scope(String scope) {
+    return 'Persona für $scope speichern.';
+  }
+
+  @override
+  String rel_admin_configure_channel(String name) {
+    return '$name konfigurieren';
+  }
+
+  @override
+  String rel_admin_channel_warning(String scope) {
+    return 'Gilt für $scope. Leer behält einen vorhandenen Wert. Zum Entfernen eines Werts seinen Schlüssel unten angeben.';
+  }
+
+  @override
+  String rel_admin_hook_warning(String scope) {
+    return 'Gilt für $scope. Verwende einen eindeutigen Namen. Das Gateway erstellt ein Signiergeheimnis. Wenn ein anderer Betreiber den Namen gleichzeitig erstellt, kann der Host diese Route ersetzen.';
+  }
+
+  @override
+  String rel_admin_hook_created(String url) {
+    return '$url erstellt. Speichere das Signiergeheimnis vor dem Verlassen.';
+  }
+
+  @override
+  String rel_admin_clone_warning(String scope) {
+    return 'Einstellungen, Skills, Persona und möglicherweise Anbieter-Zugangsdaten von $scope kopieren. Nachrichten-Tokens werden nicht angefordert.';
+  }
+
+  @override
+  String rel_admin_cloned(String source, String destination) {
+    return '$source nach $destination geklont.';
+  }
+
+  @override
+  String rel_admin_rename_target(String name) {
+    return '$name umbenennen';
+  }
+
+  @override
+  String rel_admin_rename_label_warning(String scope) {
+    return 'Anzeigenamen für $scope ändern. Die ID bleibt default.';
+  }
+
+  @override
+  String rel_admin_rename_warning(String scope) {
+    return '$scope auf dem Server umbenennen. Ein laufendes Gateway kann stoppen.';
+  }
+
+  @override
+  String rel_admin_delete_target(String name) {
+    return '$name löschen';
+  }
+
+  @override
+  String rel_admin_delete_profile_warning(String scope) {
+    return '$scope einschließlich Sitzungen und Zugangsdaten dauerhaft löschen. Gib die genaue Profil-ID ein.';
+  }
+
+  @override
+  String rel_admin_export_target(String name) {
+    return '$name exportieren';
+  }
+
+  @override
+  String rel_admin_export_warning(String scope) {
+    return 'Eine .tar.gz-Datei auf $scope erstellen. Bekannte Zugangsdaten-Speicher werden ausgeschlossen, private Daten können aber verbleiben. Vor dem Teilen prüfen.';
+  }
+
+  @override
+  String rel_admin_archive_on(String gateway, String path) {
+    return 'Archiv auf $gateway: $path';
+  }
+
+  @override
+  String rel_admin_import_warning(String gateway) {
+    return 'Eine geprüfte .tar.gz-Datei verwenden, die bereits auf $gateway liegt. Sie kann Plugins, Skripte und Zeitpläne enthalten. Eine neue Profil-ID ist erforderlich.';
+  }
+
+  @override
+  String rel_admin_imported(String name) {
+    return '$name importiert.';
+  }
+
+  @override
+  String rel_admin_approve_user(String user) {
+    return '$user genehmigen';
+  }
+
+  @override
+  String rel_admin_revoke_user(String user) {
+    return '$user widerrufen';
+  }
+
+  @override
+  String rel_admin_allow_pair(String platform, String scope) {
+    return '$platform auf $scope: Nachrichtenzugriff dieses Nutzers erlauben.';
+  }
+
+  @override
+  String rel_admin_remove_pair(String platform, String scope) {
+    return '$platform auf $scope: Nachrichtenzugriff dieses Nutzers entfernen.';
+  }
+
+  @override
+  String rel_admin_telegram_start(String scope) {
+    return 'Telegram-Kopplung auf $scope über den Einrichtungsdienst des Gateways starten.';
+  }
+
+  @override
+  String rel_admin_expires(String time) {
+    return 'Läuft ab: $time';
+  }
+
+  @override
+  String rel_admin_telegram_apply(String bot, String scope) {
+    return '@$bot auf $scope aktivieren und einen Gateway-Neustart versuchen. Nur die aufgeführten Nutzer dürfen ihm Nachrichten senden.';
+  }
+
+  @override
+  String rel_admin_hooks_enable(String scope) {
+    return 'Eingehende Webhooks auf $scope aktivieren und einen Gateway-Neustart versuchen.';
+  }
+
+  @override
+  String rel_admin_disable_target(String name) {
+    return '$name deaktivieren';
+  }
+
+  @override
+  String rel_admin_enable_target(String name) {
+    return '$name aktivieren';
+  }
+
+  @override
+  String rel_admin_hook_change(String name, String scope) {
+    return 'Genau $name auf $scope ändern.';
+  }
+
+  @override
+  String rel_admin_backup_warning(String gateway) {
+    return 'Dies ist keine Ares-Einstellungssicherung. Alle Profile, Sitzungen und Zugangsdaten auf $gateway speichern. Das Archiv ist vertraulich.';
+  }
+
+  @override
+  String rel_admin_backup_started(String gateway) {
+    return 'Sicherung auf $gateway gestartet.';
+  }
+
+  @override
+  String rel_admin_backup_verified(String gateway, String path) {
+    return 'Sicherung auf $gateway überprüft: $path';
+  }
+
+  @override
+  String rel_admin_backup_running(String gateway) {
+    return 'Sicherung auf $gateway läuft noch.';
+  }
+
+  @override
+  String get rel_admin_choice_yes => 'ja';
+
+  @override
+  String get rel_admin_choice_no => 'nein';
+
+  @override
+  String get rel_admin_choice_generic => 'allgemein';
+
+  @override
+  String get rel_admin_choice_log => 'Protokoll';
+
+  @override
+  String get rel_admin_choice_email => 'E-Mail';
+
+  @override
+  String get rel_admin_choice_github_comment => 'GitHub-Kommentar';
+
+  @override
+  String get rel_admin_choice_agent => 'Agent verarbeitet Ereignis';
+
+  @override
+  String get rel_admin_choice_direct => 'Direkte Zustellung';
+
+  @override
+  String get rel_admin_configured => 'konfiguriert';
+
+  @override
+  String get rel_admin_state_pending_restart => 'Neustart ausstehend';
+
+  @override
+  String get rel_admin_state_unknown => 'unbekannt';
+
+  @override
+  String get rel_admin_state_connected => 'verbunden';
+
+  @override
+  String get rel_admin_state_disconnected => 'getrennt';
+
+  @override
+  String get rel_admin_state_disabled => 'deaktiviert';
+
+  @override
+  String get rel_admin_state_enabled => 'aktiviert';
+
+  @override
+  String get rel_admin_state_running => 'läuft';
+
+  @override
+  String get rel_admin_state_stopped => 'gestoppt';
+
+  @override
+  String get rel_admin_state_error => 'Fehler';
+
+  @override
+  String get rel_admin_state_not_configured => 'nicht konfiguriert';
+
+  @override
+  String get rel_admin_state_startup_failed => 'Start fehlgeschlagen';
+
+  @override
+  String get rel_admin_state_gateway_stopped => 'Gateway gestoppt';
+
+  @override
+  String get rel_admin_state_connecting => 'Verbindung wird hergestellt';
+
+  @override
+  String get rel_admin_state_retrying => 'erneuter Versuch';
+
+  @override
+  String get rel_admin_state_fatal => 'schwerwiegender Fehler';
 }

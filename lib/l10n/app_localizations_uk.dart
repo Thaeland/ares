@@ -12841,4 +12841,491 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get rel_admin_auto_lower => 'Авто';
+
+  @override
+  String get rel_admin_create => 'Створити';
+
+  @override
+  String get rel_admin_prompt => 'Запит';
+
+  @override
+  String get rel_admin_new_profile_id => 'ID нового профілю';
+
+  @override
+  String get rel_admin_this_operation_is_unavailable_on_this_gateway =>
+      'Ця операція недоступна на цьому шлюзі.';
+
+  @override
+  String get rel_admin_access_denied_by_the_gateway =>
+      'Шлюз відмовив у доступі.';
+
+  @override
+  String get rel_admin_connection_changed_reopen_profiles =>
+      'Підключення змінилося. Відкрийте профілі знову.';
+
+  @override
+  String
+  get rel_admin_invalid_input_or_gateway_response_check_the_target_before =>
+      'Неприпустиме введення або відповідь шлюзу. Перевірте ціль перед повторною спробою.';
+
+  @override
+  String get rel_admin_could_not_verify_the_result_refresh_the_target_before =>
+      'Не вдалося перевірити результат. Оновіть ціль перед повторною спробою.';
+
+  @override
+  String get rel_admin_edit_soul_md => 'Редагувати SOUL.md';
+
+  @override
+  String get rel_admin_persona => 'Персона';
+
+  @override
+  String get rel_admin_persona_saved => 'Персону збережено.';
+
+  @override
+  String get rel_admin_not_set => 'не задано';
+
+  @override
+  String get rel_admin_enabled => 'Увімкнено';
+
+  @override
+  String get rel_admin_keys_to_remove_comma_separated =>
+      'Ключі для видалення (через кому)';
+
+  @override
+  String get rel_admin_saved_and_applied_by_the_gateway =>
+      'Збережено й застосовано шлюзом.';
+
+  @override
+  String get rel_admin_saved_a_gateway_restart_may_be_required =>
+      'Збережено. Може знадобитися перезапуск шлюзу.';
+
+  @override
+  String get rel_admin_create_signed_route => 'Створити підписаний маршрут';
+
+  @override
+  String get rel_admin_route_id => 'ID маршруту';
+
+  @override
+  String get rel_admin_signature => 'Підпис';
+
+  @override
+  String get rel_admin_events_comma_separated => 'Події (через кому)';
+
+  @override
+  String get rel_admin_delivery_target => 'Ціль доставки';
+
+  @override
+  String get rel_admin_skills_comma_separated => 'Навички (через кому)';
+
+  @override
+  String get rel_admin_delivery_mode => 'Режим доставки';
+
+  @override
+  String get rel_admin_delivery_chat_id_optional =>
+      'ID чату доставки (необов’язково)';
+
+  @override
+  String get rel_admin_hide_signing_secret => 'Приховати секрет підпису';
+
+  @override
+  String get rel_admin_reveal_signing_secret => 'Показати секрет підпису';
+
+  @override
+  String get rel_admin_edit_persona => 'Редагувати персону';
+
+  @override
+  String get rel_admin_portable_profile_bundle => 'Переносний пакет профілю';
+
+  @override
+  String get rel_admin_clone_profile => 'Клонувати профіль';
+
+  @override
+  String get rel_admin_rename_display_label =>
+      'Перейменувати відображувану мітку';
+
+  @override
+  String get rel_admin_rename_profile => 'Перейменувати профіль';
+
+  @override
+  String get rel_admin_new_name => 'Нова назва';
+
+  @override
+  String get rel_admin_rename_verified => 'Перейменування перевірено.';
+
+  @override
+  String get rel_admin_delete_profile => 'Видалити профіль';
+
+  @override
+  String get rel_admin_profile_id_to_delete => 'ID профілю для видалення';
+
+  @override
+  String get rel_admin_profile_deleted => 'Профіль видалено.';
+
+  @override
+  String
+  get rel_admin_profile_deleted_server_identity_cleanup_is_still_pending =>
+      'Профіль видалено. Очищення ідентифікаційних даних сервера ще очікується.';
+
+  @override
+  String get rel_admin_export_profile_archive => 'Експортувати архів профілю';
+
+  @override
+  String get rel_admin_import_profile_archive => 'Імпортувати архів профілю';
+
+  @override
+  String get rel_admin_import_a_trusted_profile =>
+      'Імпортувати довірений профіль';
+
+  @override
+  String get rel_admin_absolute_archive_path_on_gateway =>
+      'Абсолютний шлях до архіву на шлюзі';
+
+  @override
+  String get rel_admin_messaging_channels => 'Канали повідомлень';
+
+  @override
+  String get rel_admin_dm_pairing_requests =>
+      'Запити сполучення в особистих повідомленнях';
+
+  @override
+  String get rel_admin_no_pending_or_approved_users =>
+      'Немає користувачів, що очікують або схвалені.';
+
+  @override
+  String get rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user =>
+      'Застаріле сполучення: немає перевірного ID запиту. Попросіть користувача виконати сполучення знову.';
+
+  @override
+  String get rel_admin_pairing_change_verified =>
+      'Зміну сполучення перевірено.';
+
+  @override
+  String get rel_admin_create_telegram_bot_by_qr =>
+      'Створити бота Telegram через QR';
+
+  @override
+  String get rel_admin_create_telegram_bot => 'Створити бота Telegram';
+
+  @override
+  String get rel_admin_bot_name => 'Назва бота';
+
+  @override
+  String get rel_admin_telegram_bot_creation_qr_code =>
+      'QR-код створення бота Telegram';
+
+  @override
+  String get rel_admin_check_telegram_pairing =>
+      'Перевірити сполучення Telegram';
+
+  @override
+  String get rel_admin_waiting_for_telegram => 'Очікування Telegram.';
+
+  @override
+  String get rel_admin_apply_telegram_bot => 'Застосувати бота Telegram';
+
+  @override
+  String get rel_admin_allowed_numeric_user_ids =>
+      'Дозволені числові ID користувачів';
+
+  @override
+  String get rel_admin_saved_restart_still_required =>
+      'Збережено. Перезапуск усе ще потрібен.';
+
+  @override
+  String get rel_admin_saved_gateway_restart_requested =>
+      'Збережено; запитано перезапуск шлюзу.';
+
+  @override
+  String get rel_admin_cancel_telegram_setup =>
+      'Скасувати налаштування Telegram';
+
+  @override
+  String get rel_admin_inbound_webhooks => 'Вхідні вебхуки';
+
+  @override
+  String get rel_admin_enable_webhook_service => 'Увімкнути службу вебхуків';
+
+  @override
+  String get rel_admin_enable_webhooks => 'Увімкнути вебхуки';
+
+  @override
+  String get rel_admin_enabled_restart_still_required =>
+      'Увімкнено. Перезапуск усе ще потрібен.';
+
+  @override
+  String get rel_admin_enabled_restart_requested =>
+      'Увімкнено; запитано перезапуск.';
+
+  @override
+  String get rel_admin_route_change_verified => 'Зміну маршруту перевірено.';
+
+  @override
+  String get rel_admin_delete_route => 'Видалити маршрут';
+
+  @override
+  String get rel_admin_disable_route => 'Вимкнути маршрут';
+
+  @override
+  String get rel_admin_enable_route => 'Увімкнути маршрут';
+
+  @override
+  String get rel_admin_back_up_entire_agent_home =>
+      'Створити резервну копію всього домашнього каталогу агента';
+
+  @override
+  String get rel_admin_transfer_to_a_cloud_agent => 'Перенести до агента Cloud';
+
+  @override
+  String get rel_admin_check_backup_progress =>
+      'Перевірити хід резервного копіювання';
+
+  @override
+  String get rel_admin_save_backup_to_this_device =>
+      'Зберегти резервну копію на цьому пристрої';
+
+  @override
+  String get rel_admin_save_sensitive_full_home_archive =>
+      'Зберегти конфіденційний архів усього домашнього каталогу';
+
+  @override
+  String get rel_admin_save_cancelled => 'Збереження скасовано.';
+
+  @override
+  String get rel_admin_backup_saved => 'Резервну копію збережено.';
+
+  @override
+  String get rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway =>
+      'До 32 MiB. Більші архіви залишаються на шлюзі.';
+
+  @override
+  String rel_admin_persona_scope(String scope) {
+    return 'Зберегти персону для $scope.';
+  }
+
+  @override
+  String rel_admin_configure_channel(String name) {
+    return 'Налаштувати $name';
+  }
+
+  @override
+  String rel_admin_channel_warning(String scope) {
+    return 'Застосовується до $scope. Порожнє поле зберігає поточне значення. Для видалення значення вкажіть його ключ нижче.';
+  }
+
+  @override
+  String rel_admin_hook_warning(String scope) {
+    return 'Застосовується до $scope. Використовуйте унікальну назву. Шлюз створює секрет підпису. Якщо інший оператор одночасно створить цю назву, хост може замінити цей маршрут.';
+  }
+
+  @override
+  String rel_admin_hook_created(String url) {
+    return 'Створено: $url. Збережіть секрет підпису перед виходом.';
+  }
+
+  @override
+  String rel_admin_clone_warning(String scope) {
+    return 'Скопіювати налаштування, навички, персону та, можливо, облікові дані постачальників із $scope. Токени повідомлень не запитуються.';
+  }
+
+  @override
+  String rel_admin_cloned(String source, String destination) {
+    return '$source клоновано в $destination.';
+  }
+
+  @override
+  String rel_admin_rename_target(String name) {
+    return 'Перейменувати $name';
+  }
+
+  @override
+  String rel_admin_rename_label_warning(String scope) {
+    return 'Змінити відображувану мітку $scope. ID залишиться default.';
+  }
+
+  @override
+  String rel_admin_rename_warning(String scope) {
+    return 'Перейменувати $scope на сервері. Запущений шлюз може зупинитися.';
+  }
+
+  @override
+  String rel_admin_delete_target(String name) {
+    return 'Видалити $name';
+  }
+
+  @override
+  String rel_admin_delete_profile_warning(String scope) {
+    return 'Назавжди видалити $scope, включно із сеансами й обліковими даними. Введіть точний ID профілю.';
+  }
+
+  @override
+  String rel_admin_export_target(String name) {
+    return 'Експортувати $name';
+  }
+
+  @override
+  String rel_admin_export_warning(String scope) {
+    return 'Створити .tar.gz на $scope. Відомі сховища облікових даних виключаються, але приватні дані можуть залишитися. Перевірте перед поширенням.';
+  }
+
+  @override
+  String rel_admin_archive_on(String gateway, String path) {
+    return 'Архів на $gateway: $path';
+  }
+
+  @override
+  String rel_admin_import_warning(String gateway) {
+    return 'Використовуйте перевірений .tar.gz, що вже є на $gateway. Він може містити плагіни, скрипти й розклади. Потрібен новий ID профілю.';
+  }
+
+  @override
+  String rel_admin_imported(String name) {
+    return 'Імпортовано: $name.';
+  }
+
+  @override
+  String rel_admin_approve_user(String user) {
+    return 'Схвалити $user';
+  }
+
+  @override
+  String rel_admin_revoke_user(String user) {
+    return 'Відкликати $user';
+  }
+
+  @override
+  String rel_admin_allow_pair(String platform, String scope) {
+    return '$platform на $scope: дозволити цьому користувачу доступ до повідомлень.';
+  }
+
+  @override
+  String rel_admin_remove_pair(String platform, String scope) {
+    return '$platform на $scope: видалити доступ цього користувача до повідомлень.';
+  }
+
+  @override
+  String rel_admin_telegram_start(String scope) {
+    return 'Почати сполучення Telegram на $scope через службу налаштування шлюзу.';
+  }
+
+  @override
+  String rel_admin_expires(String time) {
+    return 'Спливає: $time';
+  }
+
+  @override
+  String rel_admin_telegram_apply(String bot, String scope) {
+    return 'Увімкнути @$bot на $scope і спробувати перезапустити шлюз. Лише перелічені користувачі зможуть писати йому.';
+  }
+
+  @override
+  String rel_admin_hooks_enable(String scope) {
+    return 'Увімкнути вхідні вебхуки на $scope і спробувати перезапустити шлюз.';
+  }
+
+  @override
+  String rel_admin_disable_target(String name) {
+    return 'Вимкнути $name';
+  }
+
+  @override
+  String rel_admin_enable_target(String name) {
+    return 'Увімкнути $name';
+  }
+
+  @override
+  String rel_admin_hook_change(String name, String scope) {
+    return 'Змінити саме $name на $scope.';
+  }
+
+  @override
+  String rel_admin_backup_warning(String gateway) {
+    return 'Це не резервна копія налаштувань Ares. Збережіть усі профілі, сеанси й облікові дані на $gateway. Архів містить конфіденційні дані.';
+  }
+
+  @override
+  String rel_admin_backup_started(String gateway) {
+    return 'Резервне копіювання розпочато на $gateway.';
+  }
+
+  @override
+  String rel_admin_backup_verified(String gateway, String path) {
+    return 'Резервну копію перевірено на $gateway: $path';
+  }
+
+  @override
+  String rel_admin_backup_running(String gateway) {
+    return 'Резервне копіювання ще триває на $gateway.';
+  }
+
+  @override
+  String get rel_admin_choice_yes => 'так';
+
+  @override
+  String get rel_admin_choice_no => 'ні';
+
+  @override
+  String get rel_admin_choice_generic => 'загальна';
+
+  @override
+  String get rel_admin_choice_log => 'журнал';
+
+  @override
+  String get rel_admin_choice_email => 'електронна пошта';
+
+  @override
+  String get rel_admin_choice_github_comment => 'коментар GitHub';
+
+  @override
+  String get rel_admin_choice_agent => 'Агент обробляє подію';
+
+  @override
+  String get rel_admin_choice_direct => 'Пряма доставка';
+
+  @override
+  String get rel_admin_configured => 'налаштовано';
+
+  @override
+  String get rel_admin_state_pending_restart => 'очікує перезапуску';
+
+  @override
+  String get rel_admin_state_unknown => 'невідомо';
+
+  @override
+  String get rel_admin_state_connected => 'підключено';
+
+  @override
+  String get rel_admin_state_disconnected => 'відключено';
+
+  @override
+  String get rel_admin_state_disabled => 'вимкнено';
+
+  @override
+  String get rel_admin_state_enabled => 'увімкнено';
+
+  @override
+  String get rel_admin_state_running => 'працює';
+
+  @override
+  String get rel_admin_state_stopped => 'зупинено';
+
+  @override
+  String get rel_admin_state_error => 'помилка';
+
+  @override
+  String get rel_admin_state_not_configured => 'не налаштовано';
+
+  @override
+  String get rel_admin_state_startup_failed => 'помилка запуску';
+
+  @override
+  String get rel_admin_state_gateway_stopped => 'шлюз зупинено';
+
+  @override
+  String get rel_admin_state_connecting => 'підключення';
+
+  @override
+  String get rel_admin_state_retrying => 'повторна спроба';
+
+  @override
+  String get rel_admin_state_fatal => 'критична помилка';
 }

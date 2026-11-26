@@ -12706,4 +12706,485 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get rel_admin_auto_lower => 'تلقائي';
+
+  @override
+  String get rel_admin_create => 'إنشاء';
+
+  @override
+  String get rel_admin_prompt => 'التعليمات';
+
+  @override
+  String get rel_admin_new_profile_id => 'معرّف الملف الشخصي الجديد';
+
+  @override
+  String get rel_admin_this_operation_is_unavailable_on_this_gateway =>
+      'هذه العملية غير متاحة على هذه البوابة.';
+
+  @override
+  String get rel_admin_access_denied_by_the_gateway => 'رفضت البوابة الوصول.';
+
+  @override
+  String get rel_admin_connection_changed_reopen_profiles =>
+      'تغيّر الاتصال. أعِد فتح ملفات التعريف.';
+
+  @override
+  String
+  get rel_admin_invalid_input_or_gateway_response_check_the_target_before =>
+      'إدخال أو استجابة بوابة غير صالحة. تحقّق من الهدف قبل إعادة المحاولة.';
+
+  @override
+  String get rel_admin_could_not_verify_the_result_refresh_the_target_before =>
+      'تعذّر التحقق من النتيجة. حدّث الهدف قبل المحاولة مرة أخرى.';
+
+  @override
+  String get rel_admin_edit_soul_md => 'تحرير SOUL.md';
+
+  @override
+  String get rel_admin_persona => 'الشخصية';
+
+  @override
+  String get rel_admin_persona_saved => 'حُفظت الشخصية.';
+
+  @override
+  String get rel_admin_not_set => 'غير معيّن';
+
+  @override
+  String get rel_admin_enabled => 'مفعّل';
+
+  @override
+  String get rel_admin_keys_to_remove_comma_separated =>
+      'المفاتيح المراد إزالتها (مفصولة بفواصل)';
+
+  @override
+  String get rel_admin_saved_and_applied_by_the_gateway =>
+      'حُفظ وطُبّق بواسطة البوابة.';
+
+  @override
+  String get rel_admin_saved_a_gateway_restart_may_be_required =>
+      'حُفظ. قد تلزم إعادة تشغيل البوابة.';
+
+  @override
+  String get rel_admin_create_signed_route => 'إنشاء قاعدة توجيه موقّعة';
+
+  @override
+  String get rel_admin_route_id => 'معرّف قاعدة التوجيه';
+
+  @override
+  String get rel_admin_signature => 'التوقيع';
+
+  @override
+  String get rel_admin_events_comma_separated => 'الأحداث (مفصولة بفواصل)';
+
+  @override
+  String get rel_admin_delivery_target => 'وجهة التسليم';
+
+  @override
+  String get rel_admin_skills_comma_separated => 'المهارات (مفصولة بفواصل)';
+
+  @override
+  String get rel_admin_delivery_mode => 'وضع التسليم';
+
+  @override
+  String get rel_admin_delivery_chat_id_optional =>
+      'معرّف محادثة التسليم (اختياري)';
+
+  @override
+  String get rel_admin_hide_signing_secret => 'إخفاء سر التوقيع';
+
+  @override
+  String get rel_admin_reveal_signing_secret => 'إظهار سر التوقيع';
+
+  @override
+  String get rel_admin_edit_persona => 'تحرير الشخصية';
+
+  @override
+  String get rel_admin_portable_profile_bundle => 'حزمة ملف تعريف محمولة';
+
+  @override
+  String get rel_admin_clone_profile => 'استنساخ الملف التعريفي';
+
+  @override
+  String get rel_admin_rename_display_label => 'إعادة تسمية تسمية العرض';
+
+  @override
+  String get rel_admin_rename_profile => 'إعادة تسمية الملف التعريفي';
+
+  @override
+  String get rel_admin_new_name => 'الاسم الجديد';
+
+  @override
+  String get rel_admin_rename_verified => 'تم التحقق من إعادة التسمية.';
+
+  @override
+  String get rel_admin_delete_profile => 'حذف الملف التعريفي';
+
+  @override
+  String get rel_admin_profile_id_to_delete =>
+      'معرّف الملف التعريفي المراد حذفه';
+
+  @override
+  String get rel_admin_profile_deleted => 'حُذف الملف التعريفي.';
+
+  @override
+  String
+  get rel_admin_profile_deleted_server_identity_cleanup_is_still_pending =>
+      'حُذف الملف التعريفي. لا يزال تنظيف هوية الخادم معلقًا.';
+
+  @override
+  String get rel_admin_export_profile_archive => 'تصدير أرشيف الملف التعريفي';
+
+  @override
+  String get rel_admin_import_profile_archive => 'استيراد أرشيف الملف التعريفي';
+
+  @override
+  String get rel_admin_import_a_trusted_profile => 'استيراد ملف تعريف موثوق';
+
+  @override
+  String get rel_admin_absolute_archive_path_on_gateway =>
+      'مسار الأرشيف المطلق على البوابة';
+
+  @override
+  String get rel_admin_messaging_channels => 'قنوات المراسلة';
+
+  @override
+  String get rel_admin_dm_pairing_requests => 'طلبات إقران الرسائل المباشرة';
+
+  @override
+  String get rel_admin_no_pending_or_approved_users =>
+      'لا يوجد مستخدمون معلقون أو معتمدون.';
+
+  @override
+  String get rel_admin_legacy_pairing_no_verifiable_request_id_ask_the_user =>
+      'إقران قديم: لا يوجد معرّف طلب قابل للتحقق. اطلب من المستخدم الإقران مجددًا.';
+
+  @override
+  String get rel_admin_pairing_change_verified => 'تم التحقق من تغيير الإقران.';
+
+  @override
+  String get rel_admin_create_telegram_bot_by_qr => 'إنشاء بوت Telegram عبر QR';
+
+  @override
+  String get rel_admin_create_telegram_bot => 'إنشاء بوت Telegram';
+
+  @override
+  String get rel_admin_bot_name => 'اسم البوت';
+
+  @override
+  String get rel_admin_telegram_bot_creation_qr_code =>
+      'رمز QR لإنشاء بوت Telegram';
+
+  @override
+  String get rel_admin_check_telegram_pairing => 'التحقق من إقران Telegram';
+
+  @override
+  String get rel_admin_waiting_for_telegram => 'بانتظار Telegram.';
+
+  @override
+  String get rel_admin_apply_telegram_bot => 'تطبيق بوت Telegram';
+
+  @override
+  String get rel_admin_allowed_numeric_user_ids =>
+      'معرّفات المستخدمين الرقمية المسموح بها';
+
+  @override
+  String get rel_admin_saved_restart_still_required =>
+      'حُفظ. لا تزال إعادة التشغيل مطلوبة.';
+
+  @override
+  String get rel_admin_saved_gateway_restart_requested =>
+      'حُفظ؛ طُلبت إعادة تشغيل البوابة.';
+
+  @override
+  String get rel_admin_cancel_telegram_setup => 'إلغاء إعداد Telegram';
+
+  @override
+  String get rel_admin_inbound_webhooks => 'خطافات الويب الواردة';
+
+  @override
+  String get rel_admin_enable_webhook_service => 'تفعيل خدمة خطافات الويب';
+
+  @override
+  String get rel_admin_enable_webhooks => 'تفعيل خطافات الويب';
+
+  @override
+  String get rel_admin_enabled_restart_still_required =>
+      'فُعّل. لا تزال إعادة التشغيل مطلوبة.';
+
+  @override
+  String get rel_admin_enabled_restart_requested =>
+      'فُعّل؛ طُلبت إعادة التشغيل.';
+
+  @override
+  String get rel_admin_route_change_verified =>
+      'تم التحقق من تغيير قاعدة التوجيه.';
+
+  @override
+  String get rel_admin_delete_route => 'حذف قاعدة التوجيه';
+
+  @override
+  String get rel_admin_disable_route => 'تعطيل قاعدة التوجيه';
+
+  @override
+  String get rel_admin_enable_route => 'تفعيل قاعدة التوجيه';
+
+  @override
+  String get rel_admin_back_up_entire_agent_home =>
+      'نسخ مجلد الوكيل الرئيسي بالكامل احتياطيًا';
+
+  @override
+  String get rel_admin_transfer_to_a_cloud_agent => 'النقل إلى وكيل Cloud';
+
+  @override
+  String get rel_admin_check_backup_progress =>
+      'التحقق من تقدم النسخ الاحتياطي';
+
+  @override
+  String get rel_admin_save_backup_to_this_device =>
+      'حفظ النسخة الاحتياطية على هذا الجهاز';
+
+  @override
+  String get rel_admin_save_sensitive_full_home_archive =>
+      'حفظ أرشيف المجلد الرئيسي الكامل الحساس';
+
+  @override
+  String get rel_admin_save_cancelled => 'أُلغي الحفظ.';
+
+  @override
+  String get rel_admin_backup_saved => 'حُفظت النسخة الاحتياطية.';
+
+  @override
+  String get rel_admin_up_to_32_mib_larger_archives_remain_on_the_gateway =>
+      'حتى 32 MiB. تبقى الأرشيفات الأكبر على البوابة.';
+
+  @override
+  String rel_admin_persona_scope(String scope) {
+    return 'احفظ الشخصية لـ $scope.';
+  }
+
+  @override
+  String rel_admin_configure_channel(String name) {
+    return 'إعداد $name';
+  }
+
+  @override
+  String rel_admin_channel_warning(String scope) {
+    return 'ينطبق على $scope. يترك الفراغ القيمة الحالية. لإزالة قيمة، أدرج مفتاحها أدناه.';
+  }
+
+  @override
+  String rel_admin_hook_warning(String scope) {
+    return 'ينطبق على $scope. استخدم اسمًا فريدًا. تنشئ البوابة سر توقيع. إذا أنشأ مشغّل آخر الاسم في الوقت نفسه، فقد يستبدل المضيف قاعدة التوجيه تلك.';
+  }
+
+  @override
+  String rel_admin_hook_created(String url) {
+    return 'أُنشئ $url. احفظ سر التوقيع قبل المغادرة.';
+  }
+
+  @override
+  String rel_admin_clone_warning(String scope) {
+    return 'انسخ الإعدادات والمهارات والشخصية وربما بيانات اعتماد الموفر من $scope. لا تُطلب رموز المراسلة.';
+  }
+
+  @override
+  String rel_admin_cloned(String source, String destination) {
+    return 'استُنسخ $source إلى $destination.';
+  }
+
+  @override
+  String rel_admin_rename_target(String name) {
+    return 'إعادة تسمية $name';
+  }
+
+  @override
+  String rel_admin_rename_label_warning(String scope) {
+    return 'غيّر تسمية العرض لـ $scope. يبقى معرّفه default.';
+  }
+
+  @override
+  String rel_admin_rename_warning(String scope) {
+    return 'أعِد تسمية $scope على الخادم. قد تتوقف بوابة قيد التشغيل.';
+  }
+
+  @override
+  String rel_admin_delete_target(String name) {
+    return 'حذف $name';
+  }
+
+  @override
+  String rel_admin_delete_profile_warning(String scope) {
+    return 'احذف $scope نهائيًا، بما في ذلك الجلسات وبيانات الاعتماد. اكتب معرّف الملف التعريفي بالضبط.';
+  }
+
+  @override
+  String rel_admin_export_target(String name) {
+    return 'تصدير $name';
+  }
+
+  @override
+  String rel_admin_export_warning(String scope) {
+    return 'أنشئ .tar.gz على $scope. تُستبعد مخازن بيانات الاعتماد المعروفة، لكن قد تبقى بيانات خاصة. راجع قبل المشاركة.';
+  }
+
+  @override
+  String rel_admin_archive_on(String gateway, String path) {
+    return 'الأرشيف على $gateway: $path';
+  }
+
+  @override
+  String rel_admin_import_warning(String gateway) {
+    return 'استخدم .tar.gz تمت مراجعته وموجودًا بالفعل على $gateway. قد يحتوي على إضافات وبرامج نصية وجداول. يلزم معرّف ملف تعريف جديد.';
+  }
+
+  @override
+  String rel_admin_imported(String name) {
+    return 'استُورد $name.';
+  }
+
+  @override
+  String rel_admin_approve_user(String user) {
+    return 'اعتماد $user';
+  }
+
+  @override
+  String rel_admin_revoke_user(String user) {
+    return 'إلغاء صلاحية $user';
+  }
+
+  @override
+  String rel_admin_allow_pair(String platform, String scope) {
+    return '$platform على $scope: السماح لهذا المستخدم بالوصول إلى المراسلة.';
+  }
+
+  @override
+  String rel_admin_remove_pair(String platform, String scope) {
+    return '$platform على $scope: إزالة وصول هذا المستخدم إلى المراسلة.';
+  }
+
+  @override
+  String rel_admin_telegram_start(String scope) {
+    return 'ابدأ إقران Telegram على $scope باستخدام خدمة إعداد البوابة.';
+  }
+
+  @override
+  String rel_admin_expires(String time) {
+    return 'تنتهي الصلاحية: $time';
+  }
+
+  @override
+  String rel_admin_telegram_apply(String bot, String scope) {
+    return 'فعّل @$bot على $scope وحاول إعادة تشغيل البوابة. لا يجوز مراسلته إلا للمستخدمين المدرجين.';
+  }
+
+  @override
+  String rel_admin_hooks_enable(String scope) {
+    return 'فعّل خطافات الويب الواردة على $scope وحاول إعادة تشغيل البوابة.';
+  }
+
+  @override
+  String rel_admin_disable_target(String name) {
+    return 'تعطيل $name';
+  }
+
+  @override
+  String rel_admin_enable_target(String name) {
+    return 'تفعيل $name';
+  }
+
+  @override
+  String rel_admin_hook_change(String name, String scope) {
+    return 'غيّر $name تحديدًا على $scope.';
+  }
+
+  @override
+  String rel_admin_backup_warning(String gateway) {
+    return 'هذه ليست نسخة احتياطية لإعدادات Ares. احفظ جميع ملفات التعريف والجلسات وبيانات الاعتماد على $gateway. الأرشيف حساس.';
+  }
+
+  @override
+  String rel_admin_backup_started(String gateway) {
+    return 'بدأ النسخ الاحتياطي على $gateway.';
+  }
+
+  @override
+  String rel_admin_backup_verified(String gateway, String path) {
+    return 'تم التحقق من النسخة الاحتياطية على $gateway: $path';
+  }
+
+  @override
+  String rel_admin_backup_running(String gateway) {
+    return 'لا يزال النسخ الاحتياطي جاريًا على $gateway.';
+  }
+
+  @override
+  String get rel_admin_choice_yes => 'نعم';
+
+  @override
+  String get rel_admin_choice_no => 'لا';
+
+  @override
+  String get rel_admin_choice_generic => 'عام';
+
+  @override
+  String get rel_admin_choice_log => 'سجل';
+
+  @override
+  String get rel_admin_choice_email => 'بريد إلكتروني';
+
+  @override
+  String get rel_admin_choice_github_comment => 'تعليق GitHub';
+
+  @override
+  String get rel_admin_choice_agent => 'يعالج الوكيل الحدث';
+
+  @override
+  String get rel_admin_choice_direct => 'تسليم مباشر';
+
+  @override
+  String get rel_admin_configured => 'مُعدّ';
+
+  @override
+  String get rel_admin_state_pending_restart => 'بانتظار إعادة التشغيل';
+
+  @override
+  String get rel_admin_state_unknown => 'غير معروف';
+
+  @override
+  String get rel_admin_state_connected => 'متصل';
+
+  @override
+  String get rel_admin_state_disconnected => 'غير متصل';
+
+  @override
+  String get rel_admin_state_disabled => 'معطّل';
+
+  @override
+  String get rel_admin_state_enabled => 'مفعّل';
+
+  @override
+  String get rel_admin_state_running => 'قيد التشغيل';
+
+  @override
+  String get rel_admin_state_stopped => 'متوقف';
+
+  @override
+  String get rel_admin_state_error => 'خطأ';
+
+  @override
+  String get rel_admin_state_not_configured => 'غير مُعدّ';
+
+  @override
+  String get rel_admin_state_startup_failed => 'فشل بدء التشغيل';
+
+  @override
+  String get rel_admin_state_gateway_stopped => 'البوابة متوقفة';
+
+  @override
+  String get rel_admin_state_connecting => 'جارٍ الاتصال';
+
+  @override
+  String get rel_admin_state_retrying => 'إعادة المحاولة';
+
+  @override
+  String get rel_admin_state_fatal => 'خطأ فادح';
 }
