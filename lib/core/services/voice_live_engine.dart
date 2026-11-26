@@ -25,6 +25,7 @@ class VoiceLiveEngine extends ChangeNotifier {
     LiveConversation? session,
     this.connectionId,
     this.utteranceSettleDuration = const Duration(milliseconds: 1500),
+    this.speechQuietDuration = const Duration(milliseconds: 1500),
   }) : super() {
     _conversation = session ?? GptLiveConversation(transport: transport);
     _wireCallbacks();
@@ -43,6 +44,16 @@ class VoiceLiveEngine extends ChangeNotifier {
 
   /// Quiet window after user transcript deltas before checking stop phrases.
   final Duration utteranceSettleDuration;
+
+  /// With no audio level from the peer: how long after the voice's last
+  /// output (a transcript fragment, or a reply sent to it) it counts as
+  /// done speaking.
+  final Duration speechQuietDuration;
+
+  /// The remote track's level said the voice is playing (true) or silent
+  /// (false); null until the peer has reported one.
+  bool? _audioSpeaking;
+  Timer? _speechQuietTimer;
 
   late final LiveConversation _conversation;
 
@@ -117,6 +128,62 @@ class VoiceLiveEngine extends ChangeNotifier {
     _conversation.onTranscript = _handleTranscript;
     _conversation.onError = _handleError;
     _conversation.onClosed = _handleClosed;
+    final Object conversation = _conversation;
+    if (conversation is LiveSpeakingSignal) {
+      conversation.onSpeakingChange = _handleSpeakingChange;
+    }
+  }
+
+  // --- speaking state (Desktop's refreshStatus) ---
+
+  /// The voice produced output: speaking now, and listening (or thinking)
+  /// again once it goes quiet.
+  void _markSpeaking() {
+    if (_state != VoiceLiveState.speaking) {
+      _state = VoiceLiveState.speaking;
+      notifyListeners();
+    }
+    _speechQuietTimer?.cancel();
+    _speechQuietTimer = Timer(speechQuietDuration, () {
+      _speechQuietTimer = null;
+      // The remote track says it is still playing: it ends it.
+      if (_audioSpeaking == true) return;
+      _leaveSpeaking();
+    });
+  }
+
+  /// Back to what the session is doing once the voice stopped: thinking
+  /// while a delegation is in Hermes, listening otherwise.
+  void _leaveSpeaking() {
+    if (_disposing || _stopped || !_conversation.active) return;
+    if (_state != VoiceLiveState.speaking) return;
+    _state = _delegationId != null
+        ? VoiceLiveState.thinking
+        : VoiceLiveState.listening;
+    notifyListeners();
+  }
+
+  void _handleSpeakingChange(bool speaking) {
+    if (_disposing || _stopped || !_conversation.active) return;
+    _audioSpeaking = speaking;
+    if (speaking) {
+      _speechQuietTimer?.cancel();
+      _speechQuietTimer = null;
+      if (_state != VoiceLiveState.speaking) {
+        _state = VoiceLiveState.speaking;
+        notifyListeners();
+      }
+    } else {
+      _speechQuietTimer?.cancel();
+      _speechQuietTimer = null;
+      _leaveSpeaking();
+    }
+  }
+
+  void _resetSpeaking() {
+    _speechQuietTimer?.cancel();
+    _speechQuietTimer = null;
+    _audioSpeaking = null;
   }
 
   void _onAccountBarrier() {
@@ -198,6 +265,7 @@ class VoiceLiveEngine extends ChangeNotifier {
       return false;
     }
     if (started) {
+      _resetSpeaking();
       _state = VoiceLiveState.listening;
       _muted = false;
       _delegationId = null;
@@ -220,6 +288,7 @@ class VoiceLiveEngine extends ChangeNotifier {
     _startFlight = null;
     _stopped = true;
     _clearUtteranceTimer();
+    _resetSpeaking();
     _delegationId = null;
     _spokenRaw = '';
     _spokenText = '';
@@ -320,11 +389,9 @@ class VoiceLiveEngine extends ChangeNotifier {
         _spokenCursor = cut;
       }
     }
-    if (_state == VoiceLiveState.thinking ||
-        _state == VoiceLiveState.listening) {
-      _state = VoiceLiveState.speaking;
-      notifyListeners();
-    }
+    // The voice is about to say it; the quiet timer (or the remote track's
+    // level) brings the pill back when it is done.
+    _markSpeaking();
   }
 
   /// Flush the held tail (turn settled or chat switched away).
@@ -349,12 +416,19 @@ class VoiceLiveEngine extends ChangeNotifier {
     _conversation.instruct(clean);
   }
 
-  /// Turn settled (the composer stopped streaming replies). Back to listening.
+  /// Turn settled (the composer stopped streaming replies). Back to
+  /// listening, unless the remote track says the voice is still playing it
+  /// (Desktop's refreshStatus); the end of that audio brings it back.
   void settle() {
     if (_disposing || _stopped) return;
     flushSpoken();
-    if (_state == VoiceLiveState.thinking ||
+    if (_audioSpeaking == true && _state == VoiceLiveState.speaking) {
+      _speechQuietTimer?.cancel();
+      _speechQuietTimer = null;
+    } else if (_state == VoiceLiveState.thinking ||
         _state == VoiceLiveState.speaking) {
+      _speechQuietTimer?.cancel();
+      _speechQuietTimer = null;
       _state = VoiceLiveState.listening;
       notifyListeners();
     }
@@ -370,11 +444,7 @@ class VoiceLiveEngine extends ChangeNotifier {
   void _handleTranscript(LiveFragment fragment) {
     if (_disposing || _stopped || !_conversation.active) return;
     if (fragment.speaker == 'assistant') {
-      if (fragment.text.trim().isNotEmpty &&
-          _state != VoiceLiveState.speaking) {
-        _state = VoiceLiveState.speaking;
-        notifyListeners();
-      }
+      if (fragment.text.trim().isNotEmpty) _markSpeaking();
       return;
     }
     if (fragment.speaker != 'user') return;
@@ -429,6 +499,7 @@ class VoiceLiveEngine extends ChangeNotifier {
     // user did not ask for is announced.
     final stoppedHere = _stopped;
     _clearUtteranceTimer();
+    _resetSpeaking();
     _state = VoiceLiveState.idle;
     _muted = false;
     _delegationId = null;
@@ -443,6 +514,7 @@ class VoiceLiveEngine extends ChangeNotifier {
     _stopped = true;
     _startEpoch++;
     _clearUtteranceTimer();
+    _resetSpeaking();
     if (connectionId != null) {
       ConnectionMutationBarrier.removeListener(_onAccountBarrier);
     }

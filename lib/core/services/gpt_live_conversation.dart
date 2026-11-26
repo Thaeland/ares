@@ -314,6 +314,13 @@ abstract interface class LiveMicrophoneOwner {
   bool get holdsMicrophone;
 }
 
+/// Optional capability of a [LiveConversation]: whether the voice's audio is
+/// playing, measured on the remote track (Desktop's `onSpeakingChange`).
+/// Silent where the platform reports no inbound audio level.
+abstract interface class LiveSpeakingSignal {
+  set onSpeakingChange(void Function(bool speaking)? callback);
+}
+
 /// How long a graceful close waits for the vendor's `session.closed` before
 /// the peer is closed and the tracks stopped anyway (Desktop's
 /// `CLOSE_TIMEOUT_MS`).
@@ -324,7 +331,7 @@ const Duration liveCloseTimeout = Duration(seconds: 15);
 /// plus spoken context, and the caller streams Hermes' answer back with
 /// [speak]. The vendor key stays on the gateway host.
 class GptLiveConversation extends ChangeNotifier
-    implements LiveConversation, LiveMicrophoneOwner {
+    implements LiveConversation, LiveMicrophoneOwner, LiveSpeakingSignal {
   GptLiveConversation({
     required this.transport,
     this.onDelegation,
@@ -353,6 +360,26 @@ class GptLiveConversation extends ChangeNotifier
 
   /// Fires when the vendor pauses the audio stream without closing.
   void Function()? onGap;
+
+  /// The voice's audio started or stopped playing (inbound audio level).
+  @override
+  void Function(bool speaking)? onSpeakingChange;
+
+  /// How often the inbound audio level is read (Desktop polls its analyser
+  /// every 100 ms; a stats read crosses the platform channel, so less often).
+  static const Duration speakingProbeInterval = Duration(milliseconds: 200);
+
+  /// Inbound `audioLevel` (0..1, linear) above which the voice is speaking.
+  static const double speakingLevel = 0.02;
+
+  /// Quiet reads before the voice counts as silent (a short hangover, as
+  /// Desktop's four 100 ms frames).
+  static const int speakingHangover = 2;
+
+  Timer? _speakingProbe;
+  bool _probing = false;
+  bool _lastSpeaking = false;
+  int _quietReads = speakingHangover;
 
   RTCPeerConnection? _peer;
   RTCDataChannel? _events;
@@ -506,6 +533,7 @@ class GptLiveConversation extends ChangeNotifier
       );
       if (cancelled()) return abandon();
       _active = true;
+      _armSpeakingProbe(peer);
       _safeNotify();
       return true;
     } catch (error) {
@@ -531,6 +559,50 @@ class GptLiveConversation extends ChangeNotifier
           'noiseSuppression': true,
         },
       });
+
+  /// Desktop's `armSpeakingProbe`: reads the remote track's level and reports
+  /// when the voice starts and stops speaking. A platform whose stats carry
+  /// no inbound audio level reports nothing; the engine then goes by the
+  /// output transcript.
+  void _armSpeakingProbe(RTCPeerConnection peer) {
+    _speakingProbe?.cancel();
+    _lastSpeaking = false;
+    _quietReads = speakingHangover;
+    _speakingProbe = Timer.periodic(
+      speakingProbeInterval,
+      (_) => unawaited(_probeSpeaking(peer)),
+    );
+  }
+
+  Future<void> _probeSpeaking(RTCPeerConnection peer) async {
+    if (_probing || !_active || !identical(_peer, peer)) return;
+    _probing = true;
+    try {
+      final reports = await peer.getStats();
+      if (!_active || !identical(_peer, peer)) return;
+      double? level;
+      for (final report in reports) {
+        final values = report.values;
+        final kind = values['kind'] ?? values['mediaType'];
+        if (report.type != 'inbound-rtp' || kind != 'audio') continue;
+        final raw = values['audioLevel'];
+        final value = raw is num ? raw.toDouble() : double.tryParse('$raw');
+        if (value != null && (level == null || value > level)) level = value;
+      }
+      if (level == null) return;
+      final loud = level > speakingLevel;
+      _quietReads = loud ? 0 : _quietReads + 1;
+      final speaking = loud || _quietReads < speakingHangover;
+      if (speaking != _lastSpeaking) {
+        _lastSpeaking = speaking;
+        onSpeakingChange?.call(speaking);
+      }
+    } catch (_) {
+      // No level this time: the conversation goes on without it.
+    } finally {
+      _probing = false;
+    }
+  }
 
   Future<void> _waitForIce(
     RTCPeerConnection peer,
@@ -708,6 +780,8 @@ class GptLiveConversation extends ChangeNotifier
       return;
     }
     _active = false;
+    _speakingProbe?.cancel();
+    _speakingProbe = null;
     for (final track
         in _microphone?.getAudioTracks() ?? const <MediaStreamTrack>[]) {
       track.enabled = false;
@@ -750,6 +824,8 @@ class GptLiveConversation extends ChangeNotifier
     _active = false;
     _closeTimer?.cancel();
     _closeTimer = null;
+    _speakingProbe?.cancel();
+    _speakingProbe = null;
     final channel = _events;
     final peer = _peer;
     final microphone = _microphone;
