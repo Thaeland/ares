@@ -9040,6 +9040,9 @@ class _ChatScreenState extends State<ChatScreen>
               icon: const Icon(Icons.terminal_outlined),
             ),
             PopupMenuButton<String>(
+              // Named: the pane holds other menus of this type (the narrow
+              // pane's chat tools, the composer's Status).
+              key: const ValueKey('chat-actions-menu'),
               tooltip: context.l10n.chat_actions,
               onOpened: () => unawaited(_refreshArchiveState()),
               onSelected: (action) {
