@@ -6277,16 +6277,58 @@ class _ChatScreenState extends State<ChatScreen>
         selectedModel: selectedModel,
         provider: providerHint,
       );
+      // The picker lists only providers the gateway actually has configured
+      // (custom_providers entries and the profile's current provider). A
+      // session pinned to a model from a hidden provider keeps that row
+      // visible so the picker still reflects real session state. The keep-
+      // alive trusts only a choice that actually matches the session's
+      // model: _initialModelChoice falls back to an arbitrary first row
+      // when the session's model is absent from the inventory, and that
+      // phantom must not masquerade as the session's model. The full
+      // inventory is shown only when the gateway exposes no configured-
+      // provider flags at all (legacy payload) or when filtering would
+      // leave the picker with nothing usable.
+      final configuredSlugs = _configuredProviderSlugs(modelOptions);
+      final configuredChoices = choices
+          .where((choice) => configuredSlugs.contains(choice.provider))
+          .toList(growable: false);
+      final pinnedChoice =
+          selectedChoice != null && selectedChoice.model == selectedModel
+          ? selectedChoice
+          : null;
+      final visibleChoices = <_ModelChoice>[
+        ...configuredChoices,
+        if (pinnedChoice != null &&
+            !configuredChoices.any(
+              (choice) =>
+                  choice.provider == pinnedChoice.provider &&
+                  choice.model == pinnedChoice.model,
+            ))
+          pinnedChoice,
+      ];
+      final pickerChoices = configuredSlugs.isEmpty || visibleChoices.isEmpty
+          ? choices
+          : visibleChoices;
+      // Only a choice that provably matches the session's model may be
+      // pre-selected: a phantom fallback row (session model absent from the
+      // inventory) must never masquerade as the current model, even when it
+      // happens to be a configured row.
+      final initialChoice = pinnedChoice;
+      // The "choose a provider" banner only makes sense while the displayed
+      // list actually offers the same model id under multiple providers.
+      final providerChoiceRequired =
+          selectedChoice == null &&
+          pickerChoices.where((c) => c.model == selectedModel).length > 1;
       final selectionFuture = showModalBottomSheet<_ModelSelection>(
         context: context,
         showDragHandle: true,
         isScrollControlled: true,
         builder: (_) => _ChatModelPickerSheet(
-          choices: choices,
+          choices: pickerChoices,
           modelInfo: modelInfo,
-          initialChoice: selectedChoice,
+          initialChoice: initialChoice,
           initialEffort: currentEffort,
-          providerChoiceRequired: selectedChoice == null,
+          providerChoiceRequired: providerChoiceRequired,
         ),
       );
       onOpened?.call();
@@ -6306,6 +6348,33 @@ class _ChatScreenState extends State<ChatScreen>
     } finally {
       if (mounted) setState(() => _loadingModelOptions = false);
     }
+  }
+
+  /// Provider slugs the gateway reports as configured: user-defined
+  /// (custom_providers) entries plus the profile's current provider.
+  /// Returns an empty set when the gateway exposes no such flags.
+  Set<String> _configuredProviderSlugs(Map<String, dynamic> options) {
+    final providers = options['providers'];
+    if (providers is! List) return const {};
+    final slugs = <String>{};
+    for (final rawProvider in providers) {
+      if (rawProvider is! Map) continue;
+      final provider =
+          (rawProvider['slug'] ?? rawProvider['id'])?.toString().trim() ?? '';
+      if (provider.isEmpty) continue;
+      // Mirror the gateway's explicit-only semantics (hermes_cli/inventory.py
+      // _filter_explicit_provider_rows): managed local models are configured
+      // by existence and the MoA row only exists when the user opted in, so
+      // both stay even without a configured flag.
+      final source = rawProvider['source']?.toString();
+      if (rawProvider['is_user_defined'] == true ||
+          rawProvider['is_current'] == true ||
+          source == 'local-runtime' ||
+          source == 'virtual') {
+        slugs.add(provider);
+      }
+    }
+    return slugs;
   }
 
   List<_ModelChoice> _parseModelChoices(Map<String, dynamic> options) {
