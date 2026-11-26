@@ -53,7 +53,10 @@ extension HostTerminalSocket on DashboardClient {
       final socket = await WebSocket.connect(
         uri.toString(),
         customClient: http,
-        headers: HermesSignInVault.instance.accessHeadersFor(uri),
+        headers: {
+          ..._customHeaders,
+          ...HermesSignInVault.instance.accessHeadersFor(uri),
+        },
         protocols: ['hermes-gateway-v1', 'hermes-gateway-ticket.$ticket'],
       ).timeout(const Duration(seconds: 10));
       opened = true;

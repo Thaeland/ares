@@ -29,6 +29,14 @@ class NgProjects {
           connection.apiKey,
           connection.dashboardPassword,
           connection.clientCertificate?.privateKeyPassword,
+          if (connection.deploymentToken != null ||
+              connection.customHeaders.isNotEmpty) ...[
+            connection.deploymentToken,
+            {
+              for (final k in connection.customHeaders.keys.toList()..sort())
+                k: connection.customHeaders[k],
+            },
+          ],
         ]),
       ),
     );

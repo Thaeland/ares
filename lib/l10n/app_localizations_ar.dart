@@ -4068,6 +4068,233 @@ class AppLocalizationsAr extends AppLocalizations {
       'افتح قائمة الجلسات لاختيار محادثة. مسودتك محفوظة.';
 
   @override
+  String get composer_snippets => 'Prompt snippets';
+
+  @override
+  String get composer_snippets_description =>
+      'Pick a starter prompt to drop into the composer.';
+
+  @override
+  String get composer_snippet_review => 'Code review';
+
+  @override
+  String get composer_snippet_review_body =>
+      'Audit the current change for regressions, dropped edge cases and missing tests.';
+
+  @override
+  String get composer_snippet_review_text =>
+      'Please review this for bugs, regressions and missing tests.';
+
+  @override
+  String get composer_snippet_plan => 'Implementation plan';
+
+  @override
+  String get composer_snippet_plan_body =>
+      'Outline an approach before touching code so the diff stays focused.';
+
+  @override
+  String get composer_snippet_plan_text =>
+      'Please make a concise implementation plan before changing code.';
+
+  @override
+  String get composer_snippet_explain => 'Explain this';
+
+  @override
+  String get composer_snippet_explain_body =>
+      'Walk through how the selected code works and point to the key files.';
+
+  @override
+  String get composer_snippet_explain_text =>
+      'Please explain how this works and point me to the key files.';
+
+  @override
+  String get composer_status => 'Status';
+
+  @override
+  String get composer_status_context => 'Context';
+
+  @override
+  String get composer_status_cache => 'Cache hit';
+
+  @override
+  String get composer_status_throughput => 'Output tokens/sec';
+
+  @override
+  String get composer_status_running => 'Running';
+
+  @override
+  String get composer_status_session => 'Session';
+
+  @override
+  String get composer_status_not_reported => 'Not reported';
+
+  @override
+  String get composer_status_empty => 'No context breakdown was reported.';
+
+  @override
+  String get composer_status_loading => 'Loading context breakdown';
+
+  @override
+  String get composer_status_reset => 'Reset status bar';
+
+  @override
+  String get composer_resume_title => 'Resume a chat';
+
+  @override
+  String get composer_resume_search => 'Search titles and ids';
+
+  @override
+  String get composer_resume_empty => 'No chats match.';
+
+  @override
+  String get composer_resume_unavailable =>
+      'This pane has no chat list to search.';
+
+  @override
+  String get composer_failure_retry => 'Retry';
+
+  @override
+  String composer_failure_retry_at(String time) {
+    return 'Retry at $time';
+  }
+
+  @override
+  String get composer_failure_compress => 'Compress';
+
+  @override
+  String get composer_failure_switch_model => 'Switch model';
+
+  @override
+  String composer_failure_switch_to(String model) {
+    return 'Switch to $model';
+  }
+
+  @override
+  String get composer_failure_new_chat => 'New chat';
+
+  @override
+  String get composer_failure_edit => 'Edit message';
+
+  @override
+  String get composer_failure_details => 'Details';
+
+  @override
+  String get composer_failure_hide_details => 'Hide details';
+
+  @override
+  String get composer_failure_copy => 'Copy diagnostics';
+
+  @override
+  String get composer_failure_account =>
+      'The other fix is on the gateway account. This chat cannot do it.';
+
+  @override
+  String get composer_failure_account_only =>
+      'This has to be fixed on the gateway account. This chat cannot do it.';
+
+  @override
+  String get composer_failure_confirm_compress =>
+      'Compress this chat? The gateway will shorten the transcript.';
+
+  @override
+  String composer_failure_confirm_model(String model) {
+    return 'Switch this chat to $model?';
+  }
+
+  @override
+  String get composer_drop_attach => 'Drop to attach';
+
+  @override
+  String get composer_drop_folder_unsupported =>
+      'Folders can\'t be attached. Drop the files instead.';
+
+  @override
+  String get composer_drop_reference => 'Drop to reference';
+
+  @override
+  String get composer_reference_copy => 'Copy reference';
+
+  @override
+  String get composer_reference_remove => 'Remove reference';
+
+  @override
+  String get composer_btw_usage =>
+      'Usage: /btw <question> — answered from a snapshot of this conversation without interrupting it.';
+
+  @override
+  String get composer_background_usage =>
+      'Usage: /background <prompt> — the task runs separately and the result comes back here.';
+
+  @override
+  String get composer_handoff_usage =>
+      'Usage: /handoff <platform> — transfer this chat to that messaging platform.';
+
+  @override
+  String get composer_command_needs_session =>
+      'This command needs an open chat.';
+
+  @override
+  String get composer_retry_not_found =>
+      'This turn is not in the saved history, so Retry cannot replace it. Nothing was sent again. Edit the message and send it for another try.';
+
+  @override
+  String get composer_retry_unavailable =>
+      'Retry cannot replace a turn on this connection, so nothing was sent again. Edit the message and send it for another try.';
+
+  @override
+  String get composer_failure_switch_no_retry =>
+      'يغيّر التبديل النموذج فقط: لا يمكن لهذا الاتصال إعادة تشغيل الدور الفاشل. أرسله مجددًا بعد التبديل.';
+
+  @override
+  String get composer_command_needs_gateway_session =>
+      'This chat has no gateway session yet. Send a message first, then run the command again.';
+
+  @override
+  String get composer_side_question =>
+      'btw — answering from a conversation snapshot';
+
+  @override
+  String composer_side_question_id(String id) {
+    return 'btw $id — answering from a conversation snapshot';
+  }
+
+  @override
+  String get composer_background_started =>
+      'Background task started. You can keep chatting. The result will appear here.';
+
+  @override
+  String composer_background_started_id(String id) {
+    return 'Background task $id started. You can keep chatting. The result will appear here.';
+  }
+
+  @override
+  String composer_handoff_requested(String platform) {
+    return 'Handoff to $platform requested.';
+  }
+
+  @override
+  String composer_handoff_done(String platform) {
+    return 'Handed this chat to $platform.';
+  }
+
+  @override
+  String get composer_handoff_failed => 'Handoff failed.';
+
+  @override
+  String get composer_handoff_timeout =>
+      'Handoff did not finish. It may still be running on the gateway.';
+
+  @override
+  String get composer_compress_done => 'Compressed this chat.';
+
+  @override
+  String get composer_file_missing => 'That file is not on this device.';
+
+  @override
+  String get composer_attach_busy =>
+      'Attachments can be added when this reply finishes.';
+
+  @override
   String get nextgen_toggle => 'واجهة NextGen';
 
   @override
@@ -6790,6 +7017,316 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get catalog_scan_failed => 'فشل';
+
+  @override
+  String get deployment_token_label => 'رمز النشر (اختياري)';
+
+  @override
+  String get deployment_token_helper =>
+      'لرموز جلسات Hermes Dashboard المرسلة بصفة X-Hermes-Session-Token. لا يُخزَّن كنص عادي في التفضيلات.';
+
+  @override
+  String get deployment_token_hint => 'رمز جلسة لوحة التحكم';
+
+  @override
+  String get custom_headers_label => 'ترويسات مخصصة (اختياري)';
+
+  @override
+  String get custom_headers_helper =>
+      'واحدة في كل سطر، مثل X-Custom: value. تُرفض الترويسات المحظورة.';
+
+  @override
+  String get custom_headers_hint => 'مثال: X-Custom-Header: value';
+
+  @override
+  String get desktop_tray_open => 'فتح Ares';
+
+  @override
+  String get desktop_tray_new_chat => 'دردشة جديدة';
+
+  @override
+  String get desktop_tray_quick_entry => 'إدخال سريع…';
+
+  @override
+  String get desktop_tray_pause_notifications => 'إيقاف الإشعارات مؤقتًا';
+
+  @override
+  String get desktop_tray_quit => 'إنهاء Ares';
+
+  @override
+  String get desktop_integration_title => 'التكامل مع سطح المكتب';
+
+  @override
+  String get desktop_tray_setting =>
+      'إظهار Ares في علبة النظام أو شريط القوائم';
+
+  @override
+  String get desktop_tray_setting_help =>
+      'افتح Ares أو ابدأ دردشة أو افتح الإدخال السريع أو أوقف الإشعارات مؤقتًا أو أنهِ التطبيق من الأيقونة.';
+
+  @override
+  String get desktop_close_to_tray_setting =>
+      'استمر في العمل في علبة النظام عند إغلاق النافذة';
+
+  @override
+  String get desktop_tray_unsupported =>
+      'لا يوفّر سطح المكتب هذا علبة نظام يمكن لـ Ares استخدامها.';
+
+  @override
+  String get quick_entry_title => 'إدخال سريع';
+
+  @override
+  String get quick_entry_hint => 'اكتب طلبًا لـ Ares…';
+
+  @override
+  String get quick_entry_submit => 'ضعه في مربع الكتابة';
+
+  @override
+  String get quick_entry_never_sends =>
+      'يضع Enter النص في مربع كتابة الدردشة. لا يُرسَل شيء حتى تضغط إرسال.';
+
+  @override
+  String get quick_entry_unavailable =>
+      'تعذّر فتح الإدخال السريع. حاول مرة أخرى.';
+
+  @override
+  String get desktop_hotkey_setting => 'اختصار الإدخال السريع';
+
+  @override
+  String desktop_hotkey_help(String shortcut) {
+    return 'اضغط $shortcut في أي مكان لفتح الإدخال السريع.';
+  }
+
+  @override
+  String desktop_hotkey_conflict(String shortcut) {
+    return 'يستخدم تطبيق آخر $shortcut بالفعل. اختر اختصارًا مختلفًا.';
+  }
+
+  @override
+  String get desktop_hotkey_unsupported =>
+      'لا يسمح سطح المكتب هذا للتطبيقات بتسجيل اختصار عام (مثل Wayland).';
+
+  @override
+  String get desktop_hotkey_no_modifier => 'أضف Cmd أو Ctrl أو Alt.';
+
+  @override
+  String get desktop_hotkey_super_key => 'مفتاح Windows أو Super محجوز للنظام.';
+
+  @override
+  String get desktop_hotkey_reserved => 'يستخدم النظام هذا الاختصار بالفعل.';
+
+  @override
+  String desktop_hotkey_in_app(String action) {
+    return 'يستخدم Ares هذا الاختصار بالفعل لـ $action.';
+  }
+
+  @override
+  String get desktop_hotkey_change => 'تغيير';
+
+  @override
+  String get desktop_hotkey_reset => 'استخدام الافتراضي';
+
+  @override
+  String get capture_screen_action => 'التقاط الشاشة';
+
+  @override
+  String get capture_screen_help =>
+      'يضيف لقطة شاشة إلى الرسالة كمسودة. لا يُرسَل شيء حتى تضغط إرسال.';
+
+  @override
+  String get capture_screen_unavailable =>
+      'التقاط الشاشة غير متاح على سطح المكتب هذا.';
+
+  @override
+  String get capture_screen_failed => 'تعذّر التقاط الشاشة. حاول مرة أخرى.';
+
+  @override
+  String get capture_permission_title => 'السماح بتسجيل الشاشة';
+
+  @override
+  String get capture_permission_body =>
+      'يحتاج Ares إلى إذن تسجيل الشاشة لالتقاط نافذة. فعّل Ares في إعدادات النظام > الخصوصية والأمن > تسجيل الشاشة، ثم حاول مرة أخرى.';
+
+  @override
+  String get capture_open_settings => 'فتح إعدادات النظام';
+
+  @override
+  String get keep_awake_title => 'إبقاء الحاسوب مستيقظًا';
+
+  @override
+  String get keep_awake_title_mobile => 'إبقاء الشاشة قيد التشغيل';
+
+  @override
+  String get keep_awake_mode_off => 'إيقاف';
+
+  @override
+  String get keep_awake_mode_while_working => 'أثناء العمل';
+
+  @override
+  String get keep_awake_mode_always => 'دائمًا';
+
+  @override
+  String get keep_awake_off_help => 'لا تمنع سكون النظام أبدًا (الافتراضي).';
+
+  @override
+  String get keep_awake_while_working_help =>
+      'منع السكون بسبب الخمول فقط أثناء تشغيل دور الوكيل.';
+
+  @override
+  String get keep_awake_always_help =>
+      'منع السكون بسبب الخمول ما دام Ares مفتوحًا على هذا الجهاز.';
+
+  @override
+  String get keep_awake_off_help_mobile =>
+      'دع الشاشة تنطفئ كالمعتاد (الافتراضي).';
+
+  @override
+  String get keep_awake_while_working_help_mobile =>
+      'إبقاء الشاشة قيد التشغيل أثناء تشغيل دور الوكيل وما دام Ares مفتوحًا.';
+
+  @override
+  String get keep_awake_always_help_mobile =>
+      'إبقاء الشاشة قيد التشغيل ما دام Ares مفتوحًا.';
+
+  @override
+  String get ng_token_gateway_has_no_sign_in =>
+      'لا تحتوي هذه البوابة على تسجيل دخول، لذا لا يمكنها التحقق من رمز النشر. فعّل مصادقة لوحة التحكم على المضيف (أو حدّث Hermes)، ثم حاول مرة أخرى.';
+
+  @override
+  String get palette_open => 'لوحة أوامر التطبيق';
+
+  @override
+  String get palette_no_matches => 'لا توجد إجراءات مطابقة';
+
+  @override
+  String get palette_filter_hint => 'اكتب لتصفية الإجراءات…';
+
+  @override
+  String get palette_keys_move => '↑↓ للتنقل';
+
+  @override
+  String get palette_keys_run => 'Enter للتشغيل';
+
+  @override
+  String get palette_keys_close => 'Esc للإغلاق';
+
+  @override
+  String get palette_search_sessions => 'البحث في الجلسات';
+
+  @override
+  String get palette_scheduled_crons => 'المجدولة / Cron';
+
+  @override
+  String get palette_capabilities_skills => 'القدرات والمهارات';
+
+  @override
+  String get palette_insights_usage => 'الرؤى والاستخدام';
+
+  @override
+  String get palette_more_projects => 'المزيد والمشاريع';
+
+  @override
+  String get deeplink_chat_not_found =>
+      'لم يُعثر على المحادثة في القائمة. ربما لم تُحمَّل بعد.';
+
+  @override
+  String get keyboard_shortcuts_title => 'اختصارات لوحة المفاتيح';
+
+  @override
+  String get shortcuts_reset_all => 'إعادة تعيين الكل';
+
+  @override
+  String get shortcuts_reset_to_default => 'استعادة الافتراضي';
+
+  @override
+  String get shortcut_action_command_palette => 'لوحة الأوامر';
+
+  @override
+  String get shortcut_action_new_chat => 'محادثة جديدة';
+
+  @override
+  String get shortcut_action_search => 'بحث';
+
+  @override
+  String get shortcut_action_settings => 'الإعدادات';
+
+  @override
+  String shortcut_action_go_to_tab(int number) {
+    return 'الانتقال إلى علامة التبويب $number';
+  }
+
+  @override
+  String shortcuts_conflict(String first, String second, String chord) {
+    return 'تعارض: يستخدم «$first» و«$second» كلاهما $chord. يبقى الاختصار المخصص على قيمته الافتراضية حتى تغيّر أحدهما.';
+  }
+
+  @override
+  String shortcuts_editor_title(String action) {
+    return 'الاختصار: $action';
+  }
+
+  @override
+  String get shortcuts_editor_help =>
+      'اضغط مجموعة مفاتيح، أو اختر مفاتيح التعديل ومفتاحًا أدناه:';
+
+  @override
+  String get shortcuts_editor_needs_modifier =>
+      'اختر على الأقل Cmd/Meta أو Ctrl أو Alt حتى لا تتأثر الكتابة في حقل الرسالة.';
+
+  @override
+  String shortcuts_text_editing_warning(String chord) {
+    return '$chord اختصار لتحرير النص (نسخ أو لصق أو قص أو تراجع أو إعادة أو تحديد الكل). ربطه هنا يحرم حقول النص منه.';
+  }
+
+  @override
+  String shortcuts_text_editing_in_use(String action, String chord) {
+    return 'يستخدم «$action» الاختصار $chord الخاص بتحرير النص. تفقده حقول النص ما دام مربوطًا هنا.';
+  }
+
+  @override
+  String custom_headers_problem_format(int line) {
+    return 'السطر $line: المتوقع «الاسم: القيمة»';
+  }
+
+  @override
+  String custom_headers_problem_missing_name(int line) {
+    return 'السطر $line: اسم الترويسة مفقود';
+  }
+
+  @override
+  String custom_headers_problem_invalid_name(int line, String name) {
+    return 'السطر $line: اسم ترويسة غير صالح «$name»';
+  }
+
+  @override
+  String custom_headers_problem_reserved(int line, String name) {
+    return 'السطر $line: «$name» محجوز ولا يمكن تمريره';
+  }
+
+  @override
+  String custom_headers_problem_empty_value(int line) {
+    return 'السطر $line: قيمة الترويسة فارغة';
+  }
+
+  @override
+  String get ng_enter_a_deployment_token => 'أدخل رمز جلسة النشر.';
+
+  @override
+  String get ng_custom_headers => 'ترويسات مخصصة';
+
+  @override
+  String get ng_custom_headers_help =>
+      'ترويسات HTTP إضافية لهذه البوابة (الاسم: القيمة، واحدة في كل سطر)، تُرسل مع استدعاءات REST وWebSocket الخاصة بها، وتُحفظ في مخزن بيانات الاعتماد الآمن. تُرفض ترويسات المصادقة والترويسات بين القفزات.';
+
+  @override
+  String get ng_use_a_deployment_token => 'استخدام رمز جلسة النشر';
+
+  @override
+  String get ng_sign_in_with_deployment_token => 'تسجيل الدخول برمز النشر';
+
+  @override
+  String get ng_signed_in_with_deployment_token =>
+      'تم تسجيل الدخول برمز النشر.';
 
   @override
   String get windows_window_activity => 'Share chat activity';

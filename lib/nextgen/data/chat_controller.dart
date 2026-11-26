@@ -19,11 +19,15 @@ import '../../core/render/setup_beat.dart';
 import '../../core/services/attachment_draft_service.dart';
 import '../../core/services/completion_cue_player.dart';
 import '../../core/services/remote_workspace.dart';
+import '../../core/services/system_sleep_gate.dart';
 import '../../core/services/composer_draft_store.dart';
 import '../../core/services/connection_mutation_barrier.dart';
 import '../../core/services/prepared_image_store.dart';
 import '../../core/services/slash_command_errors.dart';
 import '../../core/services/ws_client.dart';
+import '../../core/composer/composer_commands.dart';
+import '../../core/composer/failure_recovery.dart';
+import '../../core/composer/regenerate.dart';
 import 'history_rows.dart';
 import 'nextgen_gateway.dart';
 import 'session_control.dart';
@@ -201,8 +205,9 @@ class NgUserItem extends NgItem {
   /// submits this. Null when [text] is what was sent.
   final String? sentText;
 
-  /// Extra `prompt.submit` params, sent again unchanged with the same
-  /// submission id when the send is retried.
+  /// Extra `prompt.submit` params (a regenerate's truncation target, a
+  /// voice-live delegation's surface and context), sent again unchanged
+  /// with the same submission id when the send is retried.
   final Map<String, Object> promptParams;
 
   NgUserItem(
@@ -218,6 +223,24 @@ class NgUserItem extends NgItem {
     this.sentText,
     this.promptParams = const {},
   });
+}
+
+/// What [NgChatController.retryLast] did.
+enum NgRetryResult {
+  /// Nothing to retry (or the chat closed).
+  nothing,
+
+  /// An unaccepted submission went again under its submission id.
+  resent,
+
+  /// An accepted turn was regenerated in place.
+  regenerated,
+
+  /// An accepted turn with no durable row to replace: nothing was sent.
+  notFound,
+
+  /// The send failed; the transcript is as it was.
+  failed,
 }
 
 /// A `/command` run on the gateway and what it answered: shown under the
@@ -325,6 +348,15 @@ NgSystemItem? ngSystemItemFor(String key, Map<String, dynamic> row) {
 /// Short notices stay a centred line; long or multi-line ones collapse.
 bool ngNoticeIsLong(String text) =>
     text.length > 160 || text.trim().contains('\n');
+
+/// What [NgChatController.runDedicated] did: the card it answered under,
+/// and the live session to watch when it requested a handoff.
+class NgDedicatedResult {
+  const NgDedicatedResult(this.card, {this.handoffSession});
+
+  final NgCommandItem card;
+  final String? handoffSession;
+}
 
 /// A queued prompt, sent when the running turn ends.
 class NgQueued {
@@ -590,6 +622,10 @@ class NgUsage {
   final int? contextUsed;
   final int? contextMax;
   final int calls;
+  final double? cacheHitPct;
+  final double? avgTps;
+  final int? compressions;
+  final bool contextEstimated;
   const NgUsage({
     this.input = 0,
     this.output = 0,
@@ -599,6 +635,10 @@ class NgUsage {
     this.contextUsed,
     this.contextMax,
     this.calls = 0,
+    this.cacheHitPct,
+    this.avgTps,
+    this.compressions,
+    this.contextEstimated = false,
   });
 
   static int _i(Object? v) => v is num ? v.toInt() : int.tryParse('$v') ?? 0;
@@ -623,6 +663,18 @@ class NgUsage {
           ? (raw['context_length'] as num).toInt()
           : null,
       calls: _i(raw['api_calls'] ?? raw['calls']),
+      cacheHitPct:
+          raw.containsKey('cache_hit_pct') && raw['cache_hit_pct'] is num
+          ? (raw['cache_hit_pct'] as num).toDouble()
+          : null,
+      avgTps: raw.containsKey('avg_tps') && raw['avg_tps'] is num
+          ? (raw['avg_tps'] as num).toDouble()
+          : null,
+      compressions:
+          raw.containsKey('compressions') && raw['compressions'] is num
+          ? (raw['compressions'] as num).toInt()
+          : null,
+      contextEstimated: raw['context_estimated'] == true,
     );
   }
 }
@@ -636,6 +688,7 @@ class NgChatController extends ChangeNotifier {
     this.onCreated,
     this.onTurnFinished,
     AttachmentDraftService? attachmentService,
+    String? initialText,
     // Keep the public named argument while the mutable field stays private.
     // ignore: prefer_initializing_formals
   }) : _workingDirectory = workingDirectory,
@@ -643,15 +696,47 @@ class NgChatController extends ChangeNotifier {
        storedId = sessionId,
        draftKey = sessionId ?? ComposerDraftStore.newLocalKey(),
        attachmentService = attachmentService ?? AttachmentDraftService() {
+    _initialText = initialText;
     _subs.add(gateway.events.listen(_onEvent));
     _subs.add(gateway.serverRequests.listen(_onServerRequest));
     _subs.add(gateway.reconnected.listen((_) => unawaited(_reattach())));
     // Answered on another device, withdrawn, or no longer open per the server.
     _subs.add(gateway.withdrawnRequests.listen(forgetRequest));
+    SystemSleepGate.instance.addListener(_onSleepGate);
+  }
+
+  /// The computer slept or the session locked with this turn running: the
+  /// paused socket cannot see it end, so keep-awake waits until this chat
+  /// has re-attached and caught up after the pause ([_reattach]).
+  void _onSleepGate() {
+    if (_disposed) return;
+    if (SystemSleepGate.instance.value && running) {
+      SystemSleepGate.instance.holdReconcile(this);
+    }
   }
 
   final NextGenGateway gateway;
   final String draftKey;
+
+  /// One-shot composer prefill (used by validated `hermes://` deep links).
+  /// Consumed exactly once by the chat view on mount; never re-applied.
+  String? _initialText;
+  String? consumeInitialText() {
+    final value = _initialText;
+    _initialText = null;
+    if (value == null || value.trim().isEmpty) return null;
+    return value;
+  }
+
+  /// Offers a deep-link prefill to this chat's view (a mounted view picks it
+  /// up on its next change notification, a new one when it mounts). The view
+  /// appends it after any unsent draft; nothing is sent.
+  void offerInitialText(String text) {
+    if (_disposed || text.trim().isEmpty) return;
+    _initialText = text;
+    notifyListeners();
+  }
+
   bool get draftOwnerCurrent => !_disposed && gateway.draftAccountCurrent;
   final Object? _imageEpoch;
   PreparedImageTarget? get imageTarget {
@@ -759,6 +844,7 @@ class NgChatController extends ChangeNotifier {
   String? status;
   String? thinkingFrame;
   String? error;
+  FailureSurface? turnFailure;
   NgInputRequest? request;
 
   /// The open `manage_catalog` install card of this chat, if any.
@@ -1100,6 +1186,22 @@ class NgChatController extends ChangeNotifier {
     } else {
       items.add(NgNoticeItem(_key('n'), trimmed, time: at));
     }
+  }
+
+  /// A local command result (side question, background, handoff, compress).
+  void showCommandNotice(String text) {
+    _addNotice(text);
+    _changedNow();
+  }
+
+  /// Re-read the transcript after a compression. Does not open a new session.
+  Future<void> reloadTranscript() async {
+    final id = storedId;
+    if (id == null || _disposed) return;
+    final messages = await _fetchRows(id, limit: ngHistoryPage);
+    if (_disposed) return;
+    _setRows(messages, ngHistoryPage);
+    _changedNow();
   }
 
   @visibleForTesting
@@ -1574,21 +1676,28 @@ class NgChatController extends ChangeNotifier {
 
   /// Re-attaches after the socket came back, then fills what was missed.
   Future<void> _reattach() async {
-    if (_disposed) return;
-    // The first connect is the chat opening, which reads everything anyway.
-    if (!_attachedOnce) {
+    try {
+      if (_disposed) return;
+      // The first connect is the chat opening, which reads everything anyway.
+      if (!_attachedOnce) {
+        await _attach();
+        return;
+      }
+      _held ??= [];
+      if (gateway.sessionAuthority && _cursor != null) {
+        // Replay first, then attach: the owner bridges whatever it publishes
+        // between the two onto this socket.
+        await _catchUp(resubscribe: true);
+        return;
+      }
       await _attach();
-      return;
+      await _catchUp();
+    } finally {
+      // Caught up after a pause: [running] is current again.
+      if (!SystemSleepGate.instance.value) {
+        SystemSleepGate.instance.releaseReconcile(this);
+      }
     }
-    _held ??= [];
-    if (gateway.sessionAuthority && _cursor != null) {
-      // Replay first, then attach: the owner bridges whatever it publishes
-      // between the two onto this socket.
-      await _catchUp(resubscribe: true);
-      return;
-    }
-    await _attach();
-    await _catchUp();
   }
 
   bool _attachedOnce = false;
@@ -1960,6 +2069,9 @@ class NgChatController extends ChangeNotifier {
         if (message != null && message.isNotEmpty) _addNotice(message);
       case 'error':
         error = s('message') ?? ngL.ng_the_turn_failed;
+        turnFailure = FailureSurface.parse(
+          p['surface'] ?? p['error_surface'] ?? p,
+        );
         _finishTurn(failed: true);
       case 'message.complete' || 'turn.end':
         final live = running;
@@ -1999,6 +2111,17 @@ class NgChatController extends ChangeNotifier {
           gateway.forgetRequest(id);
           if (request?.request.id == id) request = null;
         }
+      case 'btw.complete' || 'background.complete':
+        // Desktop's dispatcher: the answer to /btw or /background arrives
+        // only as this event on the session that asked, so it is the one
+        // place it can be shown. A replay of the same answer is not another.
+        final answer = SideAnswer.fromEvent(event.type, p);
+        if (answer == null || !_sideAnswers.add(answer.identity)) return;
+        items.add(
+          NgCommandItem(_key('c'), answer.header, time: DateTime.now())
+            ..output = answer.text
+            ..running = false,
+        );
       case 'connection.request' || 'connection.update':
         final next = CatalogOperation.merge(
           catalog,
@@ -2023,6 +2146,8 @@ class NgChatController extends ChangeNotifier {
           'session.updated' ||
           'session.info' ||
           'session.title' ||
+          'btw.complete' ||
+          'background.complete' ||
           'notice':
         _changedNow();
       default:
@@ -2930,6 +3055,91 @@ class NgChatController extends ChangeNotifier {
 
   // ── Slash commands (Kyllene's ChatSession.runCommand) ─────────────────
 
+  /// Side answers already shown (a replayed event is not a second answer).
+  final Set<String> _sideAnswers = {};
+
+  /// Runs `/btw`, `/background` (`/bg`) or `/handoff` through its own RPC,
+  /// the way Desktop does, under a command card: never through
+  /// `slash.exec` (whose capture window closes before the answer) and never
+  /// as a prompt. A new chat is created and a stored chat attached first,
+  /// as Desktop's `ensureSessionId` does, so the RPC never names a stale id.
+  /// Returns null when [command] is not one of these, or the gateway has no
+  /// such method: the ordinary command path then runs it.
+  Future<NgDedicatedResult?> runDedicated(NgSlashLine command) async {
+    final kind = dedicatedSlash(command.name);
+    if (kind == null || kind == DedicatedSlash.resume) return null;
+    final card = NgCommandItem(_key('c'), command.label, time: DateTime.now());
+    items.add(card);
+    error = null;
+    _changedNow();
+    final usage = planDedicated(
+      name: command.name,
+      arg: command.arg,
+      sessionId: 'unused',
+      l10n: ngL,
+    );
+    if (usage.request == null) {
+      card
+        ..output = usage.notice ?? ''
+        ..running = false;
+      _changedNow();
+      return NgDedicatedResult(card);
+    }
+    final String runtime;
+    try {
+      runtime = await _ensureCommandSession();
+    } catch (e) {
+      _commandFailed(
+        card,
+        NgCommandResult.failed,
+        ngL.ng_slash_command_failed(_clean(e)),
+      );
+      return NgDedicatedResult(card);
+    }
+    if (_disposed) return NgDedicatedResult(card);
+    final run = await runDedicatedCommand(
+      name: command.name,
+      arg: command.arg,
+      sessionId: runtime,
+      l10n: ngL,
+      rpc: (method, params) =>
+          gateway.call(method, params, timeout: kNgSlashCommandTimeout),
+    );
+    final answer = run?.answer;
+    if (answer == null || answer.fallbackToExec) {
+      items.remove(card);
+      _changedNow();
+      return null;
+    }
+    if (answer.failed) {
+      _commandFailed(
+        card,
+        NgCommandResult.failed,
+        ngL.ng_slash_command_failed(answer.notice),
+      );
+      return NgDedicatedResult(card);
+    }
+    card
+      ..output = answer.notice
+      ..running = false;
+    _changedNow();
+    return NgDedicatedResult(
+      card,
+      handoffSession: answer.watchHandoff ? runtime : null,
+    );
+  }
+
+  /// Shows how a watched handoff ended on its command card.
+  void settleHandoff(NgCommandItem card, String text, {bool failed = false}) {
+    if (_disposed) return;
+    if (!items.contains(card)) items.add(card);
+    card
+      ..output = card.output.isEmpty ? text : '${card.output}\n$text'
+      ..running = false
+      ..failed = failed;
+    _changedNow();
+  }
+
   /// Whether this connection said it has no `slash.exec` (an older gateway).
   bool get slashExecUnsupported =>
       ngSlashExecUnsupported(gateway.socket ?? gateway);
@@ -2960,6 +3170,22 @@ class NgChatController extends ChangeNotifier {
       );
     }
     return _execute(card, command, runtime, followAlias: true);
+  }
+
+  /// The live runtime id for a session-scoped call (completions, Compress,
+  /// the context breakdown). A stored chat that is not attached yet attaches
+  /// first: a stored id is never sent where a runtime id belongs. A new chat
+  /// is created only when [create] (Desktop's `ensureSessionId`); otherwise
+  /// it has no session yet and the answer is null.
+  Future<String?> liveSessionId({bool create = false}) async {
+    final live = runtimeId;
+    if (live != null) return live;
+    if (storedId == null && !create) return null;
+    try {
+      return await _ensureCommandSession();
+    } catch (_) {
+      return null;
+    }
   }
 
   /// The live session a command runs in: a new chat is created as a prompt
@@ -3188,22 +3414,78 @@ class NgChatController extends ChangeNotifier {
     }
   }
 
-  /// Sends the last prompt again.
-  Future<void> retryLast() async {
-    final last = items.whereType<NgUserItem>().lastOrNull;
-    if (last == null) return;
-    if (last.failure != null && last.recoverInComposer) return;
+  /// Retry for the last prompt, the way Desktop retries.
+  ///
+  /// A submission the gateway never accepted goes again with the SAME
+  /// `submission_id`, so a gateway that did receive it answers with the turn
+  /// it already has. A turn the gateway accepted is regenerated (Desktop's
+  /// `runReload`): the running turn is interrupted first, then the prompt is
+  /// submitted with `confirm_truncate` and its durable row
+  /// (`truncate_before_row_id`), replacing the failed turn. Without a
+  /// durable row nothing is sent: a plain resubmit would append the same
+  /// turn twice.
+  Future<NgRetryResult> retryLast() async {
+    final last = items
+        .whereType<NgUserItem>()
+        .where((item) => !item.steered)
+        .lastOrNull;
+    if (last == null) return NgRetryResult.nothing;
     if (last.failure != null) {
+      if (last.recoverInComposer) return NgRetryResult.nothing;
       items.remove(last);
+      final sent = await send(
+        last.sentText ?? last.text,
+        attachments: last.attachments,
+        composerImageText: last.composerImageText,
+        submissionId: last.submissionId,
+        display: last.sentText == null ? null : last.text,
+        promptParams: last.promptParams,
+      );
+      return sent ? NgRetryResult.resent : NgRetryResult.failed;
     }
-    await send(
-      last.sentText ?? last.text,
-      attachments: last.failure != null ? last.attachments : const [],
-      composerImageText: last.failure != null ? last.composerImageText : null,
-      submissionId: last.failure != null ? last.submissionId : null,
-      display: last.sentText == null ? null : last.text,
-      promptParams: last.failure != null ? last.promptParams : const {},
+    final text = last.sentText ?? last.text;
+    final String runtime;
+    try {
+      runtime = await _ensureCommandSession();
+    } catch (_) {
+      return NgRetryResult.notFound;
+    }
+    if (running) {
+      await stop(parkLocalQueue: false);
+      for (var i = 0; i < 50 && running && !_disposed; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+      }
+      if (_disposed || running) return NgRetryResult.failed;
+    }
+    final target = await resolveRegenerateTarget(
+      rpc: (method, params) => gateway.call(method, params),
+      sessionId: runtime,
+      text: text,
     );
+    if (_disposed) return NgRetryResult.nothing;
+    if (target == null) return NgRetryResult.notFound;
+    final index = items.indexOf(last);
+    if (index < 0) return NgRetryResult.nothing;
+    // As Desktop's applyReloadOptimistic: the replaced turn leaves the view.
+    final replaced = items.sublist(index);
+    items.removeRange(index, items.length);
+    final sent = await send(
+      text,
+      display: last.sentText == null ? null : last.text,
+      // runRewindSubmit's params for the resolved row (Desktop's runReload).
+      promptParams: regenerateSubmitParams(target.rowId),
+    );
+    if (!sent && !_disposed) {
+      // Desktop's rollback: the transcript as it was, and why.
+      final failed = items.whereType<NgUserItem>().lastOrNull;
+      if (failed != null && failed.failure != null) {
+        error = failed.failure;
+        items.remove(failed);
+      }
+      items.addAll(replaced);
+      _changedNow();
+    }
+    return sent ? NgRetryResult.regenerated : NgRetryResult.failed;
   }
 
   bool _answer(Map<String, dynamic> result) {
@@ -3608,6 +3890,8 @@ class NgChatController extends ChangeNotifier {
   @override
   void dispose() {
     _disposed = true;
+    SystemSleepGate.instance.removeListener(_onSleepGate);
+    SystemSleepGate.instance.releaseReconcile(this);
     for (final sub in _subs) {
       unawaited(sub.cancel());
     }

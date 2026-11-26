@@ -24,6 +24,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/client_certificate.dart';
+import 'gateway_headers.dart';
 import 'tls_client_factory.dart';
 
 /// Why an address isn't usable.
@@ -693,14 +694,20 @@ class GatewayProbe {
   Future<ProbeResult> probe(
     GatewayUrl url, {
     ClientCertificateConfig? certificate,
+    Map<String, String> customHeaders = const <String, String>{},
   }) async {
     final client = _client ?? signInHttpClient(certificate);
     try {
       final uri = Uri.parse(url.resolve('api/status'));
       final accessHeaders = HermesSignInVault.instance.accessHeadersFor(uri);
+      final normalizedCustom = normalizeRemoteHeaders(customHeaders);
       final request = http.Request('GET', uri)
         ..followRedirects = false
-        ..headers.addAll({'Accept': 'application/json', ...accessHeaders});
+        ..headers.addAll({
+          ...normalizedCustom,
+          'Accept': 'application/json',
+          ...accessHeaders,
+        });
       final streamed = await client.send(request).timeout(timeout);
       final response = await http.Response.fromStream(streamed);
       final code = response.statusCode;
@@ -807,6 +814,13 @@ class SignInFailed extends SignInResult {
   const SignInFailed(this.message);
 }
 
+/// The gateway answers its protected routes without any credential: it has
+/// no sign-in, so a deployment token cannot be verified there. Token sign-in
+/// fails closed with this instead of accepting any token.
+class SignInGatewayHasNoAuth extends SignInResult {
+  const SignInGatewayHasNoAuth();
+}
+
 /// Who the stored sign-in belongs to (`GET /api/auth/me`).
 @immutable
 class AuthUser {
@@ -844,11 +858,103 @@ class HermesSignIn {
     }
   }
 
-  Map<String, String> _headers(Uri uri, {bool json = false}) => {
+  Map<String, String> _headers(
+    Uri uri, {
+    bool json = false,
+    Map<String, String> customHeaders = const <String, String>{},
+  }) => {
+    ...normalizeRemoteHeaders(customHeaders),
     if (json) 'Content-Type': 'application/json',
     'Accept': 'application/json',
     ...HermesSignInVault.instance.accessHeadersFor(uri),
   };
+
+  /// Verifies an explicit deployment session token (`X-Hermes-Session-Token`).
+  ///
+  /// Tries `GET /api/auth/me` first. An older gateway without that route
+  /// (HTTP 404) is checked on `GET /api/model/info` instead, and only counts
+  /// as verified when that route also refuses the same request without the
+  /// token: a gateway that answers it either way has no sign-in, and the
+  /// result is [SignInGatewayHasNoAuth] (fail closed), never a sign-in.
+  Future<SignInResult> tokenSignIn(
+    GatewayUrl url, {
+    required String token,
+    ClientCertificateConfig? certificate,
+    Map<String, String> customHeaders = const <String, String>{},
+  }) => _with(certificate, (client) async {
+    final clean = sanitizeHeaderValue(token);
+    if (clean.isEmpty) {
+      return const SignInInvalidCredentials();
+    }
+    try {
+      final meUri = Uri.parse(url.resolve('api/auth/me'));
+      final meRes = await client
+          .get(
+            meUri,
+            headers: {
+              ..._headers(meUri, customHeaders: customHeaders),
+              'X-Hermes-Session-Token': clean,
+            },
+          )
+          .timeout(const Duration(seconds: 20));
+      if (meRes.statusCode == 401 || meRes.statusCode == 403) {
+        return const SignInInvalidCredentials();
+      }
+      if (meRes.statusCode == 429) return const SignInRateLimited();
+      if (meRes.statusCode == 200) {
+        await HermesSignInVault.instance.setSession(url.canonical, null);
+        final decoded = jsonDecode(meRes.body);
+        final user = decoded is Map<String, dynamic>
+            ? AuthUser.fromJson(decoded).label
+            : null;
+        return SignInOk(user);
+      }
+      if (meRes.statusCode == 404) {
+        final modelUri = Uri.parse(url.resolve('api/model/info'));
+        final modelRes = await client
+            .get(
+              modelUri,
+              headers: {
+                ..._headers(modelUri, customHeaders: customHeaders),
+                'X-Hermes-Session-Token': clean,
+              },
+            )
+            .timeout(const Duration(seconds: 20));
+        if (modelRes.statusCode == 401 || modelRes.statusCode == 403) {
+          return const SignInInvalidCredentials();
+        }
+        if (modelRes.statusCode == 429) return const SignInRateLimited();
+        if (modelRes.statusCode < 200 || modelRes.statusCode >= 300) {
+          return SignInFailed(
+            'The gateway answered HTTP ${modelRes.statusCode}.',
+          );
+        }
+        // Same request without the token: a gateway that answers it too
+        // never looked at the token.
+        final bareRes = await client
+            .get(
+              modelUri,
+              headers: _headers(modelUri, customHeaders: customHeaders),
+            )
+            .timeout(const Duration(seconds: 20));
+        if (bareRes.statusCode >= 200 && bareRes.statusCode < 300) {
+          return const SignInGatewayHasNoAuth();
+        }
+        if (bareRes.statusCode != 401 && bareRes.statusCode != 403) {
+          return SignInFailed(
+            'The gateway answered HTTP ${bareRes.statusCode}.',
+          );
+        }
+        await HermesSignInVault.instance.setSession(url.canonical, null);
+        return const SignInOk('deployment-token');
+      }
+      return SignInFailed('The gateway answered HTTP ${meRes.statusCode}.');
+    } on TimeoutException {
+      return const SignInFailed('The gateway took too long to answer.');
+    } catch (e) {
+      return SignInFailed(_describe(e));
+    }
+  });
 
   /// `POST /auth/password-login` with the `basic` provider. The password is
   /// verified here, then kept in the connection's secure credentials so the
@@ -859,13 +965,14 @@ class HermesSignIn {
     required String password,
     String provider = 'basic',
     ClientCertificateConfig? certificate,
+    Map<String, String> customHeaders = const <String, String>{},
   }) => _with(certificate, (client) async {
     final uri = Uri.parse(url.resolve('auth/password-login'));
     try {
       final res = await client
           .post(
             uri,
-            headers: _headers(uri, json: true),
+            headers: _headers(uri, json: true, customHeaders: customHeaders),
             body: jsonEncode({
               'provider': provider,
               'username': username,
@@ -898,6 +1005,7 @@ class HermesSignIn {
     required Future<bool> Function(Uri) openBrowser,
     String? provider,
     ClientCertificateConfig? certificate,
+    Map<String, String> customHeaders = const <String, String>{},
     Duration timeout = const Duration(minutes: 10),
   }) async {
     final HttpServer server;
@@ -959,7 +1067,11 @@ class HermesSignIn {
           final res = await client
               .post(
                 uri,
-                headers: _headers(uri, json: true),
+                headers: _headers(
+                  uri,
+                  json: true,
+                  customHeaders: customHeaders,
+                ),
                 body: jsonEncode({'code': received, 'code_verifier': verifier}),
               )
               .timeout(const Duration(seconds: 20));
@@ -1007,12 +1119,19 @@ class HermesSignIn {
     GatewayUrl url, {
     Map<String, String> authHeaders = const {},
     ClientCertificateConfig? certificate,
+    Map<String, String> customHeaders = const <String, String>{},
   }) async {
     try {
       await _with(certificate, (client) async {
         final uri = Uri.parse(url.resolve('auth/logout'));
         await client
-            .post(uri, headers: {..._headers(uri), ...authHeaders})
+            .post(
+              uri,
+              headers: {
+                ..._headers(uri, customHeaders: customHeaders),
+                ...authHeaders,
+              },
+            )
             .timeout(const Duration(seconds: 10));
       });
     } catch (_) {

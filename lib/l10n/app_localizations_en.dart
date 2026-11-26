@@ -4070,6 +4070,233 @@ class AppLocalizationsEn extends AppLocalizations {
       'Open the session list to choose a chat. Your draft was kept.';
 
   @override
+  String get composer_snippets => 'Prompt snippets';
+
+  @override
+  String get composer_snippets_description =>
+      'Pick a starter prompt to drop into the composer.';
+
+  @override
+  String get composer_snippet_review => 'Code review';
+
+  @override
+  String get composer_snippet_review_body =>
+      'Audit the current change for regressions, dropped edge cases and missing tests.';
+
+  @override
+  String get composer_snippet_review_text =>
+      'Please review this for bugs, regressions and missing tests.';
+
+  @override
+  String get composer_snippet_plan => 'Implementation plan';
+
+  @override
+  String get composer_snippet_plan_body =>
+      'Outline an approach before touching code so the diff stays focused.';
+
+  @override
+  String get composer_snippet_plan_text =>
+      'Please make a concise implementation plan before changing code.';
+
+  @override
+  String get composer_snippet_explain => 'Explain this';
+
+  @override
+  String get composer_snippet_explain_body =>
+      'Walk through how the selected code works and point to the key files.';
+
+  @override
+  String get composer_snippet_explain_text =>
+      'Please explain how this works and point me to the key files.';
+
+  @override
+  String get composer_status => 'Status';
+
+  @override
+  String get composer_status_context => 'Context';
+
+  @override
+  String get composer_status_cache => 'Cache hit';
+
+  @override
+  String get composer_status_throughput => 'Output tokens/sec';
+
+  @override
+  String get composer_status_running => 'Running';
+
+  @override
+  String get composer_status_session => 'Session';
+
+  @override
+  String get composer_status_not_reported => 'Not reported';
+
+  @override
+  String get composer_status_empty => 'No context breakdown was reported.';
+
+  @override
+  String get composer_status_loading => 'Loading context breakdown';
+
+  @override
+  String get composer_status_reset => 'Reset status bar';
+
+  @override
+  String get composer_resume_title => 'Resume a chat';
+
+  @override
+  String get composer_resume_search => 'Search titles and ids';
+
+  @override
+  String get composer_resume_empty => 'No chats match.';
+
+  @override
+  String get composer_resume_unavailable =>
+      'This pane has no chat list to search.';
+
+  @override
+  String get composer_failure_retry => 'Retry';
+
+  @override
+  String composer_failure_retry_at(String time) {
+    return 'Retry at $time';
+  }
+
+  @override
+  String get composer_failure_compress => 'Compress';
+
+  @override
+  String get composer_failure_switch_model => 'Switch model';
+
+  @override
+  String composer_failure_switch_to(String model) {
+    return 'Switch to $model';
+  }
+
+  @override
+  String get composer_failure_new_chat => 'New chat';
+
+  @override
+  String get composer_failure_edit => 'Edit message';
+
+  @override
+  String get composer_failure_details => 'Details';
+
+  @override
+  String get composer_failure_hide_details => 'Hide details';
+
+  @override
+  String get composer_failure_copy => 'Copy diagnostics';
+
+  @override
+  String get composer_failure_account =>
+      'The other fix is on the gateway account. This chat cannot do it.';
+
+  @override
+  String get composer_failure_account_only =>
+      'This has to be fixed on the gateway account. This chat cannot do it.';
+
+  @override
+  String get composer_failure_confirm_compress =>
+      'Compress this chat? The gateway will shorten the transcript.';
+
+  @override
+  String composer_failure_confirm_model(String model) {
+    return 'Switch this chat to $model?';
+  }
+
+  @override
+  String get composer_drop_attach => 'Drop to attach';
+
+  @override
+  String get composer_drop_folder_unsupported =>
+      'Folders can\'t be attached. Drop the files instead.';
+
+  @override
+  String get composer_drop_reference => 'Drop to reference';
+
+  @override
+  String get composer_reference_copy => 'Copy reference';
+
+  @override
+  String get composer_reference_remove => 'Remove reference';
+
+  @override
+  String get composer_btw_usage =>
+      'Usage: /btw <question> — answered from a snapshot of this conversation without interrupting it.';
+
+  @override
+  String get composer_background_usage =>
+      'Usage: /background <prompt> — the task runs separately and the result comes back here.';
+
+  @override
+  String get composer_handoff_usage =>
+      'Usage: /handoff <platform> — transfer this chat to that messaging platform.';
+
+  @override
+  String get composer_command_needs_session =>
+      'This command needs an open chat.';
+
+  @override
+  String get composer_retry_not_found =>
+      'This turn is not in the saved history, so Retry cannot replace it. Nothing was sent again. Edit the message and send it for another try.';
+
+  @override
+  String get composer_retry_unavailable =>
+      'Retry cannot replace a turn on this connection, so nothing was sent again. Edit the message and send it for another try.';
+
+  @override
+  String get composer_failure_switch_no_retry =>
+      'Switching changes the model only: this connection can\'t run the failed turn again. Send it again after switching.';
+
+  @override
+  String get composer_command_needs_gateway_session =>
+      'This chat has no gateway session yet. Send a message first, then run the command again.';
+
+  @override
+  String get composer_side_question =>
+      'btw — answering from a conversation snapshot';
+
+  @override
+  String composer_side_question_id(String id) {
+    return 'btw $id — answering from a conversation snapshot';
+  }
+
+  @override
+  String get composer_background_started =>
+      'Background task started. You can keep chatting. The result will appear here.';
+
+  @override
+  String composer_background_started_id(String id) {
+    return 'Background task $id started. You can keep chatting. The result will appear here.';
+  }
+
+  @override
+  String composer_handoff_requested(String platform) {
+    return 'Handoff to $platform requested.';
+  }
+
+  @override
+  String composer_handoff_done(String platform) {
+    return 'Handed this chat to $platform.';
+  }
+
+  @override
+  String get composer_handoff_failed => 'Handoff failed.';
+
+  @override
+  String get composer_handoff_timeout =>
+      'Handoff did not finish. It may still be running on the gateway.';
+
+  @override
+  String get composer_compress_done => 'Compressed this chat.';
+
+  @override
+  String get composer_file_missing => 'That file is not on this device.';
+
+  @override
+  String get composer_attach_busy =>
+      'Attachments can be added when this reply finishes.';
+
+  @override
   String get nextgen_toggle => 'NextGen interface';
 
   @override
@@ -6791,6 +7018,319 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get catalog_scan_failed => 'failed';
+
+  @override
+  String get deployment_token_label => 'Deployment token (optional)';
+
+  @override
+  String get deployment_token_helper =>
+      'For Hermes Dashboard session tokens sent as X-Hermes-Session-Token. Not stored in plaintext preferences.';
+
+  @override
+  String get deployment_token_hint => 'Dashboard session token';
+
+  @override
+  String get custom_headers_label => 'Custom headers (optional)';
+
+  @override
+  String get custom_headers_helper =>
+      'One per line, e.g. X-Custom: value. Forbidden headers are rejected.';
+
+  @override
+  String get custom_headers_hint => 'e.g. X-Custom-Header: value';
+
+  @override
+  String get desktop_tray_open => 'Open Ares';
+
+  @override
+  String get desktop_tray_new_chat => 'New chat';
+
+  @override
+  String get desktop_tray_quick_entry => 'Quick entry…';
+
+  @override
+  String get desktop_tray_pause_notifications => 'Pause notifications';
+
+  @override
+  String get desktop_tray_quit => 'Quit Ares';
+
+  @override
+  String get desktop_integration_title => 'Desktop integration';
+
+  @override
+  String get desktop_tray_setting => 'Show Ares in the tray or menu bar';
+
+  @override
+  String get desktop_tray_setting_help =>
+      'Open Ares, start a chat, open quick entry, pause notifications or quit from the icon.';
+
+  @override
+  String get desktop_close_to_tray_setting =>
+      'Keep running in the tray when the window closes';
+
+  @override
+  String get desktop_tray_unsupported =>
+      'This desktop has no system tray Ares can use.';
+
+  @override
+  String get quick_entry_title => 'Quick entry';
+
+  @override
+  String get quick_entry_hint => 'Type a prompt for Ares…';
+
+  @override
+  String get quick_entry_submit => 'Put in composer';
+
+  @override
+  String get quick_entry_never_sends =>
+      'Enter puts the text in the chat\'s composer. Nothing is sent until you press Send.';
+
+  @override
+  String get quick_entry_unavailable =>
+      'Quick entry couldn\'t open. Try again.';
+
+  @override
+  String get desktop_hotkey_setting => 'Quick entry shortcut';
+
+  @override
+  String desktop_hotkey_help(String shortcut) {
+    return 'Press $shortcut anywhere to open quick entry.';
+  }
+
+  @override
+  String desktop_hotkey_conflict(String shortcut) {
+    return 'Another app already uses $shortcut. Choose a different shortcut.';
+  }
+
+  @override
+  String get desktop_hotkey_unsupported =>
+      'This desktop does not let apps register a global shortcut (for example on Wayland).';
+
+  @override
+  String get desktop_hotkey_no_modifier => 'Include Cmd, Ctrl or Alt.';
+
+  @override
+  String get desktop_hotkey_super_key =>
+      'The Windows or Super key is reserved for the system.';
+
+  @override
+  String get desktop_hotkey_reserved =>
+      'The system already uses this shortcut.';
+
+  @override
+  String desktop_hotkey_in_app(String action) {
+    return 'Ares already uses this shortcut for $action.';
+  }
+
+  @override
+  String get desktop_hotkey_change => 'Change';
+
+  @override
+  String get desktop_hotkey_reset => 'Use default';
+
+  @override
+  String get capture_screen_action => 'Capture screen';
+
+  @override
+  String get capture_screen_help =>
+      'Adds a screenshot to the message as a draft. Nothing is sent until you press Send.';
+
+  @override
+  String get capture_screen_unavailable =>
+      'Screen capture isn\'t available on this desktop.';
+
+  @override
+  String get capture_screen_failed =>
+      'Couldn\'t capture the screen. Try again.';
+
+  @override
+  String get capture_permission_title => 'Allow screen recording';
+
+  @override
+  String get capture_permission_body =>
+      'To capture a window, Ares needs the Screen Recording permission. Turn on Ares in System Settings > Privacy & Security > Screen Recording, then try again.';
+
+  @override
+  String get capture_open_settings => 'Open System Settings';
+
+  @override
+  String get keep_awake_title => 'Keep computer awake';
+
+  @override
+  String get keep_awake_title_mobile => 'Keep screen on';
+
+  @override
+  String get keep_awake_mode_off => 'Off';
+
+  @override
+  String get keep_awake_mode_while_working => 'While working';
+
+  @override
+  String get keep_awake_mode_always => 'Always';
+
+  @override
+  String get keep_awake_off_help => 'Never block system sleep (default).';
+
+  @override
+  String get keep_awake_while_working_help =>
+      'Prevent idle sleep only while an agent turn is running.';
+
+  @override
+  String get keep_awake_always_help =>
+      'Prevent idle sleep while Ares is open on this device.';
+
+  @override
+  String get keep_awake_off_help_mobile =>
+      'Let the screen turn off as usual (default).';
+
+  @override
+  String get keep_awake_while_working_help_mobile =>
+      'Keep the screen on while an agent turn is running and Ares is open.';
+
+  @override
+  String get keep_awake_always_help_mobile =>
+      'Keep the screen on while Ares is open.';
+
+  @override
+  String get ng_token_gateway_has_no_sign_in =>
+      'This gateway has no sign-in, so it can\'t check a deployment token. Turn on dashboard authentication on the host (or update Hermes), then try again.';
+
+  @override
+  String get palette_open => 'App command palette';
+
+  @override
+  String get palette_no_matches => 'No matching actions';
+
+  @override
+  String get palette_filter_hint => 'Type to filter actions…';
+
+  @override
+  String get palette_keys_move => '↑↓ to move';
+
+  @override
+  String get palette_keys_run => 'Enter to run';
+
+  @override
+  String get palette_keys_close => 'Esc to close';
+
+  @override
+  String get palette_search_sessions => 'Search sessions';
+
+  @override
+  String get palette_scheduled_crons => 'Scheduled / Crons';
+
+  @override
+  String get palette_capabilities_skills => 'Capabilities & skills';
+
+  @override
+  String get palette_insights_usage => 'Insights & usage';
+
+  @override
+  String get palette_more_projects => 'More & projects';
+
+  @override
+  String get deeplink_chat_not_found =>
+      'Chat not found in the list. It may not have loaded yet.';
+
+  @override
+  String get keyboard_shortcuts_title => 'Keyboard shortcuts';
+
+  @override
+  String get shortcuts_reset_all => 'Reset all';
+
+  @override
+  String get shortcuts_reset_to_default => 'Reset to default';
+
+  @override
+  String get shortcut_action_command_palette => 'Command palette';
+
+  @override
+  String get shortcut_action_new_chat => 'New chat';
+
+  @override
+  String get shortcut_action_search => 'Search';
+
+  @override
+  String get shortcut_action_settings => 'Settings';
+
+  @override
+  String shortcut_action_go_to_tab(int number) {
+    return 'Go to tab $number';
+  }
+
+  @override
+  String shortcuts_conflict(String first, String second, String chord) {
+    return 'Conflict: \"$first\" and \"$second\" both use $chord. The custom shortcut keeps its default until you change one of them.';
+  }
+
+  @override
+  String shortcuts_editor_title(String action) {
+    return 'Shortcut: $action';
+  }
+
+  @override
+  String get shortcuts_editor_help =>
+      'Press a key combination, or choose modifiers and a key below:';
+
+  @override
+  String get shortcuts_editor_needs_modifier =>
+      'Select at least Cmd/Meta, Ctrl or Alt so typing in the composer is unaffected.';
+
+  @override
+  String shortcuts_text_editing_warning(String chord) {
+    return '$chord is a text editing shortcut (copy, paste, cut, undo, redo or select all). Binding it here takes it away from text fields.';
+  }
+
+  @override
+  String shortcuts_text_editing_in_use(String action, String chord) {
+    return '\"$action\" uses $chord, a text editing shortcut. Text fields lose it while it is bound here.';
+  }
+
+  @override
+  String custom_headers_problem_format(int line) {
+    return 'Line $line: expected \"Name: Value\"';
+  }
+
+  @override
+  String custom_headers_problem_missing_name(int line) {
+    return 'Line $line: missing header name';
+  }
+
+  @override
+  String custom_headers_problem_invalid_name(int line, String name) {
+    return 'Line $line: invalid header name \"$name\"';
+  }
+
+  @override
+  String custom_headers_problem_reserved(int line, String name) {
+    return 'Line $line: \"$name\" is reserved and cannot be passed through';
+  }
+
+  @override
+  String custom_headers_problem_empty_value(int line) {
+    return 'Line $line: empty header value';
+  }
+
+  @override
+  String get ng_enter_a_deployment_token => 'Enter a deployment session token.';
+
+  @override
+  String get ng_custom_headers => 'Custom headers';
+
+  @override
+  String get ng_custom_headers_help =>
+      'Extra HTTP headers for this gateway (Name: Value, one per line), sent on its REST and WebSocket calls. They are kept in the secure credential store. Authentication and hop-by-hop headers are rejected.';
+
+  @override
+  String get ng_use_a_deployment_token => 'Use a deployment session token';
+
+  @override
+  String get ng_sign_in_with_deployment_token =>
+      'Sign in with deployment token';
+
+  @override
+  String get ng_signed_in_with_deployment_token =>
+      'Signed in with the deployment token.';
 
   @override
   String get windows_window_activity => 'Share chat activity';

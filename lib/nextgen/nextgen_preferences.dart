@@ -19,6 +19,12 @@ typedef NgOpenRequest = ({String connectionId, String sessionId});
 /// NextGen switches to the connection, opens the chat and clears it.
 final ValueNotifier<NgOpenRequest?> nextGenOpenRequest = ValueNotifier(null);
 
+/// Set by the app root when something owned by a connection (a quick-entry
+/// hand-back waiting in the deep-link service) must be shown there: NextGen
+/// switches to that connection and clears it. Its main page then consumes
+/// the owned link.
+final ValueNotifier<String?> nextGenConnectionRequest = ValueNotifier(null);
+
 /// Routes a notification tap to NextGen. Returns false when NextGen is off
 /// or the payload names no chat, so the classic routing handles it.
 WindowsToastTarget? pendingWindowsToastTarget;

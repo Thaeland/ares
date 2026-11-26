@@ -1,6 +1,7 @@
 // Device settings, appearance, connection information and app info.
 import 'dart:async';
 
+import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,6 +30,9 @@ import '../widgets/config_backup_card.dart';
 import '../widgets/mobile_push_settings.dart';
 import '../widgets/chat_density_settings_card.dart';
 import '../widgets/text_size_settings_card.dart';
+import '../widgets/keep_awake_settings_card.dart';
+import '../widgets/desktop_shortcuts.dart' show desktopShortcutsAvailable;
+import '../widgets/keyboard_shortcuts_settings_card.dart';
 import '../widgets/theme_palette_picker.dart';
 import '../theme/hermes_theme.dart';
 import '../presentation/presentation_settings.dart';
@@ -38,6 +42,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 import '../services/app_update_service.dart';
 import '../services/legal_links.dart';
 import '../widgets/update_available_dialog.dart';
+import '../desktop/desktop_integration_card.dart';
+import '../desktop/desktop_os.dart';
 
 import 'package:hermes_android/core/l10n/l10n.dart';
 
@@ -172,6 +178,48 @@ class _SettingsScreenState extends State<SettingsScreen> {
               .setTextSizePreference(preference),
         ),
         const SizedBox(height: 16),
+
+        // ---- Section: Desktop OS ----
+        // Shown (with its header) only where the runner keeps the device
+        // awake; the card hides itself otherwise.
+        KeepAwakeSettingsCard(
+          preferences: context
+              .findAncestorStateOfType<HermesAppState>()!
+              .widget
+              .connManager
+              .prefs,
+          header: _buildSectionHeader(
+            defaultTargetPlatform == TargetPlatform.android ||
+                    defaultTargetPlatform == TargetPlatform.iOS
+                ? context.l10n.keep_awake_title_mobile
+                : context.l10n.keep_awake_title,
+          ),
+        ),
+        const SizedBox(height: 16),
+
+        if (isDesktopOs) ...[
+          _buildSectionHeader(context.l10n.desktop_integration_title),
+          DesktopIntegrationCard(
+            preferences: context
+                .findAncestorStateOfType<HermesAppState>()!
+                .widget
+                .connManager
+                .prefs,
+          ),
+          const SizedBox(height: 16),
+        ],
+
+        if (desktopShortcutsAvailable()) ...[
+          _buildSectionHeader(context.l10n.keyboard_shortcuts_title),
+          KeyboardShortcutsSettingsCard(
+            preferences: context
+                .findAncestorStateOfType<HermesAppState>()!
+                .widget
+                .connManager
+                .prefs,
+          ),
+          const SizedBox(height: 16),
+        ],
 
         // ---- Section: Notifications ----
         // Hidden where the app cannot post notifications (Windows).

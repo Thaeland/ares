@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 
 import '../models/connection.dart';
+import 'gateway_headers.dart';
 
 /// Raised for every backup failure. The message is intentionally generic and
 /// never carries platform errors or secret material, so it can be surfaced
@@ -185,6 +186,11 @@ class ConfigBackup {
       if (connection.singleLogin) 'single_login': true,
       if (connection.signInMethod != null)
         'sign_in_method': connection.signInMethod,
+      if (connection.deploymentToken != null &&
+          connection.deploymentToken!.isNotEmpty)
+        'deployment_token': connection.deploymentToken,
+      if (connection.customHeaders.isNotEmpty)
+        'custom_headers': connection.customHeaders,
       // Paths are device-specific and meaningless on the target device; the
       // PEM contents travel in `client_certificates`. The marker lets a
       // hand-edited file fail closed instead of silently dropping mTLS.
@@ -216,6 +222,13 @@ class ConfigBackup {
       gatewayProfile: nonEmpty(map['gateway_profile']),
       singleLogin: (map['single_login'] as bool?) ?? false,
       signInMethod: nonEmpty(map['sign_in_method']),
+      deploymentToken: nonEmpty(map['deployment_token']),
+      customHeaders: switch (map['custom_headers']) {
+        final Map<dynamic, dynamic> raw => normalizeRemoteHeaders(
+          Map<String, dynamic>.from(raw),
+        ),
+        _ => const <String, String>{},
+      },
     );
   }
 
