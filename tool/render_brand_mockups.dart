@@ -271,6 +271,7 @@ Future<DemoGateway> _openNextGen(
   WidgetTester tester,
   _Device device, {
   required Brightness brightness,
+  bool project = false,
 }) async {
   _useDevice(tester, device);
   _keyboardShown.value = 0;
@@ -283,7 +284,7 @@ Future<DemoGateway> _openNextGen(
     ..accent = NgAccent.blue
     ..pureBlack = false
     ..glow = true;
-  final gateway = DemoGateway(now);
+  final gateway = DemoGateway(now, withProjects: project);
   final manager = ConnectionManager(prefs);
   final app = MaterialApp(
     debugShowCheckedModeBanner: false,
@@ -403,17 +404,27 @@ Future<void> _shoot(
   String file, {
   required Brightness brightness,
   bool newChat = false,
-  bool sparkle = true,
+  bool project = false,
   double keyboard = 0,
 }) async {
-  ngBrandLanding = true;
-  ngBrandOnNewChat = true;
-  ngBrandKeepSparkle = sparkle;
-  final gateway = await _openNextGen(tester, device, brightness: brightness);
+  final gateway = await _openNextGen(
+    tester,
+    device,
+    brightness: brightness,
+    project: project,
+  );
   if (newChat) {
     await tester.tap(find.byKey(const ValueKey('ng-brand-new-chat')));
     await _settle(tester);
     expect(find.byType(NgBrandLanding), findsNothing);
+    if (project) {
+      await tester.tap(find.byKey(const Key('nextgen-project-picker')));
+      await _settle(tester);
+      await tester.tap(
+        find.widgetWithText(CheckedPopupMenuItem<String>, 'Home project'),
+      );
+      await _settle(tester);
+    }
     if (keyboard > 0) await _raiseKeyboard(tester, device, keyboard);
   } else {
     expect(find.byType(NgBrandLanding), findsOneWidget);
@@ -471,14 +482,13 @@ void main() {
       newChat: true,
     );
   });
-  testWidgets('B2-newchat-phone-dark-nosparkle', (t) async {
+  testWidgets('B2-newchat-phone-dark-approved-sparkle', (t) async {
     await _shoot(
       t,
       _iphone,
-      'B2-newchat-phone-dark-nosparkle.png',
+      'B2-newchat-phone-dark-approved-sparkle.png',
       brightness: dark,
       newChat: true,
-      sparkle: false,
     );
   });
   testWidgets('B3-newchat-phone-light', (t) async {
@@ -502,8 +512,6 @@ void main() {
   });
   // No picture: the landing's ways forward each leave it.
   testWidgets('flow: open a chat, recent row', (t) async {
-    ngBrandLanding = true;
-    ngBrandKeepSparkle = true;
     final gateway = await _openNextGen(t, _iphone, brightness: dark);
     expect(find.byType(NgBrandLanding), findsOneWidget);
     await t.tap(find.byKey(const ValueKey('ng-brand-open-chat')));
@@ -517,6 +525,26 @@ void main() {
     expect(find.byType(NgBrandLanding), findsNothing);
     expect(find.text('Draft release notes'), findsWidgets);
     await _close(t, gateway);
+  });
+  testWidgets('B6-newchat-phone-dark-project', (t) async {
+    await _shoot(
+      t,
+      _iphone,
+      'B6-newchat-phone-dark-project.png',
+      brightness: dark,
+      newChat: true,
+      project: true,
+    );
+  });
+  testWidgets('B7-newchat-desktop-dark-project', (t) async {
+    await _shoot(
+      t,
+      _mac,
+      'B7-newchat-desktop-dark-project.png',
+      brightness: dark,
+      newChat: true,
+      project: true,
+    );
   });
   testWidgets('B5-newchat-desktop-dark', (t) async {
     await _shoot(

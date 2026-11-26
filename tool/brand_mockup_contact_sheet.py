@@ -70,12 +70,16 @@ sheet(
     [
         [
             ("B1-newchat-phone-dark.png", "B1 dark - brand above, sparkle kept"),
-            ("B2-newchat-phone-dark-nosparkle.png", "B2 dark - brand replaces sparkle"),
+            ("B2-newchat-phone-dark-approved-sparkle.png", "B2 final - approved sparkle retained"),
             ("B3-newchat-phone-light-proposal.png", "B3 light theme proposal"),
-            ("B4-newchat-phone-dark-keyboard.png", "B4 dark - keyboard up (compact lockup)"),
+            ("B4-newchat-phone-dark-keyboard.png", "B4 dark - keyboard up (brand hidden)"),
         ],
         [
             ("B5-newchat-desktop-dark.png", "B5 Mac window - dark, brand above, sparkle kept"),
+        ],
+        [
+            ("B6-newchat-phone-dark-project.png", "B6 phone - project picker visible"),
+            ("B7-newchat-desktop-dark-project.png", "B7 desktop - project picker visible"),
         ],
     ],
 )

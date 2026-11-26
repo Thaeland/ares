@@ -128,7 +128,7 @@ class DemoApi extends DashboardApiClient {
 
 /// A connected gateway answering from memory.
 class DemoGateway extends NextGenGateway {
-  DemoGateway(DateTime now)
+  DemoGateway(DateTime now, {this.withProjects = false})
     : super(
         demoConnection(),
         dashboard: DashboardClient.fromConnection(
@@ -139,6 +139,8 @@ class DemoGateway extends NextGenGateway {
     api = DemoApi(dashboard, now);
   }
 
+  final bool withProjects;
+  final calls = <({String method, Map<String, dynamic> params})>[];
   final WsClient _socket = WsClient('https://gateway.example.com');
   final _liveEvents = StreamController<StreamEvent>.broadcast();
   final _requests = StreamController<NgServerRequest>.broadcast();
@@ -167,13 +169,30 @@ class DemoGateway extends NextGenGateway {
     Map<String, dynamic> params, {
     Duration timeout = const Duration(seconds: 30),
   }) async {
+    calls.add((method: method, params: Map.of(params)));
     switch (method) {
+      case 'session.create':
+        return {'session_id': 'runtime-new', 'stored_session_id': 'stored-new'};
+      case 'session.resume':
+        return {'session_id': 'runtime-existing', 'running': false};
+      case 'prompt.submit':
+        return {'status': 'started'};
       case 'commands.catalog':
         return {'pairs': const <Object>[], 'canon': const <String, Object>{}};
       case 'complete.slash':
         throw JsonRpcError(method, 'Method not found', code: -32601);
       case 'projects.list':
-        return {'projects': const <Object>[]};
+        return {
+          'projects': [
+            if (withProjects)
+              {
+                'id': 'home',
+                'name': 'Home project',
+                'primary_path': '/srv/home',
+                'folders': [],
+              },
+          ],
+        };
       case 'projects.tree':
         return {'projects': const <Object>[]};
     }
