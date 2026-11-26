@@ -103,6 +103,7 @@ import 'slash_command_info.dart';
 import 'brand.dart';
 import 'widgets.dart';
 import '../nextgen_l10n.dart';
+import '../../core/services/android_share_intent_service.dart';
 import '../../core/desktop/screen_capture.dart';
 
 class NgChatView extends StatefulWidget {
@@ -122,7 +123,11 @@ class NgChatView extends StatefulWidget {
     this.voiceModeController,
     this.voiceLiveEngineFactory,
     this.screenCapture,
+    this.initialSharedPayload,
   });
+
+  /// One-shot share intake, owned by this freshly opened draft.
+  final AndroidSharePayload? initialSharedPayload;
 
   final NgChatController chat;
   final VoidCallback? onOpenSidebar;
@@ -553,6 +558,12 @@ class _NgChatViewState extends State<NgChatView>
     // goes after the chat's unsent draft, never over it.
     final initial = chat.consumeInitialText();
     if (initial != null) unawaited(_applyLinkPrefill(initial));
+    final shared = widget.initialSharedPayload;
+    if (shared != null && shared.files.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) unawaited(_receiveSharedFiles(shared));
+      });
+    }
     chat.addListener(_onChat);
     _wasRunning = chat.running;
     // Opening a chat never reads the reply already at its bottom; one that
@@ -1185,6 +1196,40 @@ class _NgChatViewState extends State<NgChatView>
   }
 
   int get _slotsLeft => maxRemoteAttachmentDrafts - _drafts.length;
+
+  Future<void> _receiveSharedFiles(AndroidSharePayload payload) async {
+    final owner = chat;
+    setState(() => _preparing = true);
+    final errors = <String>[];
+    try {
+      for (final file in payload.files) {
+        if (!mounted || !identical(owner, chat)) break;
+        final error = await _queueDraft(
+          owner: owner,
+          () => file.isImage
+              ? owner.attachmentService.prepareImage(
+                  sourcePath: file.path,
+                  displayName: file.name,
+                  existingDrafts: List.of(_drafts),
+                  mode: AttachmentDraftMode.remoteGateway,
+                  maxTotalBytes: maxNextGenAttachmentDraftBytes,
+                )
+              : owner.attachmentService.prepareGenericFile(
+                  sourcePath: file.path,
+                  displayName: file.name,
+                  mediaType: file.mediaType,
+                  existingDrafts: List.of(_drafts),
+                  maxFileBytes: maxNextGenAttachmentBytes,
+                  maxTotalBytes: maxNextGenAttachmentDraftBytes,
+                ),
+        );
+        if (error != null) errors.add(error);
+      }
+    } finally {
+      if (mounted) setState(() => _preparing = false);
+    }
+    if (mounted && errors.isNotEmpty) ngToast(context, errors.join('\n'));
+  }
 
   Future<void> _attach() async {
     // The chat this intake starts in owns its drafts (see [_queueDraft]).
@@ -3010,20 +3055,19 @@ class _NgChatViewState extends State<NgChatView>
       return const Center(child: CircularProgressIndicator());
     }
     if (chat.items.isEmpty) {
-      // PROTOTYPE (mock/nextgen-brand): the brand, smaller, above the
-      // greeting of a new chat.
-      final brand = ngBrandOnNewChat && chat.historyError == null;
+      final brand = chat.isNew && chat.historyError == null;
       return NgGlow(
         child: LayoutBuilder(
           builder: (context, box) {
             final header = brand
-                ? ngNewChatBrand(box.maxHeight, sparkle: ngBrandKeepSparkle)
+                ? ngNewChatBrand(
+                    box.maxHeight,
+                    textScale: MediaQuery.textScalerOf(context).scale(1),
+                  )
                 : null;
             return NgEmpty(
               header: header,
-              icon: header == null || ngBrandKeepSparkle
-                  ? Icons.auto_awesome
-                  : null,
+              icon: Icons.auto_awesome,
               title: chat.historyError ?? ngL.ng_what_should_we_work_on,
               titleWidget: chat.canPickProject && chat.historyError == null
                   ? NgProjectGreeting(chat: chat)

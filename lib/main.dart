@@ -1441,7 +1441,11 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
         );
       },
       home: nextGen
-          ? NextGenHome(connManager: widget.connManager)
+          ? NextGenHome(
+              connManager: widget.connManager,
+              shareIntents: widget.shareIntents,
+              launchIntents: widget.launchIntents,
+            )
           : HomeScreen(
               connManager: widget.connManager,
               turnApplicationController: _turnApplicationController,
