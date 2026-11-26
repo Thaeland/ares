@@ -173,4 +173,67 @@ void main() {
       expect(sent.first['event_id'], isNot(sent.last['event_id']));
     });
   });
+
+  group('seed history', () {
+    test('items are {type: message, role, content} (review probe G2)', () {
+      final history = toLiveHistory([
+        (role: 'user', text: 'hello'),
+        (role: 'assistant', text: 'hi'),
+      ]);
+      expect(history, [
+        {
+          'type': 'message',
+          'role': 'user',
+          'content': [
+            {'type': 'input_text', 'text': 'hello'},
+          ],
+        },
+        {
+          'type': 'message',
+          'role': 'assistant',
+          'content': [
+            {'type': 'output_text', 'text': 'hi'},
+          ],
+        },
+      ]);
+    });
+
+    test("each turn is cut to Desktop's 1200 characters, and the budget "
+        'counts the cut text', () {
+      final long = 'a' * 3000;
+      final one = toLiveHistory([
+        (role: 'user', text: long),
+        (role: 'assistant', text: 'short'),
+      ]);
+      expect(one, hasLength(2));
+      expect((one.first['content'] as List).single['text'], 'a' * 1200);
+
+      // 6000-character budget: five cut turns fit exactly, the sixth (the
+      // oldest) does not.
+      final six = toLiveHistory([
+        for (var i = 0; i < 6; i++) (role: 'user', text: '$i$long'),
+      ]);
+      expect(six, hasLength(5));
+      expect((six.first['content'] as List).single['text'], startsWith('1a'));
+      expect((six.last['content'] as List).single['text'], startsWith('5a'));
+    });
+
+    test(
+      'the seeded history reaches POST /voice-live/session as built',
+      () async {
+        final history = toLiveHistory([
+          (role: 'user', text: 'What is on today?'),
+          (role: 'assistant', text: 'Two meetings.'),
+        ]);
+        final live = await startFakeLive(history: history);
+        addTearDown(live.conversation.dispose);
+
+        expect(live.transport.history, history);
+        expect(
+          live.transport.history!.every((item) => item['type'] == 'message'),
+          isTrue,
+        );
+      },
+    );
+  });
 }

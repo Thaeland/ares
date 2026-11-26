@@ -184,6 +184,13 @@ List<String> chunkForCommentary(
   return chunks;
 }
 
+/// Desktop's per-turn cap on seeded history text.
+const int liveHistoryTurnCharLimit = 1200;
+
+/// Seed history for a new Live session from the chat transcript (text turns
+/// only), newest kept first. Mirrors Desktop's `toLiveHistory`: every item is
+/// a `{type: 'message', role, content}` message, each turn cut to
+/// [liveHistoryTurnCharLimit] characters.
 List<Map<String, dynamic>> toLiveHistory(
   List<({String role, String text})> turns, {
   int maxMessages = 24,
@@ -192,11 +199,15 @@ List<Map<String, dynamic>> toLiveHistory(
   final history = <Map<String, dynamic>>[];
   var budget = maxChars;
   for (final turn in turns.reversed) {
-    final text = turn.text.replaceAll(RegExp(r'\s+'), ' ').trim();
+    final clean = turn.text.replaceAll(RegExp(r'\s+'), ' ').trim();
+    final text = clean.length > liveHistoryTurnCharLimit
+        ? clean.substring(0, liveHistoryTurnCharLimit)
+        : clean;
     if (text.isEmpty) continue;
-    if (history.length >= maxMessages || budget < text.length) break;
+    if (history.length >= maxMessages || budget - text.length < 0) break;
     budget -= text.length;
     history.insert(0, {
+      'type': 'message',
       'role': turn.role,
       'content': [
         {
