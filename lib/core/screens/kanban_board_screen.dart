@@ -142,6 +142,14 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
       _target = null;
       _account = ConnectionMutationBarrier.capture(widget.route.connectionId);
       _cancelRealtime();
+      final initialCard = widget.initialCardId?.trim();
+      _pendingInitialCardId = (initialCard == null || initialCard.isEmpty)
+          ? null
+          : initialCard;
+      final initialBoard = widget.initialBoard?.trim();
+      _pendingInitialBoard = (initialBoard == null || initialBoard.isEmpty)
+          ? null
+          : initialBoard;
       unawaited(_initAndLoad());
     }
     if (oldWidget.initialCardId != widget.initialCardId ||
