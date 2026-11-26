@@ -12164,4 +12164,758 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'La puerta de enlace no puede guardar archivos ocultos.';
+
+  @override
+  String get rel_svc_push_api_select_sessions =>
+      'Selecciona entre 1 y 128 ID de sesión duraderos, de 1 a 200 caracteres ASCII cada uno, usando solo letras, dígitos, _ . : @ o -. Elimina los ID vacíos y los espacios.';
+
+  @override
+  String get rel_svc_push_api_unavailable =>
+      'Las notificaciones push móviles no están disponibles en este servidor.';
+
+  @override
+  String get rel_svc_push_api_invalid_vapid =>
+      'La clave pública VAPID del servidor no es válida.';
+
+  @override
+  String get rel_svc_push_api_update_plugin =>
+      'Este servidor necesita un complemento mobile-push actualizado para las suscripciones automáticas.';
+
+  @override
+  String get rel_svc_push_status_android_only => 'Solo Android';
+
+  @override
+  String get rel_svc_push_native_prefs_sync_failed =>
+      'No se pudieron sincronizar las preferencias de notificaciones nativas.';
+
+  @override
+  String get rel_svc_push_choose_android_connection =>
+      'Elige primero una conexión guardada en Android.';
+
+  @override
+  String get rel_svc_push_status_checking_authorization =>
+      'Comprobando autorización del servidor';
+
+  @override
+  String get rel_svc_push_revoke_persist_failed =>
+      'No se pudo guardar la revocación. Vuelve a intentar desactivar antes de salir de la aplicación.';
+
+  @override
+  String get rel_svc_push_status_off_api_ready =>
+      'Desactivado; API del servidor lista';
+
+  @override
+  String get rel_svc_push_status_off_revoke_pending =>
+      'Desactivado; revocación del servidor pendiente';
+
+  @override
+  String get rel_svc_push_status_off_connection_changed =>
+      'Desactivado; la conexión guardada cambió';
+
+  @override
+  String get rel_svc_push_status_pending_endpoint =>
+      'Esperando endpoint del distribuidor';
+
+  @override
+  String get rel_svc_push_status_registering => 'Registrando';
+
+  @override
+  String get rel_svc_push_status_pending_challenge =>
+      'Desafío cifrado pendiente (esperando una notificación push silenciosa de verificación del servidor)';
+
+  @override
+  String get rel_svc_push_allow_android_notifications_retry =>
+      'Permite las notificaciones de Android en los ajustes del sistema y vuelve a intentarlo.';
+
+  @override
+  String get rel_svc_push_plugin_invalid =>
+      'El complemento mobile-push del servidor no está disponible, está obsoleto o devolvió una respuesta de suscripción no válida. Pide al operador que lo actualice y vuelve a intentarlo.';
+
+  @override
+  String get rel_svc_push_transport_unavailable =>
+      'No hay ningún transporte push disponible. La entrega integrada necesita que Google Play Services funcione; también puedes instalar un distribuidor UnifiedPush y volver a intentarlo.';
+
+  @override
+  String get rel_svc_push_transport_choice =>
+      'Hay varios distribuidores UnifiedPush disponibles. Elige uno en Transporte avanzado y vuelve a intentarlo.';
+
+  @override
+  String get rel_svc_push_transport_missing =>
+      'El distribuidor UnifiedPush seleccionado no está disponible. Restáuralo o elige otro en Transporte avanzado.';
+
+  @override
+  String get rel_svc_push_companion_unavailable =>
+      'El componente mobile-push del servidor no está disponible. Puede faltar, estar desactivado o esta conexión puede apuntar al panel equivocado. Instálalo o actívalo en el servidor, comprueba la conexión del panel y actualiza. Consulta la guía de configuración del servidor anterior.';
+
+  @override
+  String get rel_svc_push_server_denied =>
+      'El servidor rechazó las notificaciones push móviles. Pide al operador que autorice a esta identidad y estas sesiones.';
+
+  @override
+  String get rel_svc_push_not_ready =>
+      'Las notificaciones push móviles no están listas. Comprueba la autorización del complemento del servidor, el distribuidor y la red, y vuelve a intentarlo.';
+
+  @override
+  String get rel_svc_push_availability_read_failed =>
+      'No se pudo consultar la disponibilidad de push en Android. Vuelve a intentarlo abajo.';
+
+  @override
+  String get rel_svc_push_setup_failed =>
+      'La configuración push falló. Comprueba el permiso de Android, la autorización del servidor y el transporte, y vuelve a intentarlo.';
+
+  @override
+  String rel_svc_push_status(String status) {
+    return 'Estado: $status';
+  }
+
+  @override
+  String rel_svc_push_status_bound(
+    String bound,
+    String connection,
+    String status,
+  ) {
+    return 'Estado: Vinculado a $bound (no activo para $connection; negociación: $status)';
+  }
+
+  @override
+  String get rel_svc_push_another_saved_connection => 'otra conexión guardada';
+
+  @override
+  String get rel_svc_push_background_notifications =>
+      'Notificaciones en segundo plano';
+
+  @override
+  String rel_svc_push_bound_subtitle(String bound, String connection) {
+    return 'Vinculado a $bound; revoca esa vinculación abajo antes de activarlo para $connection';
+  }
+
+  @override
+  String rel_svc_push_private_activity(String connection) {
+    return 'Actividad privada del servidor para $connection';
+  }
+
+  @override
+  String rel_svc_push_bound_warning_named(String bound) {
+    return 'Vinculado a otra conexión guardada ($bound). Desactiva y revoca esa vinculación antes de activarlo para esta conexión.';
+  }
+
+  @override
+  String get rel_svc_push_bound_warning =>
+      'Vinculado a otra conexión guardada. Desactiva y revoca esa vinculación antes de activarlo para esta conexión.';
+
+  @override
+  String get rel_svc_push_local_notifications_muted =>
+      'Las notificaciones locales están desactivadas arriba. El consentimiento para notificaciones en segundo plano no cambia, pero los avisos de actividad normales se silencian hasta activar \"Activar notificaciones\".';
+
+  @override
+  String rel_svc_push_legacy_subscription(int count) {
+    return 'Suscripción antigua: solo $count sesión(es) seleccionada(s). No se ampliará automáticamente. Desactiva y activa para aceptar las sesiones autorizadas por el servidor.';
+  }
+
+  @override
+  String get rel_svc_push_authorized_binding =>
+      'Vinculado solo a esta conexión guardada y perfil. El acceso a las sesiones sigue la autorización actual del servidor.';
+
+  @override
+  String get rel_svc_push_revocation_pending =>
+      'Revocación del servidor pendiente. La entrega local está desactivada; reinténtalo mientras esté disponible el inicio de sesión guardado original.';
+
+  @override
+  String get rel_svc_push_refresh_retry => 'Actualizar / reintentar';
+
+  @override
+  String rel_svc_push_disable_named(String bound) {
+    return 'Desactivar y revocar $bound';
+  }
+
+  @override
+  String get rel_svc_push_other_connection => 'otra conexión';
+
+  @override
+  String get rel_svc_push_disable => 'Desactivar y revocar';
+
+  @override
+  String get rel_svc_push_refresh_explanation =>
+      'Actualizar / reintentar vuelve a comprobar la disponibilidad tras configurar el servidor; no puede instalar el componente. Activar las notificaciones sigue siendo una elección aparte.';
+
+  @override
+  String get rel_svc_push_companion_required =>
+      'Las notificaciones en segundo plano necesitan un componente mobile-push del servidor instalado y activado por separado. Android no puede instalarlo. Actualizar solo el APK no configura el servidor.';
+
+  @override
+  String get rel_svc_push_server_setup_guide =>
+      'Guía de configuración del servidor';
+
+  @override
+  String get rel_svc_push_enable_disclosure =>
+      'Activa para solicitar permiso de notificaciones de Android y compartir con este servidor el endpoint y las claves de cifrado de esta instalación. Los avisos de actividad cifrados no contienen contenido del chat. Solo se incluyen sesiones autorizadas por tu inicio de sesión del servidor.';
+
+  @override
+  String get rel_svc_push_transport_disclosure =>
+      'La entrega integrada usa el transporte push de Google y necesita Google Play Services, pero no incluye el SDK de Firebase. Puede usarse un distribuidor UnifiedPush opcional. La entrega no está garantizada; vuelve a abrir Hermes para conciliar.';
+
+  @override
+  String get rel_svc_push_advanced_transport => 'Transporte avanzado';
+
+  @override
+  String get rel_svc_push_automatic_explanation =>
+      'Automático conserva el distribuidor existente; si no, usa la entrega integrada de Google cuando esté disponible. Desactiva antes de cambiar el transporte.';
+
+  @override
+  String get rel_svc_push_transport_label => 'Transporte push';
+
+  @override
+  String get rel_svc_push_automatic_recommended => 'Automático (recomendado)';
+
+  @override
+  String get rel_svc_push_selected_unavailable =>
+      'Distribuidor seleccionado (no disponible)';
+
+  @override
+  String get rel_svc_push_no_transport_detected =>
+      'No se detectó ningún transporte disponible. La entrega integrada necesita Google Play Services; sin él, instala y configura un distribuidor UnifiedPush y actualiza.';
+
+  @override
+  String get rel_svc_push_channel_turns_name => 'Turnos de Ares';
+
+  @override
+  String get rel_svc_push_channel_turns_description =>
+      'Notificaciones de turnos completados en segundo plano';
+
+  @override
+  String get rel_svc_push_channel_attention_name => 'Atención de Ares';
+
+  @override
+  String get rel_svc_push_channel_attention_description =>
+      'Aprobaciones y solicitudes de entrada que te necesitan';
+
+  @override
+  String get rel_svc_push_channel_background_name => 'Ares en segundo plano';
+
+  @override
+  String get rel_svc_push_channel_background_description =>
+      'Finalizaciones de tareas en segundo plano';
+
+  @override
+  String get rel_svc_push_channel_notices_name => 'Avisos de Ares';
+
+  @override
+  String get rel_svc_push_channel_notices_description =>
+      'Avisos de créditos y complementos';
+
+  @override
+  String get rel_svc_push_diag_not_initialised => 'sin inicializar';
+
+  @override
+  String get rel_svc_push_diag_replies_off =>
+      'las respuestas están desactivadas';
+
+  @override
+  String get rel_svc_push_diag_conversation => 'conversación';
+
+  @override
+  String get rel_svc_push_diag_conversation_permission_denied =>
+      'conversación; permiso denegado';
+
+  @override
+  String rel_svc_push_diag_conversation_error(String error) {
+    return 'conversación: $error';
+  }
+
+  @override
+  String get rel_svc_push_diag_failures_off => 'los fallos están desactivados';
+
+  @override
+  String rel_svc_push_diag_kind_off(String kind) {
+    return '$kind está desactivado';
+  }
+
+  @override
+  String get rel_svc_push_diag_windows_setting_unknown =>
+      'Windows no informó de su ajuste de notificaciones';
+
+  @override
+  String get rel_svc_backup_not_hermes_configuration_backup =>
+      'Este archivo no es una copia de seguridad de la configuración de Hermes.';
+
+  @override
+  String get rel_svc_backup_newer_version_cannot_import =>
+      'Esta copia de seguridad se creó con una versión más reciente de la aplicación y no se puede importar.';
+
+  @override
+  String get rel_svc_backup_missing_client_certificate =>
+      'Esta copia indica un certificado de cliente para una conexión, pero no lo contiene, por lo que no se puede restaurar por completo.';
+
+  @override
+  String get rel_svc_backup_damaged_unreadable =>
+      'Este archivo de copia de seguridad está dañado y no se pudo leer.';
+
+  @override
+  String get rel_svc_backup_unsupported_preference_type =>
+      'Una preferencia guardada tiene un tipo no compatible y no se puede exportar.';
+
+  @override
+  String get rel_svc_backup_choose_passphrase_api_keys =>
+      'Elige una frase de contraseña: la copia de seguridad contiene tus claves de API.';
+
+  @override
+  String get rel_svc_backup_could_not_protect_safely =>
+      'No se pudo proteger la copia de seguridad de forma segura.';
+
+  @override
+  String get rel_svc_backup_unsupported_encryption =>
+      'Esta copia de seguridad usa un esquema de cifrado no compatible.';
+
+  @override
+  String get rel_svc_backup_wrong_passphrase_or_altered =>
+      'La frase de contraseña es incorrecta o este archivo de copia de seguridad se ha modificado.';
+
+  @override
+  String get rel_svc_backup_share_subject =>
+      'Copia de seguridad de la configuración de Hermes';
+
+  @override
+  String get rel_svc_backup_selected_file_unreadable =>
+      'No se pudo leer ese archivo.';
+
+  @override
+  String rel_svc_backup_connections_added(int count) {
+    return '$count añadidas';
+  }
+
+  @override
+  String rel_svc_backup_connections_updated(int count) {
+    return '$count actualizadas';
+  }
+
+  @override
+  String rel_svc_backup_connections_removed(int count) {
+    return '$count eliminadas';
+  }
+
+  @override
+  String get rel_svc_backup_no_connection_changes =>
+      'Sin cambios en las conexiones';
+
+  @override
+  String rel_svc_backup_connections_summary(String changes) {
+    return 'Conexiones: $changes';
+  }
+
+  @override
+  String rel_svc_backup_restore_summary(String connections, int count) {
+    return '$connections · $count ajustes restaurados';
+  }
+
+  @override
+  String rel_svc_backup_certificate_not_included(String label, String error) {
+    return 'No se pudo incluir el certificado de cliente de «$label» en esta copia de seguridad: $error';
+  }
+
+  @override
+  String get rel_svc_backup_certificate_password_needed =>
+      'Este certificado necesita su contraseña. Introdúcela abajo y se abrirá automáticamente.';
+
+  @override
+  String get rel_svc_backup_certificate_password_or_corrupt =>
+      'La contraseña del certificado es incorrecta o el archivo está dañado.';
+
+  @override
+  String get rel_svc_backup_certificate_password_incorrect =>
+      'La contraseña del certificado es incorrecta.';
+
+  @override
+  String get rel_svc_backup_certificate_unsupported_encryption =>
+      'Este certificado usa un método de cifrado que la aplicación no puede leer.';
+
+  @override
+  String get rel_svc_backup_certificate_unreadable_pkcs12 =>
+      'El archivo seleccionado no es un certificado PKCS#12 (.p12/.pfx) legible.';
+
+  @override
+  String get rel_svc_backup_certificate_unreadable =>
+      'No se pudo leer el certificado seleccionado.';
+
+  @override
+  String get rel_svc_backup_not_certificate_file =>
+      'Ese archivo no es un certificado: elige un contenedor .p12/.pfx o archivos de certificado y clave PEM.';
+
+  @override
+  String get rel_svc_backup_not_pem_certificate =>
+      'El certificado seleccionado no es un certificado PEM.';
+
+  @override
+  String get rel_svc_backup_not_pem_private_key =>
+      'La clave privada seleccionada no es una clave privada PEM.';
+
+  @override
+  String get rel_svc_backup_certificate_pair_unloadable =>
+      'No se pudieron cargar el certificado y la clave privada seleccionados.';
+
+  @override
+  String get rel_svc_backup_saved_certificate_files_unreadable =>
+      'No se pudieron leer los archivos guardados del certificado de cliente.';
+
+  @override
+  String get rel_svc_backup_client_certificate_storage_failed =>
+      'No se pudo guardar de forma segura el certificado de cliente en este dispositivo.';
+
+  @override
+  String get rel_svc_backup_certificate_storage_failed =>
+      'No se pudo guardar de forma segura el certificado en este dispositivo.';
+
+  @override
+  String get rel_svc_backup_client_certificate_label =>
+      'Certificado de cliente';
+
+  @override
+  String rel_svc_backup_search_dashboard_unreachable(String error) {
+    return 'No se pudo acceder al panel: $error';
+  }
+
+  @override
+  String get rel_svc_backup_search_credentials_rejected =>
+      'El panel rechazó las credenciales guardadas. Comprueba el nombre de usuario y la contraseña del panel para esta conexión.';
+
+  @override
+  String get rel_svc_backup_search_not_supported =>
+      'Este panel no ofrece búsqueda de sesiones. Actualiza Hermes en el host o vuelve a la búsqueda en el dispositivo.';
+
+  @override
+  String rel_svc_backup_search_redirected(int statusCode) {
+    return 'El panel redirigió la búsqueda de sesiones (HTTP $statusCode). Ares no sigue redirecciones con credenciales guardadas; comprueba la dirección de conexión.';
+  }
+
+  @override
+  String rel_svc_backup_search_http_failed(int statusCode) {
+    return 'La búsqueda de sesiones falló con HTTP $statusCode.';
+  }
+
+  @override
+  String get rel_svc_backup_search_malformed_response =>
+      'El panel devolvió una respuesta de búsqueda con formato incorrecto.';
+
+  @override
+  String get rel_svc_backup_search_unexpected_response =>
+      'El panel devolvió una respuesta de búsqueda inesperada.';
+
+  @override
+  String get rel_svc_backup_search_too_many_results =>
+      'El panel devolvió más resultados de búsqueda de los solicitados.';
+
+  @override
+  String get rel_svc_backup_message_search_unexpected_response =>
+      'Respuesta inesperada de búsqueda de mensajes.';
+
+  @override
+  String get rel_svc_backup_message_search_unexpected_result =>
+      'Resultado inesperado de búsqueda de mensajes.';
+
+  @override
+  String get rel_svc_backup_ai_search_api_key_rejected =>
+      'La API de Hermes rechazó la clave de API guardada.';
+
+  @override
+  String rel_svc_backup_ai_search_http_failed(int statusCode) {
+    return 'La reformulación de la consulta con IA falló con HTTP $statusCode.';
+  }
+
+  @override
+  String get rel_svc_backup_ai_search_no_usable_query =>
+      'El modelo seleccionado no devolvió ninguna consulta de búsqueda utilizable.';
+
+  @override
+  String get rel_svc_backup_ai_search_malformed_response =>
+      'Hermes devolvió una respuesta de reformulación con IA con formato incorrecto.';
+
+  @override
+  String get rel_svc_backup_space_name_already_exists =>
+      'Ya existe un espacio con este nombre';
+
+  @override
+  String get rel_svc_backup_space_name_length_invalid =>
+      'El nombre del espacio debe tener entre 1 y 80 caracteres';
+
+  @override
+  String get ng_rel_svc_backup_gateway_address_required =>
+      'Introduce la dirección de tu panel de Hermes.';
+
+  @override
+  String ng_rel_svc_backup_gateway_address_scheme(String scheme) {
+    return 'La dirección debe empezar por http:// o https:// (se obtuvo $scheme).';
+  }
+
+  @override
+  String get ng_rel_svc_backup_gateway_address_invalid =>
+      'Esa dirección no es válida.';
+
+  @override
+  String get ng_rel_svc_backup_gateway_address_no_host =>
+      'La dirección no tiene nombre de host.';
+
+  @override
+  String get ng_rel_svc_backup_sign_in_main_window =>
+      'Inicia sesión en la ventana principal.';
+
+  @override
+  String get rel_svc_backup_sign_in_renewal_failed =>
+      'La puerta de enlace no pudo renovar el inicio de sesión ahora mismo.';
+
+  @override
+  String get rel_svc_backup_sign_in_provider_unreachable =>
+      'La puerta de enlace no pudo renovar el inicio de sesión: no se puede acceder al proveedor de inicio de sesión.';
+
+  @override
+  String get rel_svc_backup_sign_in_renewal_timed_out =>
+      'Se agotó el tiempo para renovar el inicio de sesión.';
+
+  @override
+  String get rel_svc_backup_sign_in_no_tokens =>
+      'La puerta de enlace no devolvió tokens de inicio de sesión.';
+
+  @override
+  String get ng_rel_svc_backup_probe_timed_out =>
+      'Se agotó el tiempo. Comprueba la dirección y la conexión VPN o Tailscale.';
+
+  @override
+  String ng_rel_svc_backup_probe_tls_failed(String error) {
+    return 'Falló el protocolo de enlace TLS: $error';
+  }
+
+  @override
+  String ng_rel_svc_backup_gateway_answered_http(int statusCode) {
+    return 'La puerta de enlace respondió con HTTP $statusCode.';
+  }
+
+  @override
+  String get ng_rel_svc_backup_gateway_answer_timed_out =>
+      'La puerta de enlace tardó demasiado en responder.';
+
+  @override
+  String ng_rel_svc_backup_browser_callback_not_ready(String error) {
+    return 'No se pudo preparar el regreso del navegador: $error';
+  }
+
+  @override
+  String get ng_rel_svc_backup_browser_signed_in_body =>
+      'Ya puedes volver a Hermes.';
+
+  @override
+  String get ng_rel_svc_backup_browser_waiting_title =>
+      'Esperando el inicio de sesión';
+
+  @override
+  String get ng_rel_svc_backup_browser_not_current =>
+      'Esta página no forma parte del inicio de sesión actual.';
+
+  @override
+  String get ng_rel_svc_backup_browser_open_failed =>
+      'No se pudo abrir el navegador para iniciar sesión.';
+
+  @override
+  String get ng_rel_svc_backup_browser_sign_in_timed_out =>
+      'El inicio de sesión tardó demasiado. Inténtalo de nuevo.';
+
+  @override
+  String ng_rel_svc_backup_gateway_refused_sign_in(int statusCode) {
+    return 'La puerta de enlace rechazó el inicio de sesión (HTTP $statusCode).';
+  }
+
+  @override
+  String get rel_svc_misc_alert_caution => 'Precaución';
+
+  @override
+  String get rel_svc_misc_alert_important => 'Importante';
+
+  @override
+  String get rel_svc_misc_alert_tip => 'Consejo';
+
+  @override
+  String get rel_svc_misc_alert_warning => 'Advertencia';
+
+  @override
+  String get rel_svc_misc_allow_folder_session =>
+      'Permitir esta carpeta hasta que termine la sesión.';
+
+  @override
+  String get rel_svc_misc_allow_website_session =>
+      'Permitir este sitio web hasta que termine la sesión.';
+
+  @override
+  String rel_svc_misc_approval_needed_title(String title) {
+    return 'Se necesita aprobación — $title';
+  }
+
+  @override
+  String get rel_svc_misc_attach_file_reference =>
+      'Adjuntar una referencia de archivo';
+
+  @override
+  String get rel_svc_misc_attach_folder_reference =>
+      'Adjuntar una referencia de carpeta';
+
+  @override
+  String get rel_svc_misc_attach_git_context => 'Adjuntar contexto de git';
+
+  @override
+  String get rel_svc_misc_attach_image_reference =>
+      'Adjuntar una referencia de imagen';
+
+  @override
+  String get rel_svc_misc_attach_staged_diff => 'Adjuntar el diff preparado';
+
+  @override
+  String get rel_svc_misc_attach_tool_reference =>
+      'Adjuntar una referencia de herramienta';
+
+  @override
+  String get rel_svc_misc_attach_unstaged_diff =>
+      'Adjuntar el diff sin preparar';
+
+  @override
+  String get rel_svc_misc_attach_url_reference =>
+      'Adjuntar una referencia de URL';
+
+  @override
+  String get rel_svc_misc_background_task_completed =>
+      'Tarea en segundo plano completada';
+
+  @override
+  String rel_svc_misc_background_task_named_completed(String taskId) {
+    return 'Tarea en segundo plano $taskId completada';
+  }
+
+  @override
+  String get rel_svc_misc_chat => 'Chat';
+
+  @override
+  String get rel_svc_misc_compacting_context =>
+      'Compactando el contexto de la conversación…';
+
+  @override
+  String rel_svc_misc_completed_in(String duration) {
+    return 'Completado en $duration';
+  }
+
+  @override
+  String get rel_svc_misc_context_compacted =>
+      'Contexto de la conversación compactado';
+
+  @override
+  String get rel_svc_misc_cron_readback_mismatch =>
+      'La lectura del modelo de Cron no coincidió';
+
+  @override
+  String get rel_svc_misc_cron_update_rejected =>
+      'Actualización de Cron rechazada';
+
+  @override
+  String get rel_svc_misc_deny_folder_grant =>
+      'No conceder acceso a esta carpeta.';
+
+  @override
+  String get rel_svc_misc_deny_website_grant =>
+      'No conceder acceso a este sitio web.';
+
+  @override
+  String rel_svc_misc_failed_after(String duration) {
+    return 'Falló después de $duration';
+  }
+
+  @override
+  String get rel_svc_misc_gateway_folder_unnamed =>
+      'La puerta de enlace no indicó una carpeta.';
+
+  @override
+  String get rel_svc_misc_gateway_idle_unconfirmed =>
+      'La puerta de enlace está inactiva. No se pudo confirmar el resultado del turno anterior.';
+
+  @override
+  String get rel_svc_misc_gateway_turn_failed =>
+      'Falló el turno de la puerta de enlace';
+
+  @override
+  String rel_svc_misc_gateway_turn_status(String status) {
+    return 'Turno de la puerta de enlace: $status';
+  }
+
+  @override
+  String get rel_svc_misc_gateway_website_unnamed =>
+      'La puerta de enlace no indicó un sitio web.';
+
+  @override
+  String get rel_svc_misc_hermes_review => 'Revisión de Hermes';
+
+  @override
+  String get rel_svc_misc_hermes_turn_failed => 'Falló el turno de Hermes';
+
+  @override
+  String get rel_svc_misc_image_recovery_companion_gap =>
+      'La recuperación de imágenes y texto no está disponible en la recuperación complementaria. Un envío de imagen sin confirmar no se puede restaurar en esta conexión y nada se vuelve a enviar automáticamente.';
+
+  @override
+  String get rel_svc_misc_image_recovery_rest_gap =>
+      'La recuperación de imágenes y texto no está disponible en Classic REST/SSE. Un envío de imagen sin confirmar no se puede restaurar en esta conexión y nada se vuelve a enviar automáticamente.';
+
+  @override
+  String rel_svc_misc_input_needed_title(String title) {
+    return 'Se necesita una respuesta — $title';
+  }
+
+  @override
+  String get rel_svc_misc_parallel_workspace_connection_changed =>
+      'La conexión cambió. Vuelve a abrirla para usar el espacio de trabajo.';
+
+  @override
+  String get rel_svc_misc_preparing => 'Preparando';
+
+  @override
+  String get rel_svc_misc_save_folder_grant =>
+      'Guardar este permiso de carpeta para solicitudes posteriores.';
+
+  @override
+  String get rel_svc_misc_save_website_grant =>
+      'Guardar este permiso del sitio web para solicitudes posteriores.';
+
+  @override
+  String get rel_svc_misc_stored_identity_turn_conflict =>
+      'Este chat se abrió mediante su identidad almacenada mientras se admitía otro turno. La instrucción pendiente no se envió; vuelve a intentarlo expresamente cuando termine ese turno.';
+
+  @override
+  String get rel_svc_misc_untitled => 'Sin título';
+
+  @override
+  String get rel_svc_misc_wake_capture_silent =>
+      'La captura de activación del cliente solo detecta silencio; comprueba el acceso al micrófono del sistema operativo y vuelve a activar la palabra de activación.';
+
+  @override
+  String get rel_svc_misc_wake_capture_stalled =>
+      'La captura de activación del cliente se ha detenido: no llegaron devoluciones de audio del micrófono.';
+
+  @override
+  String rel_svc_misc_wake_feed_refused(int count, String detail) {
+    return 'El flujo de la palabra de activación rechazó $count fotogramas consecutivos$detail; vuelve a activar la palabra de activación.';
+  }
+
+  @override
+  String rel_svc_misc_wake_microphone_failed(String error) {
+    return 'Falló el flujo del micrófono de activación del cliente: $error';
+  }
+
+  @override
+  String get rel_svc_misc_wake_track_ended =>
+      'La pista del micrófono terminó durante la captura de la palabra de activación; vuelve a activar la palabra de activación.';
+
+  @override
+  String get rel_svc_misc_website => 'Sitio web';
+
+  @override
+  String get rel_svc_lan_timeout => 'Se agotó el tiempo de detección en la LAN';
+
+  @override
+  String get rel_svc_notification_permission_denied => 'permiso denegado';
+
+  @override
+  String get rel_svc_notifications_off =>
+      'las notificaciones están desactivadas';
 }

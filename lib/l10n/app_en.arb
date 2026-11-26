@@ -8102,5 +8102,931 @@
   "release_core_file_save_hidden": "Hidden files can't be saved by the gateway.",
   "@release_core_file_save_hidden": {
     "description": "Shared validation refusal; preserve the specific delivery target or file-saving reason."
+  },
+  "rel_svc_push_api_select_sessions": "Select 1–128 durable session IDs, each 1–200 ASCII characters using only letters, digits, _ . : @ or -. Remove blank IDs and whitespace.",
+  "@rel_svc_push_api_select_sessions": {
+    "description": "Validation shown when a legacy mobile-push session allowlist is invalid."
+  },
+  "rel_svc_push_api_unavailable": "Mobile push is unavailable on this server.",
+  "@rel_svc_push_api_unavailable": {
+    "description": "Mobile-push capability validation failure."
+  },
+  "rel_svc_push_api_invalid_vapid": "Invalid server VAPID public key.",
+  "@rel_svc_push_api_invalid_vapid": {
+    "description": "Mobile-push server key validation failure."
+  },
+  "rel_svc_push_api_update_plugin": "This server needs an updated mobile-push plugin for automatic subscriptions.",
+  "@rel_svc_push_api_update_plugin": {
+    "description": "Server plugin is too old for authorized automatic subscriptions."
+  },
+  "rel_svc_push_status_android_only": "Android only",
+  "@rel_svc_push_status_android_only": {
+    "description": "Mobile-push service status on unsupported platforms."
+  },
+  "rel_svc_push_native_prefs_sync_failed": "Native notification preferences could not be synchronized.",
+  "@rel_svc_push_native_prefs_sync_failed": {
+    "description": "Safe mobile-push error when native preference synchronization fails."
+  },
+  "rel_svc_push_choose_android_connection": "Choose a saved connection on Android first.",
+  "@rel_svc_push_choose_android_connection": {
+    "description": "Mobile-push enable error when no eligible saved Android connection exists."
+  },
+  "rel_svc_push_status_checking_authorization": "Checking server authorization",
+  "@rel_svc_push_status_checking_authorization": {
+    "description": "Mobile-push handshake status."
+  },
+  "rel_svc_push_revoke_persist_failed": "Could not persist revocation. Retry disabling before leaving the app.",
+  "@rel_svc_push_revoke_persist_failed": {
+    "description": "Error after local mobile-push revocation could not be saved."
+  },
+  "rel_svc_push_status_off_api_ready": "Off; server API ready",
+  "@rel_svc_push_status_off_api_ready": {
+    "description": "Mobile-push availability status while consent is off."
+  },
+  "rel_svc_push_status_off_revoke_pending": "Off; server revocation pending",
+  "@rel_svc_push_status_off_revoke_pending": {
+    "description": "Mobile-push status while a server-side revoke must still be retried."
+  },
+  "rel_svc_push_status_off_connection_changed": "Off; saved connection changed",
+  "@rel_svc_push_status_off_connection_changed": {
+    "description": "Mobile-push status after its bound saved login changed."
+  },
+  "rel_svc_push_status_pending_endpoint": "Pending distributor endpoint",
+  "@rel_svc_push_status_pending_endpoint": {
+    "description": "Mobile-push registration status while waiting for the distributor endpoint."
+  },
+  "rel_svc_push_status_registering": "Registering",
+  "@rel_svc_push_status_registering": {
+    "description": "Mobile-push registration status."
+  },
+  "rel_svc_push_status_pending_challenge": "Pending encrypted challenge (waiting for silent server verification push)",
+  "@rel_svc_push_status_pending_challenge": {
+    "description": "Mobile-push handshake status while waiting for a silent encrypted verification push."
+  },
+  "rel_svc_push_allow_android_notifications_retry": "Allow Android notifications in system settings, then retry.",
+  "@rel_svc_push_allow_android_notifications_retry": {
+    "description": "Safe mobile-push error after notification permission was denied."
+  },
+  "rel_svc_push_plugin_invalid": "The server mobile-push plugin is unavailable, outdated, or returned an invalid subscription response. Ask the operator to update it, then retry.",
+  "@rel_svc_push_plugin_invalid": {
+    "description": "Safe mobile-push error for invalid server capability or subscription responses."
+  },
+  "rel_svc_push_transport_unavailable": "No push transport is available. Built-in delivery needs working Google Play Services; alternatively install a UnifiedPush distributor and retry.",
+  "@rel_svc_push_transport_unavailable": {
+    "description": "Safe mobile-push error when Android has no usable transport."
+  },
+  "rel_svc_push_transport_choice": "Several UnifiedPush distributors are available. Choose one in Advanced transport, then retry.",
+  "@rel_svc_push_transport_choice": {
+    "description": "Safe mobile-push error when Android needs an explicit distributor choice."
+  },
+  "rel_svc_push_transport_missing": "The selected UnifiedPush distributor is unavailable. Restore it or choose another in Advanced transport.",
+  "@rel_svc_push_transport_missing": {
+    "description": "Safe mobile-push error when the selected distributor disappeared."
+  },
+  "rel_svc_push_companion_unavailable": "The server mobile-push companion is unavailable. It may be missing or disabled, or this connection may point to the wrong dashboard. Install or enable the companion on the server, check the dashboard connection, then refresh. See Server setup guide above.",
+  "@rel_svc_push_companion_unavailable": {
+    "description": "Safe 404 error with operator remediation for the server companion."
+  },
+  "rel_svc_push_server_denied": "Server denied mobile push. Ask the operator to authorize this principal and these sessions.",
+  "@rel_svc_push_server_denied": {
+    "description": "Safe authorization failure for mobile push."
+  },
+  "rel_svc_push_not_ready": "Mobile push is not ready. Check server plugin authorization, distributor and network, then retry.",
+  "@rel_svc_push_not_ready": {
+    "description": "Generic safe mobile-push setup failure."
+  },
+  "rel_svc_push_availability_read_failed": "Unable to read Android push availability. Retry below.",
+  "@rel_svc_push_availability_read_failed": {
+    "description": "Settings error while loading Android push transports."
+  },
+  "rel_svc_push_setup_failed": "Push setup failed. Check Android permission, server authorization and transport, then retry.",
+  "@rel_svc_push_setup_failed": {
+    "description": "Fallback error for the mobile-push settings action."
+  },
+  "rel_svc_push_status": "Status: {status}",
+  "@rel_svc_push_status": {
+    "description": "Mobile-push settings status line.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_svc_push_status_bound": "Status: Bound to {bound} (not active for {connection}; handshake: {status})",
+  "@rel_svc_push_status_bound": {
+    "description": "Mobile-push status when another saved connection owns the binding.",
+    "placeholders": {
+      "bound": {
+        "type": "String"
+      },
+      "connection": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_svc_push_another_saved_connection": "another saved connection",
+  "@rel_svc_push_another_saved_connection": {
+    "description": "Fallback label for a different saved connection."
+  },
+  "rel_svc_push_background_notifications": "Background notifications",
+  "@rel_svc_push_background_notifications": {
+    "description": "Title of the explicit mobile-push consent switch."
+  },
+  "rel_svc_push_bound_subtitle": "Bound to {bound} — revoke that binding below before enabling for {connection}",
+  "@rel_svc_push_bound_subtitle": {
+    "description": "Mobile-push switch subtitle when another connection owns consent.",
+    "placeholders": {
+      "bound": {
+        "type": "String"
+      },
+      "connection": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_svc_push_private_activity": "Private server activity for {connection}",
+  "@rel_svc_push_private_activity": {
+    "description": "Mobile-push switch subtitle for the current connection.",
+    "placeholders": {
+      "connection": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_svc_push_bound_warning_named": "Bound to another saved connection ({bound}). Disable and revoke that binding before enabling for this connection.",
+  "@rel_svc_push_bound_warning_named": {
+    "description": "Named warning when mobile push is bound elsewhere.",
+    "placeholders": {
+      "bound": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_svc_push_bound_warning": "Bound to another saved connection. Disable and revoke that binding before enabling for this connection.",
+  "@rel_svc_push_bound_warning": {
+    "description": "Warning when mobile push is bound to an unnamed saved connection."
+  },
+  "rel_svc_push_local_notifications_muted": "Local notifications are turned off above. Background notification consent is unchanged, but ordinary background activity hints are muted until \"Enable notifications\" is turned on.",
+  "@rel_svc_push_local_notifications_muted": {
+    "description": "Explains that the master local toggle mutes delivery without revoking push consent."
+  },
+  "rel_svc_push_legacy_subscription": "Legacy subscription: {count} selected session(s) only. It will not expand automatically. Turn off, then on to opt in to server-authorized sessions.",
+  "@rel_svc_push_legacy_subscription": {
+    "description": "Warning for a legacy explicit mobile-push session allowlist.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_svc_push_authorized_binding": "Bound only to this saved connection and profile. Session access follows current server authorization.",
+  "@rel_svc_push_authorized_binding": {
+    "description": "Scope disclosure for automatic mobile-push subscriptions."
+  },
+  "rel_svc_push_revocation_pending": "Server revocation pending. Local delivery is off; retry while the original saved login is available.",
+  "@rel_svc_push_revocation_pending": {
+    "description": "Warning for a durable pending server revoke."
+  },
+  "rel_svc_push_refresh_retry": "Refresh / retry",
+  "@rel_svc_push_refresh_retry": {
+    "description": "Button to recheck mobile-push setup."
+  },
+  "rel_svc_push_disable_named": "Disable and revoke {bound}",
+  "@rel_svc_push_disable_named": {
+    "description": "Button revoking mobile push from a named other connection.",
+    "placeholders": {
+      "bound": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_svc_push_other_connection": "other connection",
+  "@rel_svc_push_other_connection": {
+    "description": "Fallback short label for another connection."
+  },
+  "rel_svc_push_disable": "Disable and revoke",
+  "@rel_svc_push_disable": {
+    "description": "Button revoking mobile-push consent."
+  },
+  "rel_svc_push_refresh_explanation": "Refresh / retry rechecks availability after server setup; it cannot install the companion. Enabling notifications remains a separate choice.",
+  "@rel_svc_push_refresh_explanation": {
+    "description": "Clarifies what refresh does and that notification consent stays separate."
+  },
+  "rel_svc_push_companion_required": "Background notifications require a separately installed and enabled server-side mobile-push companion. Android cannot install it. Updating the APK alone does not set up the server.",
+  "@rel_svc_push_companion_required": {
+    "description": "Server-side installation requirement disclosure."
+  },
+  "rel_svc_push_server_setup_guide": "Server setup guide",
+  "@rel_svc_push_server_setup_guide": {
+    "description": "Link to mobile-push server installation documentation."
+  },
+  "rel_svc_push_enable_disclosure": "Enable to request Android notification permission and share this installation’s endpoint and encryption keys with this server. Encrypted activity hints contain no chat content. Only sessions authorized by your server login are included.",
+  "@rel_svc_push_enable_disclosure": {
+    "description": "Consent disclosure shown before enabling mobile push."
+  },
+  "rel_svc_push_transport_disclosure": "Built-in delivery uses Google’s push transport and needs Google Play Services, but includes no Firebase SDK. An optional UnifiedPush distributor can be used instead. Delivery is best-effort; reopen Hermes to reconcile.",
+  "@rel_svc_push_transport_disclosure": {
+    "description": "Mobile-push transport and delivery disclosure."
+  },
+  "rel_svc_push_advanced_transport": "Advanced transport",
+  "@rel_svc_push_advanced_transport": {
+    "description": "Expandable mobile-push transport settings title."
+  },
+  "rel_svc_push_automatic_explanation": "Automatic preserves an existing distributor choice, otherwise uses built-in Google delivery when available. Disable before changing transport.",
+  "@rel_svc_push_automatic_explanation": {
+    "description": "Explanation of automatic transport selection."
+  },
+  "rel_svc_push_transport_label": "Push transport",
+  "@rel_svc_push_transport_label": {
+    "description": "Mobile-push transport dropdown label."
+  },
+  "rel_svc_push_automatic_recommended": "Automatic (recommended)",
+  "@rel_svc_push_automatic_recommended": {
+    "description": "Recommended automatic mobile-push transport option."
+  },
+  "rel_svc_push_selected_unavailable": "Selected distributor (unavailable)",
+  "@rel_svc_push_selected_unavailable": {
+    "description": "Disabled dropdown option for a missing selected distributor."
+  },
+  "rel_svc_push_no_transport_detected": "No available transport detected. Built-in delivery needs Google Play Services; without it, install and configure a UnifiedPush distributor, then refresh.",
+  "@rel_svc_push_no_transport_detected": {
+    "description": "Empty mobile-push transport list guidance."
+  },
+  "rel_svc_push_channel_turns_name": "Ares Turns",
+  "@rel_svc_push_channel_turns_name": {
+    "description": "OS notification channel name for completed turns."
+  },
+  "rel_svc_push_channel_turns_description": "Notifications for completed background turns",
+  "@rel_svc_push_channel_turns_description": {
+    "description": "OS notification channel description for completed turns."
+  },
+  "rel_svc_push_channel_attention_name": "Ares Attention",
+  "@rel_svc_push_channel_attention_name": {
+    "description": "OS notification channel name for requests needing attention."
+  },
+  "rel_svc_push_channel_attention_description": "Approvals and input requests that need you",
+  "@rel_svc_push_channel_attention_description": {
+    "description": "OS notification channel description for attention requests."
+  },
+  "rel_svc_push_channel_background_name": "Ares Background",
+  "@rel_svc_push_channel_background_name": {
+    "description": "OS notification channel name for background work."
+  },
+  "rel_svc_push_channel_background_description": "Background task completions",
+  "@rel_svc_push_channel_background_description": {
+    "description": "OS notification channel description for background work."
+  },
+  "rel_svc_push_channel_notices_name": "Ares Notices",
+  "@rel_svc_push_channel_notices_name": {
+    "description": "OS notification channel name for credit and plugin notices."
+  },
+  "rel_svc_push_channel_notices_description": "Credit and plugin notices",
+  "@rel_svc_push_channel_notices_description": {
+    "description": "OS notification channel description for credit and plugin notices."
+  },
+  "rel_svc_push_diag_not_initialised": "not initialised",
+  "@rel_svc_push_diag_not_initialised": {
+    "description": "Recent-notification diagnostic detail when the notification sink did not initialize."
+  },
+  "rel_svc_push_diag_replies_off": "replies are off",
+  "@rel_svc_push_diag_replies_off": {
+    "description": "Recent-notification skip reason when reply notifications are disabled."
+  },
+  "rel_svc_push_diag_conversation": "conversation",
+  "@rel_svc_push_diag_conversation": {
+    "description": "Recent-notification diagnostic indicating an Android conversation post."
+  },
+  "rel_svc_push_diag_conversation_permission_denied": "conversation; permission denied",
+  "@rel_svc_push_diag_conversation_permission_denied": {
+    "description": "Recent-notification diagnostic for a conversation posted without confirmed permission."
+  },
+  "rel_svc_push_diag_conversation_error": "conversation: {error}",
+  "@rel_svc_push_diag_conversation_error": {
+    "description": "Recent-notification conversation failure prefix; error is kept raw.",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_svc_push_diag_failures_off": "failures are off",
+  "@rel_svc_push_diag_failures_off": {
+    "description": "Recent-notification skip reason when failure notifications are disabled."
+  },
+  "rel_svc_push_diag_kind_off": "{kind} is off",
+  "@rel_svc_push_diag_kind_off": {
+    "description": "Recent-notification skip reason; kind is a literal notification enum id.",
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_svc_push_diag_windows_setting_unknown": "Windows did not report its notification setting",
+  "@rel_svc_push_diag_windows_setting_unknown": {
+    "description": "Recent-notification diagnostic when Windows accepts a toast but its setting is unreadable."
+  },
+  "rel_svc_backup_not_hermes_configuration_backup": "This file is not a Hermes configuration backup.",
+  "@rel_svc_backup_not_hermes_configuration_backup": {
+    "description": "Backup validation failure for a file with the wrong format."
+  },
+  "rel_svc_backup_newer_version_cannot_import": "This backup was made by a newer version of the app and cannot be imported.",
+  "@rel_svc_backup_newer_version_cannot_import": {
+    "description": "Backup version is newer than this app supports."
+  },
+  "rel_svc_backup_missing_client_certificate": "This backup claims a client certificate for a connection but does not contain it, so a complete restore is not possible.",
+  "@rel_svc_backup_missing_client_certificate": {
+    "description": "Backup metadata references a missing client certificate."
+  },
+  "rel_svc_backup_damaged_unreadable": "This backup file is damaged and could not be read.",
+  "@rel_svc_backup_damaged_unreadable": {
+    "description": "Generic safe error for malformed backup content."
+  },
+  "rel_svc_backup_unsupported_preference_type": "A saved preference has an unsupported type and cannot be exported.",
+  "@rel_svc_backup_unsupported_preference_type": {
+    "description": "Export failed because a stored setting has an unsupported value type."
+  },
+  "rel_svc_backup_choose_passphrase_api_keys": "Choose a passphrase — the backup contains your API keys.",
+  "@rel_svc_backup_choose_passphrase_api_keys": {
+    "description": "Backup export requires encryption because API keys are included."
+  },
+  "rel_svc_backup_could_not_protect_safely": "The backup could not be protected safely.",
+  "@rel_svc_backup_could_not_protect_safely": {
+    "description": "Backup encryption failed safely."
+  },
+  "rel_svc_backup_unsupported_encryption": "This backup uses an unsupported encryption scheme.",
+  "@rel_svc_backup_unsupported_encryption": {
+    "description": "Backup declares an encryption format this app cannot use."
+  },
+  "rel_svc_backup_wrong_passphrase_or_altered": "Wrong passphrase, or this backup file has been altered.",
+  "@rel_svc_backup_wrong_passphrase_or_altered": {
+    "description": "Authenticated decryption failed without distinguishing password from tampering."
+  },
+  "rel_svc_backup_share_subject": "Hermes configuration backup",
+  "@rel_svc_backup_share_subject": {
+    "description": "Operating-system share sheet subject for an exported backup."
+  },
+  "rel_svc_backup_selected_file_unreadable": "That file could not be read.",
+  "@rel_svc_backup_selected_file_unreadable": {
+    "description": "Selected backup file could not be read."
+  },
+  "rel_svc_backup_connections_added": "{count} added",
+  "@rel_svc_backup_connections_added": {
+    "description": "Count fragment in a restored-connections summary.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_svc_backup_connections_updated": "{count} updated",
+  "@rel_svc_backup_connections_updated": {
+    "description": "Count fragment in a restored-connections summary.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_svc_backup_connections_removed": "{count} removed",
+  "@rel_svc_backup_connections_removed": {
+    "description": "Count fragment in a restored-connections summary.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_svc_backup_no_connection_changes": "No connection changes",
+  "@rel_svc_backup_no_connection_changes": {
+    "description": "Restore summary when no saved connections changed."
+  },
+  "rel_svc_backup_connections_summary": "Connections: {changes}",
+  "@rel_svc_backup_connections_summary": {
+    "description": "Restore summary prefix followed by localized change fragments.",
+    "placeholders": {
+      "changes": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_svc_backup_restore_summary": "{connections} · {count} settings restored",
+  "@rel_svc_backup_restore_summary": {
+    "description": "Final configuration restore result summary.",
+    "placeholders": {
+      "connections": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_svc_backup_certificate_not_included": "The client certificate for \"{label}\" could not be included in this backup: {error}",
+  "@rel_svc_backup_certificate_not_included": {
+    "description": "Backup export could not include one connection's client certificate; label is user data and error is already localized.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_svc_backup_certificate_password_needed": "This certificate needs its password. Enter it below and it will open automatically.",
+  "@rel_svc_backup_certificate_password_needed": {
+    "description": "Certificate import requires its password."
+  },
+  "rel_svc_backup_certificate_password_or_corrupt": "The certificate password is incorrect, or the file is corrupted.",
+  "@rel_svc_backup_certificate_password_or_corrupt": {
+    "description": "Certificate authentication failed without distinguishing wrong password from corruption."
+  },
+  "rel_svc_backup_certificate_password_incorrect": "The certificate password is incorrect.",
+  "@rel_svc_backup_certificate_password_incorrect": {
+    "description": "Certificate password is wrong."
+  },
+  "rel_svc_backup_certificate_unsupported_encryption": "This certificate uses an encryption method the app cannot read.",
+  "@rel_svc_backup_certificate_unsupported_encryption": {
+    "description": "Certificate uses unsupported encryption."
+  },
+  "rel_svc_backup_certificate_unreadable_pkcs12": "The selected file is not a readable PKCS#12 (.p12/.pfx) certificate.",
+  "@rel_svc_backup_certificate_unreadable_pkcs12": {
+    "description": "Selected file is not a readable PKCS#12 certificate container."
+  },
+  "rel_svc_backup_certificate_unreadable": "The selected certificate could not be read.",
+  "@rel_svc_backup_certificate_unreadable": {
+    "description": "Selected certificate could not be parsed."
+  },
+  "rel_svc_backup_not_certificate_file": "That file is not a certificate: pick a .p12/.pfx container or PEM certificate and key files.",
+  "@rel_svc_backup_not_certificate_file": {
+    "description": "Picked file contains no supported certificate or private key."
+  },
+  "rel_svc_backup_not_pem_certificate": "The selected certificate is not a PEM certificate.",
+  "@rel_svc_backup_not_pem_certificate": {
+    "description": "Selected certificate half is not PEM."
+  },
+  "rel_svc_backup_not_pem_private_key": "The selected private key is not a PEM private key.",
+  "@rel_svc_backup_not_pem_private_key": {
+    "description": "Selected private-key half is not PEM."
+  },
+  "rel_svc_backup_certificate_pair_unloadable": "The selected certificate and private key could not be loaded.",
+  "@rel_svc_backup_certificate_pair_unloadable": {
+    "description": "PEM certificate and private key could not be loaded together."
+  },
+  "rel_svc_backup_saved_certificate_files_unreadable": "The saved client certificate files could not be read.",
+  "@rel_svc_backup_saved_certificate_files_unreadable": {
+    "description": "Stored client certificate files are missing or unreadable during backup."
+  },
+  "rel_svc_backup_client_certificate_storage_failed": "The client certificate could not be stored securely on this device.",
+  "@rel_svc_backup_client_certificate_storage_failed": {
+    "description": "Committing a client certificate to private device storage failed."
+  },
+  "rel_svc_backup_certificate_storage_failed": "The certificate could not be stored securely on this device.",
+  "@rel_svc_backup_certificate_storage_failed": {
+    "description": "Writing certificate files to private device storage failed."
+  },
+  "rel_svc_backup_client_certificate_label": "Client certificate",
+  "@rel_svc_backup_client_certificate_label": {
+    "description": "Fallback display label when a client certificate has no filename or common name."
+  },
+  "rel_svc_backup_search_dashboard_unreachable": "Could not reach the dashboard: {error}",
+  "@rel_svc_backup_search_dashboard_unreachable": {
+    "description": "Session search transport failed; error is raw platform detail.",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_svc_backup_search_credentials_rejected": "The dashboard rejected the saved credentials. Check the dashboard username and password for this connection.",
+  "@rel_svc_backup_search_credentials_rejected": {
+    "description": "Session search received an authentication rejection."
+  },
+  "rel_svc_backup_search_not_supported": "This dashboard does not expose session search. Update Hermes on the host, or switch back to on-device search.",
+  "@rel_svc_backup_search_not_supported": {
+    "description": "Dashboard does not support remote session search."
+  },
+  "rel_svc_backup_search_redirected": "The dashboard redirected session search (HTTP {statusCode}). Ares does not follow redirects with saved credentials; check the connection address.",
+  "@rel_svc_backup_search_redirected": {
+    "description": "Session search refused an HTTP redirect to protect saved credentials.",
+    "placeholders": {
+      "statusCode": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_svc_backup_search_http_failed": "Session search failed with HTTP {statusCode}.",
+  "@rel_svc_backup_search_http_failed": {
+    "description": "Session search failed with a non-success HTTP status.",
+    "placeholders": {
+      "statusCode": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_svc_backup_search_malformed_response": "The dashboard returned a malformed search response.",
+  "@rel_svc_backup_search_malformed_response": {
+    "description": "Dashboard search response was not valid JSON."
+  },
+  "rel_svc_backup_search_unexpected_response": "The dashboard returned an unexpected search response.",
+  "@rel_svc_backup_search_unexpected_response": {
+    "description": "Dashboard search response had the wrong top-level shape."
+  },
+  "rel_svc_backup_search_too_many_results": "The dashboard returned more search results than requested.",
+  "@rel_svc_backup_search_too_many_results": {
+    "description": "Dashboard exceeded the requested search-result limit."
+  },
+  "rel_svc_backup_message_search_unexpected_response": "Unexpected message search response.",
+  "@rel_svc_backup_message_search_unexpected_response": {
+    "description": "Message-search response failed semantic validation."
+  },
+  "rel_svc_backup_message_search_unexpected_result": "Unexpected message search result.",
+  "@rel_svc_backup_message_search_unexpected_result": {
+    "description": "One message-search result failed semantic validation."
+  },
+  "rel_svc_backup_ai_search_api_key_rejected": "The Hermes API rejected the saved API key.",
+  "@rel_svc_backup_ai_search_api_key_rejected": {
+    "description": "AI search rewrite authentication failed."
+  },
+  "rel_svc_backup_ai_search_http_failed": "AI query rewrite failed with HTTP {statusCode}.",
+  "@rel_svc_backup_ai_search_http_failed": {
+    "description": "AI query rewrite failed with a non-success HTTP status.",
+    "placeholders": {
+      "statusCode": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_svc_backup_ai_search_no_usable_query": "The selected model returned no usable search query.",
+  "@rel_svc_backup_ai_search_no_usable_query": {
+    "description": "AI model produced no usable rewritten query."
+  },
+  "rel_svc_backup_ai_search_malformed_response": "Hermes returned a malformed AI rewrite response.",
+  "@rel_svc_backup_ai_search_malformed_response": {
+    "description": "Hermes returned invalid AI rewrite JSON."
+  },
+  "rel_svc_backup_space_name_already_exists": "A space with this name already exists",
+  "@rel_svc_backup_space_name_already_exists": {
+    "description": "Space create or rename validation failure."
+  },
+  "rel_svc_backup_space_name_length_invalid": "Space name must be 1–80 characters",
+  "@rel_svc_backup_space_name_length_invalid": {
+    "description": "Space name validation range and single-line requirement."
+  },
+  "ng_rel_svc_backup_gateway_address_required": "Enter the address of your Hermes dashboard.",
+  "@ng_rel_svc_backup_gateway_address_required": {
+    "description": "NextGen gateway address validation."
+  },
+  "ng_rel_svc_backup_gateway_address_scheme": "The address must start with http:// or https:// (got {scheme}).",
+  "@ng_rel_svc_backup_gateway_address_scheme": {
+    "description": "NextGen gateway address has an unsupported scheme.",
+    "placeholders": {
+      "scheme": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_rel_svc_backup_gateway_address_invalid": "That address is not valid.",
+  "@ng_rel_svc_backup_gateway_address_invalid": {
+    "description": "NextGen gateway address parse failure."
+  },
+  "ng_rel_svc_backup_gateway_address_no_host": "The address has no host name.",
+  "@ng_rel_svc_backup_gateway_address_no_host": {
+    "description": "NextGen gateway address has no hostname."
+  },
+  "ng_rel_svc_backup_sign_in_main_window": "Sign in in the main window.",
+  "@ng_rel_svc_backup_sign_in_main_window": {
+    "description": "NextGen read-only secondary window cannot alter sign-in."
+  },
+  "rel_svc_backup_sign_in_renewal_failed": "The gateway couldn't renew the sign-in right now.",
+  "@rel_svc_backup_sign_in_renewal_failed": {
+    "description": "Recent sign-in renewal failed and is temporarily throttled."
+  },
+  "rel_svc_backup_sign_in_provider_unreachable": "The gateway couldn't renew the sign-in: its sign-in provider is unreachable.",
+  "@rel_svc_backup_sign_in_provider_unreachable": {
+    "description": "Sign-in renewal provider is unavailable."
+  },
+  "rel_svc_backup_sign_in_renewal_timed_out": "Timed out renewing the sign-in.",
+  "@rel_svc_backup_sign_in_renewal_timed_out": {
+    "description": "Sign-in renewal request timed out."
+  },
+  "rel_svc_backup_sign_in_no_tokens": "The gateway returned no sign-in tokens.",
+  "@rel_svc_backup_sign_in_no_tokens": {
+    "description": "Gateway sign-in or renewal returned no tokens."
+  },
+  "ng_rel_svc_backup_probe_timed_out": "Timed out. Check the address, VPN or Tailscale connection.",
+  "@ng_rel_svc_backup_probe_timed_out": {
+    "description": "NextGen gateway probe timed out."
+  },
+  "ng_rel_svc_backup_probe_tls_failed": "TLS handshake failed: {error}",
+  "@ng_rel_svc_backup_probe_tls_failed": {
+    "description": "NextGen gateway probe TLS failure; error is raw platform detail.",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_rel_svc_backup_gateway_answered_http": "The gateway answered HTTP {statusCode}.",
+  "@ng_rel_svc_backup_gateway_answered_http": {
+    "description": "NextGen sign-in received an unexpected HTTP status.",
+    "placeholders": {
+      "statusCode": {
+        "type": "int"
+      }
+    }
+  },
+  "ng_rel_svc_backup_gateway_answer_timed_out": "The gateway took too long to answer.",
+  "@ng_rel_svc_backup_gateway_answer_timed_out": {
+    "description": "NextGen sign-in gateway request timed out."
+  },
+  "ng_rel_svc_backup_browser_callback_not_ready": "Couldn't get ready for the browser to come back: {error}",
+  "@ng_rel_svc_backup_browser_callback_not_ready": {
+    "description": "NextGen could not open the local browser callback listener; error is raw detail.",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "ng_rel_svc_backup_browser_signed_in_body": "You can go back to Hermes now.",
+  "@ng_rel_svc_backup_browser_signed_in_body": {
+    "description": "NextGen browser callback success page body."
+  },
+  "ng_rel_svc_backup_browser_waiting_title": "Waiting for sign-in",
+  "@ng_rel_svc_backup_browser_waiting_title": {
+    "description": "NextGen browser callback mismatch page title."
+  },
+  "ng_rel_svc_backup_browser_not_current": "This page is not part of the current sign-in.",
+  "@ng_rel_svc_backup_browser_not_current": {
+    "description": "NextGen browser callback state did not match the current sign-in."
+  },
+  "ng_rel_svc_backup_browser_open_failed": "Couldn't open the browser to sign in.",
+  "@ng_rel_svc_backup_browser_open_failed": {
+    "description": "NextGen failed to launch the external browser for sign-in."
+  },
+  "ng_rel_svc_backup_browser_sign_in_timed_out": "The sign-in took too long. Try again.",
+  "@ng_rel_svc_backup_browser_sign_in_timed_out": {
+    "description": "NextGen browser sign-in timed out."
+  },
+  "ng_rel_svc_backup_gateway_refused_sign_in": "The gateway refused the sign-in (HTTP {statusCode}).",
+  "@ng_rel_svc_backup_gateway_refused_sign_in": {
+    "description": "NextGen gateway rejected browser token redemption.",
+    "placeholders": {
+      "statusCode": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_svc_misc_alert_caution": "Caution",
+  "@rel_svc_misc_alert_caution": {
+    "description": "Label for a Markdown caution alert banner."
+  },
+  "rel_svc_misc_alert_important": "Important",
+  "@rel_svc_misc_alert_important": {
+    "description": "Label for a Markdown important alert banner."
+  },
+  "rel_svc_misc_alert_tip": "Tip",
+  "@rel_svc_misc_alert_tip": {
+    "description": "Label for a Markdown tip alert banner."
+  },
+  "rel_svc_misc_alert_warning": "Warning",
+  "@rel_svc_misc_alert_warning": {
+    "description": "Label for a Markdown warning alert banner."
+  },
+  "rel_svc_misc_allow_folder_session": "Allow this folder until the session ends.",
+  "@rel_svc_misc_allow_folder_session": {
+    "description": "Approval scope explanation for a session-long folder grant."
+  },
+  "rel_svc_misc_allow_website_session": "Allow this website until the session ends.",
+  "@rel_svc_misc_allow_website_session": {
+    "description": "Approval scope explanation for a session-long website grant."
+  },
+  "rel_svc_misc_approval_needed_title": "Approval needed — {title}",
+  "@rel_svc_misc_approval_needed_title": {
+    "description": "Native notification title for an approval request. Title is the user or server supplied chat title.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_svc_misc_attach_file_reference": "Attach a file reference",
+  "@rel_svc_misc_attach_file_reference": {
+    "description": "Description of the @file composer reference starter."
+  },
+  "rel_svc_misc_attach_folder_reference": "Attach a folder reference",
+  "@rel_svc_misc_attach_folder_reference": {
+    "description": "Description of the @folder composer reference starter."
+  },
+  "rel_svc_misc_attach_git_context": "Attach git context",
+  "@rel_svc_misc_attach_git_context": {
+    "description": "Description of the @git composer reference starter."
+  },
+  "rel_svc_misc_attach_image_reference": "Attach an image reference",
+  "@rel_svc_misc_attach_image_reference": {
+    "description": "Description of the @image composer reference starter."
+  },
+  "rel_svc_misc_attach_staged_diff": "Attach the staged diff",
+  "@rel_svc_misc_attach_staged_diff": {
+    "description": "Description of the @staged composer reference starter."
+  },
+  "rel_svc_misc_attach_tool_reference": "Attach a tool reference",
+  "@rel_svc_misc_attach_tool_reference": {
+    "description": "Description of the @tool composer reference starter."
+  },
+  "rel_svc_misc_attach_unstaged_diff": "Attach the unstaged diff",
+  "@rel_svc_misc_attach_unstaged_diff": {
+    "description": "Description of the @diff composer reference starter."
+  },
+  "rel_svc_misc_attach_url_reference": "Attach a URL reference",
+  "@rel_svc_misc_attach_url_reference": {
+    "description": "Description of the @url composer reference starter."
+  },
+  "rel_svc_misc_background_task_completed": "Background task completed",
+  "@rel_svc_misc_background_task_completed": {
+    "description": "Title of a completed background-task notice when the gateway supplies no task ID."
+  },
+  "rel_svc_misc_background_task_named_completed": "Background task {taskId} completed",
+  "@rel_svc_misc_background_task_named_completed": {
+    "description": "Title of a completed background-task notice. TaskId is an opaque server task identifier.",
+    "placeholders": {
+      "taskId": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_svc_misc_chat": "Chat",
+  "@rel_svc_misc_chat": {
+    "description": "Fallback chat title used while restoring a stored gateway turn."
+  },
+  "rel_svc_misc_compacting_context": "Compacting conversation context…",
+  "@rel_svc_misc_compacting_context": {
+    "description": "Live turn status while conversation context is being compacted."
+  },
+  "rel_svc_misc_completed_in": "Completed in {duration}",
+  "@rel_svc_misc_completed_in": {
+    "description": "Tool activity status with a preformatted elapsed duration such as 420 ms or 1.2 s.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_svc_misc_context_compacted": "Conversation context compacted",
+  "@rel_svc_misc_context_compacted": {
+    "description": "Live turn status after conversation context compaction completes."
+  },
+  "rel_svc_misc_cron_readback_mismatch": "Cron model read-back did not match",
+  "@rel_svc_misc_cron_readback_mismatch": {
+    "description": "Cron update failure when the job read back from the gateway does not match the submitted model and fields."
+  },
+  "rel_svc_misc_cron_update_rejected": "Cron update rejected",
+  "@rel_svc_misc_cron_update_rejected": {
+    "description": "Cron update failure when the gateway explicitly rejects the update."
+  },
+  "rel_svc_misc_deny_folder_grant": "Do not grant this folder.",
+  "@rel_svc_misc_deny_folder_grant": {
+    "description": "Approval scope explanation for denying folder access."
+  },
+  "rel_svc_misc_deny_website_grant": "Do not grant this website.",
+  "@rel_svc_misc_deny_website_grant": {
+    "description": "Approval scope explanation for denying website access."
+  },
+  "rel_svc_misc_failed_after": "Failed after {duration}",
+  "@rel_svc_misc_failed_after": {
+    "description": "Tool activity failure status with a preformatted elapsed duration such as 420 ms or 1.2 s.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_svc_misc_gateway_folder_unnamed": "The gateway did not name a folder.",
+  "@rel_svc_misc_gateway_folder_unnamed": {
+    "description": "Folder approval fallback when the gateway omits the folder path."
+  },
+  "rel_svc_misc_gateway_idle_unconfirmed": "The gateway is idle. The previous turn’s outcome could not be confirmed.",
+  "@rel_svc_misc_gateway_idle_unconfirmed": {
+    "description": "Turn status after recovery finds an idle gateway but cannot prove the previous turn outcome."
+  },
+  "rel_svc_misc_gateway_turn_failed": "Gateway turn failed",
+  "@rel_svc_misc_gateway_turn_failed": {
+    "description": "Fallback failure text when a gateway turn fails without a server-authored error."
+  },
+  "rel_svc_misc_gateway_turn_status": "Gateway turn {status}",
+  "@rel_svc_misc_gateway_turn_status": {
+    "description": "Fallback failure text that retains an unknown raw gateway turn status.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_svc_misc_gateway_website_unnamed": "The gateway did not name a website.",
+  "@rel_svc_misc_gateway_website_unnamed": {
+    "description": "Website approval fallback when the gateway omits the host."
+  },
+  "rel_svc_misc_hermes_review": "Hermes review",
+  "@rel_svc_misc_hermes_review": {
+    "description": "Title of a gateway review-summary notice. Hermes is the product name."
+  },
+  "rel_svc_misc_hermes_turn_failed": "Hermes turn failed",
+  "@rel_svc_misc_hermes_turn_failed": {
+    "description": "Native notification title for a failed Hermes turn."
+  },
+  "rel_svc_misc_image_recovery_companion_gap": "Image and text recovery is not available on companion recovery. An unacknowledged image send cannot be restored on this connection, and nothing is sent again automatically.",
+  "@rel_svc_misc_image_recovery_companion_gap": {
+    "description": "Composer notice explaining the image recovery limitation on the companion recovery transport."
+  },
+  "rel_svc_misc_image_recovery_rest_gap": "Image and text recovery is not available on Classic REST/SSE. An unacknowledged image send cannot be restored on this connection, and nothing is sent again automatically.",
+  "@rel_svc_misc_image_recovery_rest_gap": {
+    "description": "Composer notice explaining the image recovery limitation on Classic REST/SSE."
+  },
+  "rel_svc_misc_input_needed_title": "Input needed — {title}",
+  "@rel_svc_misc_input_needed_title": {
+    "description": "Native notification title for an input request. Title is the user or server supplied chat title.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_svc_misc_parallel_workspace_connection_changed": "The connection changed. Reopen it to use the workspace.",
+  "@rel_svc_misc_parallel_workspace_connection_changed": {
+    "description": "Snack bar shown when an old parallel-workspace entry loses connection ownership."
+  },
+  "rel_svc_misc_preparing": "Preparing",
+  "@rel_svc_misc_preparing": {
+    "description": "Tool activity status while a tool is preparing output."
+  },
+  "rel_svc_misc_save_folder_grant": "Save this folder grant for later requests.",
+  "@rel_svc_misc_save_folder_grant": {
+    "description": "Approval scope explanation for permanently saving a folder grant."
+  },
+  "rel_svc_misc_save_website_grant": "Save this website grant for later requests.",
+  "@rel_svc_misc_save_website_grant": {
+    "description": "Approval scope explanation for permanently saving a website grant."
+  },
+  "rel_svc_misc_stored_identity_turn_conflict": "This chat was opened through its stored identity while another turn was admitted. The unsent prompt was not sent; retry explicitly after that turn finishes.",
+  "@rel_svc_misc_stored_identity_turn_conflict": {
+    "description": "Chat failure explaining that an unsent prompt was rejected after stored-session identity reconciliation found another admitted turn."
+  },
+  "rel_svc_misc_untitled": "Untitled",
+  "@rel_svc_misc_untitled": {
+    "description": "Fallback title for a cron job with no name or ID."
+  },
+  "rel_svc_misc_wake_capture_silent": "Client wake capture hears only silence — check OS microphone access and re-toggle wake word.",
+  "@rel_svc_misc_wake_capture_silent": {
+    "description": "Wake-word notice when client microphone capture contains only silence."
+  },
+  "rel_svc_misc_wake_capture_stalled": "Client wake capture stalled: no microphone audio callbacks arrived.",
+  "@rel_svc_misc_wake_capture_stalled": {
+    "description": "Wake-word notice when client microphone capture stops delivering audio callbacks."
+  },
+  "rel_svc_misc_wake_feed_refused": "Wake-word feed refused {count} consecutive frames{detail} — re-toggle wake word to re-arm.",
+  "@rel_svc_misc_wake_feed_refused": {
+    "description": "Wake-word notice after consecutive audio frames are refused. Detail is either empty or a raw server reason in parentheses.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_svc_misc_wake_microphone_failed": "Client wake microphone stream failed: {error}",
+  "@rel_svc_misc_wake_microphone_failed": {
+    "description": "Wake-word notice when the client microphone stream fails. Error is a raw local platform error.",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_svc_misc_wake_track_ended": "Microphone track ended during wake-word capture — re-toggle wake word to re-arm.",
+  "@rel_svc_misc_wake_track_ended": {
+    "description": "Wake-word notice when the microphone track ends unexpectedly during capture."
+  },
+  "rel_svc_misc_website": "Website",
+  "@rel_svc_misc_website": {
+    "description": "Field heading for the host requested by a website-access approval."
+  },
+  "rel_svc_lan_timeout": "LAN discovery timed out",
+  "@rel_svc_lan_timeout": {
+    "description": "Explanation when discovery on the local network reaches its time limit; displayed inside the discovery failure wrapper."
+  },
+  "rel_svc_notification_permission_denied": "permission denied",
+  "@rel_svc_notification_permission_denied": {
+    "description": "Lowercase reason in recent notification diagnostics when OS permission is denied."
+  },
+  "rel_svc_notifications_off": "notifications are off",
+  "@rel_svc_notifications_off": {
+    "description": "Lowercase recent-notification diagnostic explaining that notifications are disabled."
   }
 }

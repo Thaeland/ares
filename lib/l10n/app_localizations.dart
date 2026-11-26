@@ -19675,6 +19675,1132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hidden files can\'t be saved by the gateway.'**
   String get release_core_file_save_hidden;
+
+  /// Validation shown when a legacy mobile-push session allowlist is invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Select 1–128 durable session IDs, each 1–200 ASCII characters using only letters, digits, _ . : @ or -. Remove blank IDs and whitespace.'**
+  String get rel_svc_push_api_select_sessions;
+
+  /// Mobile-push capability validation failure.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile push is unavailable on this server.'**
+  String get rel_svc_push_api_unavailable;
+
+  /// Mobile-push server key validation failure.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid server VAPID public key.'**
+  String get rel_svc_push_api_invalid_vapid;
+
+  /// Server plugin is too old for authorized automatic subscriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'This server needs an updated mobile-push plugin for automatic subscriptions.'**
+  String get rel_svc_push_api_update_plugin;
+
+  /// Mobile-push service status on unsupported platforms.
+  ///
+  /// In en, this message translates to:
+  /// **'Android only'**
+  String get rel_svc_push_status_android_only;
+
+  /// Safe mobile-push error when native preference synchronization fails.
+  ///
+  /// In en, this message translates to:
+  /// **'Native notification preferences could not be synchronized.'**
+  String get rel_svc_push_native_prefs_sync_failed;
+
+  /// Mobile-push enable error when no eligible saved Android connection exists.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a saved connection on Android first.'**
+  String get rel_svc_push_choose_android_connection;
+
+  /// Mobile-push handshake status.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking server authorization'**
+  String get rel_svc_push_status_checking_authorization;
+
+  /// Error after local mobile-push revocation could not be saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not persist revocation. Retry disabling before leaving the app.'**
+  String get rel_svc_push_revoke_persist_failed;
+
+  /// Mobile-push availability status while consent is off.
+  ///
+  /// In en, this message translates to:
+  /// **'Off; server API ready'**
+  String get rel_svc_push_status_off_api_ready;
+
+  /// Mobile-push status while a server-side revoke must still be retried.
+  ///
+  /// In en, this message translates to:
+  /// **'Off; server revocation pending'**
+  String get rel_svc_push_status_off_revoke_pending;
+
+  /// Mobile-push status after its bound saved login changed.
+  ///
+  /// In en, this message translates to:
+  /// **'Off; saved connection changed'**
+  String get rel_svc_push_status_off_connection_changed;
+
+  /// Mobile-push registration status while waiting for the distributor endpoint.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending distributor endpoint'**
+  String get rel_svc_push_status_pending_endpoint;
+
+  /// Mobile-push registration status.
+  ///
+  /// In en, this message translates to:
+  /// **'Registering'**
+  String get rel_svc_push_status_registering;
+
+  /// Mobile-push handshake status while waiting for a silent encrypted verification push.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending encrypted challenge (waiting for silent server verification push)'**
+  String get rel_svc_push_status_pending_challenge;
+
+  /// Safe mobile-push error after notification permission was denied.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow Android notifications in system settings, then retry.'**
+  String get rel_svc_push_allow_android_notifications_retry;
+
+  /// Safe mobile-push error for invalid server capability or subscription responses.
+  ///
+  /// In en, this message translates to:
+  /// **'The server mobile-push plugin is unavailable, outdated, or returned an invalid subscription response. Ask the operator to update it, then retry.'**
+  String get rel_svc_push_plugin_invalid;
+
+  /// Safe mobile-push error when Android has no usable transport.
+  ///
+  /// In en, this message translates to:
+  /// **'No push transport is available. Built-in delivery needs working Google Play Services; alternatively install a UnifiedPush distributor and retry.'**
+  String get rel_svc_push_transport_unavailable;
+
+  /// Safe mobile-push error when Android needs an explicit distributor choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Several UnifiedPush distributors are available. Choose one in Advanced transport, then retry.'**
+  String get rel_svc_push_transport_choice;
+
+  /// Safe mobile-push error when the selected distributor disappeared.
+  ///
+  /// In en, this message translates to:
+  /// **'The selected UnifiedPush distributor is unavailable. Restore it or choose another in Advanced transport.'**
+  String get rel_svc_push_transport_missing;
+
+  /// Safe 404 error with operator remediation for the server companion.
+  ///
+  /// In en, this message translates to:
+  /// **'The server mobile-push companion is unavailable. It may be missing or disabled, or this connection may point to the wrong dashboard. Install or enable the companion on the server, check the dashboard connection, then refresh. See Server setup guide above.'**
+  String get rel_svc_push_companion_unavailable;
+
+  /// Safe authorization failure for mobile push.
+  ///
+  /// In en, this message translates to:
+  /// **'Server denied mobile push. Ask the operator to authorize this principal and these sessions.'**
+  String get rel_svc_push_server_denied;
+
+  /// Generic safe mobile-push setup failure.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile push is not ready. Check server plugin authorization, distributor and network, then retry.'**
+  String get rel_svc_push_not_ready;
+
+  /// Settings error while loading Android push transports.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to read Android push availability. Retry below.'**
+  String get rel_svc_push_availability_read_failed;
+
+  /// Fallback error for the mobile-push settings action.
+  ///
+  /// In en, this message translates to:
+  /// **'Push setup failed. Check Android permission, server authorization and transport, then retry.'**
+  String get rel_svc_push_setup_failed;
+
+  /// Mobile-push settings status line.
+  ///
+  /// In en, this message translates to:
+  /// **'Status: {status}'**
+  String rel_svc_push_status(String status);
+
+  /// Mobile-push status when another saved connection owns the binding.
+  ///
+  /// In en, this message translates to:
+  /// **'Status: Bound to {bound} (not active for {connection}; handshake: {status})'**
+  String rel_svc_push_status_bound(
+    String bound,
+    String connection,
+    String status,
+  );
+
+  /// Fallback label for a different saved connection.
+  ///
+  /// In en, this message translates to:
+  /// **'another saved connection'**
+  String get rel_svc_push_another_saved_connection;
+
+  /// Title of the explicit mobile-push consent switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Background notifications'**
+  String get rel_svc_push_background_notifications;
+
+  /// Mobile-push switch subtitle when another connection owns consent.
+  ///
+  /// In en, this message translates to:
+  /// **'Bound to {bound} — revoke that binding below before enabling for {connection}'**
+  String rel_svc_push_bound_subtitle(String bound, String connection);
+
+  /// Mobile-push switch subtitle for the current connection.
+  ///
+  /// In en, this message translates to:
+  /// **'Private server activity for {connection}'**
+  String rel_svc_push_private_activity(String connection);
+
+  /// Named warning when mobile push is bound elsewhere.
+  ///
+  /// In en, this message translates to:
+  /// **'Bound to another saved connection ({bound}). Disable and revoke that binding before enabling for this connection.'**
+  String rel_svc_push_bound_warning_named(String bound);
+
+  /// Warning when mobile push is bound to an unnamed saved connection.
+  ///
+  /// In en, this message translates to:
+  /// **'Bound to another saved connection. Disable and revoke that binding before enabling for this connection.'**
+  String get rel_svc_push_bound_warning;
+
+  /// Explains that the master local toggle mutes delivery without revoking push consent.
+  ///
+  /// In en, this message translates to:
+  /// **'Local notifications are turned off above. Background notification consent is unchanged, but ordinary background activity hints are muted until \"Enable notifications\" is turned on.'**
+  String get rel_svc_push_local_notifications_muted;
+
+  /// Warning for a legacy explicit mobile-push session allowlist.
+  ///
+  /// In en, this message translates to:
+  /// **'Legacy subscription: {count} selected session(s) only. It will not expand automatically. Turn off, then on to opt in to server-authorized sessions.'**
+  String rel_svc_push_legacy_subscription(int count);
+
+  /// Scope disclosure for automatic mobile-push subscriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Bound only to this saved connection and profile. Session access follows current server authorization.'**
+  String get rel_svc_push_authorized_binding;
+
+  /// Warning for a durable pending server revoke.
+  ///
+  /// In en, this message translates to:
+  /// **'Server revocation pending. Local delivery is off; retry while the original saved login is available.'**
+  String get rel_svc_push_revocation_pending;
+
+  /// Button to recheck mobile-push setup.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh / retry'**
+  String get rel_svc_push_refresh_retry;
+
+  /// Button revoking mobile push from a named other connection.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable and revoke {bound}'**
+  String rel_svc_push_disable_named(String bound);
+
+  /// Fallback short label for another connection.
+  ///
+  /// In en, this message translates to:
+  /// **'other connection'**
+  String get rel_svc_push_other_connection;
+
+  /// Button revoking mobile-push consent.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable and revoke'**
+  String get rel_svc_push_disable;
+
+  /// Clarifies what refresh does and that notification consent stays separate.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh / retry rechecks availability after server setup; it cannot install the companion. Enabling notifications remains a separate choice.'**
+  String get rel_svc_push_refresh_explanation;
+
+  /// Server-side installation requirement disclosure.
+  ///
+  /// In en, this message translates to:
+  /// **'Background notifications require a separately installed and enabled server-side mobile-push companion. Android cannot install it. Updating the APK alone does not set up the server.'**
+  String get rel_svc_push_companion_required;
+
+  /// Link to mobile-push server installation documentation.
+  ///
+  /// In en, this message translates to:
+  /// **'Server setup guide'**
+  String get rel_svc_push_server_setup_guide;
+
+  /// Consent disclosure shown before enabling mobile push.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable to request Android notification permission and share this installation’s endpoint and encryption keys with this server. Encrypted activity hints contain no chat content. Only sessions authorized by your server login are included.'**
+  String get rel_svc_push_enable_disclosure;
+
+  /// Mobile-push transport and delivery disclosure.
+  ///
+  /// In en, this message translates to:
+  /// **'Built-in delivery uses Google’s push transport and needs Google Play Services, but includes no Firebase SDK. An optional UnifiedPush distributor can be used instead. Delivery is best-effort; reopen Hermes to reconcile.'**
+  String get rel_svc_push_transport_disclosure;
+
+  /// Expandable mobile-push transport settings title.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced transport'**
+  String get rel_svc_push_advanced_transport;
+
+  /// Explanation of automatic transport selection.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic preserves an existing distributor choice, otherwise uses built-in Google delivery when available. Disable before changing transport.'**
+  String get rel_svc_push_automatic_explanation;
+
+  /// Mobile-push transport dropdown label.
+  ///
+  /// In en, this message translates to:
+  /// **'Push transport'**
+  String get rel_svc_push_transport_label;
+
+  /// Recommended automatic mobile-push transport option.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic (recommended)'**
+  String get rel_svc_push_automatic_recommended;
+
+  /// Disabled dropdown option for a missing selected distributor.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected distributor (unavailable)'**
+  String get rel_svc_push_selected_unavailable;
+
+  /// Empty mobile-push transport list guidance.
+  ///
+  /// In en, this message translates to:
+  /// **'No available transport detected. Built-in delivery needs Google Play Services; without it, install and configure a UnifiedPush distributor, then refresh.'**
+  String get rel_svc_push_no_transport_detected;
+
+  /// OS notification channel name for completed turns.
+  ///
+  /// In en, this message translates to:
+  /// **'Ares Turns'**
+  String get rel_svc_push_channel_turns_name;
+
+  /// OS notification channel description for completed turns.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications for completed background turns'**
+  String get rel_svc_push_channel_turns_description;
+
+  /// OS notification channel name for requests needing attention.
+  ///
+  /// In en, this message translates to:
+  /// **'Ares Attention'**
+  String get rel_svc_push_channel_attention_name;
+
+  /// OS notification channel description for attention requests.
+  ///
+  /// In en, this message translates to:
+  /// **'Approvals and input requests that need you'**
+  String get rel_svc_push_channel_attention_description;
+
+  /// OS notification channel name for background work.
+  ///
+  /// In en, this message translates to:
+  /// **'Ares Background'**
+  String get rel_svc_push_channel_background_name;
+
+  /// OS notification channel description for background work.
+  ///
+  /// In en, this message translates to:
+  /// **'Background task completions'**
+  String get rel_svc_push_channel_background_description;
+
+  /// OS notification channel name for credit and plugin notices.
+  ///
+  /// In en, this message translates to:
+  /// **'Ares Notices'**
+  String get rel_svc_push_channel_notices_name;
+
+  /// OS notification channel description for credit and plugin notices.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit and plugin notices'**
+  String get rel_svc_push_channel_notices_description;
+
+  /// Recent-notification diagnostic detail when the notification sink did not initialize.
+  ///
+  /// In en, this message translates to:
+  /// **'not initialised'**
+  String get rel_svc_push_diag_not_initialised;
+
+  /// Recent-notification skip reason when reply notifications are disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'replies are off'**
+  String get rel_svc_push_diag_replies_off;
+
+  /// Recent-notification diagnostic indicating an Android conversation post.
+  ///
+  /// In en, this message translates to:
+  /// **'conversation'**
+  String get rel_svc_push_diag_conversation;
+
+  /// Recent-notification diagnostic for a conversation posted without confirmed permission.
+  ///
+  /// In en, this message translates to:
+  /// **'conversation; permission denied'**
+  String get rel_svc_push_diag_conversation_permission_denied;
+
+  /// Recent-notification conversation failure prefix; error is kept raw.
+  ///
+  /// In en, this message translates to:
+  /// **'conversation: {error}'**
+  String rel_svc_push_diag_conversation_error(String error);
+
+  /// Recent-notification skip reason when failure notifications are disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'failures are off'**
+  String get rel_svc_push_diag_failures_off;
+
+  /// Recent-notification skip reason; kind is a literal notification enum id.
+  ///
+  /// In en, this message translates to:
+  /// **'{kind} is off'**
+  String rel_svc_push_diag_kind_off(String kind);
+
+  /// Recent-notification diagnostic when Windows accepts a toast but its setting is unreadable.
+  ///
+  /// In en, this message translates to:
+  /// **'Windows did not report its notification setting'**
+  String get rel_svc_push_diag_windows_setting_unknown;
+
+  /// Backup validation failure for a file with the wrong format.
+  ///
+  /// In en, this message translates to:
+  /// **'This file is not a Hermes configuration backup.'**
+  String get rel_svc_backup_not_hermes_configuration_backup;
+
+  /// Backup version is newer than this app supports.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup was made by a newer version of the app and cannot be imported.'**
+  String get rel_svc_backup_newer_version_cannot_import;
+
+  /// Backup metadata references a missing client certificate.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup claims a client certificate for a connection but does not contain it, so a complete restore is not possible.'**
+  String get rel_svc_backup_missing_client_certificate;
+
+  /// Generic safe error for malformed backup content.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup file is damaged and could not be read.'**
+  String get rel_svc_backup_damaged_unreadable;
+
+  /// Export failed because a stored setting has an unsupported value type.
+  ///
+  /// In en, this message translates to:
+  /// **'A saved preference has an unsupported type and cannot be exported.'**
+  String get rel_svc_backup_unsupported_preference_type;
+
+  /// Backup export requires encryption because API keys are included.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a passphrase — the backup contains your API keys.'**
+  String get rel_svc_backup_choose_passphrase_api_keys;
+
+  /// Backup encryption failed safely.
+  ///
+  /// In en, this message translates to:
+  /// **'The backup could not be protected safely.'**
+  String get rel_svc_backup_could_not_protect_safely;
+
+  /// Backup declares an encryption format this app cannot use.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup uses an unsupported encryption scheme.'**
+  String get rel_svc_backup_unsupported_encryption;
+
+  /// Authenticated decryption failed without distinguishing password from tampering.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong passphrase, or this backup file has been altered.'**
+  String get rel_svc_backup_wrong_passphrase_or_altered;
+
+  /// Operating-system share sheet subject for an exported backup.
+  ///
+  /// In en, this message translates to:
+  /// **'Hermes configuration backup'**
+  String get rel_svc_backup_share_subject;
+
+  /// Selected backup file could not be read.
+  ///
+  /// In en, this message translates to:
+  /// **'That file could not be read.'**
+  String get rel_svc_backup_selected_file_unreadable;
+
+  /// Count fragment in a restored-connections summary.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} added'**
+  String rel_svc_backup_connections_added(int count);
+
+  /// Count fragment in a restored-connections summary.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} updated'**
+  String rel_svc_backup_connections_updated(int count);
+
+  /// Count fragment in a restored-connections summary.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} removed'**
+  String rel_svc_backup_connections_removed(int count);
+
+  /// Restore summary when no saved connections changed.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection changes'**
+  String get rel_svc_backup_no_connection_changes;
+
+  /// Restore summary prefix followed by localized change fragments.
+  ///
+  /// In en, this message translates to:
+  /// **'Connections: {changes}'**
+  String rel_svc_backup_connections_summary(String changes);
+
+  /// Final configuration restore result summary.
+  ///
+  /// In en, this message translates to:
+  /// **'{connections} · {count} settings restored'**
+  String rel_svc_backup_restore_summary(String connections, int count);
+
+  /// Backup export could not include one connection's client certificate; label is user data and error is already localized.
+  ///
+  /// In en, this message translates to:
+  /// **'The client certificate for \"{label}\" could not be included in this backup: {error}'**
+  String rel_svc_backup_certificate_not_included(String label, String error);
+
+  /// Certificate import requires its password.
+  ///
+  /// In en, this message translates to:
+  /// **'This certificate needs its password. Enter it below and it will open automatically.'**
+  String get rel_svc_backup_certificate_password_needed;
+
+  /// Certificate authentication failed without distinguishing wrong password from corruption.
+  ///
+  /// In en, this message translates to:
+  /// **'The certificate password is incorrect, or the file is corrupted.'**
+  String get rel_svc_backup_certificate_password_or_corrupt;
+
+  /// Certificate password is wrong.
+  ///
+  /// In en, this message translates to:
+  /// **'The certificate password is incorrect.'**
+  String get rel_svc_backup_certificate_password_incorrect;
+
+  /// Certificate uses unsupported encryption.
+  ///
+  /// In en, this message translates to:
+  /// **'This certificate uses an encryption method the app cannot read.'**
+  String get rel_svc_backup_certificate_unsupported_encryption;
+
+  /// Selected file is not a readable PKCS#12 certificate container.
+  ///
+  /// In en, this message translates to:
+  /// **'The selected file is not a readable PKCS#12 (.p12/.pfx) certificate.'**
+  String get rel_svc_backup_certificate_unreadable_pkcs12;
+
+  /// Selected certificate could not be parsed.
+  ///
+  /// In en, this message translates to:
+  /// **'The selected certificate could not be read.'**
+  String get rel_svc_backup_certificate_unreadable;
+
+  /// Picked file contains no supported certificate or private key.
+  ///
+  /// In en, this message translates to:
+  /// **'That file is not a certificate: pick a .p12/.pfx container or PEM certificate and key files.'**
+  String get rel_svc_backup_not_certificate_file;
+
+  /// Selected certificate half is not PEM.
+  ///
+  /// In en, this message translates to:
+  /// **'The selected certificate is not a PEM certificate.'**
+  String get rel_svc_backup_not_pem_certificate;
+
+  /// Selected private-key half is not PEM.
+  ///
+  /// In en, this message translates to:
+  /// **'The selected private key is not a PEM private key.'**
+  String get rel_svc_backup_not_pem_private_key;
+
+  /// PEM certificate and private key could not be loaded together.
+  ///
+  /// In en, this message translates to:
+  /// **'The selected certificate and private key could not be loaded.'**
+  String get rel_svc_backup_certificate_pair_unloadable;
+
+  /// Stored client certificate files are missing or unreadable during backup.
+  ///
+  /// In en, this message translates to:
+  /// **'The saved client certificate files could not be read.'**
+  String get rel_svc_backup_saved_certificate_files_unreadable;
+
+  /// Committing a client certificate to private device storage failed.
+  ///
+  /// In en, this message translates to:
+  /// **'The client certificate could not be stored securely on this device.'**
+  String get rel_svc_backup_client_certificate_storage_failed;
+
+  /// Writing certificate files to private device storage failed.
+  ///
+  /// In en, this message translates to:
+  /// **'The certificate could not be stored securely on this device.'**
+  String get rel_svc_backup_certificate_storage_failed;
+
+  /// Fallback display label when a client certificate has no filename or common name.
+  ///
+  /// In en, this message translates to:
+  /// **'Client certificate'**
+  String get rel_svc_backup_client_certificate_label;
+
+  /// Session search transport failed; error is raw platform detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not reach the dashboard: {error}'**
+  String rel_svc_backup_search_dashboard_unreachable(String error);
+
+  /// Session search received an authentication rejection.
+  ///
+  /// In en, this message translates to:
+  /// **'The dashboard rejected the saved credentials. Check the dashboard username and password for this connection.'**
+  String get rel_svc_backup_search_credentials_rejected;
+
+  /// Dashboard does not support remote session search.
+  ///
+  /// In en, this message translates to:
+  /// **'This dashboard does not expose session search. Update Hermes on the host, or switch back to on-device search.'**
+  String get rel_svc_backup_search_not_supported;
+
+  /// Session search refused an HTTP redirect to protect saved credentials.
+  ///
+  /// In en, this message translates to:
+  /// **'The dashboard redirected session search (HTTP {statusCode}). Ares does not follow redirects with saved credentials; check the connection address.'**
+  String rel_svc_backup_search_redirected(int statusCode);
+
+  /// Session search failed with a non-success HTTP status.
+  ///
+  /// In en, this message translates to:
+  /// **'Session search failed with HTTP {statusCode}.'**
+  String rel_svc_backup_search_http_failed(int statusCode);
+
+  /// Dashboard search response was not valid JSON.
+  ///
+  /// In en, this message translates to:
+  /// **'The dashboard returned a malformed search response.'**
+  String get rel_svc_backup_search_malformed_response;
+
+  /// Dashboard search response had the wrong top-level shape.
+  ///
+  /// In en, this message translates to:
+  /// **'The dashboard returned an unexpected search response.'**
+  String get rel_svc_backup_search_unexpected_response;
+
+  /// Dashboard exceeded the requested search-result limit.
+  ///
+  /// In en, this message translates to:
+  /// **'The dashboard returned more search results than requested.'**
+  String get rel_svc_backup_search_too_many_results;
+
+  /// Message-search response failed semantic validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected message search response.'**
+  String get rel_svc_backup_message_search_unexpected_response;
+
+  /// One message-search result failed semantic validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected message search result.'**
+  String get rel_svc_backup_message_search_unexpected_result;
+
+  /// AI search rewrite authentication failed.
+  ///
+  /// In en, this message translates to:
+  /// **'The Hermes API rejected the saved API key.'**
+  String get rel_svc_backup_ai_search_api_key_rejected;
+
+  /// AI query rewrite failed with a non-success HTTP status.
+  ///
+  /// In en, this message translates to:
+  /// **'AI query rewrite failed with HTTP {statusCode}.'**
+  String rel_svc_backup_ai_search_http_failed(int statusCode);
+
+  /// AI model produced no usable rewritten query.
+  ///
+  /// In en, this message translates to:
+  /// **'The selected model returned no usable search query.'**
+  String get rel_svc_backup_ai_search_no_usable_query;
+
+  /// Hermes returned invalid AI rewrite JSON.
+  ///
+  /// In en, this message translates to:
+  /// **'Hermes returned a malformed AI rewrite response.'**
+  String get rel_svc_backup_ai_search_malformed_response;
+
+  /// Space create or rename validation failure.
+  ///
+  /// In en, this message translates to:
+  /// **'A space with this name already exists'**
+  String get rel_svc_backup_space_name_already_exists;
+
+  /// Space name validation range and single-line requirement.
+  ///
+  /// In en, this message translates to:
+  /// **'Space name must be 1–80 characters'**
+  String get rel_svc_backup_space_name_length_invalid;
+
+  /// NextGen gateway address validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the address of your Hermes dashboard.'**
+  String get ng_rel_svc_backup_gateway_address_required;
+
+  /// NextGen gateway address has an unsupported scheme.
+  ///
+  /// In en, this message translates to:
+  /// **'The address must start with http:// or https:// (got {scheme}).'**
+  String ng_rel_svc_backup_gateway_address_scheme(String scheme);
+
+  /// NextGen gateway address parse failure.
+  ///
+  /// In en, this message translates to:
+  /// **'That address is not valid.'**
+  String get ng_rel_svc_backup_gateway_address_invalid;
+
+  /// NextGen gateway address has no hostname.
+  ///
+  /// In en, this message translates to:
+  /// **'The address has no host name.'**
+  String get ng_rel_svc_backup_gateway_address_no_host;
+
+  /// NextGen read-only secondary window cannot alter sign-in.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in in the main window.'**
+  String get ng_rel_svc_backup_sign_in_main_window;
+
+  /// Recent sign-in renewal failed and is temporarily throttled.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway couldn\'t renew the sign-in right now.'**
+  String get rel_svc_backup_sign_in_renewal_failed;
+
+  /// Sign-in renewal provider is unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway couldn\'t renew the sign-in: its sign-in provider is unreachable.'**
+  String get rel_svc_backup_sign_in_provider_unreachable;
+
+  /// Sign-in renewal request timed out.
+  ///
+  /// In en, this message translates to:
+  /// **'Timed out renewing the sign-in.'**
+  String get rel_svc_backup_sign_in_renewal_timed_out;
+
+  /// Gateway sign-in or renewal returned no tokens.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway returned no sign-in tokens.'**
+  String get rel_svc_backup_sign_in_no_tokens;
+
+  /// NextGen gateway probe timed out.
+  ///
+  /// In en, this message translates to:
+  /// **'Timed out. Check the address, VPN or Tailscale connection.'**
+  String get ng_rel_svc_backup_probe_timed_out;
+
+  /// NextGen gateway probe TLS failure; error is raw platform detail.
+  ///
+  /// In en, this message translates to:
+  /// **'TLS handshake failed: {error}'**
+  String ng_rel_svc_backup_probe_tls_failed(String error);
+
+  /// NextGen sign-in received an unexpected HTTP status.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway answered HTTP {statusCode}.'**
+  String ng_rel_svc_backup_gateway_answered_http(int statusCode);
+
+  /// NextGen sign-in gateway request timed out.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway took too long to answer.'**
+  String get ng_rel_svc_backup_gateway_answer_timed_out;
+
+  /// NextGen could not open the local browser callback listener; error is raw detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t get ready for the browser to come back: {error}'**
+  String ng_rel_svc_backup_browser_callback_not_ready(String error);
+
+  /// NextGen browser callback success page body.
+  ///
+  /// In en, this message translates to:
+  /// **'You can go back to Hermes now.'**
+  String get ng_rel_svc_backup_browser_signed_in_body;
+
+  /// NextGen browser callback mismatch page title.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for sign-in'**
+  String get ng_rel_svc_backup_browser_waiting_title;
+
+  /// NextGen browser callback state did not match the current sign-in.
+  ///
+  /// In en, this message translates to:
+  /// **'This page is not part of the current sign-in.'**
+  String get ng_rel_svc_backup_browser_not_current;
+
+  /// NextGen failed to launch the external browser for sign-in.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open the browser to sign in.'**
+  String get ng_rel_svc_backup_browser_open_failed;
+
+  /// NextGen browser sign-in timed out.
+  ///
+  /// In en, this message translates to:
+  /// **'The sign-in took too long. Try again.'**
+  String get ng_rel_svc_backup_browser_sign_in_timed_out;
+
+  /// NextGen gateway rejected browser token redemption.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway refused the sign-in (HTTP {statusCode}).'**
+  String ng_rel_svc_backup_gateway_refused_sign_in(int statusCode);
+
+  /// Label for a Markdown caution alert banner.
+  ///
+  /// In en, this message translates to:
+  /// **'Caution'**
+  String get rel_svc_misc_alert_caution;
+
+  /// Label for a Markdown important alert banner.
+  ///
+  /// In en, this message translates to:
+  /// **'Important'**
+  String get rel_svc_misc_alert_important;
+
+  /// Label for a Markdown tip alert banner.
+  ///
+  /// In en, this message translates to:
+  /// **'Tip'**
+  String get rel_svc_misc_alert_tip;
+
+  /// Label for a Markdown warning alert banner.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get rel_svc_misc_alert_warning;
+
+  /// Approval scope explanation for a session-long folder grant.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow this folder until the session ends.'**
+  String get rel_svc_misc_allow_folder_session;
+
+  /// Approval scope explanation for a session-long website grant.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow this website until the session ends.'**
+  String get rel_svc_misc_allow_website_session;
+
+  /// Native notification title for an approval request. Title is the user or server supplied chat title.
+  ///
+  /// In en, this message translates to:
+  /// **'Approval needed — {title}'**
+  String rel_svc_misc_approval_needed_title(String title);
+
+  /// Description of the @file composer reference starter.
+  ///
+  /// In en, this message translates to:
+  /// **'Attach a file reference'**
+  String get rel_svc_misc_attach_file_reference;
+
+  /// Description of the @folder composer reference starter.
+  ///
+  /// In en, this message translates to:
+  /// **'Attach a folder reference'**
+  String get rel_svc_misc_attach_folder_reference;
+
+  /// Description of the @git composer reference starter.
+  ///
+  /// In en, this message translates to:
+  /// **'Attach git context'**
+  String get rel_svc_misc_attach_git_context;
+
+  /// Description of the @image composer reference starter.
+  ///
+  /// In en, this message translates to:
+  /// **'Attach an image reference'**
+  String get rel_svc_misc_attach_image_reference;
+
+  /// Description of the @staged composer reference starter.
+  ///
+  /// In en, this message translates to:
+  /// **'Attach the staged diff'**
+  String get rel_svc_misc_attach_staged_diff;
+
+  /// Description of the @tool composer reference starter.
+  ///
+  /// In en, this message translates to:
+  /// **'Attach a tool reference'**
+  String get rel_svc_misc_attach_tool_reference;
+
+  /// Description of the @diff composer reference starter.
+  ///
+  /// In en, this message translates to:
+  /// **'Attach the unstaged diff'**
+  String get rel_svc_misc_attach_unstaged_diff;
+
+  /// Description of the @url composer reference starter.
+  ///
+  /// In en, this message translates to:
+  /// **'Attach a URL reference'**
+  String get rel_svc_misc_attach_url_reference;
+
+  /// Title of a completed background-task notice when the gateway supplies no task ID.
+  ///
+  /// In en, this message translates to:
+  /// **'Background task completed'**
+  String get rel_svc_misc_background_task_completed;
+
+  /// Title of a completed background-task notice. TaskId is an opaque server task identifier.
+  ///
+  /// In en, this message translates to:
+  /// **'Background task {taskId} completed'**
+  String rel_svc_misc_background_task_named_completed(String taskId);
+
+  /// Fallback chat title used while restoring a stored gateway turn.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat'**
+  String get rel_svc_misc_chat;
+
+  /// Live turn status while conversation context is being compacted.
+  ///
+  /// In en, this message translates to:
+  /// **'Compacting conversation context…'**
+  String get rel_svc_misc_compacting_context;
+
+  /// Tool activity status with a preformatted elapsed duration such as 420 ms or 1.2 s.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed in {duration}'**
+  String rel_svc_misc_completed_in(String duration);
+
+  /// Live turn status after conversation context compaction completes.
+  ///
+  /// In en, this message translates to:
+  /// **'Conversation context compacted'**
+  String get rel_svc_misc_context_compacted;
+
+  /// Cron update failure when the job read back from the gateway does not match the submitted model and fields.
+  ///
+  /// In en, this message translates to:
+  /// **'Cron model read-back did not match'**
+  String get rel_svc_misc_cron_readback_mismatch;
+
+  /// Cron update failure when the gateway explicitly rejects the update.
+  ///
+  /// In en, this message translates to:
+  /// **'Cron update rejected'**
+  String get rel_svc_misc_cron_update_rejected;
+
+  /// Approval scope explanation for denying folder access.
+  ///
+  /// In en, this message translates to:
+  /// **'Do not grant this folder.'**
+  String get rel_svc_misc_deny_folder_grant;
+
+  /// Approval scope explanation for denying website access.
+  ///
+  /// In en, this message translates to:
+  /// **'Do not grant this website.'**
+  String get rel_svc_misc_deny_website_grant;
+
+  /// Tool activity failure status with a preformatted elapsed duration such as 420 ms or 1.2 s.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed after {duration}'**
+  String rel_svc_misc_failed_after(String duration);
+
+  /// Folder approval fallback when the gateway omits the folder path.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway did not name a folder.'**
+  String get rel_svc_misc_gateway_folder_unnamed;
+
+  /// Turn status after recovery finds an idle gateway but cannot prove the previous turn outcome.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway is idle. The previous turn’s outcome could not be confirmed.'**
+  String get rel_svc_misc_gateway_idle_unconfirmed;
+
+  /// Fallback failure text when a gateway turn fails without a server-authored error.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway turn failed'**
+  String get rel_svc_misc_gateway_turn_failed;
+
+  /// Fallback failure text that retains an unknown raw gateway turn status.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway turn {status}'**
+  String rel_svc_misc_gateway_turn_status(String status);
+
+  /// Website approval fallback when the gateway omits the host.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway did not name a website.'**
+  String get rel_svc_misc_gateway_website_unnamed;
+
+  /// Title of a gateway review-summary notice. Hermes is the product name.
+  ///
+  /// In en, this message translates to:
+  /// **'Hermes review'**
+  String get rel_svc_misc_hermes_review;
+
+  /// Native notification title for a failed Hermes turn.
+  ///
+  /// In en, this message translates to:
+  /// **'Hermes turn failed'**
+  String get rel_svc_misc_hermes_turn_failed;
+
+  /// Composer notice explaining the image recovery limitation on the companion recovery transport.
+  ///
+  /// In en, this message translates to:
+  /// **'Image and text recovery is not available on companion recovery. An unacknowledged image send cannot be restored on this connection, and nothing is sent again automatically.'**
+  String get rel_svc_misc_image_recovery_companion_gap;
+
+  /// Composer notice explaining the image recovery limitation on Classic REST/SSE.
+  ///
+  /// In en, this message translates to:
+  /// **'Image and text recovery is not available on Classic REST/SSE. An unacknowledged image send cannot be restored on this connection, and nothing is sent again automatically.'**
+  String get rel_svc_misc_image_recovery_rest_gap;
+
+  /// Native notification title for an input request. Title is the user or server supplied chat title.
+  ///
+  /// In en, this message translates to:
+  /// **'Input needed — {title}'**
+  String rel_svc_misc_input_needed_title(String title);
+
+  /// Snack bar shown when an old parallel-workspace entry loses connection ownership.
+  ///
+  /// In en, this message translates to:
+  /// **'The connection changed. Reopen it to use the workspace.'**
+  String get rel_svc_misc_parallel_workspace_connection_changed;
+
+  /// Tool activity status while a tool is preparing output.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing'**
+  String get rel_svc_misc_preparing;
+
+  /// Approval scope explanation for permanently saving a folder grant.
+  ///
+  /// In en, this message translates to:
+  /// **'Save this folder grant for later requests.'**
+  String get rel_svc_misc_save_folder_grant;
+
+  /// Approval scope explanation for permanently saving a website grant.
+  ///
+  /// In en, this message translates to:
+  /// **'Save this website grant for later requests.'**
+  String get rel_svc_misc_save_website_grant;
+
+  /// Chat failure explaining that an unsent prompt was rejected after stored-session identity reconciliation found another admitted turn.
+  ///
+  /// In en, this message translates to:
+  /// **'This chat was opened through its stored identity while another turn was admitted. The unsent prompt was not sent; retry explicitly after that turn finishes.'**
+  String get rel_svc_misc_stored_identity_turn_conflict;
+
+  /// Fallback title for a cron job with no name or ID.
+  ///
+  /// In en, this message translates to:
+  /// **'Untitled'**
+  String get rel_svc_misc_untitled;
+
+  /// Wake-word notice when client microphone capture contains only silence.
+  ///
+  /// In en, this message translates to:
+  /// **'Client wake capture hears only silence — check OS microphone access and re-toggle wake word.'**
+  String get rel_svc_misc_wake_capture_silent;
+
+  /// Wake-word notice when client microphone capture stops delivering audio callbacks.
+  ///
+  /// In en, this message translates to:
+  /// **'Client wake capture stalled: no microphone audio callbacks arrived.'**
+  String get rel_svc_misc_wake_capture_stalled;
+
+  /// Wake-word notice after consecutive audio frames are refused. Detail is either empty or a raw server reason in parentheses.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake-word feed refused {count} consecutive frames{detail} — re-toggle wake word to re-arm.'**
+  String rel_svc_misc_wake_feed_refused(int count, String detail);
+
+  /// Wake-word notice when the client microphone stream fails. Error is a raw local platform error.
+  ///
+  /// In en, this message translates to:
+  /// **'Client wake microphone stream failed: {error}'**
+  String rel_svc_misc_wake_microphone_failed(String error);
+
+  /// Wake-word notice when the microphone track ends unexpectedly during capture.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone track ended during wake-word capture — re-toggle wake word to re-arm.'**
+  String get rel_svc_misc_wake_track_ended;
+
+  /// Field heading for the host requested by a website-access approval.
+  ///
+  /// In en, this message translates to:
+  /// **'Website'**
+  String get rel_svc_misc_website;
+
+  /// Explanation when discovery on the local network reaches its time limit; displayed inside the discovery failure wrapper.
+  ///
+  /// In en, this message translates to:
+  /// **'LAN discovery timed out'**
+  String get rel_svc_lan_timeout;
+
+  /// Lowercase reason in recent notification diagnostics when OS permission is denied.
+  ///
+  /// In en, this message translates to:
+  /// **'permission denied'**
+  String get rel_svc_notification_permission_denied;
+
+  /// Lowercase recent-notification diagnostic explaining that notifications are disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'notifications are off'**
+  String get rel_svc_notifications_off;
 }
 
 class _AppLocalizationsDelegate
