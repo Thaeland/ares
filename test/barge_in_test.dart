@@ -14,6 +14,8 @@ import 'package:hermes_android/core/utils/barge_echo.dart';
 import 'package:hermes_android/nextgen/data/read_aloud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'support/fake_voice_composer_adapter.dart';
+
 class _FakeSpeaker implements VoiceReplySpeaker {
   final spoken = <String>[];
   bool gated = false;
@@ -119,6 +121,58 @@ void main() {
 
   tearDown(() {
     bargeInEnabled.value = false;
+  });
+
+  group('echo guard: short partials of the reply being spoken (probe B1)', () {
+    const spoken =
+        'Sure. Here is the weather for Paris today: sunny with a high of '
+        'twenty two degrees and light winds from the west.';
+
+    test("the app's own first words are echo, from the first partial", () {
+      for (final partial in [
+        'sure',
+        'Sure.',
+        'sure here',
+        'sure here is',
+        'sure here is the weather',
+        'here is the weather for paris today',
+      ]) {
+        expect(isLikelyEcho(partial, spoken), isTrue, reason: partial);
+      }
+    });
+
+    test('a short interjection that is not the opening still interrupts', () {
+      for (final partial in ['stop', 'wait', 'no', 'hold on', 'cancel']) {
+        expect(isLikelyEcho(partial, spoken), isFalse, reason: partial);
+      }
+      // A word the reply only starts with is not its opening word.
+      expect(isLikelyEcho('no', 'Now I will check the calendar.'), isFalse);
+      // Words from later in the reply are not its opening.
+      expect(isLikelyEcho('paris', spoken), isFalse);
+    });
+
+    test('the read keeps going over its own opening words, and stops for '
+        'the user', () async {
+      final adapter = FakeVoiceComposerAdapter();
+      final monitor = SpeechToTextBargeInMonitor(adapter: adapter);
+      var interrupts = 0;
+      expect(
+        await monitor.start(
+          onInterrupt: () => interrupts++,
+          echoText: spoken,
+          isCurrent: () => true,
+        ),
+        isTrue,
+      );
+      await pumpEventQueue();
+      adapter.emitPartial('sure');
+      adapter.emitPartial('sure here');
+      adapter.emitPartial('sure here is the weather');
+      expect(interrupts, 0);
+      adapter.emitPartial('stop');
+      expect(interrupts, 1);
+      await monitor.stop();
+    });
   });
 
   group('echo guard', () {
