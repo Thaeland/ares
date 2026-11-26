@@ -35,6 +35,10 @@ enum DesktopConnectionState {
 /// profiles. When a connection supplies [SavedConnection.desktopGatewayUrl],
 /// chat writes and interactive events use this one Desktop session transport.
 class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
+  /// How long a new socket waits for `gateway.ready` before its first
+  /// request. Every current gateway greets at once.
+  static const gatewayReadyGrace = Duration(seconds: 3);
+
   static final _localServerRequestKey = RegExp(
     r'^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}\.[0-9]+\.[0-9]+:',
   );
@@ -482,6 +486,16 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
     };
     try {
       await client.connect();
+      // The greeting says whether this gateway is a session authority
+      // (Hermes 0.23+), and every request is shaped by that. It arrives
+      // just after the upgrade; a request written before it would go out in
+      // the legacy shape and be refused. A gateway that never greets is
+      // served the legacy shapes after a short wait.
+      try {
+        await client.waitForGatewayReady(timeout: gatewayReadyGrace);
+      } on TimeoutException {
+        // No greeting: an older gateway.
+      }
       if (_closed) {
         client.close();
         throw StateError('DesktopGatewayClient is closed.');
@@ -587,7 +601,10 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
       _checkSocket(client);
       // Known durable chats never silently become new chats on reconnect.
       if (_resumeOnlySessions.contains(mobileSessionId)) rethrow;
+      // A session-authority gateway names an unknown id `not_found` (4001);
+      // the legacy sidecar answers 4007 "session not found".
       if (error.code != 4007 &&
+          error.reason != 'not_found' &&
           !error.message.toLowerCase().contains('session not found')) {
         rethrow;
       }
@@ -716,6 +733,11 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
   /// (`_sess_nowait`, 4001), so this is a recoverable stale-binding, not a
   /// hard failure.
   static bool _isStaleRuntimeSession(JsonRpcError error) {
+    // A session-authority gateway answers every refusal with 4001 and names
+    // the reason: only `not_found` means the runtime is gone. Re-resuming
+    // and resending on `session_busy` or `invalid_params` would repeat a
+    // request the owner already refused.
+    if (error.reason != null) return error.reason == 'not_found';
     if (error.code == 4001) return true;
     final message = error.message.toLowerCase();
     return message.contains('session not found') ||
