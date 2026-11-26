@@ -3817,7 +3817,9 @@ class _LanDiscoverySheetState extends State<LanDiscoverySheet> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(
                 context.sharedL10n.release_misc_discovery_failed(
-                  _error.toString(),
+                  _error is TimeoutException
+                      ? context.sharedL10n.rel_svc_lan_timeout
+                      : _error.toString(),
                 ),
                 style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
