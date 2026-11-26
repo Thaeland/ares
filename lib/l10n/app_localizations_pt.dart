@@ -7442,6 +7442,242 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get rewind_session_changed =>
       'Esta conversa mudou desde que foi aberta aqui, por isso nada foi removido nem enviado. Reabra-a e tente novamente.';
+
+  @override
+  String get history_lineage => 'Conversas relacionadas';
+
+  @override
+  String get history_lineage_none =>
+      'Esta conversa não tem ramificações nem ramos irmãos.';
+
+  @override
+  String get history_lineage_unavailable =>
+      'Não foi possível ler as conversas relacionadas neste gateway.';
+
+  @override
+  String get history_lineage_parent => 'Origem';
+
+  @override
+  String get history_lineage_sibling => 'Irmão';
+
+  @override
+  String get history_lineage_fork => 'Ramificação';
+
+  @override
+  String get history_messages => 'Mensagens';
+
+  @override
+  String get history_messages_hint =>
+      'Selecione uma mensagem guardada para ramificar ou recuar até aí.';
+
+  @override
+  String get history_messages_none => 'Ainda não há mensagens guardadas.';
+
+  @override
+  String get history_messages_unavailable =>
+      'Não foi possível ler as mensagens guardadas. Abra esta conversa e atualize.';
+
+  @override
+  String get history_role_user => 'Você';
+
+  @override
+  String get history_role_assistant => 'Hermes';
+
+  @override
+  String get history_branch_here => 'Ramificar a partir daqui';
+
+  @override
+  String get history_rewind_here => 'Recuar até aqui';
+
+  @override
+  String get history_branch_title => 'Ramificar a partir desta mensagem';
+
+  @override
+  String get history_branch_body =>
+      'Isto cria uma nova conversa com o histórico até à mensagem selecionada. A conversa atual fica como está.';
+
+  @override
+  String get history_rewind_title => 'Recuar até esta mensagem';
+
+  @override
+  String get history_rewind_body =>
+      'As mensagens a partir da selecionada são removidas desta conversa. Os ficheiros no computador não são alterados. Restaurá-los é uma ação à parte, por ponto de controlo.';
+
+  @override
+  String history_branched(String id) {
+    return 'Ramificado como $id';
+  }
+
+  @override
+  String get history_open_chat => 'Abrir conversa';
+
+  @override
+  String get history_mutate_unsupported =>
+      'Ramificar e recuar requerem Hermes 0.23 ou mais recente neste gateway.';
+
+  @override
+  String get history_checkpoints => 'Pontos de controlo';
+
+  @override
+  String get history_checkpoints_none =>
+      'Esta sessão não tem pontos de controlo de ficheiros.';
+
+  @override
+  String get history_checkpoints_unavailable =>
+      'Os pontos de controlo não estão disponíveis neste gateway.';
+
+  @override
+  String get history_diff_none => 'Sem diferenças.';
+
+  @override
+  String get history_diff_loading => 'A carregar as alterações…';
+
+  @override
+  String get history_diff_failed =>
+      'Não foi possível carregar as alterações, por isso este ponto de controlo ainda não pode ser restaurado.';
+
+  @override
+  String get history_restore_checkpoint => 'Restaurar ponto de controlo';
+
+  @override
+  String get history_restore_title => 'Restaurar este ponto de controlo';
+
+  @override
+  String get history_restore_body =>
+      'Os ficheiros que o agente alterou desde este ponto de controlo voltam a como estavam. As suas próprias alterações são mantidas. Mensagens posteriores da conversa também podem ser removidas. A conversa não é ramificada.';
+
+  @override
+  String get history_restore_body_all =>
+      'Todos os ficheiros da pasta da sessão voltam a este ponto de controlo, incluindo as suas próprias alterações. Mensagens posteriores da conversa também podem ser removidas. A conversa não é ramificada.';
+
+  @override
+  String get history_restore_own_edits =>
+      'Reverter também as minhas alterações';
+
+  @override
+  String get history_restored => 'Ponto de controlo restaurado.';
+
+  @override
+  String history_restored_removed(int count) {
+    return 'Ponto de controlo restaurado. Foram removidas $count mensagens da conversa.';
+  }
+
+  @override
+  String get history_export => 'Exportar';
+
+  @override
+  String get history_export_redact => 'Ocultar tokens';
+
+  @override
+  String get history_export_action => 'Exportar transcrição';
+
+  @override
+  String get history_export_saved => 'Transcrição guardada.';
+
+  @override
+  String get history_export_unsupported =>
+      'Exportar requer Hermes 0.23 ou mais recente neste gateway.';
+
+  @override
+  String get history_import_unsupported =>
+      'Este gateway não suporta a importação do Claude e do Codex.';
+
+  @override
+  String history_import_destination(String profile) {
+    return 'Perfil de destino: $profile.';
+  }
+
+  @override
+  String history_import_reading(String host, String profile, int count) {
+    return 'A ler de $host · Perfil de destino: $profile. Não foi possível ler $count registos.';
+  }
+
+  @override
+  String get history_import_all => 'Todos';
+
+  @override
+  String history_import_scan_failed(String reason) {
+    return 'Não foi possível procurar as sessões do anfitrião: $reason';
+  }
+
+  @override
+  String get history_import_none =>
+      'Não foram encontradas sessões do Claude Code ou do Codex neste anfitrião.';
+
+  @override
+  String get history_import_no_match =>
+      'Nenhuma sessão do anfitrião corresponde.';
+
+  @override
+  String history_import_preview_failed(String reason) {
+    return 'Não foi possível pré-visualizar a sessão: $reason';
+  }
+
+  @override
+  String get history_import_open => 'Abrir sessão importada';
+
+  @override
+  String get history_import_action => 'Importar sessão selecionada';
+
+  @override
+  String get history_import_title => 'Importar esta sessão';
+
+  @override
+  String history_import_body(String profile) {
+    return 'Copiar esta sessão do Claude ou do Codex para o perfil \"$profile\" neste gateway.';
+  }
+
+  @override
+  String history_import_body_existing(String profile) {
+    return 'Esta sessão já foi importada para \"$profile\". Continue com a cópia existente.';
+  }
+
+  @override
+  String history_imported(String id) {
+    return 'Importado como $id';
+  }
+
+  @override
+  String history_imported_already(String id) {
+    return 'Já importado como $id';
+  }
+
+  @override
+  String history_import_directory(String path) {
+    return 'Diretório: $path';
+  }
+
+  @override
+  String history_import_preview_partial(int shown, int total) {
+    return 'A pré-visualização mostra $shown de $total.';
+  }
+
+  @override
+  String history_failed(String reason) {
+    return 'Não foi possível concluir: $reason';
+  }
+
+  @override
+  String get history_error_unavailable =>
+      'O gateway não conseguiu fazer isto agora. Tente novamente.';
+
+  @override
+  String get history_error_unsupported => 'Este gateway não suporta isto.';
+
+  @override
+  String get history_error_denied => 'Este gateway recusou o pedido.';
+
+  @override
+  String get history_error_changed =>
+      'Esta conversa mudou enquanto esta página estava aberta. Atualize e tente novamente.';
+
+  @override
+  String get history_error_unbound =>
+      'Esta conversa não está aberta no gateway. Abra-a e tente novamente.';
+
+  @override
+  String get history_error_invalid =>
+      'O gateway enviou uma resposta que esta aplicação não conseguiu ler.';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -14105,4 +14341,240 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get rewind_session_changed =>
       'Esta conversa mudou desde que foi aberta aqui, então nada foi removido nem enviado. Reabra-a e tente novamente.';
+
+  @override
+  String get history_lineage => 'Conversas relacionadas';
+
+  @override
+  String get history_lineage_none =>
+      'Esta conversa não tem ramificações nem ramos irmãos.';
+
+  @override
+  String get history_lineage_unavailable =>
+      'Não foi possível ler as conversas relacionadas neste gateway.';
+
+  @override
+  String get history_lineage_parent => 'Origem';
+
+  @override
+  String get history_lineage_sibling => 'Irmão';
+
+  @override
+  String get history_lineage_fork => 'Ramificação';
+
+  @override
+  String get history_messages => 'Mensagens';
+
+  @override
+  String get history_messages_hint =>
+      'Selecione uma mensagem guardada para ramificar ou recuar até aí.';
+
+  @override
+  String get history_messages_none => 'Ainda não há mensagens guardadas.';
+
+  @override
+  String get history_messages_unavailable =>
+      'Não foi possível ler as mensagens guardadas. Abra esta conversa e atualize.';
+
+  @override
+  String get history_role_user => 'Você';
+
+  @override
+  String get history_role_assistant => 'Hermes';
+
+  @override
+  String get history_branch_here => 'Ramificar a partir daqui';
+
+  @override
+  String get history_rewind_here => 'Recuar até aqui';
+
+  @override
+  String get history_branch_title => 'Ramificar a partir desta mensagem';
+
+  @override
+  String get history_branch_body =>
+      'Isto cria uma nova conversa com o histórico até à mensagem selecionada. A conversa atual fica como está.';
+
+  @override
+  String get history_rewind_title => 'Recuar até esta mensagem';
+
+  @override
+  String get history_rewind_body =>
+      'As mensagens a partir da selecionada são removidas desta conversa. Os ficheiros no computador não são alterados. Restaurá-los é uma ação à parte, por ponto de controlo.';
+
+  @override
+  String history_branched(String id) {
+    return 'Ramificado como $id';
+  }
+
+  @override
+  String get history_open_chat => 'Abrir conversa';
+
+  @override
+  String get history_mutate_unsupported =>
+      'Ramificar e recuar requerem Hermes 0.23 ou mais recente neste gateway.';
+
+  @override
+  String get history_checkpoints => 'Pontos de controlo';
+
+  @override
+  String get history_checkpoints_none =>
+      'Esta sessão não tem pontos de controlo de ficheiros.';
+
+  @override
+  String get history_checkpoints_unavailable =>
+      'Os pontos de controlo não estão disponíveis neste gateway.';
+
+  @override
+  String get history_diff_none => 'Sem diferenças.';
+
+  @override
+  String get history_diff_loading => 'A carregar as alterações…';
+
+  @override
+  String get history_diff_failed =>
+      'Não foi possível carregar as alterações, por isso este ponto de controlo ainda não pode ser restaurado.';
+
+  @override
+  String get history_restore_checkpoint => 'Restaurar ponto de controlo';
+
+  @override
+  String get history_restore_title => 'Restaurar este ponto de controlo';
+
+  @override
+  String get history_restore_body =>
+      'Os ficheiros que o agente alterou desde este ponto de controlo voltam a como estavam. As suas próprias alterações são mantidas. Mensagens posteriores da conversa também podem ser removidas. A conversa não é ramificada.';
+
+  @override
+  String get history_restore_body_all =>
+      'Todos os ficheiros da pasta da sessão voltam a este ponto de controlo, incluindo as suas próprias alterações. Mensagens posteriores da conversa também podem ser removidas. A conversa não é ramificada.';
+
+  @override
+  String get history_restore_own_edits =>
+      'Reverter também as minhas alterações';
+
+  @override
+  String get history_restored => 'Ponto de controlo restaurado.';
+
+  @override
+  String history_restored_removed(int count) {
+    return 'Ponto de controlo restaurado. Foram removidas $count mensagens da conversa.';
+  }
+
+  @override
+  String get history_export => 'Exportar';
+
+  @override
+  String get history_export_redact => 'Ocultar tokens';
+
+  @override
+  String get history_export_action => 'Exportar transcrição';
+
+  @override
+  String get history_export_saved => 'Transcrição guardada.';
+
+  @override
+  String get history_export_unsupported =>
+      'Exportar requer Hermes 0.23 ou mais recente neste gateway.';
+
+  @override
+  String get history_import_unsupported =>
+      'Este gateway não suporta a importação do Claude e do Codex.';
+
+  @override
+  String history_import_destination(String profile) {
+    return 'Perfil de destino: $profile.';
+  }
+
+  @override
+  String history_import_reading(String host, String profile, int count) {
+    return 'A ler de $host · Perfil de destino: $profile. Não foi possível ler $count registos.';
+  }
+
+  @override
+  String get history_import_all => 'Todos';
+
+  @override
+  String history_import_scan_failed(String reason) {
+    return 'Não foi possível procurar as sessões do anfitrião: $reason';
+  }
+
+  @override
+  String get history_import_none =>
+      'Não foram encontradas sessões do Claude Code ou do Codex neste anfitrião.';
+
+  @override
+  String get history_import_no_match =>
+      'Nenhuma sessão do anfitrião corresponde.';
+
+  @override
+  String history_import_preview_failed(String reason) {
+    return 'Não foi possível pré-visualizar a sessão: $reason';
+  }
+
+  @override
+  String get history_import_open => 'Abrir sessão importada';
+
+  @override
+  String get history_import_action => 'Importar sessão selecionada';
+
+  @override
+  String get history_import_title => 'Importar esta sessão';
+
+  @override
+  String history_import_body(String profile) {
+    return 'Copiar esta sessão do Claude ou do Codex para o perfil \"$profile\" neste gateway.';
+  }
+
+  @override
+  String history_import_body_existing(String profile) {
+    return 'Esta sessão já foi importada para \"$profile\". Continue com a cópia existente.';
+  }
+
+  @override
+  String history_imported(String id) {
+    return 'Importado como $id';
+  }
+
+  @override
+  String history_imported_already(String id) {
+    return 'Já importado como $id';
+  }
+
+  @override
+  String history_import_directory(String path) {
+    return 'Diretório: $path';
+  }
+
+  @override
+  String history_import_preview_partial(int shown, int total) {
+    return 'A pré-visualização mostra $shown de $total.';
+  }
+
+  @override
+  String history_failed(String reason) {
+    return 'Não foi possível concluir: $reason';
+  }
+
+  @override
+  String get history_error_unavailable =>
+      'O gateway não conseguiu fazer isto agora. Tente novamente.';
+
+  @override
+  String get history_error_unsupported => 'Este gateway não suporta isto.';
+
+  @override
+  String get history_error_denied => 'Este gateway recusou o pedido.';
+
+  @override
+  String get history_error_changed =>
+      'Esta conversa mudou enquanto esta página estava aberta. Atualize e tente novamente.';
+
+  @override
+  String get history_error_unbound =>
+      'Esta conversa não está aberta no gateway. Abra-a e tente novamente.';
+
+  @override
+  String get history_error_invalid =>
+      'O gateway enviou uma resposta que esta aplicação não conseguiu ler.';
 }

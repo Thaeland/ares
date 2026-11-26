@@ -721,4 +721,16 @@ void main() {
       await tester.pumpWidget(const SizedBox.shrink());
     });
   });
+
+  testWidgets('NextGen wide app bar: Session history has its own icon, not '
+      'the tree Session files uses', (tester) async {
+    await _pumpNextGen(tester, authority: true);
+    final history = tester.widget<IconButton>(
+      find.byKey(const ValueKey('session-history')),
+    );
+    final icon = (history.icon as Icon).icon;
+    expect(icon, Icons.manage_history);
+    expect(icon, isNot(Icons.account_tree_outlined));
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
 }

@@ -2845,6 +2845,10 @@ class _ChatScreenState extends State<ChatScreen>
             unawaited(_fetchMessages(focusSavedHistory: true));
             _editComposerAsUser(text);
           },
+          onRestored: () {
+            if (!mounted) return;
+            unawaited(_fetchMessages(focusSavedHistory: true));
+          },
           onOpenSession: widget.singleSession && widget.onOpenSession == null
               ? null
               : _openStoredSessionFromHistory,

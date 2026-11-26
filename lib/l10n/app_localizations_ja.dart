@@ -7227,4 +7227,231 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get rewind_session_changed =>
       'このチャットはここで開いてから変更されたため、何も削除・送信されませんでした。開き直してからもう一度お試しください。';
+
+  @override
+  String get history_lineage => '関連チャット';
+
+  @override
+  String get history_lineage_none => 'このチャットには分岐や兄弟ブランチがありません。';
+
+  @override
+  String get history_lineage_unavailable => 'このゲートウェイから関連チャットを読み込めませんでした。';
+
+  @override
+  String get history_lineage_parent => '親';
+
+  @override
+  String get history_lineage_sibling => '兄弟';
+
+  @override
+  String get history_lineage_fork => '分岐';
+
+  @override
+  String get history_messages => 'メッセージ';
+
+  @override
+  String get history_messages_hint => '保存済みメッセージを選ぶと、そこから分岐または巻き戻しできます。';
+
+  @override
+  String get history_messages_none => '保存済みメッセージはまだありません。';
+
+  @override
+  String get history_messages_unavailable =>
+      '保存済みメッセージを読み込めませんでした。このチャットを開いてから更新してください。';
+
+  @override
+  String get history_role_user => 'あなた';
+
+  @override
+  String get history_role_assistant => 'Hermes';
+
+  @override
+  String get history_branch_here => 'ここから分岐';
+
+  @override
+  String get history_rewind_here => 'ここまで巻き戻す';
+
+  @override
+  String get history_branch_title => 'このメッセージから分岐';
+
+  @override
+  String get history_branch_body =>
+      '選択したメッセージまでの履歴を含む新しいチャットを作成します。現在のチャットはそのままです。';
+
+  @override
+  String get history_rewind_title => 'このメッセージまで巻き戻す';
+
+  @override
+  String get history_rewind_body =>
+      '選択したメッセージ以降がこのチャットから削除されます。コンピューター上のファイルは変更されません。ファイルの復元はチェックポイントで別に行います。';
+
+  @override
+  String history_branched(String id) {
+    return '$id として分岐しました';
+  }
+
+  @override
+  String get history_open_chat => 'チャットを開く';
+
+  @override
+  String get history_mutate_unsupported =>
+      '分岐と巻き戻しには、このゲートウェイに Hermes 0.23 以降が必要です。';
+
+  @override
+  String get history_checkpoints => 'チェックポイント';
+
+  @override
+  String get history_checkpoints_none => 'このセッションにはファイルのチェックポイントがありません。';
+
+  @override
+  String get history_checkpoints_unavailable => 'このゲートウェイではチェックポイントを利用できません。';
+
+  @override
+  String get history_diff_none => '差分はありません。';
+
+  @override
+  String get history_diff_loading => '変更を読み込み中…';
+
+  @override
+  String get history_diff_failed => '変更を読み込めなかったため、このチェックポイントはまだ復元できません。';
+
+  @override
+  String get history_restore_checkpoint => 'チェックポイントを復元';
+
+  @override
+  String get history_restore_title => 'このチェックポイントを復元';
+
+  @override
+  String get history_restore_body =>
+      'このチェックポイント以降にエージェントが変更したファイルが当時の状態に戻ります。あなた自身の変更は残ります。以降のチャットメッセージも削除されることがあります。会話は分岐されません。';
+
+  @override
+  String get history_restore_body_all =>
+      'セッションフォルダー内のすべてのファイルが、あなた自身の変更も含めてこのチェックポイントに戻ります。以降のチャットメッセージも削除されることがあります。会話は分岐されません。';
+
+  @override
+  String get history_restore_own_edits => '自分の編集も元に戻す';
+
+  @override
+  String get history_restored => 'チェックポイントを復元しました。';
+
+  @override
+  String history_restored_removed(int count) {
+    return 'チェックポイントを復元しました。チャットメッセージ $count 件を削除しました。';
+  }
+
+  @override
+  String get history_export => 'エクスポート';
+
+  @override
+  String get history_export_redact => 'トークンを伏せる';
+
+  @override
+  String get history_export_action => 'トランスクリプトをエクスポート';
+
+  @override
+  String get history_export_saved => 'トランスクリプトを保存しました。';
+
+  @override
+  String get history_export_unsupported =>
+      'エクスポートには、このゲートウェイに Hermes 0.23 以降が必要です。';
+
+  @override
+  String get history_import_unsupported =>
+      'このゲートウェイは Claude と Codex のインポートに対応していません。';
+
+  @override
+  String history_import_destination(String profile) {
+    return 'インポート先プロファイル: $profile。';
+  }
+
+  @override
+  String history_import_reading(String host, String profile, int count) {
+    return '$host から読み込み中 · インポート先プロファイル: $profile。読み込めなかったログ: $count 件。';
+  }
+
+  @override
+  String get history_import_all => 'すべて';
+
+  @override
+  String history_import_scan_failed(String reason) {
+    return 'ホストのセッションを検索できませんでした: $reason';
+  }
+
+  @override
+  String get history_import_none =>
+      'このホストに Claude Code や Codex のセッションは見つかりませんでした。';
+
+  @override
+  String get history_import_no_match => '一致するホストセッションはありません。';
+
+  @override
+  String history_import_preview_failed(String reason) {
+    return 'セッションをプレビューできませんでした: $reason';
+  }
+
+  @override
+  String get history_import_open => 'インポート済みセッションを開く';
+
+  @override
+  String get history_import_action => '選択したセッションをインポート';
+
+  @override
+  String get history_import_title => 'このセッションをインポート';
+
+  @override
+  String history_import_body(String profile) {
+    return 'この Claude または Codex のセッションを、このゲートウェイのプロファイル「$profile」にコピーします。';
+  }
+
+  @override
+  String history_import_body_existing(String profile) {
+    return 'このセッションは既に「$profile」にインポートされています。既存のコピーで続行します。';
+  }
+
+  @override
+  String history_imported(String id) {
+    return '$id としてインポートしました';
+  }
+
+  @override
+  String history_imported_already(String id) {
+    return '$id として既にインポート済み';
+  }
+
+  @override
+  String history_import_directory(String path) {
+    return 'ディレクトリ: $path';
+  }
+
+  @override
+  String history_import_preview_partial(int shown, int total) {
+    return 'プレビューは $total 件中 $shown 件を表示しています。';
+  }
+
+  @override
+  String history_failed(String reason) {
+    return '完了できませんでした: $reason';
+  }
+
+  @override
+  String get history_error_unavailable =>
+      'ゲートウェイは今この操作を実行できませんでした。もう一度お試しください。';
+
+  @override
+  String get history_error_unsupported => 'このゲートウェイはこの操作に対応していません。';
+
+  @override
+  String get history_error_denied => 'このゲートウェイはリクエストを拒否しました。';
+
+  @override
+  String get history_error_changed =>
+      'このページを開いている間にチャットが変更されました。更新してからもう一度お試しください。';
+
+  @override
+  String get history_error_unbound =>
+      'このチャットはゲートウェイで開かれていません。開いてからもう一度お試しください。';
+
+  @override
+  String get history_error_invalid => 'ゲートウェイからの応答をこのアプリで読み取れませんでした。';
 }

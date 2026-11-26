@@ -3351,5 +3351,168 @@
   "ng_signed_in_with_deployment_token": "Signed in with the deployment token.",
   "rewind_target_unsaved": "This message is not saved yet. Wait for it to settle, then edit it again.",
   "rewind_turn_busy": "The current reply has not stopped yet, so nothing was sent. Try again in a moment.",
-  "rewind_session_changed": "This chat changed since it was opened here, so nothing was removed or sent. Reopen it, then try again."
+  "rewind_session_changed": "This chat changed since it was opened here, so nothing was removed or sent. Reopen it, then try again.",
+  "history_lineage": "Related chats",
+  "history_lineage_none": "This chat has no forks or sibling branches.",
+  "history_lineage_unavailable": "Related chats could not be read from this gateway.",
+  "history_lineage_parent": "Parent",
+  "history_lineage_sibling": "Sibling",
+  "history_lineage_fork": "Fork",
+  "history_messages": "Messages",
+  "history_messages_hint": "Select a saved message to branch or rewind there.",
+  "history_messages_none": "No saved messages yet.",
+  "history_messages_unavailable": "The saved messages could not be read. Open this chat, then refresh.",
+  "history_role_user": "You",
+  "history_role_assistant": "Hermes",
+  "history_branch_here": "Branch from here",
+  "history_rewind_here": "Rewind to here",
+  "history_branch_title": "Branch from this message",
+  "history_branch_body": "This creates a new chat containing history through the selected message. The current chat stays as it is.",
+  "history_rewind_title": "Rewind to this message",
+  "history_rewind_body": "Messages from the selected one onward are removed from this chat. Files on the computer are not changed. Restoring those is a separate checkpoint action.",
+  "history_branched": "Branched as {id}",
+  "@history_branched": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "history_open_chat": "Open chat",
+  "history_mutate_unsupported": "Branch and rewind need Hermes 0.23 or newer on this gateway.",
+  "history_checkpoints": "Checkpoints",
+  "history_checkpoints_none": "This session has no filesystem checkpoints.",
+  "history_checkpoints_unavailable": "Checkpoints are not available on this gateway.",
+  "history_diff_none": "No differences.",
+  "history_diff_loading": "Loading the changes…",
+  "history_diff_failed": "The changes could not be loaded, so this checkpoint cannot be restored yet.",
+  "history_restore_checkpoint": "Restore checkpoint",
+  "history_restore_title": "Restore this checkpoint",
+  "history_restore_body": "The files the agent changed since this checkpoint go back to how they were then. Changes you made yourself are kept. Later chat messages can be removed as well. The conversation is not branched.",
+  "history_restore_body_all": "Every file in the session folder goes back to this checkpoint, including changes you made yourself. Later chat messages can be removed as well. The conversation is not branched.",
+  "history_restore_own_edits": "Also revert my own edits",
+  "history_restored": "Checkpoint restored.",
+  "history_restored_removed": "Checkpoint restored. {count} chat messages were removed.",
+  "@history_restored_removed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "history_export": "Export",
+  "history_export_redact": "Redact tokens",
+  "history_export_action": "Export transcript",
+  "history_export_saved": "Transcript saved.",
+  "history_export_unsupported": "Export needs Hermes 0.23 or newer on this gateway.",
+  "history_import_unsupported": "Claude and Codex import is not supported by this gateway.",
+  "history_import_destination": "Destination profile: {profile}.",
+  "@history_import_destination": {
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "history_import_reading": "Reading from {host} · Destination profile: {profile}. {count} logs could not be read.",
+  "@history_import_reading": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "history_import_all": "All",
+  "history_import_scan_failed": "Could not scan host sessions: {reason}",
+  "@history_import_scan_failed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "history_import_none": "No Claude Code or Codex sessions found on this host.",
+  "history_import_no_match": "No matching host sessions.",
+  "history_import_preview_failed": "Could not preview session: {reason}",
+  "@history_import_preview_failed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "history_import_open": "Open imported session",
+  "history_import_action": "Import selected session",
+  "history_import_title": "Import this session",
+  "history_import_body": "Copy this Claude or Codex session into profile \"{profile}\" on this gateway.",
+  "@history_import_body": {
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "history_import_body_existing": "This session was already imported into \"{profile}\". Continue with the existing copy.",
+  "@history_import_body_existing": {
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "history_imported": "Imported as {id}",
+  "@history_imported": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "history_imported_already": "Already imported as {id}",
+  "@history_imported_already": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "history_import_directory": "Directory: {path}",
+  "@history_import_directory": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "history_import_preview_partial": "Preview shows {shown} of {total}.",
+  "@history_import_preview_partial": {
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "history_failed": "Could not finish: {reason}",
+  "@history_failed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "history_error_unavailable": "The gateway could not do this right now. Try again.",
+  "history_error_unsupported": "This gateway does not support this.",
+  "history_error_denied": "This gateway refused the request.",
+  "history_error_changed": "This chat changed while this page was open. Refresh, then try again.",
+  "history_error_unbound": "This chat is not open on the gateway. Open it, then try again.",
+  "history_error_invalid": "The gateway sent an answer this app could not read."
 }

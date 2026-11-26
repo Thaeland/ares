@@ -101,6 +101,7 @@ class FakeAuthorityGateway {
     this.authority = true,
     this.sessionId = 'authority-session',
     this.profile = 'field-work',
+    this.cwd = '/srv/authority',
     List<Map<String, dynamic>>? rows,
     this.reply = 'Fresh reply',
   }) : rows =
@@ -116,6 +117,9 @@ class FakeAuthorityGateway {
   final bool authority;
   final String sessionId;
   final String profile;
+
+  /// The session's working directory, as its snapshot reports it.
+  final String cwd;
 
   /// The session's durable transcript, as `session.history` stamps it.
   final List<Map<String, dynamic>> rows;
@@ -180,10 +184,13 @@ class FakeAuthorityGateway {
 
   /// A connected transport on this gateway, attached to [sessionId] as a
   /// client is after `session.resume` (it knows the session's fences).
-  Future<WsClient> connect({bool attach = true}) async {
+  Future<WsClient> connect({
+    bool attach = true,
+    String baseUrl = 'http://authority.invalid',
+  }) async {
     install();
     final client = WsClient(
-      'http://authority.invalid',
+      baseUrl,
       profile: profile,
       heartbeatInterval: Duration.zero,
     );
@@ -284,7 +291,7 @@ class FakeAuthorityGateway {
       'desktop_protocol': 'hermes-gateway-v1',
       'stored_session_id': sessionId,
       'profile_name': profile,
-      'cwd': '/srv/authority',
+      'cwd': cwd,
       'terminal_backend': 'local',
       'model': 'fixture',
     },

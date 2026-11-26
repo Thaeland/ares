@@ -1681,7 +1681,8 @@ class _NgChatViewState extends State<NgChatView>
                       tooltip: chat.storedId == null
                           ? ngL.ng_import_claude_or_codex
                           : ngL.ng_session_history,
-                      icon: const Icon(Icons.account_tree_outlined),
+                      // Its own icon: Session files next to it is the tree.
+                      icon: const Icon(Icons.manage_history),
                       onPressed: () => _openHistory(chat.storedId),
                     ),
                   ] else
@@ -1750,7 +1751,7 @@ class _NgChatViewState extends State<NgChatView>
                         PopupMenuItem(
                           value: 'history',
                           child: ListTile(
-                            leading: const Icon(Icons.account_tree_outlined),
+                            leading: const Icon(Icons.manage_history),
                             title: Text(
                               chat.storedId == null
                                   ? ngL.ng_import_claude_or_codex
@@ -1933,6 +1934,9 @@ class _NgChatViewState extends State<NgChatView>
             chat.resync();
             _input.text = text;
             _input.selection = TextSelection.collapsed(offset: text.length);
+          },
+          onRestored: () {
+            if (mounted) chat.resync();
           },
           onOpenSession: widget.onOpenSessionId == null
               ? null

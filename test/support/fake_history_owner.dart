@@ -67,6 +67,18 @@ class FakeHistoryBackend {
   int revision = 4;
   int generation = 9;
 
+  /// Fixture knobs for the review regressions.
+  List<Map<String, dynamic>> historyRows = [
+    {'row_id': 7, 'role': 'user', 'text': 'Keep this'},
+    {'row_id': 8, 'role': 'assistant', 'text': 'Noted'},
+  ];
+  String? exportContent;
+  List<Map<String, dynamic>>? previewRows;
+  bool diffFails = false;
+  bool mutateFails = false;
+  int restoreRemoves = 1;
+  Future<void>? holdRpc;
+
   final rpcCalls = <({String method, Map<String, dynamic> params})>[];
   final mutations = <Map<String, dynamic>>[];
   final restores = <Map<String, dynamic>>[];
@@ -183,16 +195,12 @@ class FakeHistoryBackend {
     Map<String, dynamic> params,
   ) async {
     rpcCalls.add((method: method, params: Map<String, dynamic>.from(params)));
+    final hold = holdRpc;
+    if (hold != null) await hold;
     switch (method) {
       case 'session.history':
         return {
-          'result': {
-            'count': 2,
-            'messages': [
-              {'row_id': 7, 'role': 'user', 'text': 'Keep this'},
-              {'row_id': 8, 'role': 'assistant', 'text': 'Noted'},
-            ],
-          },
+          'result': {'count': historyRows.length, 'messages': historyRows},
         };
       case 'session.list':
         // The canonical row (CanonicalSessionListRow) has no lineage
@@ -215,6 +223,14 @@ class FakeHistoryBackend {
       case 'session.mutate' || 'session.export' when !sessionAuthority:
         return {
           'error': {'code': -32601, 'message': 'Method not found'},
+        };
+      case 'session.mutate' when mutateFails:
+        return {
+          'error': {
+            'code': 4001,
+            'message': 'revision_conflict',
+            'data': {'reason': 'revision_conflict'},
+          },
         };
       case 'session.mutate':
         mutations.add(Map<String, dynamic>.from(params));
@@ -243,6 +259,10 @@ class FakeHistoryBackend {
             ],
           },
         };
+      case 'rollback.diff' when diffFails:
+        return {
+          'error': {'code': 5001, 'message': 'storage_unavailable'},
+        };
       case 'rollback.diff':
         return {
           'result': {'diff': 'line with $fixtureToken\n'},
@@ -252,7 +272,7 @@ class FakeHistoryBackend {
         return {
           'result': {
             'success': true,
-            'history_removed': 1,
+            'history_removed': restoreRemoves,
             'restored_files': ['a.txt'],
           },
         };
@@ -262,7 +282,7 @@ class FakeHistoryBackend {
           'result': {
             'format': params['format'],
             'filename': 'transcript.${params['format']}',
-            'content': 'exported $fixtureToken end',
+            'content': exportContent ?? 'exported $fixtureToken end',
           },
         };
       case 'session.foreign.list':
@@ -323,6 +343,15 @@ class FakeHistoryBackend {
           };
         }
         foreignPreviews.add(Map<String, dynamic>.from(params));
+        if (previewRows != null) {
+          return {
+            'result': {
+              'messages': previewRows,
+              'total': previewRows!.length,
+              'truncated': false,
+            },
+          };
+        }
         if (params['id'] == codexHandle) {
           return {
             'result': {
