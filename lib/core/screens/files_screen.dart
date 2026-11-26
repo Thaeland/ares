@@ -8,6 +8,7 @@ import '../services/remote_workspace.dart';
 import '../theme/hermes_theme.dart';
 import '../widgets/hermes_components.dart';
 import '../widgets/markdown_file_preview.dart';
+import '../widgets/attachment_audio_preview.dart';
 
 import 'package:hermes_android/core/l10n/l10n.dart';
 
@@ -146,6 +147,10 @@ class _FilesScreenState extends State<FilesScreen> {
       _loading = true;
       _error = null;
     });
+    if (attachmentAudioExtension(entry.name).isNotEmpty) {
+      setState(() => _loading = false);
+      return;
+    }
     try {
       final preview = await widget.files.readText(entry.path);
       if (!_owns(generation)) return;
@@ -272,6 +277,27 @@ class _FilesScreenState extends State<FilesScreen> {
   }
 
   Widget _fileContents(RemoteFileEntry selected, RemoteTextPreview? preview) {
+    final extension = attachmentAudioExtension(
+      selected.name,
+      preview?.mimeType,
+    );
+    if (extension.isNotEmpty) {
+      final source = widget.files;
+      return Center(
+        child: SingleChildScrollView(
+          child: AttachmentAudioPreview(
+            sourceIdentity: (source, _generation, selected.path),
+            extension: extension,
+            loadBytes: () async {
+              final result = source is RemoteFilesClient
+                  ? await source.downloadPreview(selected.path)
+                  : await source.download(selected.path);
+              return result.bytes;
+            },
+          ),
+        ),
+      );
+    }
     if (_error != null) {
       return SingleChildScrollView(
         child: ErrorState(
@@ -345,7 +371,9 @@ class _FilesScreenState extends State<FilesScreen> {
                 const SizedBox(width: HermesSpacing.md),
                 Expanded(
                   child: FilledButton.icon(
-                    onPressed: _preview == null
+                    onPressed:
+                        _preview == null &&
+                            attachmentAudioExtension(selected.name).isEmpty
                         ? null
                         : () {
                             widget.onAddToChat!(selected.path);

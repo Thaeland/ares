@@ -148,6 +148,7 @@ import '../widgets/chat_activity_bar.dart';
 import '../widgets/markdown_code_block.dart';
 import '../widgets/markdown_link_handler.dart';
 import '../widgets/attachment_draft_tile.dart';
+import '../utils/audio_file_references.dart';
 import '../widgets/chat_end_affordance.dart';
 import '../widgets/received_recovery_inspector.dart';
 import '../widgets/gateway_approval_dialog.dart';
@@ -8134,6 +8135,10 @@ class _ChatScreenState extends State<ChatScreen>
           final localContent = [
             text,
             labels,
+            // Keep gateway audio references in the optimistic user row too;
+            // filename-only labels cannot resolve playback before hydration.
+            for (final ref in refTexts)
+              if (audioPromptFileRefs(ref).isNotEmpty) ref,
           ].where((part) => part.trim().isNotEmpty).join('\n\n');
           final testSubmit = widget.testRemotePromptSubmit;
           final knownStored =
@@ -10724,6 +10729,7 @@ class _ChatScreenState extends State<ChatScreen>
             : SessionFilesView(
                 owner: fileOwner,
                 route: fileOwner.route(storedSessionId: fileId),
+                audioFilesClient: _newMediaFilesClient,
                 startOnGit: _openGit,
                 focusGitFile: _gitFocus,
                 onGitClosed: () => setState(() => _openGit = false),
@@ -11190,6 +11196,8 @@ class _ChatScreenState extends State<ChatScreen>
                               itemCount: _attachmentDrafts.length,
                               itemBuilder: (context, index) =>
                                   AttachmentDraftTile(
+                                    key: ValueKey(_attachmentDrafts[index].id),
+                                    previewOwner: _draftWriter,
                                     draft: _attachmentDrafts[index],
                                     index: index,
                                     total: _attachmentDrafts.length,
@@ -11883,7 +11891,7 @@ class _ChatScreenState extends State<ChatScreen>
         onMetadataExpansionChanged: onExpansionChanged,
         mediaReferencesFinal: message['_gateway_pending_response'] != true,
         mediaSourceIdentity: sourceIdentity,
-        mediaFilesClient: isUser ? null : filesClient,
+        mediaFilesClient: filesClient,
         readWidgetHtml: _readWidgetHtml,
         onWidgetIntent: _deliverWidgetIntent,
       );
@@ -12115,7 +12123,7 @@ class _ChatScreenState extends State<ChatScreen>
       metadata: msg,
       mediaReferencesFinal: msg['_gateway_pending_response'] != true,
       mediaSourceIdentity: (widget.connection, _storedSessionKey, source),
-      mediaFilesClient: isUser ? null : _newMediaFilesClient,
+      mediaFilesClient: _newMediaFilesClient,
       readWidgetHtml: _readWidgetHtml,
       onWidgetIntent: _deliverWidgetIntent,
       onReadAloud: isUser || isParkedAutomotive
@@ -12901,6 +12909,14 @@ class MessageBubble extends StatelessWidget {
           )
         else
           ...renderProse(block as String),
+      if (mediaFilesClient != null && isUser)
+        for (final ref in audioPromptFileRefs(content))
+          MediaArtifactCard(
+            key: ValueKey((mediaSourceIdentity, 'audio-prompt', ref.path)),
+            ref: ref,
+            filesClient: mediaFilesClient!,
+            sourceIdentity: mediaSourceIdentity,
+          ),
       if (filesClient != null)
         for (final ref in markdownRefs.values)
           MediaArtifactCard(

@@ -9,6 +9,13 @@ class AppLocalizationsPt extends AppLocalizations {
   AppLocalizationsPt([String locale = 'pt']) : super(locale);
 
   @override
+  String get attachment_audio_failed =>
+      'Não foi possível reproduzir este áudio. O formato ou codec pode não ser compatível, ou o limite de tamanho da pré-visualização foi excedido. Tente novamente, guarde ou partilhe o ficheiro original.';
+
+  @override
+  String get attachment_audio_seek => 'Posição do áudio';
+
+  @override
   String get workspace_workers => 'Subagentes ativos';
 
   @override
@@ -15728,6 +15735,13 @@ class AppLocalizationsPt extends AppLocalizations {
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
 class AppLocalizationsPtBr extends AppLocalizationsPt {
   AppLocalizationsPtBr() : super('pt_BR');
+
+  @override
+  String get attachment_audio_failed =>
+      'Não foi possível reproduzir este áudio. O formato ou codec pode não ser compatível, ou o limite de tamanho da prévia foi excedido. Tente novamente, salve ou compartilhe o arquivo original.';
+
+  @override
+  String get attachment_audio_seek => 'Posição do áudio';
 
   @override
   String get workspace_workers => 'Subagentes ativos';

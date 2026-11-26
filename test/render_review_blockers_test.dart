@@ -591,21 +591,24 @@ void main() {
       await tester.pumpWidget(const SizedBox());
     });
 
-    testWidgets('audio cards carry no unwired speed or position controls', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        _classicApp(
-          MediaArtifactCard(
-            ref: MediaTagRef(path: '/tmp/talk.mp3'),
-            filesClient: () => _WidgetFiles(''),
+    testWidgets(
+      'audio seek stays disabled until real native metadata is available',
+      (tester) async {
+        await tester.pumpWidget(
+          _classicApp(
+            MediaArtifactCard(
+              ref: MediaTagRef(path: '/tmp/talk.mp3'),
+              filesClient: () => _WidgetFiles(''),
+            ),
           ),
-        ),
-      );
-      expect(find.byType(Slider), findsNothing);
-      expect(find.text('1.5x'), findsNothing);
-      expect(find.text('Playback in this transcript'), findsNothing);
-    });
+        );
+        expect(find.byType(Slider), findsOneWidget);
+        expect(tester.widget<Slider>(find.byType(Slider)).onChanged, isNull);
+        expect(find.byTooltip('Play'), findsOneWidget);
+        expect(find.text('1.5x'), findsNothing);
+        expect(find.text('Playback in this transcript'), findsNothing);
+      },
+    );
 
     testWidgets('NextGen offers no dead preview suggestion chips', (
       tester,

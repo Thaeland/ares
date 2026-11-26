@@ -9,6 +9,13 @@ class AppLocalizationsUk extends AppLocalizations {
   AppLocalizationsUk([String locale = 'uk']) : super(locale);
 
   @override
+  String get attachment_audio_failed =>
+      'Не вдалося відтворити аудіо. Можливо, формат або кодек не підтримується чи перевищено розмір попереднього перегляду. Спробуйте ще раз, збережіть оригінальний файл або поділіться ним.';
+
+  @override
+  String get attachment_audio_seek => 'Позиція аудіо';
+
+  @override
   String get workspace_workers => 'Активні субагенти';
 
   @override

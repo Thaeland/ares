@@ -9,6 +9,13 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
+  String get attachment_audio_failed =>
+      '无法播放此音频。格式或编解码器可能不受支持，或超出了预览大小限制。请重试，或保存、分享原始文件。';
+
+  @override
+  String get attachment_audio_seek => '音频位置';
+
+  @override
   String get workspace_workers => '运行中的子代理';
 
   @override
@@ -14786,6 +14793,13 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   AppLocalizationsZhHans() : super('zh_Hans');
 
   @override
+  String get attachment_audio_failed =>
+      '无法播放此音频。格式或编解码器可能不受支持，或超出了预览大小限制。请重试，或保存、分享原始文件。';
+
+  @override
+  String get attachment_audio_seek => '音频位置';
+
+  @override
   String get workspace_workers => '运行中的子代理';
 
   @override
@@ -29561,6 +29575,13 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 /// The translations for Chinese, using the Han script (`zh_Hant`).
 class AppLocalizationsZhHant extends AppLocalizationsZh {
   AppLocalizationsZhHant() : super('zh_Hant');
+
+  @override
+  String get attachment_audio_failed =>
+      '無法播放此音訊。格式或編解碼器可能不受支援，或超出了預覽大小限制。請重試，或儲存、分享原始檔案。';
+
+  @override
+  String get attachment_audio_seek => '音訊位置';
 
   @override
   String get workspace_workers => '即時工作者';

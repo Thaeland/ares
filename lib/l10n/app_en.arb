@@ -1,4 +1,6 @@
 {
+  "attachment_audio_failed": "This audio could not be played. Its format or codec may not be supported, or the preview size limit was exceeded. Retry, or save or share the original file.",
+  "attachment_audio_seek": "Audio position",
   "workspace_workers": "Live workers",
   "workers_unattached": "Counts only. To steer a worker, choose Live workers in its attached parent chat.",
   "slash_local_arguments": "This shortcut does not accept arguments here. Use the app controls; your draft was kept.",

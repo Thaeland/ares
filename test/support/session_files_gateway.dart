@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
@@ -33,6 +34,13 @@ class SessionFilesGateway {
   static const database = 'cache.db';
   static const databasePath = '$root/$database';
   static const transcript = 'Check the field notes';
+  static const audioName = 'clip.wav';
+  static const audioPath = '$root/$audioName';
+  bool audioFiles = false;
+  String runtime = 'live-field-chat';
+  Future<void> Function()? rebindClient;
+  final audioEntered = Completer<void>();
+  Completer<void>? audioGate;
   String text = markdownFixture;
   String sibling = 'before.txt';
   // Simulates another writer AFTER the client's preflight GET, before the CAS.
@@ -80,6 +88,7 @@ class SessionFilesGateway {
     _entry(root, spaced),
     _entry(root, hidden),
     _entry(root, database),
+    if (audioFiles) _entry(root, audioName),
   ];
 
   String? _preview(String? filePath) {
@@ -89,6 +98,7 @@ class SessionFilesGateway {
     if (filePath == spacedPath) return 'spaced notes\n';
     if (filePath == hiddenPath) return 'hidden\n';
     if (filePath == databasePath) return 'db\n';
+    if (audioFiles && filePath == audioPath) return '';
     return null;
   }
 
@@ -142,7 +152,7 @@ class SessionFilesGateway {
           }
           final result = switch (method) {
             'session.resume' when frame['params']['session_id'] == session => {
-              'session_id': 'live-field-chat',
+              'session_id': runtime,
               'stored_session_id': session,
               'info': {
                 'profile_name': profile,
@@ -235,8 +245,23 @@ class SessionFilesGateway {
           'text': preview,
           'byteSize': utf8.encode(preview).length,
           'truncated': false,
-          'binary': false,
+          'binary': q['path'] == audioPath,
         };
+      case ('GET', '/api/fs/download')
+          when audioFiles &&
+              q['profile'] == profile &&
+              q['session_id'] == session &&
+              q['path'] == audioPath:
+        if (!audioEntered.isCompleted) audioEntered.complete();
+        await audioGate?.future;
+        res.headers.contentType = ContentType('audio', 'wav');
+        res.add([
+          1,
+          2,
+          3,
+        ]); // Player adapter is mocked; native probe uses valid WAV.
+        await res.close();
+        return;
       case ('POST', '/api/fs/replace-text-v1') when q['profile'] == profile:
         final data =
             jsonDecode(await utf8.decoder.bind(req).join())

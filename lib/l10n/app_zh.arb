@@ -1,4 +1,6 @@
 {
+  "attachment_audio_failed": "无法播放此音频。格式或编解码器可能不受支持，或超出了预览大小限制。请重试，或保存、分享原始文件。",
+  "attachment_audio_seek": "音频位置",
   "@@locale": "zh",
   "workspace_workers": "运行中的子代理",
   "workers_unattached": "仅显示数量。要向子代理发送指令，请在已连接的上级对话中选择“运行中的子代理”。",

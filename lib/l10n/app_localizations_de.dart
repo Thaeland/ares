@@ -9,6 +9,13 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
+  String get attachment_audio_failed =>
+      'Dieses Audio konnte nicht abgespielt werden. Format oder Codec werden möglicherweise nicht unterstützt oder die Vorschau ist zu groß. Erneut versuchen oder die Originaldatei speichern oder teilen.';
+
+  @override
+  String get attachment_audio_seek => 'Audioposition';
+
+  @override
   String get workspace_workers => 'Aktive Unteragenten';
 
   @override

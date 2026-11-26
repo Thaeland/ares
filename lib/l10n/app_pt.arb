@@ -1,4 +1,6 @@
 {
+  "attachment_audio_failed": "Não foi possível reproduzir este áudio. O formato ou codec pode não ser compatível, ou o limite de tamanho da pré-visualização foi excedido. Tente novamente, guarde ou partilhe o ficheiro original.",
+  "attachment_audio_seek": "Posição do áudio",
   "@@locale": "pt",
   "workspace_workers": "Subagentes ativos",
   "workers_unattached": "Apenas contagens. Para orientar um subagente, escolha Subagentes ativos na conversa principal ligada.",
