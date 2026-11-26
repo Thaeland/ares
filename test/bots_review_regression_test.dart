@@ -1,6 +1,8 @@
 // Regression tests cut from the independent review of v5/bots @ d74ba224
 // (evidence/bots-review-d74ba224, probes B1-B10). Each test failed on the
 // reviewed code and names the probe it replaces.
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -259,6 +261,87 @@ void main() {
       expect(removes().single.params, containsPair('name', 'job-standup'));
       await botsShown(tester, find.text('No routines for this bot.'));
       expect(gateway.refusals, isEmpty);
+    });
+  });
+
+  group('a late reply for another bot is dropped', () {
+    Future<void> pickBot(WidgetTester tester, String name) async {
+      await tester.tap(find.byType(DropdownButtonFormField<String>));
+      await botsStep(tester, 6);
+      await tester.tap(find.text(name).last);
+      await botsStep(tester);
+    }
+
+    testWidgets("B5 routines: workbot's list arriving after the switch to "
+        'researchbot is not shown', (tester) async {
+      wide(tester, const Size(900, 900));
+      final gateway = BotsReviewGateway();
+      final hold = Completer<void>();
+      gateway.holds['cron.manage:workbot:list'] = hold;
+      final owner = botsReviewOwner(gateway);
+      addTearDown(owner.close);
+      await tester.pumpWidget(botsReviewApp(owner));
+      await botsShown(tester, find.text('WorkBot'));
+      await tester.tap(find.text('Routines'));
+      await botsStep(tester, 3);
+      await pickBot(tester, 'researchbot');
+      expect(find.text('No routines for this bot.'), findsOneWidget);
+      hold.complete();
+      await botsStep(tester);
+      final dropdown = tester.widget<DropdownButtonFormField<String>>(
+        find.byType(DropdownButtonFormField<String>),
+      );
+      expect(dropdown.initialValue, 'researchbot');
+      expect(find.text('Stand-up'), findsNothing);
+      expect(find.text('No routines for this bot.'), findsOneWidget);
+    });
+
+    testWidgets("B6 screen: workbot's status arriving after the switch to "
+        'researchbot is not shown', (tester) async {
+      wide(tester, const Size(900, 900));
+      final gateway = BotsReviewGateway();
+      final owner = botsReviewOwner(gateway);
+      addTearDown(owner.close);
+      await tester.pumpWidget(botsReviewApp(owner));
+      await openBotsScreenTab(tester);
+      final hold = Completer<void>();
+      gateway.holds['display.status:workbot:'] = hold;
+      await pickBot(tester, 'researchbot');
+      expect(find.text('Not installed'), findsOneWidget);
+      // Back to workbot (its status is held), then away again.
+      await pickBot(tester, 'workbot');
+      await pickBot(tester, 'researchbot');
+      expect(find.text('Not installed'), findsOneWidget);
+      hold.complete();
+      await botsStep(tester);
+      expect(find.text('Running'), findsNothing);
+      expect(find.text('Not installed'), findsOneWidget);
+      // And its thumbnail poll is not left running for the other bot.
+      final before = gateway.named('display.thumbnail').length;
+      await tester.pump(const Duration(seconds: 9));
+      await botsStep(tester, 2);
+      expect(gateway.named('display.thumbnail'), hasLength(before));
+    });
+
+    testWidgets('a start reply for the bot that was left does not paint the '
+        'bot now selected', (tester) async {
+      wide(tester, const Size(900, 900));
+      final gateway = BotsReviewGateway()..running.clear();
+      final owner = botsReviewOwner(gateway);
+      addTearDown(owner.close);
+      await tester.pumpWidget(botsReviewApp(owner));
+      await botsShown(tester, find.text('WorkBot'));
+      await tester.tap(find.text('Screen'));
+      await botsShown(tester, find.text('Stopped'));
+      final hold = Completer<void>();
+      gateway.holds['display.start:workbot:'] = hold;
+      await tester.tap(find.text('Start'));
+      await botsStep(tester, 2);
+      await pickBot(tester, 'researchbot');
+      hold.complete();
+      await botsStep(tester);
+      expect(find.text('Running'), findsNothing);
+      expect(find.text('Not installed'), findsOneWidget);
     });
   });
 }

@@ -41,6 +41,12 @@ class _BotsScreenState extends State<BotsScreen> {
   Object? _account;
   Object _token = Object();
 
+  // One counter per kind of read: only the newest request may land.
+  int _roomsRequest = 0;
+  int _routinesRequest = 0;
+  int _screenRequest = 0;
+  int _thumbnailRequest = 0;
+
   _BotsTab _tab = _BotsTab.roster;
   bool _loading = true;
   WorkspaceFailure? _failure;
@@ -178,19 +184,36 @@ class _BotsScreenState extends State<BotsScreen> {
     }
   }
 
+  /// True while [target] is still this screen's gateway: the same
+  /// connection, account and profile it was bound for. Every request captures
+  /// its target (and its bot) before the first await and checks again after
+  /// each one, so a late reply is dropped instead of landing on whatever is
+  /// selected now.
+  bool _owns(WorkspaceTarget target) =>
+      mounted && identical(target, _target) && target.isCurrent;
+
+  bool _ownsScreen(WorkspaceTarget target, String bot) =>
+      _owns(target) && _screenProfile == bot;
+
+  bool _ownsRoutines(WorkspaceTarget target, String bot) =>
+      _owns(target) && _routinesProfile == bot;
+
   Future<void> _loadRooms(WorkspaceTarget target) async {
+    final request = ++_roomsRequest;
+    bool current() => request == _roomsRequest && _owns(target);
     setState(() => _roomsLoading = true);
     try {
       final caps = await target.roomCapabilities();
+      if (!current()) return;
       final rooms = await target.roomList(limit: 50);
-      if (!mounted) return;
+      if (!current()) return;
       setState(() {
         _roomsCaps = caps;
         _rooms = rooms;
         _roomsLoading = false;
       });
     } catch (e) {
-      if (!mounted) return;
+      if (!current()) return;
       setState(() {
         _roomsLoading = false;
         _roomsCaps = null;
@@ -201,64 +224,68 @@ class _BotsScreenState extends State<BotsScreen> {
   }
 
   Future<void> _loadRoutines(WorkspaceTarget target) async {
-    final profile = _routinesProfile;
-    if (profile == null) return;
+    final bot = _routinesProfile;
+    if (bot == null) return;
+    final request = ++_routinesRequest;
+    bool current() => request == _routinesRequest && _ownsRoutines(target, bot);
     setState(() => _routinesLoading = true);
     try {
-      final result = await target.botRoutinesWithLegacyPause(profile);
-      if (!mounted) return;
+      final result = await target.botRoutinesWithLegacyPause(bot);
+      if (!current()) return;
       setState(() {
         _routines = result.jobs;
         _routinesScope = result.scoped;
         _routinesLoading = false;
       });
     } on WorkspaceException catch (e) {
-      if (!mounted) return;
+      if (!current()) return;
       setState(() {
         _routinesLoading = false;
         _routines = const [];
         _errorDetail = 'Could not load routines: ${e.reason.name}';
       });
     } catch (_) {
-      if (!mounted) return;
+      if (!current()) return;
       setState(() => _routinesLoading = false);
     }
   }
 
   Future<void> _loadScreen(WorkspaceTarget target) async {
-    final profile = _screenProfile;
-    if (profile == null) return;
+    final bot = _screenProfile;
+    if (bot == null) return;
+    final request = ++_screenRequest;
+    bool current() => request == _screenRequest && _ownsScreen(target, bot);
     try {
-      final status = await target.displayStatus(profile);
-      if (!mounted) return;
+      final status = await target.displayStatus(bot);
+      if (!current()) return;
       setState(() {
         _display = status;
         _thumbnailSuppressed = false;
       });
       if (status.running) {
-        await _refreshThumbnail(target);
-        _scheduleThumbnail(target);
+        await _refreshThumbnail(target, bot);
+        if (!current()) return;
+        _scheduleThumbnail(target, bot);
       } else {
         _cancelThumbnail();
       }
     } on WorkspaceException catch (e) {
-      if (!mounted) return;
+      if (!current()) return;
       setState(() {
         _display = null;
         _errorDetail = 'Bot Desktop: ${e.reason.name}';
       });
     } catch (_) {
-      if (!mounted) return;
+      if (!current()) return;
       setState(() => _display = null);
     }
   }
 
-  Future<void> _refreshThumbnail(WorkspaceTarget target) async {
-    final profile = _screenProfile;
-    if (profile == null) return;
+  Future<void> _refreshThumbnail(WorkspaceTarget target, String bot) async {
+    final request = ++_thumbnailRequest;
     try {
-      final thumb = await target.displayThumbnail(profile);
-      if (!mounted) return;
+      final thumb = await target.displayThumbnail(bot);
+      if (request != _thumbnailRequest || !_ownsScreen(target, bot)) return;
       setState(() {
         _thumbnail = thumb;
         _thumbnailSuppressed = thumb.suppressed != null;
@@ -268,60 +295,68 @@ class _BotsScreenState extends State<BotsScreen> {
     }
   }
 
-  void _scheduleThumbnail(WorkspaceTarget target) {
+  void _scheduleThumbnail(WorkspaceTarget target, String bot) {
     _cancelThumbnail();
-    _thumbnailTimer = Timer.periodic(const Duration(seconds: 4), (_) {
-      if (mounted && _tab == _BotsTab.screen) {
-        unawaited(_refreshThumbnail(target));
+    _thumbnailTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
+      if (!_ownsScreen(target, bot)) {
+        timer.cancel();
+        return;
       }
+      if (_tab == _BotsTab.screen) unawaited(_refreshThumbnail(target, bot));
     });
   }
 
-  Future<void> _startInstalling() async {
+  /// Runs one Bot Desktop action for the bot selected when it was tapped.
+  /// [apply] only runs if that bot (and this gateway) is still the one shown
+  /// when the reply arrives.
+  Future<void> _screenAction<T>({
+    required Future<T> Function(WorkspaceTarget target, String bot) send,
+    required void Function(WorkspaceTarget target, String bot, T value) apply,
+    required String failure,
+  }) async {
     final target = _target;
-    final profile = _screenProfile;
-    if (target == null || profile == null) return;
+    final bot = _screenProfile;
+    if (target == null || bot == null) return;
     setState(() => _screenBusy = true);
     try {
-      final result = await target.displayInstall(profile);
-      if (!mounted) return;
+      final value = await send(target, bot);
+      if (!_ownsScreen(target, bot)) return;
+      apply(target, bot, value);
+    } catch (e) {
+      if (_ownsScreen(target, bot)) _toast('$failure: $e');
+    } finally {
+      if (mounted) setState(() => _screenBusy = false);
+    }
+  }
+
+  Future<void> _startInstalling() => _screenAction(
+    send: (target, bot) => target.displayInstall(bot),
+    apply: (target, bot, result) {
       _toast(
         result.started
             ? 'Installing screen (${result.command ?? 'process launched'})'
             : 'Install declined: ${result.command ?? 'unknown reason'}',
       );
-      await _loadScreen(target);
-    } catch (e) {
-      if (mounted) _toast('Install failed: $e');
-    } finally {
-      if (mounted) setState(() => _screenBusy = false);
-    }
-  }
+      unawaited(_loadScreen(target));
+    },
+    failure: 'Install failed',
+  );
 
-  Future<void> _startScreen() async {
-    final target = _target;
-    final profile = _screenProfile;
-    if (target == null || profile == null) return;
-    setState(() => _screenBusy = true);
-    try {
-      final status = await target.displayStart(profile);
-      if (!mounted) return;
+  Future<void> _startScreen() => _screenAction(
+    send: (target, bot) => target.displayStart(bot),
+    apply: (target, bot, status) {
       setState(() => _display = status);
       if (status.running) {
-        await _refreshThumbnail(target);
-        _scheduleThumbnail(target);
+        unawaited(_refreshThumbnail(target, bot));
+        _scheduleThumbnail(target, bot);
       }
-    } catch (e) {
-      if (mounted) _toast('Start failed: $e');
-    } finally {
-      if (mounted) setState(() => _screenBusy = false);
-    }
-  }
+    },
+    failure: 'Start failed',
+  );
 
   Future<void> _stopScreen() async {
-    final target = _target;
     final profile = _screenProfile;
-    if (target == null || profile == null) return;
+    if (_target == null || profile == null) return;
     // The gateway refuses to stop a screen a person is driving unless told
     // to (methods_display.py); say so before asking.
     final humanHeld = _display?.lease.isAgent == false;
@@ -333,18 +368,15 @@ class _BotsScreenState extends State<BotsScreen> {
           : 'Everything open on the bot’s screen is closed.',
       confirmLabel: 'Stop',
     );
-    if (!confirmed || !mounted) return;
-    setState(() => _screenBusy = true);
-    try {
-      final status = await target.displayStop(profile, force: humanHeld);
-      if (!mounted) return;
-      _cancelThumbnail();
-      setState(() => _display = status);
-    } catch (e) {
-      if (mounted) _toast('Stop refused: $e');
-    } finally {
-      if (mounted) setState(() => _screenBusy = false);
-    }
+    if (!confirmed || !mounted || _screenProfile != profile) return;
+    await _screenAction(
+      send: (target, bot) => target.displayStop(bot, force: humanHeld),
+      apply: (target, bot, status) {
+        _cancelThumbnail();
+        setState(() => _display = status);
+      },
+      failure: 'Stop refused',
+    );
   }
 
   Future<void> _takeOverScreen() async {
@@ -358,6 +390,7 @@ class _BotsScreenState extends State<BotsScreen> {
       if (viewerId == null) {
         try {
           observe = await target.displayObserve(profile);
+          if (!_ownsScreen(target, profile)) return;
           viewerId = observe.viewerId;
           _watchViewerId = viewerId;
         } catch (_) {
@@ -366,7 +399,7 @@ class _BotsScreenState extends State<BotsScreen> {
         }
       }
       if (viewerId == null) {
-        if (!mounted) return;
+        if (!_ownsScreen(target, profile)) return;
         _toast('Screen is not up yet. Start it, then take over.');
         return;
       }
@@ -375,48 +408,37 @@ class _BotsScreenState extends State<BotsScreen> {
         viewerId,
         reason: 'Take over from the bots workspace',
       );
-      if (!mounted) return;
+      if (!_ownsScreen(target, profile)) return;
       setState(() {
         if (_display != null) {
           _display = _display!.copyWith(lease: lease);
         }
       });
     } catch (e) {
-      if (mounted) _toast('Take over failed: $e');
+      if (_ownsScreen(target, profile)) _toast('Take over failed: $e');
     } finally {
       if (mounted) setState(() => _screenBusy = false);
     }
   }
 
-  Future<void> _handBackScreen() async {
-    final target = _target;
-    final profile = _screenProfile;
-    if (target == null || profile == null) return;
-    setState(() => _screenBusy = true);
-    try {
-      final lease = await target.displayLeaseRelease(
-        profile,
-        viewerId: _watchViewerId,
-        force: _watchViewerId == null,
-      );
-      if (!mounted) return;
-      setState(() {
-        if (_display != null) {
-          _display = _display!.copyWith(lease: lease);
-        }
-        _watchViewerId = null;
-      });
-    } catch (e) {
-      if (mounted) _toast('Hand back failed: $e');
-    } finally {
-      if (mounted) setState(() => _screenBusy = false);
-    }
-  }
+  Future<void> _handBackScreen() => _screenAction(
+    send: (target, bot) => target.displayLeaseRelease(
+      bot,
+      viewerId: _watchViewerId,
+      force: _watchViewerId == null,
+    ),
+    apply: (target, bot, lease) => setState(() {
+      if (_display != null) {
+        _display = _display!.copyWith(lease: lease);
+      }
+      _watchViewerId = null;
+    }),
+    failure: 'Hand back failed',
+  );
 
   Future<void> _switchSandboxImage() async {
-    final target = _target;
     final profile = _screenProfile;
-    if (target == null || profile == null) return;
+    if (_target == null || profile == null) return;
     final pending = _display?.imageSwitch;
     final confirmed = await _confirm(
       title: 'Adopt the new sandbox image?',
@@ -427,40 +449,21 @@ class _BotsScreenState extends State<BotsScreen> {
           'container is lost.',
       confirmLabel: 'Adopt image',
     );
-    if (!confirmed || !mounted) return;
-    setState(() => _screenBusy = true);
-    try {
-      final status = await target.displaySwitchSandboxImage(
-        profile,
-        approve: true,
-      );
-      if (!mounted) return;
-      setState(() => _display = status);
-    } catch (e) {
-      if (mounted) _toast('Image switch failed: $e');
-    } finally {
-      if (mounted) setState(() => _screenBusy = false);
-    }
+    if (!confirmed || !mounted || _screenProfile != profile) return;
+    await _screenAction(
+      send: (target, bot) =>
+          target.displaySwitchSandboxImage(bot, approve: true),
+      apply: (target, bot, status) => setState(() => _display = status),
+      failure: 'Image switch failed',
+    );
   }
 
-  Future<void> _keepCurrentImage() async {
-    final target = _target;
-    final profile = _screenProfile;
-    if (target == null || profile == null) return;
-    setState(() => _screenBusy = true);
-    try {
-      final status = await target.displaySwitchSandboxImage(
-        profile,
-        approve: false,
-      );
-      if (!mounted) return;
-      setState(() => _display = status);
-    } catch (e) {
-      if (mounted) _toast('Keep refused: $e');
-    } finally {
-      if (mounted) setState(() => _screenBusy = false);
-    }
-  }
+  Future<void> _keepCurrentImage() => _screenAction(
+    send: (target, bot) =>
+        target.displaySwitchSandboxImage(bot, approve: false),
+    apply: (target, bot, status) => setState(() => _display = status),
+    failure: 'Keep refused',
+  );
 
   /// Asks before stopping, replacing or removing something a bot is using.
   /// False on Cancel or dismissal: the caller then sends nothing.
@@ -500,16 +503,13 @@ class _BotsScreenState extends State<BotsScreen> {
       ..showSnackBar(SnackBar(content: Text(message)));
   }
 
-  Future<CanonicalChat> _openBotChat(BotRosterProfile bot) async {
-    final target = await _bound();
-    return target.resolveCanonicalChat(bot.name);
-  }
-
   void _openCanonicalChat(BotRosterProfile bot) {
     unawaited(() async {
       try {
-        final chat = await _openBotChat(bot);
-        if (!mounted) return;
+        final target = await _bound();
+        final chat = await target.resolveCanonicalChat(bot.name);
+        // The connection or account changed while the chat was resolved.
+        if (!mounted || !_owns(target)) return;
         await Navigator.of(context).push(
           MaterialPageRoute<void>(
             builder: (_) => BotChatPage(
@@ -885,15 +885,15 @@ class _BotsScreenState extends State<BotsScreen> {
               name: name,
               members: members,
             );
-            if (!mounted) return;
+            if (!_owns(target)) return;
             _toast('Room created');
             await _loadRooms(target);
           } on WorkspaceException catch (e) {
-            if (!mounted) return;
+            if (!_owns(target)) return;
             setState(() => _roomsLoading = false);
             _toast('Room creation refused (${e.reason.name})');
           } catch (e) {
-            if (!mounted) return;
+            if (!_owns(target)) return;
             setState(() => _roomsLoading = false);
             _toast('Room creation failed: $e');
           }
@@ -937,6 +937,7 @@ class _BotsScreenState extends State<BotsScreen> {
           ),
           onChanged: (n) {
             if (n == null || n == _screenProfile) return;
+            _cancelThumbnail();
             setState(() {
               _screenProfile = n;
               _display = null;
@@ -1162,6 +1163,7 @@ class _BotsScreenState extends State<BotsScreen> {
               _routinesProfile = n;
               _routines = const [];
               _routinesScope = null;
+              _routinesLoading = false;
             });
             final target = _target;
             if (target != null) unawaited(_loadRoutines(target));
@@ -1275,7 +1277,7 @@ class _BotsScreenState extends State<BotsScreen> {
             'This cannot be undone.',
         confirmLabel: 'Remove',
       );
-      if (!confirmed || !mounted) return;
+      if (!confirmed || !_ownsRoutines(target, profile)) return;
     }
     setState(() => _routinesLoading = true);
     try {
@@ -1287,10 +1289,10 @@ class _BotsScreenState extends State<BotsScreen> {
         case 'remove':
           await target.botRoutineRemove(profile, job.jobId);
       }
-      if (!mounted) return;
+      if (!_ownsRoutines(target, profile)) return;
       await _loadRoutines(target);
     } catch (e) {
-      if (mounted) {
+      if (_ownsRoutines(target, profile)) {
         setState(() => _routinesLoading = false);
         _toast('$action failed: $e');
       }
@@ -1321,9 +1323,9 @@ class _BotsScreenState extends State<BotsScreen> {
           } catch (e) {
             return 'Add failed: $e';
           }
-          if (!mounted) return null;
+          if (!_ownsRoutines(target, profile)) return null;
           _toast('Routine added');
-          if (_routinesProfile == profile) unawaited(_loadRoutines(target));
+          unawaited(_loadRoutines(target));
           return null;
         },
       ),
