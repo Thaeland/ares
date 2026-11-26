@@ -135,7 +135,8 @@ void main() {
   test(
     'explicit start persists, is scoped to the profile and session, and arms',
     () async {
-      final gateway = _FakeTransport();
+      // The host says the wake word can run here (the toggle is offered).
+      final gateway = _FakeTransport(status: const {'available': true});
       final pcm = _FakePcmSource();
       final controller = _controller(gateway, pcm);
       addTearDown(() {
@@ -144,6 +145,7 @@ void main() {
         pcm.dispose();
       });
       controller.bindSessionId('session-1');
+      await controller.refreshStatus();
 
       expect(await controller.startExplicit(), isTrue);
       final start = gateway.callsTo('wake.start').single;
@@ -319,7 +321,12 @@ void main() {
   test(
     'permission denial leaves wake off and never opens the microphone',
     () async {
-      final gateway = _FakeTransport();
+      // The host is asked first and the permission only once it armed client
+      // capture (Desktop's order, review K1); a refusal then undoes the
+      // saved enable, so wake stays off.
+      final gateway = _FakeTransport(
+        status: const {'available': true, 'enabled': false},
+      )..startResult = const {'started': true, 'capture': 'client'};
       final pcm = _FakePcmSource()..granted = false;
       final controller = _controller(gateway, pcm);
       addTearDown(() {
@@ -327,11 +334,14 @@ void main() {
         gateway.dispose();
         pcm.dispose();
       });
+      await controller.refreshStatus();
 
       expect(await controller.startExplicit(), isFalse);
-      expect(gateway.callsTo('wake.start'), isEmpty);
+      expect(gateway.callsTo('wake.start'), hasLength(1));
+      expect(gateway.callsTo('wake.stop').last.params['persist'], isTrue);
       expect(pcm.starts, isEmpty);
       expect(controller.state.listening, isFalse);
+      expect(controller.state.enabled, isFalse);
       expect(controller.state.notice, contains('Microphone'));
     },
   );

@@ -75,6 +75,9 @@ class GatewayWakeToolbarButton extends StatelessWidget {
       listenable: controller,
       builder: (context, _) {
         final state = controller.state;
+        // As Desktop: hidden until the gateway says the wake word can run
+        // here; a 0.23+ authority gateway (wake.* answers -32601) never does.
+        if (!state.offered) return const SizedBox.shrink();
         final active = state.listening && !state.paused;
         final scheme = Theme.of(context).colorScheme;
         return GestureDetector(
@@ -294,6 +297,8 @@ class GatewayWakeSettingsPanel extends StatelessWidget {
       listenable: controller,
       builder: (context, _) {
         final state = controller.state;
+        // Nothing to switch on where the gateway does not offer it.
+        if (!state.offered) return const SizedBox.shrink();
         final captureRaw = state.capture.trim().toLowerCase();
         final captureChoice = switch (captureRaw) {
           'client' || 'remote' || 'external' => 'client',

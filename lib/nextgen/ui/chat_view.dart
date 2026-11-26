@@ -2364,7 +2364,8 @@ class _NgChatViewState extends State<NgChatView>
                                 title: Text(ngL.palette_open),
                               ),
                             ),
-                          wakeWordToolItem(context, _wake.state),
+                          if (_wake.state.offered)
+                            wakeWordToolItem(context, _wake.state),
                           if (_voiceMode.hasStatus)
                             voiceEngineToolItem(context, _voiceMode),
                           if (chat.storedId != null)

@@ -138,6 +138,13 @@ class GatewayWakeState {
     return mode == 'client' || mode == 'remote' || mode == 'external';
   }
 
+  /// Whether the wake word is offered at all. As Desktop's `$wakeWord`: the
+  /// toggle stays hidden until `wake.status` says the feature can run here
+  /// (or config already has it on), so a gateway that does not serve
+  /// `wake.*` (a 0.23+ session-authority gateway answers -32601) or has not
+  /// answered yet shows nothing to tap.
+  bool get offered => available || enabled || listening || paused || pending;
+
   GatewayWakeState copyWith({
     bool? available,
     bool? enabled,
@@ -811,10 +818,29 @@ class GatewayWakeWordController extends ChangeNotifier {
       );
       if (!isOwnerCurrent || callEpoch != _epoch) return _state;
       _applyStatusPayload(res);
-    } catch (_) {
+    } catch (error) {
       // Older backends without wake.* keep the opt-in off default quietly.
+      _noteUnserved(error, callEpoch);
     }
     return _state;
+  }
+
+  /// A gateway that answered a status probe with -32601 does not serve the
+  /// wake word: nothing is offered (the toggle hides).
+  void _noteUnserved(Object error, int callEpoch) {
+    if (!_isUnservedMethod(error) || !isOwnerCurrent || callEpoch != _epoch) {
+      return;
+    }
+    _setState(
+      _state.copyWith(
+        available: false,
+        enabled: false,
+        listening: false,
+        paused: false,
+        pending: false,
+        notice: '',
+      ),
+    );
   }
 
   /// Syncs state when the gateway socket becomes ready. Never flips config
@@ -829,7 +855,8 @@ class GatewayWakeWordController extends ChangeNotifier {
         'wake.status',
         _scopedParams({'surface': 'gui', 'client_capture': true}),
       );
-    } catch (_) {
+    } catch (error) {
+      _noteUnserved(error, callEpoch);
       return;
     }
     if (!isOwnerCurrent || callEpoch != _epoch) return;
@@ -899,30 +926,17 @@ class GatewayWakeWordController extends ChangeNotifier {
   }
 
   /// Explicit user gesture to enable and arm wake word (`persist: true`).
+  ///
+  /// As Desktop's `toggleWakeWord`: the host is asked first, and the
+  /// microphone permission is requested only once it has armed client
+  /// capture (in [_applyStartPayload]). A gateway that has not offered the
+  /// wake word (see [GatewayWakeState.offered]) is never asked to arm.
   Future<bool> startExplicit({String? sessionId}) async {
-    if (!isOwnerCurrent || _state.pending) return false;
+    if (!isOwnerCurrent || _state.pending || !_state.offered) return false;
     if (sessionId != null) bindSessionId(sessionId);
     final callEpoch = ++_epoch;
 
-    // Request explicit microphone permission before persisting wake_word.enabled
-    // whenever capture is not explicitly host-local.
-    if (_state.capture.trim().toLowerCase() != 'local') {
-      final granted = await _pcmSource.hasPermission(request: true);
-      if (!isOwnerCurrent || callEpoch != _epoch) return false;
-      if (!granted) {
-        _setState(
-          _state.copyWith(
-            listening: false,
-            paused: false,
-            pending: false,
-            reason: 'permission_denied',
-            notice: formatWakeRefusalReason('permission_denied'),
-          ),
-        );
-        return false;
-      }
-    }
-
+    final wasEnabled = _state.enabled;
     _setState(
       _state.copyWith(pending: true, notice: 'Arming wake word…', reason: null),
     );
@@ -939,19 +953,51 @@ class GatewayWakeWordController extends ChangeNotifier {
         timeout: wakeStartTimeout,
       );
       if (!isOwnerCurrent || callEpoch != _epoch) return false;
-      return await _applyStartPayload(result, allowPermissionPrompt: true);
+      final armed = await _applyStartPayload(
+        result,
+        allowPermissionPrompt: true,
+      );
+      if (!armed &&
+          result['started'] == true &&
+          !wasEnabled &&
+          isOwnerCurrent &&
+          callEpoch == _epoch) {
+        // The host armed and saved `enabled`, but this device's microphone
+        // was refused: undo the saved choice, so a denied permission leaves
+        // the wake word off rather than on-but-deaf.
+        try {
+          await transport.call('wake.stop', _scopedParams({'persist': true}));
+        } catch (_) {}
+        if (isOwnerCurrent && callEpoch == _epoch) {
+          _setState(_state.copyWith(enabled: false));
+        }
+      }
+      return armed;
     } catch (error) {
       if (!isOwnerCurrent || callEpoch != _epoch) return false;
       await _stopClientCapture();
+      // A gateway that does not serve wake.* (a 0.23+ session-authority
+      // gateway) has proved it cannot arm: stop offering the toggle.
+      final unserved = _isUnservedMethod(error);
       _setState(
         _state.copyWith(
+          available: unserved ? false : null,
+          enabled: unserved ? false : null,
           listening: false,
           pending: false,
-          notice: _cleanError(error),
+          notice: unserved ? '' : _cleanError(error),
         ),
       );
       return false;
     }
+  }
+
+  /// The gateway does not serve the method (Desktop's `isMissingRpcMethod`:
+  /// the code decides; a codeless error by its message).
+  static bool _isUnservedMethod(Object error) {
+    if (error is! JsonRpcError) return false;
+    if (error.code != null) return error.code == -32601;
+    return error.message.toLowerCase().contains('unknown method');
   }
 
   /// Explicit user gesture to stop and disable wake word (`persist: true`).
