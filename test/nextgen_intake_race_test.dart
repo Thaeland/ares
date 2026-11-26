@@ -33,6 +33,8 @@ import 'package:image/image.dart' as image_lib;
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'support/native_windows_clipboard_fixture.dart';
+
 const _fieldKey = ValueKey('ng-composer-field');
 
 SavedConnection _connection() => SavedConnection(
@@ -305,6 +307,11 @@ void main() {
   testWidgets(
     'desktop focused paste appends bitmap and multiple image files; toolbar shares intake',
     (tester) async {
+      useNativeWindowsClipboardFixture(
+        root: root,
+        current: () => clip,
+        screenshotToken: png,
+      );
       final env = await pump(tester, keyed: false);
       final field = find.byKey(_fieldKey);
       await tester.enterText(field, 'preserved text');

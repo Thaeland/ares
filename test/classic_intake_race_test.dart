@@ -28,6 +28,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'support/completed_stock_turn.dart';
 import 'support/fake_voice_composer_adapter.dart';
+import 'support/native_windows_clipboard_fixture.dart';
 import 'support/pump_chat_updates.dart';
 
 const _composerKey = Key('chat-message-composer');
@@ -186,6 +187,11 @@ void main() {
   testWidgets(
     'desktop focused paste appends bitmap and multiple image files; toolbar shares intake',
     (tester) async {
+      useNativeWindowsClipboardFixture(
+        root: root,
+        current: () => clip,
+        screenshotToken: png,
+      );
       await big(tester);
       final sent = <String>[];
       await tester.pumpWidget(app(chat('desktop-paste', sent)));
