@@ -12868,6 +12868,1193 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get rel_admin_phase_undone => '已撤销';
+
+  @override
+  String rel_ops_cap_install_blocked(String verdict, String detail) {
+    return '安装已被阻止（$verdict）：$detail';
+  }
+
+  @override
+  String rel_ops_cap_scan_confirm(String verdict, String requested) {
+    return '扫描结果：$verdict。安装前请确认 $requested。';
+  }
+
+  @override
+  String rel_ops_cap_install_unconfirmed(String requested) {
+    return '网关尚未确认 $requested 已安装。';
+  }
+
+  @override
+  String rel_ops_cap_edit_skill(String name) {
+    return '编辑 $name';
+  }
+
+  @override
+  String rel_ops_cap_archive_skill(String name) {
+    return '归档 $name？';
+  }
+
+  @override
+  String rel_ops_cap_archive_explanation(String command) {
+    return '技能将被归档，可通过 $command 恢复。';
+  }
+
+  @override
+  String rel_ops_cap_install_anyway(String name) {
+    return '仍要安装 $name';
+  }
+
+  @override
+  String rel_ops_cap_install_despite_scan(String name) {
+    return '仍要安装扫描未通过的 $name？';
+  }
+
+  @override
+  String rel_ops_cap_scan_warning(String name) {
+    return '安全扫描已阻止 $name。此确认仅适用于 $name。';
+  }
+
+  @override
+  String rel_ops_cap_accept_scan_warning(String name) {
+    return '接受功能权限不会绕过对 $name 的扫描。';
+  }
+
+  @override
+  String rel_ops_cap_review_scan(String name) {
+    return '查看 $name 的扫描结果';
+  }
+
+  @override
+  String rel_ops_cap_desktop_grants(String description) {
+    return '$description\n文件夹和预览脚本的授权保留在该计算机的 Desktop 应用中。在此移除插件不会撤销这些本地授权。';
+  }
+
+  @override
+  String rel_ops_cap_remove_plugin(String name) {
+    return '移除 $name？';
+  }
+
+  @override
+  String rel_ops_cap_probe_result(String name, String tools) {
+    return '探测 $name：$tools';
+  }
+
+  @override
+  String rel_ops_cap_save_tool_grants_for(String connector) {
+    return '保存 $connector 的工具授权';
+  }
+
+  @override
+  String rel_ops_cap_backends_for(String name) {
+    return '$name 的后端';
+  }
+
+  @override
+  String rel_ops_cap_use_backend_confirmation(String name) {
+    return '使用 $name？';
+  }
+
+  @override
+  String rel_ops_cap_unlock_source(String name) {
+    return '解锁 $name';
+  }
+
+  @override
+  String get rel_ops_cap_capabilities => '功能';
+
+  @override
+  String get rel_ops_cap_plugins => '插件';
+
+  @override
+  String get rel_ops_cap_connectors => '连接器';
+
+  @override
+  String get rel_ops_cap_backends => '后端';
+
+  @override
+  String get rel_ops_cap_save_skill => '保存技能';
+
+  @override
+  String get rel_ops_cap_archive => '归档';
+
+  @override
+  String get rel_ops_cap_hub_identifier => 'Hub 标识符';
+
+  @override
+  String get rel_ops_cap_install => '安装';
+
+  @override
+  String get rel_ops_cap_update_all => '全部更新';
+
+  @override
+  String get rel_ops_cap_unlock => '解锁';
+
+  @override
+  String get rel_ops_cap_lock => '锁定';
+
+  @override
+  String get rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet =>
+      '此更新会添加功能。尚未进行任何更改。';
+
+  @override
+  String get rel_ops_cap_the_scan_blocked_this_plugin => '扫描已阻止此插件。';
+
+  @override
+  String get rel_ops_cap_the_plugin_was_not_changed => '插件未更改。';
+
+  @override
+  String get rel_ops_cap_repository => '代码仓库';
+
+  @override
+  String get rel_ops_cap_install_plugin => '安装插件';
+
+  @override
+  String get rel_ops_cap_update_plugins => '更新插件';
+
+  @override
+  String get rel_ops_cap_accept_capabilities => '接受功能权限';
+
+  @override
+  String get rel_ops_cap_update => '更新';
+
+  @override
+  String get rel_ops_cap_remove_desktop_half => '移除桌面端组件';
+
+  @override
+  String get rel_ops_cap_server_name => '服务器名称';
+
+  @override
+  String get rel_ops_cap_command => '命令';
+
+  @override
+  String get rel_ops_cap_http_url => 'HTTP URL';
+
+  @override
+  String get rel_ops_cap_add_server => '添加服务器';
+
+  @override
+  String get rel_ops_cap_probe => '探测';
+
+  @override
+  String get rel_ops_cap_probe_failed => '探测失败。';
+
+  @override
+  String get rel_ops_cap_logs => '日志';
+
+  @override
+  String get rel_ops_cap_mcp_log => 'MCP 日志';
+
+  @override
+  String get rel_ops_cap_connector => '连接器';
+
+  @override
+  String get rel_ops_cap_account_alias => '账户别名';
+
+  @override
+  String get rel_ops_cap_link_account => '关联账户';
+
+  @override
+  String get rel_ops_cap_remove_account => '移除账户';
+
+  @override
+  String get rel_ops_cap_tool_connector => '工具连接器';
+
+  @override
+  String get rel_ops_cap_load_tools => '加载工具';
+
+  @override
+  String get rel_ops_cap_save_tool_grants => '保存工具授权';
+
+  @override
+  String
+  get rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged =>
+      '此策略没有成员修订版本，因此工具授权保持不变。';
+
+  @override
+  String get rel_ops_cap_active => '使用中';
+
+  @override
+  String get rel_ops_cap_use => '使用';
+
+  @override
+  String get rel_ops_cap_run_setup => '运行设置';
+
+  @override
+  String get rel_ops_cap_terminal_backends => '终端后端';
+
+  @override
+  String get rel_ops_cap_this_changes_the_terminal_backend_for_this_profile =>
+      '这会更改此配置文件的终端后端。';
+
+  @override
+  String get rel_ops_cap_use_backend => '使用后端';
+
+  @override
+  String get rel_ops_cap_select => '选择';
+
+  @override
+  String get rel_ops_cap_browser_vault => '浏览器保险库';
+
+  @override
+  String
+  get rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here =>
+      '已保存的网站登录信息、地址和银行卡。密码保留在安全字段中，不会在此列出。';
+
+  @override
+  String get rel_ops_cap_remove_saved_item => '移除已保存的项目';
+
+  @override
+  String get rel_ops_cap_delete_this_item => '删除此项目？';
+
+  @override
+  String get rel_ops_cap_unlocked => '已解锁';
+
+  @override
+  String get rel_ops_cap_locked => '已锁定';
+
+  @override
+  String get rel_ops_cap_not_detected => '未检测到';
+
+  @override
+  String get rel_ops_cap_master_password => '主密码';
+
+  @override
+  String get rel_ops_cap_login => '登录信息';
+
+  @override
+  String get rel_ops_cap_address => '地址';
+
+  @override
+  String get rel_ops_cap_card => '银行卡';
+
+  @override
+  String get rel_ops_cap_label => '标签';
+
+  @override
+  String get rel_ops_cap_site_origin => '网站源';
+
+  @override
+  String get rel_ops_cap_identifier => '标识符';
+
+  @override
+  String get rel_ops_cap_password => '密码';
+
+  @override
+  String get rel_ops_cap_authenticator_key => '身份验证密钥';
+
+  @override
+  String get rel_ops_cap_street => '街道';
+
+  @override
+  String get rel_ops_cap_city => '城市';
+
+  @override
+  String get rel_ops_cap_postal_code => '邮政编码';
+
+  @override
+  String get rel_ops_cap_country => '国家或地区';
+
+  @override
+  String get rel_ops_cap_name_on_card => '持卡人姓名';
+
+  @override
+  String get rel_ops_cap_card_number => '卡号';
+
+  @override
+  String get rel_ops_cap_expiry_month => '到期月份';
+
+  @override
+  String get rel_ops_cap_expiry_year => '到期年份';
+
+  @override
+  String get rel_ops_cap_security_code => '安全码';
+
+  @override
+  String get rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method =>
+      '此网关没有共享指标的同意授权方法。';
+
+  @override
+  String get rel_ops_cap_agent_policy => '智能体策略';
+
+  @override
+  String get rel_ops_cap_loading_policy => '正在加载策略';
+
+  @override
+  String get rel_ops_cap_approval_timeout => '审批超时';
+
+  @override
+  String get rel_ops_cap_confirm_mcp_reloads => '确认 MCP 重新加载';
+
+  @override
+  String get rel_ops_cap_command_allowlist => '命令允许列表';
+
+  @override
+  String get rel_ops_cap_file_checkpoints => '文件检查点';
+
+  @override
+  String get rel_ops_cap_checkpoint_limit => '检查点上限';
+
+  @override
+  String get rel_ops_cap_browser_private_urls => '浏览器私有 URL';
+
+  @override
+  String get rel_ops_cap_use_my_real_browser_profile => '使用我的真实浏览器配置文件';
+
+  @override
+  String get rel_ops_cap_save_policy => '保存策略';
+
+  @override
+  String get rel_ops_cap_shared_metrics_for_this_profile => '此配置文件的共享指标';
+
+  @override
+  String get rel_ops_cap_send_shared_metrics => '发送共享指标';
+
+  @override
+  String get rel_ops_cap_error_enter_a_label => '请输入标签。';
+
+  @override
+  String get rel_ops_cap_error_enter_a_valid_url_like_https_example_com =>
+      '请输入有效的 URL，例如 https://example.com。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_identifier_and_password =>
+      '请输入标识符和密码。';
+
+  @override
+  String
+  get rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code =>
+      '请输入持卡人姓名、卡号、有效期和安全码。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_street_city_postal_code_and_country =>
+      '请输入街道、城市、邮政编码和国家或地区。';
+
+  @override
+  String
+  get rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read =>
+      '网关返回了无法读取的响应。';
+
+  @override
+  String rel_ops_cap_error_the_gateway_refused_the_request_status(
+    int statusCode,
+  ) {
+    return '网关拒绝了请求（$statusCode）。';
+  }
+
+  @override
+  String
+  rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable(
+    String method,
+  ) {
+    return '此连接没有网关套接字，因此 $method 不可用。';
+  }
+
+  @override
+  String get rel_ops_cap_error_choose_a_skill => '请选择技能。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_text_was_not_returned => '未返回技能文本。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_saved => '技能未保存。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_archived => '技能未归档。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_installed => '技能未安装。';
+
+  @override
+  String get rel_ops_cap_error_skill_updates_did_not_start => '技能更新未启动。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_removed => '技能未移除。';
+
+  @override
+  String get rel_ops_cap_error_enter_a_skill_or_plugin_identifier =>
+      '请输入技能或插件标识符。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_plugin => '请选择插件。';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_removed => '插件未移除。';
+
+  @override
+  String get rel_ops_cap_error_the_desktop_half_was_not_removed => '桌面端组件未移除。';
+
+  @override
+  String
+  get rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key =>
+      '此网关未为插件分配稳定的键。';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_changed => '插件未更改。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_server => '请选择服务器。';
+
+  @override
+  String get rel_ops_cap_error_name_the_server => '请为服务器命名。';
+
+  @override
+  String get rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url =>
+      '请为服务器提供命令或 http(s) URL。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_toolset => '请选择工具集。';
+
+  @override
+  String get rel_ops_cap_error_tool_backend_status_was_not_returned =>
+      '未返回工具后端状态。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_provider => '请选择提供商。';
+
+  @override
+  String get rel_ops_cap_error_this_provider_has_no_setup_action =>
+      '此提供商没有设置操作。';
+
+  @override
+  String get rel_ops_cap_error_setup_did_not_start => '设置未启动。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_terminal_backend => '请选择终端后端。';
+
+  @override
+  String get rel_ops_cap_error_name_the_connector => '请为连接器命名。';
+
+  @override
+  String get rel_ops_cap_error_choose_an_account => '请选择账户。';
+
+  @override
+  String
+  get rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants =>
+      '更改工具授权前，请重新加载连接器策略。';
+
+  @override
+  String get rel_ops_cap_error_choose_an_item => '请选择项目。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_source => '请选择来源。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_master_password => '请输入主密码。';
+
+  @override
+  String get rel_ops_cap_error_gateway_config_was_not_returned => '未返回网关配置。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_known_approval_mode => '请选择已知的审批模式。';
+
+  @override
+  String get rel_ops_cap_error_use_a_positive_limit => '请使用大于零的上限。';
+
+  @override
+  String get rel_ops_cap_error_the_policy_was_not_saved => '策略未保存。';
+
+  @override
+  String get rel_ops_cap_value_manual => '手动';
+
+  @override
+  String get rel_ops_cap_value_smart => '智能';
+
+  @override
+  String get rel_ops_cap_value_off => '关闭';
+
+  @override
+  String get rel_ops_cap_value_safe => '安全';
+
+  @override
+  String get rel_ops_cap_value_caution => '谨慎';
+
+  @override
+  String get rel_ops_cap_value_dangerous => '危险';
+
+  @override
+  String get rel_ops_cap_value_blocked => '已阻止';
+
+  @override
+  String get rel_ops_cap_value_clean => '无威胁';
+
+  @override
+  String get rel_ops_cap_value_ready => '就绪';
+
+  @override
+  String get rel_ops_cap_value_available => '可用';
+
+  @override
+  String get rel_ops_cap_value_unavailable => '不可用';
+
+  @override
+  String get rel_ops_cap_value_enabled => '已启用';
+
+  @override
+  String get rel_ops_cap_value_disabled => '已禁用';
+
+  @override
+  String get rel_ops_cap_value_active => '使用中';
+
+  @override
+  String get rel_ops_cap_value_inactive => '未使用';
+
+  @override
+  String get rel_ops_cap_value_installed => '已安装';
+
+  @override
+  String get rel_ops_cap_value_missing => '缺失';
+
+  @override
+  String get rel_ops_cap_value_configured => '已配置';
+
+  @override
+  String get rel_ops_cap_value_not_configured => '未配置';
+
+  @override
+  String get rel_ops_cap_value_error => '错误';
+
+  @override
+  String get rel_ops_cap_value_unknown => '未知';
+
+  @override
+  String get rel_ops_cap_value_login => '登录信息';
+
+  @override
+  String get rel_ops_cap_value_address => '地址';
+
+  @override
+  String get rel_ops_cap_value_payment => '支付';
+
+  @override
+  String get rel_ops_term_connecting => '正在连接…';
+
+  @override
+  String get rel_ops_term_unbound => '没有匹配的活动会话或主机工作目录。请先打开所属聊天。';
+
+  @override
+  String get rel_ops_term_unsupported => '此网关不提供这项终端功能。未启动本地命令行解释器。';
+
+  @override
+  String get rel_ops_term_local_pty_unavailable => '此设备无法使用随附的本地伪终端（PTY）。';
+
+  @override
+  String get rel_ops_term_operation_failed =>
+      '无法打开或控制终端。请检查主机、凭据和指纹。未启动备用命令行解释器。';
+
+  @override
+  String get rel_ops_term_input_refused => '输入被拒绝。请重新打开原始聊天。';
+
+  @override
+  String get rel_ops_term_cancel => '取消';
+
+  @override
+  String get rel_ops_term_confirm => '确认';
+
+  @override
+  String get rel_ops_term_open_device_title => '在此设备上打开命令行解释器？';
+
+  @override
+  String get rel_ops_term_ssh_shell => 'SSH 命令行解释器';
+
+  @override
+  String get rel_ops_term_local_shell => '本地命令行解释器';
+
+  @override
+  String get rel_ops_term_connection_lost => '连接已丢失';
+
+  @override
+  String get rel_ops_term_shell_ended => '命令行解释器已结束';
+
+  @override
+  String get rel_ops_term_no_owner =>
+      '此聊天没有经过身份验证的网关终端所有者。仅凭 URL 或云端登录无法获得命令行访问权限。';
+
+  @override
+  String get rel_ops_term_open_gateway_title => '打开网关命令行解释器？';
+
+  @override
+  String get rel_ops_term_shell_expired => '命令行解释器已结束或已过期';
+
+  @override
+  String get rel_ops_term_disconnected => '已断开连接';
+
+  @override
+  String get rel_ops_term_gateway_shell => '网关命令行解释器';
+
+  @override
+  String get rel_ops_term_close_body => '结束此命令行解释器。如需保持运行，请改为隐藏面板。';
+
+  @override
+  String get rel_ops_term_closing => '正在关闭…';
+
+  @override
+  String get rel_ops_term_close_unconfirmed => '关闭未确认';
+
+  @override
+  String get rel_ops_term_processes_require_chat => '代理进程需要经过身份验证的所属聊天。';
+
+  @override
+  String get rel_ops_term_watching_processes => '正在监视此聊天的代理进程。关闭镜像视图绝不会停止其进程。';
+
+  @override
+  String get rel_ops_term_paste_limit => '粘贴大小限制为 16 KiB。';
+
+  @override
+  String get rel_ops_term_paste => '粘贴';
+
+  @override
+  String get rel_ops_term_select_first => '请先选择终端输出。';
+
+  @override
+  String get rel_ops_term_open_chat_to_insert => '插入输出前，请打开原始聊天。';
+
+  @override
+  String get rel_ops_term_added_to_draft => '已添加到原始聊天草稿。未发送任何内容。';
+
+  @override
+  String get rel_ops_term_close => '关闭';
+
+  @override
+  String get rel_ops_term_add_selection => '将所选内容添加到聊天草稿';
+
+  @override
+  String get rel_ops_term_new_terminal => '新建终端';
+
+  @override
+  String get rel_ops_term_gateway_terminal => '网关主机终端';
+
+  @override
+  String get rel_ops_term_verified_ssh_terminal => '已验证的 SSH 终端';
+
+  @override
+  String get rel_ops_term_device_local_shell => '此设备（本地命令行解释器）';
+
+  @override
+  String get rel_ops_term_local_unavailable_mobile => '移动设备无法使用本地命令行解释器';
+
+  @override
+  String get rel_ops_term_watch_processes => '监视代理进程';
+
+  @override
+  String get rel_ops_term_select_output => '选择或复制输出';
+
+  @override
+  String get rel_ops_term_add_selected_output => '将所选输出添加到聊天草稿';
+
+  @override
+  String get rel_ops_term_review_paste => '检查剪贴板粘贴内容';
+
+  @override
+  String get rel_ops_term_reconnect => '重新连接同一命令行解释器';
+
+  @override
+  String get rel_ops_term_close_mirror => '关闭镜像视图';
+
+  @override
+  String get rel_ops_term_close_shell => '关闭命令行解释器';
+
+  @override
+  String get rel_ops_term_empty => '选择 + 以打开终端。不会自动启动任何命令行解释器。';
+
+  @override
+  String get rel_ops_term_reason_stale => '已失效';
+
+  @override
+  String get rel_ops_term_reason_mismatch => '不匹配';
+
+  @override
+  String get rel_ops_term_reason_unbound => '未绑定';
+
+  @override
+  String get rel_ops_term_reason_unsupported => '不支持';
+
+  @override
+  String get rel_ops_term_reason_denied => '已拒绝';
+
+  @override
+  String get rel_ops_term_reason_ineligible => '不符合条件';
+
+  @override
+  String get rel_ops_term_reason_unavailable => '不可用';
+
+  @override
+  String get rel_ops_term_reason_invalid => '无效';
+
+  @override
+  String get rel_ops_term_reason_insecure => '不安全';
+
+  @override
+  String rel_ops_term_refused(String reason) {
+    return '网关拒绝了此终端操作（$reason）。';
+  }
+
+  @override
+  String rel_ops_term_open_device_body(String connection) {
+    return '这是运行 Ares 的设备，而不是 $connection。命令行解释器使用应用权限，并在应用存储空间中启动。';
+  }
+
+  @override
+  String rel_ops_term_open_gateway_body(String host) {
+    return '在 $host 上经过验证的聊天工作目录中启动命令行解释器。这不是设备本地的命令行解释器。';
+  }
+
+  @override
+  String rel_ops_term_close_tab_title(String label) {
+    return '关闭 $label？';
+  }
+
+  @override
+  String rel_ops_term_read_only_status(String status) {
+    return '只读 · $status';
+  }
+
+  @override
+  String rel_ops_term_paste_title(String label) {
+    return '粘贴到 $label？';
+  }
+
+  @override
+  String rel_ops_term_output_title(String label) {
+    return '输出 · $label';
+  }
+
+  @override
+  String rel_ops_term_mirror_status(String label) {
+    return '只读进程镜像 · $label';
+  }
+
+  @override
+  String rel_ops_term_status_label(String status, String label) {
+    return '$status · $label';
+  }
+
+  @override
+  String rel_ops_term_ssh_tab(String user, String host, int port, int number) {
+    return 'SSH $user@$host:$port · $number';
+  }
+
+  @override
+  String rel_ops_term_device_tab(int number) {
+    return '此设备 · $number';
+  }
+
+  @override
+  String rel_ops_term_gateway_tab(String host, int number) {
+    return '网关 $host · $number';
+  }
+
+  @override
+  String get rel_ops_term_earlier_output_trimmed => '[较早的输出已截断]';
+
+  @override
+  String get rel_ops_term_ssh_dialog_title => '打开已验证的 SSH 终端';
+
+  @override
+  String get rel_ops_term_ssh_dialog_body =>
+      '请使用通过独立渠道从主机管理员处获得的指纹。此操作会打开新的远程登录会话，而非网关或本地命令行解释器。';
+
+  @override
+  String get rel_ops_term_ssh_host => 'SSH 主机';
+
+  @override
+  String get rel_ops_term_ssh_port => '端口';
+
+  @override
+  String get rel_ops_term_ssh_user => '用户';
+
+  @override
+  String get rel_ops_term_ssh_fingerprint => '主机密钥指纹（SHA256:…）';
+
+  @override
+  String get rel_ops_term_ssh_password => 'SSH 密码（不保存）';
+
+  @override
+  String get rel_ops_term_connect => '连接';
+
+  @override
+  String get rel_ops_ssh_invalid_destination => 'SSH 主机、端口或用户无效。';
+
+  @override
+  String get rel_ops_ssh_public_key_required => '需要 OpenSSH Ed25519 格式的主机公钥。';
+
+  @override
+  String get rel_ops_ssh_invalid_public_key => 'Ed25519 主机密钥无效。';
+
+  @override
+  String get rel_ops_ssh_invalid_saved_key => '已保存的主机密钥无效。';
+
+  @override
+  String get rel_ops_ssh_enrollment_unverified => '无法验证主机密钥注册。';
+
+  @override
+  String get rel_ops_ssh_different_key_pinned => '已固定了另一把密钥。请单独验证此变更。';
+
+  @override
+  String get rel_ops_ssh_open_ssh_unavailable => '系统 OpenSSH 不可用。';
+
+  @override
+  String get rel_ops_ssh_confirm_host_key => '请先确认主机密钥再连接。';
+
+  @override
+  String get rel_ops_ssh_absolute_identity_required => '请选择使用绝对路径的身份密钥文件。';
+
+  @override
+  String get rel_ops_ssh_invalid_remote_port => '远程端口无效。';
+
+  @override
+  String get rel_ops_ssh_preview_too_large => '预览超出 64 KiB 限制。';
+
+  @override
+  String get rel_ops_ssh_connection_refused => 'SSH 连接被拒绝。请检查已注册的主机密钥、身份凭据和服务。';
+
+  @override
+  String get rel_ops_ssh_http_not_ok => '远程服务未返回 HTTP 200。';
+
+  @override
+  String get rel_ops_ssh_encoded_response => '此预览不支持经过编码的响应。';
+
+  @override
+  String get rel_ops_ssh_preview_type_unsupported => '只能预览文本和 HTML 源代码。';
+
+  @override
+  String get rel_ops_ssh_health_unconfirmed => '服务未确认网关运行正常。';
+
+  @override
+  String get rel_ops_ssh_enroll_host_key_first => '请先注册主机的公钥。';
+
+  @override
+  String get rel_ops_ssh_cancel => '取消';
+
+  @override
+  String get rel_ops_ssh_confirm => '确认';
+
+  @override
+  String get rel_ops_ssh_pin_title => '固定此 SSH 主机密钥？';
+
+  @override
+  String rel_ops_ssh_pin_detail(String destination, String fingerprint) {
+    return '$destination\n$fingerprint\n请通过独立渠道与主机管理员核对此指纹。不会建立任何连接。';
+  }
+
+  @override
+  String get rel_ops_ssh_host_key_pinned => '主机密钥已固定。';
+
+  @override
+  String get rel_ops_ssh_shell_detail => '打开交互式登录 shell。';
+
+  @override
+  String rel_ops_ssh_read_detail(String path, int port) {
+    return '通过 SSH 通道读取远程 127.0.0.1:$port 上的 $path。';
+  }
+
+  @override
+  String rel_ops_ssh_connect_title(String destination) {
+    return '连接到 $destination？';
+  }
+
+  @override
+  String rel_ops_ssh_connect_detail(
+    String detail,
+    String fingerprint,
+    String authentication,
+  ) {
+    return '$detail\n$fingerprint\n$authentication';
+  }
+
+  @override
+  String get rel_ops_ssh_agent_auth => '使用你的 SSH 代理进行身份验证。';
+
+  @override
+  String get rel_ops_ssh_identity_auth => '使用选定的身份密钥文件。';
+
+  @override
+  String rel_ops_ssh_gateway_responding(int port) {
+    return '网关正在远程回环端口 $port 上响应。';
+  }
+
+  @override
+  String get rel_ops_ssh_session_closed => 'SSH 会话已关闭。';
+
+  @override
+  String get rel_ops_ssh_session_unclean => 'SSH 会话未正常退出。';
+
+  @override
+  String get rel_ops_ssh_operation_failed => 'SSH 操作失败。请检查目标和身份凭据。';
+
+  @override
+  String get rel_ops_ssh_title => '经验证的 SSH';
+
+  @override
+  String get rel_ops_ssh_unsupported =>
+      '此设备没有受支持的系统 OpenSSH 传输方式。已固定网关的中继会自动接受新密钥，因此不能用于经验证的注册。';
+
+  @override
+  String get rel_ops_ssh_host => 'SSH 主机';
+
+  @override
+  String get rel_ops_ssh_port => 'SSH 端口';
+
+  @override
+  String get rel_ops_ssh_user => 'SSH 用户';
+
+  @override
+  String get rel_ops_ssh_identity => '身份密钥文件（可选；否则使用 SSH 代理）';
+
+  @override
+  String get rel_ops_ssh_public_key => '管理员提供的主机公钥（ssh-ed25519）';
+
+  @override
+  String get rel_ops_ssh_review_key => '审查主机密钥';
+
+  @override
+  String get rel_ops_ssh_remote_port => '远程回环服务端口';
+
+  @override
+  String get rel_ops_ssh_check_gateway => '通过 SSH 检查网关';
+
+  @override
+  String get rel_ops_ssh_preview_source => '通过 SSH 预览源代码';
+
+  @override
+  String get rel_ops_ssh_open_shell => '打开 SSH shell';
+
+  @override
+  String get rel_ops_ssh_shell_line => '发送到远程 shell 的行';
+
+  @override
+  String get rel_ops_ssh_disconnect => '断开 shell 连接';
+
+  @override
+  String get rel_ops_host_cancel => '取消';
+
+  @override
+  String get rel_ops_host_confirm => '确认';
+
+  @override
+  String get rel_ops_host_title => '主机';
+
+  @override
+  String get rel_ops_host_refresh => '刷新';
+
+  @override
+  String get rel_ops_host_update => '更新远程 Hermes';
+
+  @override
+  String rel_ops_host_update_confirmation(String profile) {
+    return '这将在网关主机上为 $profile 执行就地更新，不会更新此设备上的 Ares。更新是否成功以匹配的更新回执为准，而不是以主机是否保持可访问为准。';
+  }
+
+  @override
+  String get rel_ops_host_update_awaiting => '正在等待匹配的回执。更新仍在进行中。';
+
+  @override
+  String get rel_ops_host_receipt_success => '更新回执显示成功。';
+
+  @override
+  String get rel_ops_host_receipt_partial => '更新已应用，但仍有后续步骤需要完成。';
+
+  @override
+  String get rel_ops_host_receipt_failed => '更新回执显示失败。';
+
+  @override
+  String get rel_ops_host_receipt_refused => '更新回执显示已拒绝。';
+
+  @override
+  String get rel_ops_host_update_running => '更新仍在进行中。';
+
+  @override
+  String get rel_ops_host_update_unknown => '更新结果未知。网关正常运行并不代表更新成功。';
+
+  @override
+  String get rel_ops_host_default_profile => '网关默认配置档案';
+
+  @override
+  String get rel_ops_host_restart => '重启远程网关';
+
+  @override
+  String rel_ops_host_restart_shared_confirmation(String profiles) {
+    return '这将重启 $profiles 共享的网关。此网关上正在进行的轮次会被中断。请随后重新连接。可以访问网关并不能证明重启已完成。';
+  }
+
+  @override
+  String rel_ops_host_restart_confirmation(String profile) {
+    return '这将重启 $profile 的远程网关。此网关上正在进行的轮次会被中断。请随后重新连接。';
+  }
+
+  @override
+  String get rel_ops_host_restart_running => '重启命令仍在运行。';
+
+  @override
+  String get rel_ops_host_restart_finished => '重启命令已结束。请手动重新连接主机。';
+
+  @override
+  String get rel_ops_host_restart_failed => '重启命令失败。';
+
+  @override
+  String rel_ops_host_maintenance_running(String name) {
+    return '$name 仍在运行';
+  }
+
+  @override
+  String rel_ops_host_maintenance_finished(String name) {
+    return '$name 已完成';
+  }
+
+  @override
+  String rel_ops_host_maintenance_failed(String name) {
+    return '$name 失败';
+  }
+
+  @override
+  String get rel_ops_host_curator_paused_result => '维护器已暂停。';
+
+  @override
+  String get rel_ops_host_curator_resumed_result => '维护器已恢复。';
+
+  @override
+  String get rel_ops_host_reset => '重置远程记忆文件';
+
+  @override
+  String rel_ops_host_reset_confirmation(String targetName, String profile) {
+    return '删除 $profile 上的 $targetName 记忆文件？此操作无法通过 Ares 撤销。';
+  }
+
+  @override
+  String rel_ops_host_reset_result(String targetName, int count) {
+    return '已重置 $targetName。已删除 $count 个远程文件。';
+  }
+
+  @override
+  String get rel_ops_host_share_not_redacted => '主机未确认诊断包已隐去敏感信息，因此不显示链接。';
+
+  @override
+  String rel_ops_host_scope(String connection, String profile) {
+    return '这些控件操作的是 $profile 的远程网关 $connection，而不是此设备，也不用于更新 Ares 客户端。';
+  }
+
+  @override
+  String rel_ops_host_health_running(String version, int count) {
+    return '网关进程正在运行 $version · $count 个会话';
+  }
+
+  @override
+  String rel_ops_host_health_stopped(String version, int count) {
+    return '网关进程已停止 $version · $count 个会话';
+  }
+
+  @override
+  String rel_ops_host_heartbeat_stale(num seconds) {
+    return '主机心跳已过期（$seconds 秒）。';
+  }
+
+  @override
+  String get rel_ops_host_doctor => '运行 Doctor';
+
+  @override
+  String get rel_ops_host_security_audit => '安全审计';
+
+  @override
+  String get rel_ops_host_check_receipt => '检查更新回执';
+
+  @override
+  String get rel_ops_host_logs => '远程主机日志';
+
+  @override
+  String get rel_ops_host_search_logs => '搜索主机日志';
+
+  @override
+  String get rel_ops_host_driver => '远程主机驱动程序';
+
+  @override
+  String get rel_ops_host_driver_scope =>
+      '计算机操作功能的就绪状态取决于网关机器上的驱动程序和操作系统权限，而不是此设备。';
+
+  @override
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  ) {
+    return '$platform · 已安装 $installed · 已就绪 $ready';
+  }
+
+  @override
+  String get rel_ops_host_null => '不可用';
+
+  @override
+  String get rel_ops_host_true => '是';
+
+  @override
+  String get rel_ops_host_false => '否';
+
+  @override
+  String get rel_ops_host_curator => '维护器';
+
+  @override
+  String get rel_ops_host_curator_paused => '维护器已暂停';
+
+  @override
+  String get rel_ops_host_curator_running => '维护器正在运行';
+
+  @override
+  String get rel_ops_host_no_run => '尚无已完成的运行';
+
+  @override
+  String get rel_ops_host_run_curator => '立即运行维护器';
+
+  @override
+  String get rel_ops_host_reset_memory => '重置记忆文件';
+
+  @override
+  String get rel_ops_host_reset_user => '重置用户文件';
+
+  @override
+  String get rel_ops_host_reset_both => '重置两个文件';
+
+  @override
+  String get rel_ops_host_share_consent => '我同意从远程主机上传已隐去敏感信息的诊断包';
+
+  @override
+  String get rel_ops_host_share => '分享已隐去敏感信息的诊断数据';
+
+  @override
+  String get rel_ops_host_update_unknown_installation => '无法识别此安装，因此未发送更新请求';
+
+  @override
+  String get rel_ops_host_update_busy_installation => '此安装上有聊天正在运行';
+
+  @override
+  String get rel_ops_host_update_refused => '远程更新被拒绝';
+
+  @override
+  String get rel_ops_host_error_stale => '远程工作区：已过期';
+
+  @override
+  String get rel_ops_host_error_mismatch => '远程工作区：不匹配';
+
+  @override
+  String get rel_ops_host_error_unbound => '远程工作区：未绑定';
+
+  @override
+  String get rel_ops_host_error_unsupported => '远程工作区：不支持';
+
+  @override
+  String get rel_ops_host_error_denied => '远程工作区：访问被拒绝';
+
+  @override
+  String get rel_ops_host_error_ineligible => '远程工作区：不符合操作条件';
+
+  @override
+  String get rel_ops_host_error_unavailable => '远程工作区：不可用';
+
+  @override
+  String get rel_ops_host_error_invalid => '远程工作区：无效';
+
+  @override
+  String get rel_ops_host_error_insecure => '远程工作区：不安全';
+
+  @override
+  String get rel_ops_host_error_request => '无法完成该请求。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -25734,6 +26921,1193 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get rel_admin_phase_undone => '已撤销';
+
+  @override
+  String rel_ops_cap_install_blocked(String verdict, String detail) {
+    return '安装已被阻止（$verdict）：$detail';
+  }
+
+  @override
+  String rel_ops_cap_scan_confirm(String verdict, String requested) {
+    return '扫描结果：$verdict。安装前请确认 $requested。';
+  }
+
+  @override
+  String rel_ops_cap_install_unconfirmed(String requested) {
+    return '网关尚未确认 $requested 已安装。';
+  }
+
+  @override
+  String rel_ops_cap_edit_skill(String name) {
+    return '编辑 $name';
+  }
+
+  @override
+  String rel_ops_cap_archive_skill(String name) {
+    return '归档 $name？';
+  }
+
+  @override
+  String rel_ops_cap_archive_explanation(String command) {
+    return '技能将被归档，可通过 $command 恢复。';
+  }
+
+  @override
+  String rel_ops_cap_install_anyway(String name) {
+    return '仍要安装 $name';
+  }
+
+  @override
+  String rel_ops_cap_install_despite_scan(String name) {
+    return '仍要安装扫描未通过的 $name？';
+  }
+
+  @override
+  String rel_ops_cap_scan_warning(String name) {
+    return '安全扫描已阻止 $name。此确认仅适用于 $name。';
+  }
+
+  @override
+  String rel_ops_cap_accept_scan_warning(String name) {
+    return '接受功能权限不会绕过对 $name 的扫描。';
+  }
+
+  @override
+  String rel_ops_cap_review_scan(String name) {
+    return '查看 $name 的扫描结果';
+  }
+
+  @override
+  String rel_ops_cap_desktop_grants(String description) {
+    return '$description\n文件夹和预览脚本的授权保留在该计算机的 Desktop 应用中。在此移除插件不会撤销这些本地授权。';
+  }
+
+  @override
+  String rel_ops_cap_remove_plugin(String name) {
+    return '移除 $name？';
+  }
+
+  @override
+  String rel_ops_cap_probe_result(String name, String tools) {
+    return '探测 $name：$tools';
+  }
+
+  @override
+  String rel_ops_cap_save_tool_grants_for(String connector) {
+    return '保存 $connector 的工具授权';
+  }
+
+  @override
+  String rel_ops_cap_backends_for(String name) {
+    return '$name 的后端';
+  }
+
+  @override
+  String rel_ops_cap_use_backend_confirmation(String name) {
+    return '使用 $name？';
+  }
+
+  @override
+  String rel_ops_cap_unlock_source(String name) {
+    return '解锁 $name';
+  }
+
+  @override
+  String get rel_ops_cap_capabilities => '功能';
+
+  @override
+  String get rel_ops_cap_plugins => '插件';
+
+  @override
+  String get rel_ops_cap_connectors => '连接器';
+
+  @override
+  String get rel_ops_cap_backends => '后端';
+
+  @override
+  String get rel_ops_cap_save_skill => '保存技能';
+
+  @override
+  String get rel_ops_cap_archive => '归档';
+
+  @override
+  String get rel_ops_cap_hub_identifier => 'Hub 标识符';
+
+  @override
+  String get rel_ops_cap_install => '安装';
+
+  @override
+  String get rel_ops_cap_update_all => '全部更新';
+
+  @override
+  String get rel_ops_cap_unlock => '解锁';
+
+  @override
+  String get rel_ops_cap_lock => '锁定';
+
+  @override
+  String get rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet =>
+      '此更新会添加功能。尚未进行任何更改。';
+
+  @override
+  String get rel_ops_cap_the_scan_blocked_this_plugin => '扫描已阻止此插件。';
+
+  @override
+  String get rel_ops_cap_the_plugin_was_not_changed => '插件未更改。';
+
+  @override
+  String get rel_ops_cap_repository => '代码仓库';
+
+  @override
+  String get rel_ops_cap_install_plugin => '安装插件';
+
+  @override
+  String get rel_ops_cap_update_plugins => '更新插件';
+
+  @override
+  String get rel_ops_cap_accept_capabilities => '接受功能权限';
+
+  @override
+  String get rel_ops_cap_update => '更新';
+
+  @override
+  String get rel_ops_cap_remove_desktop_half => '移除桌面端组件';
+
+  @override
+  String get rel_ops_cap_server_name => '服务器名称';
+
+  @override
+  String get rel_ops_cap_command => '命令';
+
+  @override
+  String get rel_ops_cap_http_url => 'HTTP URL';
+
+  @override
+  String get rel_ops_cap_add_server => '添加服务器';
+
+  @override
+  String get rel_ops_cap_probe => '探测';
+
+  @override
+  String get rel_ops_cap_probe_failed => '探测失败。';
+
+  @override
+  String get rel_ops_cap_logs => '日志';
+
+  @override
+  String get rel_ops_cap_mcp_log => 'MCP 日志';
+
+  @override
+  String get rel_ops_cap_connector => '连接器';
+
+  @override
+  String get rel_ops_cap_account_alias => '账户别名';
+
+  @override
+  String get rel_ops_cap_link_account => '关联账户';
+
+  @override
+  String get rel_ops_cap_remove_account => '移除账户';
+
+  @override
+  String get rel_ops_cap_tool_connector => '工具连接器';
+
+  @override
+  String get rel_ops_cap_load_tools => '加载工具';
+
+  @override
+  String get rel_ops_cap_save_tool_grants => '保存工具授权';
+
+  @override
+  String
+  get rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged =>
+      '此策略没有成员修订版本，因此工具授权保持不变。';
+
+  @override
+  String get rel_ops_cap_active => '使用中';
+
+  @override
+  String get rel_ops_cap_use => '使用';
+
+  @override
+  String get rel_ops_cap_run_setup => '运行设置';
+
+  @override
+  String get rel_ops_cap_terminal_backends => '终端后端';
+
+  @override
+  String get rel_ops_cap_this_changes_the_terminal_backend_for_this_profile =>
+      '这会更改此配置文件的终端后端。';
+
+  @override
+  String get rel_ops_cap_use_backend => '使用后端';
+
+  @override
+  String get rel_ops_cap_select => '选择';
+
+  @override
+  String get rel_ops_cap_browser_vault => '浏览器保险库';
+
+  @override
+  String
+  get rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here =>
+      '已保存的网站登录信息、地址和银行卡。密码保留在安全字段中，不会在此列出。';
+
+  @override
+  String get rel_ops_cap_remove_saved_item => '移除已保存的项目';
+
+  @override
+  String get rel_ops_cap_delete_this_item => '删除此项目？';
+
+  @override
+  String get rel_ops_cap_unlocked => '已解锁';
+
+  @override
+  String get rel_ops_cap_locked => '已锁定';
+
+  @override
+  String get rel_ops_cap_not_detected => '未检测到';
+
+  @override
+  String get rel_ops_cap_master_password => '主密码';
+
+  @override
+  String get rel_ops_cap_login => '登录信息';
+
+  @override
+  String get rel_ops_cap_address => '地址';
+
+  @override
+  String get rel_ops_cap_card => '银行卡';
+
+  @override
+  String get rel_ops_cap_label => '标签';
+
+  @override
+  String get rel_ops_cap_site_origin => '网站源';
+
+  @override
+  String get rel_ops_cap_identifier => '标识符';
+
+  @override
+  String get rel_ops_cap_password => '密码';
+
+  @override
+  String get rel_ops_cap_authenticator_key => '身份验证密钥';
+
+  @override
+  String get rel_ops_cap_street => '街道';
+
+  @override
+  String get rel_ops_cap_city => '城市';
+
+  @override
+  String get rel_ops_cap_postal_code => '邮政编码';
+
+  @override
+  String get rel_ops_cap_country => '国家或地区';
+
+  @override
+  String get rel_ops_cap_name_on_card => '持卡人姓名';
+
+  @override
+  String get rel_ops_cap_card_number => '卡号';
+
+  @override
+  String get rel_ops_cap_expiry_month => '到期月份';
+
+  @override
+  String get rel_ops_cap_expiry_year => '到期年份';
+
+  @override
+  String get rel_ops_cap_security_code => '安全码';
+
+  @override
+  String get rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method =>
+      '此网关没有共享指标的同意授权方法。';
+
+  @override
+  String get rel_ops_cap_agent_policy => '智能体策略';
+
+  @override
+  String get rel_ops_cap_loading_policy => '正在加载策略';
+
+  @override
+  String get rel_ops_cap_approval_timeout => '审批超时';
+
+  @override
+  String get rel_ops_cap_confirm_mcp_reloads => '确认 MCP 重新加载';
+
+  @override
+  String get rel_ops_cap_command_allowlist => '命令允许列表';
+
+  @override
+  String get rel_ops_cap_file_checkpoints => '文件检查点';
+
+  @override
+  String get rel_ops_cap_checkpoint_limit => '检查点上限';
+
+  @override
+  String get rel_ops_cap_browser_private_urls => '浏览器私有 URL';
+
+  @override
+  String get rel_ops_cap_use_my_real_browser_profile => '使用我的真实浏览器配置文件';
+
+  @override
+  String get rel_ops_cap_save_policy => '保存策略';
+
+  @override
+  String get rel_ops_cap_shared_metrics_for_this_profile => '此配置文件的共享指标';
+
+  @override
+  String get rel_ops_cap_send_shared_metrics => '发送共享指标';
+
+  @override
+  String get rel_ops_cap_error_enter_a_label => '请输入标签。';
+
+  @override
+  String get rel_ops_cap_error_enter_a_valid_url_like_https_example_com =>
+      '请输入有效的 URL，例如 https://example.com。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_identifier_and_password =>
+      '请输入标识符和密码。';
+
+  @override
+  String
+  get rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code =>
+      '请输入持卡人姓名、卡号、有效期和安全码。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_street_city_postal_code_and_country =>
+      '请输入街道、城市、邮政编码和国家或地区。';
+
+  @override
+  String
+  get rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read =>
+      '网关返回了无法读取的响应。';
+
+  @override
+  String rel_ops_cap_error_the_gateway_refused_the_request_status(
+    int statusCode,
+  ) {
+    return '网关拒绝了请求（$statusCode）。';
+  }
+
+  @override
+  String
+  rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable(
+    String method,
+  ) {
+    return '此连接没有网关套接字，因此 $method 不可用。';
+  }
+
+  @override
+  String get rel_ops_cap_error_choose_a_skill => '请选择技能。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_text_was_not_returned => '未返回技能文本。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_saved => '技能未保存。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_archived => '技能未归档。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_installed => '技能未安装。';
+
+  @override
+  String get rel_ops_cap_error_skill_updates_did_not_start => '技能更新未启动。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_removed => '技能未移除。';
+
+  @override
+  String get rel_ops_cap_error_enter_a_skill_or_plugin_identifier =>
+      '请输入技能或插件标识符。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_plugin => '请选择插件。';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_removed => '插件未移除。';
+
+  @override
+  String get rel_ops_cap_error_the_desktop_half_was_not_removed => '桌面端组件未移除。';
+
+  @override
+  String
+  get rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key =>
+      '此网关未为插件分配稳定的键。';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_changed => '插件未更改。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_server => '请选择服务器。';
+
+  @override
+  String get rel_ops_cap_error_name_the_server => '请为服务器命名。';
+
+  @override
+  String get rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url =>
+      '请为服务器提供命令或 http(s) URL。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_toolset => '请选择工具集。';
+
+  @override
+  String get rel_ops_cap_error_tool_backend_status_was_not_returned =>
+      '未返回工具后端状态。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_provider => '请选择提供商。';
+
+  @override
+  String get rel_ops_cap_error_this_provider_has_no_setup_action =>
+      '此提供商没有设置操作。';
+
+  @override
+  String get rel_ops_cap_error_setup_did_not_start => '设置未启动。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_terminal_backend => '请选择终端后端。';
+
+  @override
+  String get rel_ops_cap_error_name_the_connector => '请为连接器命名。';
+
+  @override
+  String get rel_ops_cap_error_choose_an_account => '请选择账户。';
+
+  @override
+  String
+  get rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants =>
+      '更改工具授权前，请重新加载连接器策略。';
+
+  @override
+  String get rel_ops_cap_error_choose_an_item => '请选择项目。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_source => '请选择来源。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_master_password => '请输入主密码。';
+
+  @override
+  String get rel_ops_cap_error_gateway_config_was_not_returned => '未返回网关配置。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_known_approval_mode => '请选择已知的审批模式。';
+
+  @override
+  String get rel_ops_cap_error_use_a_positive_limit => '请使用大于零的上限。';
+
+  @override
+  String get rel_ops_cap_error_the_policy_was_not_saved => '策略未保存。';
+
+  @override
+  String get rel_ops_cap_value_manual => '手动';
+
+  @override
+  String get rel_ops_cap_value_smart => '智能';
+
+  @override
+  String get rel_ops_cap_value_off => '关闭';
+
+  @override
+  String get rel_ops_cap_value_safe => '安全';
+
+  @override
+  String get rel_ops_cap_value_caution => '谨慎';
+
+  @override
+  String get rel_ops_cap_value_dangerous => '危险';
+
+  @override
+  String get rel_ops_cap_value_blocked => '已阻止';
+
+  @override
+  String get rel_ops_cap_value_clean => '无威胁';
+
+  @override
+  String get rel_ops_cap_value_ready => '就绪';
+
+  @override
+  String get rel_ops_cap_value_available => '可用';
+
+  @override
+  String get rel_ops_cap_value_unavailable => '不可用';
+
+  @override
+  String get rel_ops_cap_value_enabled => '已启用';
+
+  @override
+  String get rel_ops_cap_value_disabled => '已禁用';
+
+  @override
+  String get rel_ops_cap_value_active => '使用中';
+
+  @override
+  String get rel_ops_cap_value_inactive => '未使用';
+
+  @override
+  String get rel_ops_cap_value_installed => '已安装';
+
+  @override
+  String get rel_ops_cap_value_missing => '缺失';
+
+  @override
+  String get rel_ops_cap_value_configured => '已配置';
+
+  @override
+  String get rel_ops_cap_value_not_configured => '未配置';
+
+  @override
+  String get rel_ops_cap_value_error => '错误';
+
+  @override
+  String get rel_ops_cap_value_unknown => '未知';
+
+  @override
+  String get rel_ops_cap_value_login => '登录信息';
+
+  @override
+  String get rel_ops_cap_value_address => '地址';
+
+  @override
+  String get rel_ops_cap_value_payment => '支付';
+
+  @override
+  String get rel_ops_term_connecting => '正在连接…';
+
+  @override
+  String get rel_ops_term_unbound => '没有匹配的活动会话或主机工作目录。请先打开所属聊天。';
+
+  @override
+  String get rel_ops_term_unsupported => '此网关不提供这项终端功能。未启动本地命令行解释器。';
+
+  @override
+  String get rel_ops_term_local_pty_unavailable => '此设备无法使用随附的本地伪终端（PTY）。';
+
+  @override
+  String get rel_ops_term_operation_failed =>
+      '无法打开或控制终端。请检查主机、凭据和指纹。未启动备用命令行解释器。';
+
+  @override
+  String get rel_ops_term_input_refused => '输入被拒绝。请重新打开原始聊天。';
+
+  @override
+  String get rel_ops_term_cancel => '取消';
+
+  @override
+  String get rel_ops_term_confirm => '确认';
+
+  @override
+  String get rel_ops_term_open_device_title => '在此设备上打开命令行解释器？';
+
+  @override
+  String get rel_ops_term_ssh_shell => 'SSH 命令行解释器';
+
+  @override
+  String get rel_ops_term_local_shell => '本地命令行解释器';
+
+  @override
+  String get rel_ops_term_connection_lost => '连接已丢失';
+
+  @override
+  String get rel_ops_term_shell_ended => '命令行解释器已结束';
+
+  @override
+  String get rel_ops_term_no_owner =>
+      '此聊天没有经过身份验证的网关终端所有者。仅凭 URL 或云端登录无法获得命令行访问权限。';
+
+  @override
+  String get rel_ops_term_open_gateway_title => '打开网关命令行解释器？';
+
+  @override
+  String get rel_ops_term_shell_expired => '命令行解释器已结束或已过期';
+
+  @override
+  String get rel_ops_term_disconnected => '已断开连接';
+
+  @override
+  String get rel_ops_term_gateway_shell => '网关命令行解释器';
+
+  @override
+  String get rel_ops_term_close_body => '结束此命令行解释器。如需保持运行，请改为隐藏面板。';
+
+  @override
+  String get rel_ops_term_closing => '正在关闭…';
+
+  @override
+  String get rel_ops_term_close_unconfirmed => '关闭未确认';
+
+  @override
+  String get rel_ops_term_processes_require_chat => '代理进程需要经过身份验证的所属聊天。';
+
+  @override
+  String get rel_ops_term_watching_processes => '正在监视此聊天的代理进程。关闭镜像视图绝不会停止其进程。';
+
+  @override
+  String get rel_ops_term_paste_limit => '粘贴大小限制为 16 KiB。';
+
+  @override
+  String get rel_ops_term_paste => '粘贴';
+
+  @override
+  String get rel_ops_term_select_first => '请先选择终端输出。';
+
+  @override
+  String get rel_ops_term_open_chat_to_insert => '插入输出前，请打开原始聊天。';
+
+  @override
+  String get rel_ops_term_added_to_draft => '已添加到原始聊天草稿。未发送任何内容。';
+
+  @override
+  String get rel_ops_term_close => '关闭';
+
+  @override
+  String get rel_ops_term_add_selection => '将所选内容添加到聊天草稿';
+
+  @override
+  String get rel_ops_term_new_terminal => '新建终端';
+
+  @override
+  String get rel_ops_term_gateway_terminal => '网关主机终端';
+
+  @override
+  String get rel_ops_term_verified_ssh_terminal => '已验证的 SSH 终端';
+
+  @override
+  String get rel_ops_term_device_local_shell => '此设备（本地命令行解释器）';
+
+  @override
+  String get rel_ops_term_local_unavailable_mobile => '移动设备无法使用本地命令行解释器';
+
+  @override
+  String get rel_ops_term_watch_processes => '监视代理进程';
+
+  @override
+  String get rel_ops_term_select_output => '选择或复制输出';
+
+  @override
+  String get rel_ops_term_add_selected_output => '将所选输出添加到聊天草稿';
+
+  @override
+  String get rel_ops_term_review_paste => '检查剪贴板粘贴内容';
+
+  @override
+  String get rel_ops_term_reconnect => '重新连接同一命令行解释器';
+
+  @override
+  String get rel_ops_term_close_mirror => '关闭镜像视图';
+
+  @override
+  String get rel_ops_term_close_shell => '关闭命令行解释器';
+
+  @override
+  String get rel_ops_term_empty => '选择 + 以打开终端。不会自动启动任何命令行解释器。';
+
+  @override
+  String get rel_ops_term_reason_stale => '已失效';
+
+  @override
+  String get rel_ops_term_reason_mismatch => '不匹配';
+
+  @override
+  String get rel_ops_term_reason_unbound => '未绑定';
+
+  @override
+  String get rel_ops_term_reason_unsupported => '不支持';
+
+  @override
+  String get rel_ops_term_reason_denied => '已拒绝';
+
+  @override
+  String get rel_ops_term_reason_ineligible => '不符合条件';
+
+  @override
+  String get rel_ops_term_reason_unavailable => '不可用';
+
+  @override
+  String get rel_ops_term_reason_invalid => '无效';
+
+  @override
+  String get rel_ops_term_reason_insecure => '不安全';
+
+  @override
+  String rel_ops_term_refused(String reason) {
+    return '网关拒绝了此终端操作（$reason）。';
+  }
+
+  @override
+  String rel_ops_term_open_device_body(String connection) {
+    return '这是运行 Ares 的设备，而不是 $connection。命令行解释器使用应用权限，并在应用存储空间中启动。';
+  }
+
+  @override
+  String rel_ops_term_open_gateway_body(String host) {
+    return '在 $host 上经过验证的聊天工作目录中启动命令行解释器。这不是设备本地的命令行解释器。';
+  }
+
+  @override
+  String rel_ops_term_close_tab_title(String label) {
+    return '关闭 $label？';
+  }
+
+  @override
+  String rel_ops_term_read_only_status(String status) {
+    return '只读 · $status';
+  }
+
+  @override
+  String rel_ops_term_paste_title(String label) {
+    return '粘贴到 $label？';
+  }
+
+  @override
+  String rel_ops_term_output_title(String label) {
+    return '输出 · $label';
+  }
+
+  @override
+  String rel_ops_term_mirror_status(String label) {
+    return '只读进程镜像 · $label';
+  }
+
+  @override
+  String rel_ops_term_status_label(String status, String label) {
+    return '$status · $label';
+  }
+
+  @override
+  String rel_ops_term_ssh_tab(String user, String host, int port, int number) {
+    return 'SSH $user@$host:$port · $number';
+  }
+
+  @override
+  String rel_ops_term_device_tab(int number) {
+    return '此设备 · $number';
+  }
+
+  @override
+  String rel_ops_term_gateway_tab(String host, int number) {
+    return '网关 $host · $number';
+  }
+
+  @override
+  String get rel_ops_term_earlier_output_trimmed => '[较早的输出已截断]';
+
+  @override
+  String get rel_ops_term_ssh_dialog_title => '打开已验证的 SSH 终端';
+
+  @override
+  String get rel_ops_term_ssh_dialog_body =>
+      '请使用通过独立渠道从主机管理员处获得的指纹。此操作会打开新的远程登录会话，而非网关或本地命令行解释器。';
+
+  @override
+  String get rel_ops_term_ssh_host => 'SSH 主机';
+
+  @override
+  String get rel_ops_term_ssh_port => '端口';
+
+  @override
+  String get rel_ops_term_ssh_user => '用户';
+
+  @override
+  String get rel_ops_term_ssh_fingerprint => '主机密钥指纹（SHA256:…）';
+
+  @override
+  String get rel_ops_term_ssh_password => 'SSH 密码（不保存）';
+
+  @override
+  String get rel_ops_term_connect => '连接';
+
+  @override
+  String get rel_ops_ssh_invalid_destination => 'SSH 主机、端口或用户无效。';
+
+  @override
+  String get rel_ops_ssh_public_key_required => '需要 OpenSSH Ed25519 格式的主机公钥。';
+
+  @override
+  String get rel_ops_ssh_invalid_public_key => 'Ed25519 主机密钥无效。';
+
+  @override
+  String get rel_ops_ssh_invalid_saved_key => '已保存的主机密钥无效。';
+
+  @override
+  String get rel_ops_ssh_enrollment_unverified => '无法验证主机密钥注册。';
+
+  @override
+  String get rel_ops_ssh_different_key_pinned => '已固定了另一把密钥。请单独验证此变更。';
+
+  @override
+  String get rel_ops_ssh_open_ssh_unavailable => '系统 OpenSSH 不可用。';
+
+  @override
+  String get rel_ops_ssh_confirm_host_key => '请先确认主机密钥再连接。';
+
+  @override
+  String get rel_ops_ssh_absolute_identity_required => '请选择使用绝对路径的身份密钥文件。';
+
+  @override
+  String get rel_ops_ssh_invalid_remote_port => '远程端口无效。';
+
+  @override
+  String get rel_ops_ssh_preview_too_large => '预览超出 64 KiB 限制。';
+
+  @override
+  String get rel_ops_ssh_connection_refused => 'SSH 连接被拒绝。请检查已注册的主机密钥、身份凭据和服务。';
+
+  @override
+  String get rel_ops_ssh_http_not_ok => '远程服务未返回 HTTP 200。';
+
+  @override
+  String get rel_ops_ssh_encoded_response => '此预览不支持经过编码的响应。';
+
+  @override
+  String get rel_ops_ssh_preview_type_unsupported => '只能预览文本和 HTML 源代码。';
+
+  @override
+  String get rel_ops_ssh_health_unconfirmed => '服务未确认网关运行正常。';
+
+  @override
+  String get rel_ops_ssh_enroll_host_key_first => '请先注册主机的公钥。';
+
+  @override
+  String get rel_ops_ssh_cancel => '取消';
+
+  @override
+  String get rel_ops_ssh_confirm => '确认';
+
+  @override
+  String get rel_ops_ssh_pin_title => '固定此 SSH 主机密钥？';
+
+  @override
+  String rel_ops_ssh_pin_detail(String destination, String fingerprint) {
+    return '$destination\n$fingerprint\n请通过独立渠道与主机管理员核对此指纹。不会建立任何连接。';
+  }
+
+  @override
+  String get rel_ops_ssh_host_key_pinned => '主机密钥已固定。';
+
+  @override
+  String get rel_ops_ssh_shell_detail => '打开交互式登录 shell。';
+
+  @override
+  String rel_ops_ssh_read_detail(String path, int port) {
+    return '通过 SSH 通道读取远程 127.0.0.1:$port 上的 $path。';
+  }
+
+  @override
+  String rel_ops_ssh_connect_title(String destination) {
+    return '连接到 $destination？';
+  }
+
+  @override
+  String rel_ops_ssh_connect_detail(
+    String detail,
+    String fingerprint,
+    String authentication,
+  ) {
+    return '$detail\n$fingerprint\n$authentication';
+  }
+
+  @override
+  String get rel_ops_ssh_agent_auth => '使用你的 SSH 代理进行身份验证。';
+
+  @override
+  String get rel_ops_ssh_identity_auth => '使用选定的身份密钥文件。';
+
+  @override
+  String rel_ops_ssh_gateway_responding(int port) {
+    return '网关正在远程回环端口 $port 上响应。';
+  }
+
+  @override
+  String get rel_ops_ssh_session_closed => 'SSH 会话已关闭。';
+
+  @override
+  String get rel_ops_ssh_session_unclean => 'SSH 会话未正常退出。';
+
+  @override
+  String get rel_ops_ssh_operation_failed => 'SSH 操作失败。请检查目标和身份凭据。';
+
+  @override
+  String get rel_ops_ssh_title => '经验证的 SSH';
+
+  @override
+  String get rel_ops_ssh_unsupported =>
+      '此设备没有受支持的系统 OpenSSH 传输方式。已固定网关的中继会自动接受新密钥，因此不能用于经验证的注册。';
+
+  @override
+  String get rel_ops_ssh_host => 'SSH 主机';
+
+  @override
+  String get rel_ops_ssh_port => 'SSH 端口';
+
+  @override
+  String get rel_ops_ssh_user => 'SSH 用户';
+
+  @override
+  String get rel_ops_ssh_identity => '身份密钥文件（可选；否则使用 SSH 代理）';
+
+  @override
+  String get rel_ops_ssh_public_key => '管理员提供的主机公钥（ssh-ed25519）';
+
+  @override
+  String get rel_ops_ssh_review_key => '审查主机密钥';
+
+  @override
+  String get rel_ops_ssh_remote_port => '远程回环服务端口';
+
+  @override
+  String get rel_ops_ssh_check_gateway => '通过 SSH 检查网关';
+
+  @override
+  String get rel_ops_ssh_preview_source => '通过 SSH 预览源代码';
+
+  @override
+  String get rel_ops_ssh_open_shell => '打开 SSH shell';
+
+  @override
+  String get rel_ops_ssh_shell_line => '发送到远程 shell 的行';
+
+  @override
+  String get rel_ops_ssh_disconnect => '断开 shell 连接';
+
+  @override
+  String get rel_ops_host_cancel => '取消';
+
+  @override
+  String get rel_ops_host_confirm => '确认';
+
+  @override
+  String get rel_ops_host_title => '主机';
+
+  @override
+  String get rel_ops_host_refresh => '刷新';
+
+  @override
+  String get rel_ops_host_update => '更新远程 Hermes';
+
+  @override
+  String rel_ops_host_update_confirmation(String profile) {
+    return '这将在网关主机上为 $profile 执行就地更新，不会更新此设备上的 Ares。更新是否成功以匹配的更新回执为准，而不是以主机是否保持可访问为准。';
+  }
+
+  @override
+  String get rel_ops_host_update_awaiting => '正在等待匹配的回执。更新仍在进行中。';
+
+  @override
+  String get rel_ops_host_receipt_success => '更新回执显示成功。';
+
+  @override
+  String get rel_ops_host_receipt_partial => '更新已应用，但仍有后续步骤需要完成。';
+
+  @override
+  String get rel_ops_host_receipt_failed => '更新回执显示失败。';
+
+  @override
+  String get rel_ops_host_receipt_refused => '更新回执显示已拒绝。';
+
+  @override
+  String get rel_ops_host_update_running => '更新仍在进行中。';
+
+  @override
+  String get rel_ops_host_update_unknown => '更新结果未知。网关正常运行并不代表更新成功。';
+
+  @override
+  String get rel_ops_host_default_profile => '网关默认配置档案';
+
+  @override
+  String get rel_ops_host_restart => '重启远程网关';
+
+  @override
+  String rel_ops_host_restart_shared_confirmation(String profiles) {
+    return '这将重启 $profiles 共享的网关。此网关上正在进行的轮次会被中断。请随后重新连接。可以访问网关并不能证明重启已完成。';
+  }
+
+  @override
+  String rel_ops_host_restart_confirmation(String profile) {
+    return '这将重启 $profile 的远程网关。此网关上正在进行的轮次会被中断。请随后重新连接。';
+  }
+
+  @override
+  String get rel_ops_host_restart_running => '重启命令仍在运行。';
+
+  @override
+  String get rel_ops_host_restart_finished => '重启命令已结束。请手动重新连接主机。';
+
+  @override
+  String get rel_ops_host_restart_failed => '重启命令失败。';
+
+  @override
+  String rel_ops_host_maintenance_running(String name) {
+    return '$name 仍在运行';
+  }
+
+  @override
+  String rel_ops_host_maintenance_finished(String name) {
+    return '$name 已完成';
+  }
+
+  @override
+  String rel_ops_host_maintenance_failed(String name) {
+    return '$name 失败';
+  }
+
+  @override
+  String get rel_ops_host_curator_paused_result => '维护器已暂停。';
+
+  @override
+  String get rel_ops_host_curator_resumed_result => '维护器已恢复。';
+
+  @override
+  String get rel_ops_host_reset => '重置远程记忆文件';
+
+  @override
+  String rel_ops_host_reset_confirmation(String targetName, String profile) {
+    return '删除 $profile 上的 $targetName 记忆文件？此操作无法通过 Ares 撤销。';
+  }
+
+  @override
+  String rel_ops_host_reset_result(String targetName, int count) {
+    return '已重置 $targetName。已删除 $count 个远程文件。';
+  }
+
+  @override
+  String get rel_ops_host_share_not_redacted => '主机未确认诊断包已隐去敏感信息，因此不显示链接。';
+
+  @override
+  String rel_ops_host_scope(String connection, String profile) {
+    return '这些控件操作的是 $profile 的远程网关 $connection，而不是此设备，也不用于更新 Ares 客户端。';
+  }
+
+  @override
+  String rel_ops_host_health_running(String version, int count) {
+    return '网关进程正在运行 $version · $count 个会话';
+  }
+
+  @override
+  String rel_ops_host_health_stopped(String version, int count) {
+    return '网关进程已停止 $version · $count 个会话';
+  }
+
+  @override
+  String rel_ops_host_heartbeat_stale(num seconds) {
+    return '主机心跳已过期（$seconds 秒）。';
+  }
+
+  @override
+  String get rel_ops_host_doctor => '运行 Doctor';
+
+  @override
+  String get rel_ops_host_security_audit => '安全审计';
+
+  @override
+  String get rel_ops_host_check_receipt => '检查更新回执';
+
+  @override
+  String get rel_ops_host_logs => '远程主机日志';
+
+  @override
+  String get rel_ops_host_search_logs => '搜索主机日志';
+
+  @override
+  String get rel_ops_host_driver => '远程主机驱动程序';
+
+  @override
+  String get rel_ops_host_driver_scope =>
+      '计算机操作功能的就绪状态取决于网关机器上的驱动程序和操作系统权限，而不是此设备。';
+
+  @override
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  ) {
+    return '$platform · 已安装 $installed · 已就绪 $ready';
+  }
+
+  @override
+  String get rel_ops_host_null => '不可用';
+
+  @override
+  String get rel_ops_host_true => '是';
+
+  @override
+  String get rel_ops_host_false => '否';
+
+  @override
+  String get rel_ops_host_curator => '维护器';
+
+  @override
+  String get rel_ops_host_curator_paused => '维护器已暂停';
+
+  @override
+  String get rel_ops_host_curator_running => '维护器正在运行';
+
+  @override
+  String get rel_ops_host_no_run => '尚无已完成的运行';
+
+  @override
+  String get rel_ops_host_run_curator => '立即运行维护器';
+
+  @override
+  String get rel_ops_host_reset_memory => '重置记忆文件';
+
+  @override
+  String get rel_ops_host_reset_user => '重置用户文件';
+
+  @override
+  String get rel_ops_host_reset_both => '重置两个文件';
+
+  @override
+  String get rel_ops_host_share_consent => '我同意从远程主机上传已隐去敏感信息的诊断包';
+
+  @override
+  String get rel_ops_host_share => '分享已隐去敏感信息的诊断数据';
+
+  @override
+  String get rel_ops_host_update_unknown_installation => '无法识别此安装，因此未发送更新请求';
+
+  @override
+  String get rel_ops_host_update_busy_installation => '此安装上有聊天正在运行';
+
+  @override
+  String get rel_ops_host_update_refused => '远程更新被拒绝';
+
+  @override
+  String get rel_ops_host_error_stale => '远程工作区：已过期';
+
+  @override
+  String get rel_ops_host_error_mismatch => '远程工作区：不匹配';
+
+  @override
+  String get rel_ops_host_error_unbound => '远程工作区：未绑定';
+
+  @override
+  String get rel_ops_host_error_unsupported => '远程工作区：不支持';
+
+  @override
+  String get rel_ops_host_error_denied => '远程工作区：访问被拒绝';
+
+  @override
+  String get rel_ops_host_error_ineligible => '远程工作区：不符合操作条件';
+
+  @override
+  String get rel_ops_host_error_unavailable => '远程工作区：不可用';
+
+  @override
+  String get rel_ops_host_error_invalid => '远程工作区：无效';
+
+  @override
+  String get rel_ops_host_error_insecure => '远程工作区：不安全';
+
+  @override
+  String get rel_ops_host_error_request => '无法完成该请求。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -38604,4 +40978,1192 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get rel_admin_phase_undone => '已復原';
+
+  @override
+  String rel_ops_cap_install_blocked(String verdict, String detail) {
+    return '安裝已遭封鎖（$verdict）：$detail';
+  }
+
+  @override
+  String rel_ops_cap_scan_confirm(String verdict, String requested) {
+    return '掃描結果：$verdict。安裝前請確認 $requested。';
+  }
+
+  @override
+  String rel_ops_cap_install_unconfirmed(String requested) {
+    return '閘道尚未確認 $requested 已安裝。';
+  }
+
+  @override
+  String rel_ops_cap_edit_skill(String name) {
+    return '編輯 $name';
+  }
+
+  @override
+  String rel_ops_cap_archive_skill(String name) {
+    return '封存 $name？';
+  }
+
+  @override
+  String rel_ops_cap_archive_explanation(String command) {
+    return '技能將被封存，可透過 $command 還原。';
+  }
+
+  @override
+  String rel_ops_cap_install_anyway(String name) {
+    return '仍要安裝 $name';
+  }
+
+  @override
+  String rel_ops_cap_install_despite_scan(String name) {
+    return '仍要安裝未通過掃描的 $name？';
+  }
+
+  @override
+  String rel_ops_cap_scan_warning(String name) {
+    return '安全掃描已封鎖 $name。此確認僅適用於 $name。';
+  }
+
+  @override
+  String rel_ops_cap_accept_scan_warning(String name) {
+    return '接受功能權限不會略過對 $name 的掃描。';
+  }
+
+  @override
+  String rel_ops_cap_review_scan(String name) {
+    return '檢視 $name 的掃描結果';
+  }
+
+  @override
+  String rel_ops_cap_desktop_grants(String description) {
+    return '$description\n資料夾和預覽指令碼的授權會保留在該電腦的 Desktop 應用程式中。在此移除外掛程式不會撤銷這些本機授權。';
+  }
+
+  @override
+  String rel_ops_cap_remove_plugin(String name) {
+    return '移除 $name？';
+  }
+
+  @override
+  String rel_ops_cap_probe_result(String name, String tools) {
+    return '探測 $name：$tools';
+  }
+
+  @override
+  String rel_ops_cap_save_tool_grants_for(String connector) {
+    return '儲存 $connector 的工具授權';
+  }
+
+  @override
+  String rel_ops_cap_backends_for(String name) {
+    return '$name 的後端';
+  }
+
+  @override
+  String rel_ops_cap_use_backend_confirmation(String name) {
+    return '使用 $name？';
+  }
+
+  @override
+  String rel_ops_cap_unlock_source(String name) {
+    return '解鎖 $name';
+  }
+
+  @override
+  String get rel_ops_cap_capabilities => '功能';
+
+  @override
+  String get rel_ops_cap_plugins => '外掛程式';
+
+  @override
+  String get rel_ops_cap_connectors => '連接器';
+
+  @override
+  String get rel_ops_cap_backends => '後端';
+
+  @override
+  String get rel_ops_cap_save_skill => '儲存技能';
+
+  @override
+  String get rel_ops_cap_archive => '封存';
+
+  @override
+  String get rel_ops_cap_hub_identifier => 'Hub 識別碼';
+
+  @override
+  String get rel_ops_cap_install => '安裝';
+
+  @override
+  String get rel_ops_cap_update_all => '全部更新';
+
+  @override
+  String get rel_ops_cap_unlock => '解鎖';
+
+  @override
+  String get rel_ops_cap_lock => '鎖定';
+
+  @override
+  String get rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet =>
+      '此更新會新增功能。尚未進行任何變更。';
+
+  @override
+  String get rel_ops_cap_the_scan_blocked_this_plugin => '掃描已封鎖此外掛程式。';
+
+  @override
+  String get rel_ops_cap_the_plugin_was_not_changed => '外掛程式未變更。';
+
+  @override
+  String get rel_ops_cap_repository => '程式碼儲存庫';
+
+  @override
+  String get rel_ops_cap_install_plugin => '安裝外掛程式';
+
+  @override
+  String get rel_ops_cap_update_plugins => '更新外掛程式';
+
+  @override
+  String get rel_ops_cap_accept_capabilities => '接受功能權限';
+
+  @override
+  String get rel_ops_cap_update => '更新';
+
+  @override
+  String get rel_ops_cap_remove_desktop_half => '移除桌面端元件';
+
+  @override
+  String get rel_ops_cap_server_name => '伺服器名稱';
+
+  @override
+  String get rel_ops_cap_command => '命令';
+
+  @override
+  String get rel_ops_cap_http_url => 'HTTP URL';
+
+  @override
+  String get rel_ops_cap_add_server => '新增伺服器';
+
+  @override
+  String get rel_ops_cap_probe => '探測';
+
+  @override
+  String get rel_ops_cap_probe_failed => '探測失敗。';
+
+  @override
+  String get rel_ops_cap_logs => '記錄';
+
+  @override
+  String get rel_ops_cap_mcp_log => 'MCP 記錄';
+
+  @override
+  String get rel_ops_cap_connector => '連接器';
+
+  @override
+  String get rel_ops_cap_account_alias => '帳戶別名';
+
+  @override
+  String get rel_ops_cap_link_account => '連結帳戶';
+
+  @override
+  String get rel_ops_cap_remove_account => '移除帳戶';
+
+  @override
+  String get rel_ops_cap_tool_connector => '工具連接器';
+
+  @override
+  String get rel_ops_cap_load_tools => '載入工具';
+
+  @override
+  String get rel_ops_cap_save_tool_grants => '儲存工具授權';
+
+  @override
+  String
+  get rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged =>
+      '此原則沒有成員修訂版本，因此工具授權維持不變。';
+
+  @override
+  String get rel_ops_cap_active => '使用中';
+
+  @override
+  String get rel_ops_cap_use => '使用';
+
+  @override
+  String get rel_ops_cap_run_setup => '執行設定';
+
+  @override
+  String get rel_ops_cap_terminal_backends => '終端機後端';
+
+  @override
+  String get rel_ops_cap_this_changes_the_terminal_backend_for_this_profile =>
+      '這會變更此設定檔的終端機後端。';
+
+  @override
+  String get rel_ops_cap_use_backend => '使用後端';
+
+  @override
+  String get rel_ops_cap_select => '選取';
+
+  @override
+  String get rel_ops_cap_browser_vault => '瀏覽器保險庫';
+
+  @override
+  String
+  get rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here =>
+      '已儲存的網站登入資訊、地址和付款卡。密碼會保留在安全欄位中，不會在此列出。';
+
+  @override
+  String get rel_ops_cap_remove_saved_item => '移除已儲存的項目';
+
+  @override
+  String get rel_ops_cap_delete_this_item => '刪除此項目？';
+
+  @override
+  String get rel_ops_cap_unlocked => '已解鎖';
+
+  @override
+  String get rel_ops_cap_locked => '已鎖定';
+
+  @override
+  String get rel_ops_cap_not_detected => '未偵測到';
+
+  @override
+  String get rel_ops_cap_master_password => '主密碼';
+
+  @override
+  String get rel_ops_cap_login => '登入資訊';
+
+  @override
+  String get rel_ops_cap_address => '地址';
+
+  @override
+  String get rel_ops_cap_card => '付款卡';
+
+  @override
+  String get rel_ops_cap_label => '標籤';
+
+  @override
+  String get rel_ops_cap_site_origin => '網站來源';
+
+  @override
+  String get rel_ops_cap_identifier => '識別碼';
+
+  @override
+  String get rel_ops_cap_password => '密碼';
+
+  @override
+  String get rel_ops_cap_authenticator_key => '驗證器金鑰';
+
+  @override
+  String get rel_ops_cap_street => '街道';
+
+  @override
+  String get rel_ops_cap_city => '城市';
+
+  @override
+  String get rel_ops_cap_postal_code => '郵遞區號';
+
+  @override
+  String get rel_ops_cap_country => '國家或地區';
+
+  @override
+  String get rel_ops_cap_name_on_card => '持卡人姓名';
+
+  @override
+  String get rel_ops_cap_card_number => '卡號';
+
+  @override
+  String get rel_ops_cap_expiry_month => '到期月份';
+
+  @override
+  String get rel_ops_cap_expiry_year => '到期年份';
+
+  @override
+  String get rel_ops_cap_security_code => '安全碼';
+
+  @override
+  String get rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method =>
+      '此閘道沒有共用指標的同意授權方法。';
+
+  @override
+  String get rel_ops_cap_agent_policy => '代理程式原則';
+
+  @override
+  String get rel_ops_cap_loading_policy => '正在載入原則';
+
+  @override
+  String get rel_ops_cap_approval_timeout => '核准逾時';
+
+  @override
+  String get rel_ops_cap_confirm_mcp_reloads => '確認 MCP 重新載入';
+
+  @override
+  String get rel_ops_cap_command_allowlist => '命令允許清單';
+
+  @override
+  String get rel_ops_cap_file_checkpoints => '檔案檢查點';
+
+  @override
+  String get rel_ops_cap_checkpoint_limit => '檢查點上限';
+
+  @override
+  String get rel_ops_cap_browser_private_urls => '瀏覽器私人 URL';
+
+  @override
+  String get rel_ops_cap_use_my_real_browser_profile => '使用我的實際瀏覽器設定檔';
+
+  @override
+  String get rel_ops_cap_save_policy => '儲存原則';
+
+  @override
+  String get rel_ops_cap_shared_metrics_for_this_profile => '此設定檔的共用指標';
+
+  @override
+  String get rel_ops_cap_send_shared_metrics => '傳送共用指標';
+
+  @override
+  String get rel_ops_cap_error_enter_a_label => '請輸入標籤。';
+
+  @override
+  String get rel_ops_cap_error_enter_a_valid_url_like_https_example_com =>
+      '請輸入有效的 URL，例如 https://example.com。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_identifier_and_password =>
+      '請輸入識別碼和密碼。';
+
+  @override
+  String
+  get rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code =>
+      '請輸入持卡人姓名、卡號、有效期限和安全碼。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_street_city_postal_code_and_country =>
+      '請輸入街道、城市、郵遞區號和國家或地區。';
+
+  @override
+  String
+  get rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read =>
+      '閘道傳回了無法讀取的回應。';
+
+  @override
+  String rel_ops_cap_error_the_gateway_refused_the_request_status(
+    int statusCode,
+  ) {
+    return '閘道拒絕了要求（$statusCode）。';
+  }
+
+  @override
+  String
+  rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable(
+    String method,
+  ) {
+    return '此連線沒有閘道通訊端，因此無法使用 $method。';
+  }
+
+  @override
+  String get rel_ops_cap_error_choose_a_skill => '請選擇技能。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_text_was_not_returned => '未傳回技能文字。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_saved => '技能未儲存。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_archived => '技能未封存。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_installed => '技能未安裝。';
+
+  @override
+  String get rel_ops_cap_error_skill_updates_did_not_start => '技能更新未啟動。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_removed => '技能未移除。';
+
+  @override
+  String get rel_ops_cap_error_enter_a_skill_or_plugin_identifier =>
+      '請輸入技能或外掛程式識別碼。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_plugin => '請選擇外掛程式。';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_removed => '外掛程式未移除。';
+
+  @override
+  String get rel_ops_cap_error_the_desktop_half_was_not_removed => '桌面端元件未移除。';
+
+  @override
+  String
+  get rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key =>
+      '此閘道未為外掛程式指派穩定的索引鍵。';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_changed => '外掛程式未變更。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_server => '請選擇伺服器。';
+
+  @override
+  String get rel_ops_cap_error_name_the_server => '請為伺服器命名。';
+
+  @override
+  String get rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url =>
+      '請為伺服器提供命令或 http(s) URL。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_toolset => '請選擇工具組。';
+
+  @override
+  String get rel_ops_cap_error_tool_backend_status_was_not_returned =>
+      '未傳回工具後端狀態。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_provider => '請選擇供應商。';
+
+  @override
+  String get rel_ops_cap_error_this_provider_has_no_setup_action =>
+      '此供應商沒有設定動作。';
+
+  @override
+  String get rel_ops_cap_error_setup_did_not_start => '設定未啟動。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_terminal_backend => '請選擇終端機後端。';
+
+  @override
+  String get rel_ops_cap_error_name_the_connector => '請為連接器命名。';
+
+  @override
+  String get rel_ops_cap_error_choose_an_account => '請選擇帳戶。';
+
+  @override
+  String
+  get rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants =>
+      '變更工具授權前，請重新載入連接器原則。';
+
+  @override
+  String get rel_ops_cap_error_choose_an_item => '請選擇項目。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_source => '請選擇來源。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_master_password => '請輸入主密碼。';
+
+  @override
+  String get rel_ops_cap_error_gateway_config_was_not_returned => '未傳回閘道設定。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_known_approval_mode => '請選擇已知的核准模式。';
+
+  @override
+  String get rel_ops_cap_error_use_a_positive_limit => '請使用大於零的上限。';
+
+  @override
+  String get rel_ops_cap_error_the_policy_was_not_saved => '原則未儲存。';
+
+  @override
+  String get rel_ops_cap_value_manual => '手動';
+
+  @override
+  String get rel_ops_cap_value_smart => '智慧';
+
+  @override
+  String get rel_ops_cap_value_off => '關閉';
+
+  @override
+  String get rel_ops_cap_value_safe => '安全';
+
+  @override
+  String get rel_ops_cap_value_caution => '謹慎';
+
+  @override
+  String get rel_ops_cap_value_dangerous => '危險';
+
+  @override
+  String get rel_ops_cap_value_blocked => '已封鎖';
+
+  @override
+  String get rel_ops_cap_value_clean => '無威脅';
+
+  @override
+  String get rel_ops_cap_value_ready => '就緒';
+
+  @override
+  String get rel_ops_cap_value_available => '可用';
+
+  @override
+  String get rel_ops_cap_value_unavailable => '無法使用';
+
+  @override
+  String get rel_ops_cap_value_enabled => '已啟用';
+
+  @override
+  String get rel_ops_cap_value_disabled => '已停用';
+
+  @override
+  String get rel_ops_cap_value_active => '使用中';
+
+  @override
+  String get rel_ops_cap_value_inactive => '未使用';
+
+  @override
+  String get rel_ops_cap_value_installed => '已安裝';
+
+  @override
+  String get rel_ops_cap_value_missing => '缺少';
+
+  @override
+  String get rel_ops_cap_value_configured => '已設定';
+
+  @override
+  String get rel_ops_cap_value_not_configured => '未設定';
+
+  @override
+  String get rel_ops_cap_value_error => '錯誤';
+
+  @override
+  String get rel_ops_cap_value_unknown => '未知';
+
+  @override
+  String get rel_ops_cap_value_login => '登入資訊';
+
+  @override
+  String get rel_ops_cap_value_address => '地址';
+
+  @override
+  String get rel_ops_cap_value_payment => '付款';
+
+  @override
+  String get rel_ops_term_connecting => '正在連線…';
+
+  @override
+  String get rel_ops_term_unbound => '沒有相符的作用中工作階段或主機工作目錄。請先開啟所屬聊天。';
+
+  @override
+  String get rel_ops_term_unsupported => '此閘道不提供這項終端機功能。未啟動本機命令殼層。';
+
+  @override
+  String get rel_ops_term_local_pty_unavailable => '此裝置無法使用隨附的本機虛擬終端機（PTY）。';
+
+  @override
+  String get rel_ops_term_operation_failed =>
+      '無法開啟或控制終端機。請檢查主機、認證資料及指紋。未啟動備用命令殼層。';
+
+  @override
+  String get rel_ops_term_input_refused => '輸入遭拒。請重新開啟原始聊天。';
+
+  @override
+  String get rel_ops_term_cancel => '取消';
+
+  @override
+  String get rel_ops_term_confirm => '確認';
+
+  @override
+  String get rel_ops_term_open_device_title => '在此裝置上開啟命令殼層？';
+
+  @override
+  String get rel_ops_term_ssh_shell => 'SSH 命令殼層';
+
+  @override
+  String get rel_ops_term_local_shell => '本機命令殼層';
+
+  @override
+  String get rel_ops_term_connection_lost => '連線已中斷';
+
+  @override
+  String get rel_ops_term_shell_ended => '命令殼層已結束';
+
+  @override
+  String get rel_ops_term_no_owner =>
+      '此聊天沒有經過身分驗證的閘道終端機擁有者。僅憑 URL 或雲端登入無法取得命令殼層的存取權。';
+
+  @override
+  String get rel_ops_term_open_gateway_title => '開啟閘道命令殼層？';
+
+  @override
+  String get rel_ops_term_shell_expired => '命令殼層已結束或已到期';
+
+  @override
+  String get rel_ops_term_disconnected => '已中斷連線';
+
+  @override
+  String get rel_ops_term_gateway_shell => '閘道命令殼層';
+
+  @override
+  String get rel_ops_term_close_body => '結束此命令殼層。如需保持執行，請改為隱藏面板。';
+
+  @override
+  String get rel_ops_term_closing => '正在關閉…';
+
+  @override
+  String get rel_ops_term_close_unconfirmed => '尚未確認關閉';
+
+  @override
+  String get rel_ops_term_processes_require_chat => '代理程式的處理程序需要經過身分驗證的所屬聊天。';
+
+  @override
+  String get rel_ops_term_watching_processes =>
+      '正在監看此聊天的代理程式處理程序。關閉鏡像檢視絕不會停止其處理程序。';
+
+  @override
+  String get rel_ops_term_paste_limit => '貼上大小限制為 16 KiB。';
+
+  @override
+  String get rel_ops_term_paste => '貼上';
+
+  @override
+  String get rel_ops_term_select_first => '請先選取終端機輸出。';
+
+  @override
+  String get rel_ops_term_open_chat_to_insert => '插入輸出前，請開啟原始聊天。';
+
+  @override
+  String get rel_ops_term_added_to_draft => '已新增至原始聊天草稿。未傳送任何內容。';
+
+  @override
+  String get rel_ops_term_close => '關閉';
+
+  @override
+  String get rel_ops_term_add_selection => '將所選內容新增至聊天草稿';
+
+  @override
+  String get rel_ops_term_new_terminal => '新增終端機';
+
+  @override
+  String get rel_ops_term_gateway_terminal => '閘道主機終端機';
+
+  @override
+  String get rel_ops_term_verified_ssh_terminal => '已驗證的 SSH 終端機';
+
+  @override
+  String get rel_ops_term_device_local_shell => '此裝置（本機命令殼層）';
+
+  @override
+  String get rel_ops_term_local_unavailable_mobile => '行動裝置無法使用本機命令殼層';
+
+  @override
+  String get rel_ops_term_watch_processes => '監看代理程式處理程序';
+
+  @override
+  String get rel_ops_term_select_output => '選取或複製輸出';
+
+  @override
+  String get rel_ops_term_add_selected_output => '將所選輸出新增至聊天草稿';
+
+  @override
+  String get rel_ops_term_review_paste => '檢查剪貼簿貼上內容';
+
+  @override
+  String get rel_ops_term_reconnect => '重新連線至同一命令殼層';
+
+  @override
+  String get rel_ops_term_close_mirror => '關閉鏡像檢視';
+
+  @override
+  String get rel_ops_term_close_shell => '關閉命令殼層';
+
+  @override
+  String get rel_ops_term_empty => '選取 + 以開啟終端機。不會自動啟動任何命令殼層。';
+
+  @override
+  String get rel_ops_term_reason_stale => '已失效';
+
+  @override
+  String get rel_ops_term_reason_mismatch => '不相符';
+
+  @override
+  String get rel_ops_term_reason_unbound => '未繫結';
+
+  @override
+  String get rel_ops_term_reason_unsupported => '不支援';
+
+  @override
+  String get rel_ops_term_reason_denied => '已拒絕';
+
+  @override
+  String get rel_ops_term_reason_ineligible => '不符合資格';
+
+  @override
+  String get rel_ops_term_reason_unavailable => '無法使用';
+
+  @override
+  String get rel_ops_term_reason_invalid => '無效';
+
+  @override
+  String get rel_ops_term_reason_insecure => '不安全';
+
+  @override
+  String rel_ops_term_refused(String reason) {
+    return '閘道拒絕了此終端機操作（$reason）。';
+  }
+
+  @override
+  String rel_ops_term_open_device_body(String connection) {
+    return '這是執行 Ares 的裝置，而非 $connection。命令殼層使用應用程式的權限，並在應用程式的儲存空間中啟動。';
+  }
+
+  @override
+  String rel_ops_term_open_gateway_body(String host) {
+    return '在 $host 上經過驗證的聊天工作目錄中啟動命令殼層。這不是裝置本機的命令殼層。';
+  }
+
+  @override
+  String rel_ops_term_close_tab_title(String label) {
+    return '關閉 $label？';
+  }
+
+  @override
+  String rel_ops_term_read_only_status(String status) {
+    return '唯讀 · $status';
+  }
+
+  @override
+  String rel_ops_term_paste_title(String label) {
+    return '貼上至 $label？';
+  }
+
+  @override
+  String rel_ops_term_output_title(String label) {
+    return '輸出 · $label';
+  }
+
+  @override
+  String rel_ops_term_mirror_status(String label) {
+    return '唯讀處理程序鏡像 · $label';
+  }
+
+  @override
+  String rel_ops_term_status_label(String status, String label) {
+    return '$status · $label';
+  }
+
+  @override
+  String rel_ops_term_ssh_tab(String user, String host, int port, int number) {
+    return 'SSH $user@$host:$port · $number';
+  }
+
+  @override
+  String rel_ops_term_device_tab(int number) {
+    return '此裝置 · $number';
+  }
+
+  @override
+  String rel_ops_term_gateway_tab(String host, int number) {
+    return '閘道 $host · $number';
+  }
+
+  @override
+  String get rel_ops_term_earlier_output_trimmed => '[較早的輸出已截斷]';
+
+  @override
+  String get rel_ops_term_ssh_dialog_title => '開啟已驗證的 SSH 終端機';
+
+  @override
+  String get rel_ops_term_ssh_dialog_body =>
+      '請使用透過獨立管道向主機管理員取得的指紋。此操作會開啟新的遠端登入工作階段，而非閘道或本機命令殼層。';
+
+  @override
+  String get rel_ops_term_ssh_host => 'SSH 主機';
+
+  @override
+  String get rel_ops_term_ssh_port => '連接埠';
+
+  @override
+  String get rel_ops_term_ssh_user => '使用者';
+
+  @override
+  String get rel_ops_term_ssh_fingerprint => '主機金鑰指紋（SHA256:…）';
+
+  @override
+  String get rel_ops_term_ssh_password => 'SSH 密碼（不儲存）';
+
+  @override
+  String get rel_ops_term_connect => '連線';
+
+  @override
+  String get rel_ops_ssh_invalid_destination => 'SSH 主機、連接埠或使用者無效。';
+
+  @override
+  String get rel_ops_ssh_public_key_required => '需要 OpenSSH Ed25519 格式的主機公開金鑰。';
+
+  @override
+  String get rel_ops_ssh_invalid_public_key => 'Ed25519 主機金鑰無效。';
+
+  @override
+  String get rel_ops_ssh_invalid_saved_key => '已儲存的主機金鑰無效。';
+
+  @override
+  String get rel_ops_ssh_enrollment_unverified => '無法驗證主機金鑰註冊。';
+
+  @override
+  String get rel_ops_ssh_different_key_pinned => '已固定另一把金鑰。請另行驗證此變更。';
+
+  @override
+  String get rel_ops_ssh_open_ssh_unavailable => '系統 OpenSSH 無法使用。';
+
+  @override
+  String get rel_ops_ssh_confirm_host_key => '請先確認主機金鑰再連線。';
+
+  @override
+  String get rel_ops_ssh_absolute_identity_required => '請選取使用絕對路徑的身分金鑰檔案。';
+
+  @override
+  String get rel_ops_ssh_invalid_remote_port => '遠端連接埠無效。';
+
+  @override
+  String get rel_ops_ssh_preview_too_large => '預覽超過 64 KiB 限制。';
+
+  @override
+  String get rel_ops_ssh_connection_refused => 'SSH 連線遭拒。請檢查已註冊的主機金鑰、身分憑證和服務。';
+
+  @override
+  String get rel_ops_ssh_http_not_ok => '遠端服務未傳回 HTTP 200。';
+
+  @override
+  String get rel_ops_ssh_encoded_response => '此預覽不支援經過編碼的回應。';
+
+  @override
+  String get rel_ops_ssh_preview_type_unsupported => '只能預覽文字和 HTML 原始碼。';
+
+  @override
+  String get rel_ops_ssh_health_unconfirmed => '服務未確認閘道運作正常。';
+
+  @override
+  String get rel_ops_ssh_enroll_host_key_first => '請先註冊主機的公開金鑰。';
+
+  @override
+  String get rel_ops_ssh_cancel => '取消';
+
+  @override
+  String get rel_ops_ssh_confirm => '確認';
+
+  @override
+  String get rel_ops_ssh_pin_title => '固定此 SSH 主機金鑰？';
+
+  @override
+  String rel_ops_ssh_pin_detail(String destination, String fingerprint) {
+    return '$destination\n$fingerprint\n請透過獨立管道與主機管理員核對此指紋。不會建立任何連線。';
+  }
+
+  @override
+  String get rel_ops_ssh_host_key_pinned => '主機金鑰已固定。';
+
+  @override
+  String get rel_ops_ssh_shell_detail => '開啟互動式登入 shell。';
+
+  @override
+  String rel_ops_ssh_read_detail(String path, int port) {
+    return '透過 SSH 通道讀取遠端 127.0.0.1:$port 上的 $path。';
+  }
+
+  @override
+  String rel_ops_ssh_connect_title(String destination) {
+    return '連線至 $destination？';
+  }
+
+  @override
+  String rel_ops_ssh_connect_detail(
+    String detail,
+    String fingerprint,
+    String authentication,
+  ) {
+    return '$detail\n$fingerprint\n$authentication';
+  }
+
+  @override
+  String get rel_ops_ssh_agent_auth => '使用你的 SSH 代理程式進行身分驗證。';
+
+  @override
+  String get rel_ops_ssh_identity_auth => '使用選取的身分金鑰檔案。';
+
+  @override
+  String rel_ops_ssh_gateway_responding(int port) {
+    return '閘道正在遠端回送連接埠 $port 上回應。';
+  }
+
+  @override
+  String get rel_ops_ssh_session_closed => 'SSH 工作階段已關閉。';
+
+  @override
+  String get rel_ops_ssh_session_unclean => 'SSH 工作階段未正常結束。';
+
+  @override
+  String get rel_ops_ssh_operation_failed => 'SSH 操作失敗。請檢查目的地和身分憑證。';
+
+  @override
+  String get rel_ops_ssh_title => '經驗證的 SSH';
+
+  @override
+  String get rel_ops_ssh_unsupported =>
+      '此裝置沒有受支援的系統 OpenSSH 傳輸方式。已固定閘道的中繼會自動接受新金鑰，因此無法用於經驗證的註冊。';
+
+  @override
+  String get rel_ops_ssh_host => 'SSH 主機';
+
+  @override
+  String get rel_ops_ssh_port => 'SSH 連接埠';
+
+  @override
+  String get rel_ops_ssh_user => 'SSH 使用者';
+
+  @override
+  String get rel_ops_ssh_identity => '身分金鑰檔案（選填；否則使用 SSH 代理程式）';
+
+  @override
+  String get rel_ops_ssh_public_key => '管理員提供的主機公開金鑰（ssh-ed25519）';
+
+  @override
+  String get rel_ops_ssh_review_key => '檢視主機金鑰';
+
+  @override
+  String get rel_ops_ssh_remote_port => '遠端回送服務連接埠';
+
+  @override
+  String get rel_ops_ssh_check_gateway => '透過 SSH 檢查閘道';
+
+  @override
+  String get rel_ops_ssh_preview_source => '透過 SSH 預覽原始碼';
+
+  @override
+  String get rel_ops_ssh_open_shell => '開啟 SSH shell';
+
+  @override
+  String get rel_ops_ssh_shell_line => '傳送至遠端 shell 的行';
+
+  @override
+  String get rel_ops_ssh_disconnect => '中斷 shell 連線';
+
+  @override
+  String get rel_ops_host_cancel => '取消';
+
+  @override
+  String get rel_ops_host_confirm => '確認';
+
+  @override
+  String get rel_ops_host_title => '主機';
+
+  @override
+  String get rel_ops_host_refresh => '重新整理';
+
+  @override
+  String get rel_ops_host_update => '更新遠端 Hermes';
+
+  @override
+  String rel_ops_host_update_confirmation(String profile) {
+    return '這將在閘道主機上為 $profile 執行就地更新，不會更新此裝置上的 Ares。更新是否成功以相符的更新回條為準，而不是以主機是否持續可存取為準。';
+  }
+
+  @override
+  String get rel_ops_host_update_awaiting => '正在等候相符的回條。更新仍在進行中。';
+
+  @override
+  String get rel_ops_host_receipt_success => '更新回條顯示成功。';
+
+  @override
+  String get rel_ops_host_receipt_partial => '更新已套用，但仍有後續步驟需要完成。';
+
+  @override
+  String get rel_ops_host_receipt_failed => '更新回條顯示失敗。';
+
+  @override
+  String get rel_ops_host_receipt_refused => '更新回條顯示已拒絕。';
+
+  @override
+  String get rel_ops_host_update_running => '更新仍在進行中。';
+
+  @override
+  String get rel_ops_host_update_unknown => '更新結果不明。閘道正常運作並不代表更新成功。';
+
+  @override
+  String get rel_ops_host_default_profile => '閘道預設設定檔';
+
+  @override
+  String get rel_ops_host_restart => '重新啟動遠端閘道';
+
+  @override
+  String rel_ops_host_restart_shared_confirmation(String profiles) {
+    return '這將重新啟動 $profiles 共用的閘道。此閘道上正在進行的回合會被中斷。請隨後重新連線。可以存取閘道並不能證明重新啟動已完成。';
+  }
+
+  @override
+  String rel_ops_host_restart_confirmation(String profile) {
+    return '這將重新啟動 $profile 的遠端閘道。此閘道上正在進行的回合會被中斷。請隨後重新連線。';
+  }
+
+  @override
+  String get rel_ops_host_restart_running => '重新啟動指令仍在執行。';
+
+  @override
+  String get rel_ops_host_restart_finished => '重新啟動指令已結束。請手動重新連線至主機。';
+
+  @override
+  String get rel_ops_host_restart_failed => '重新啟動指令失敗。';
+
+  @override
+  String rel_ops_host_maintenance_running(String name) {
+    return '$name 仍在執行';
+  }
+
+  @override
+  String rel_ops_host_maintenance_finished(String name) {
+    return '$name 已完成';
+  }
+
+  @override
+  String rel_ops_host_maintenance_failed(String name) {
+    return '$name 失敗';
+  }
+
+  @override
+  String get rel_ops_host_curator_paused_result => '技能維護已暫停。';
+
+  @override
+  String get rel_ops_host_curator_resumed_result => '技能維護已恢復。';
+
+  @override
+  String get rel_ops_host_reset => '重設遠端記憶檔案';
+
+  @override
+  String rel_ops_host_reset_confirmation(String targetName, String profile) {
+    return '刪除 $profile 上的 $targetName 記憶檔案？此操作無法透過 Ares 復原。';
+  }
+
+  @override
+  String rel_ops_host_reset_result(String targetName, int count) {
+    return '已重設 $targetName。已刪除 $count 個遠端檔案。';
+  }
+
+  @override
+  String get rel_ops_host_share_not_redacted => '主機未確認診斷套件已隱去敏感資訊，因此不顯示連結。';
+
+  @override
+  String rel_ops_host_scope(String connection, String profile) {
+    return '這些控制項操作的是 $profile 的遠端閘道 $connection，而不是此裝置，也不用於更新 Ares 用戶端。';
+  }
+
+  @override
+  String rel_ops_host_health_running(String version, int count) {
+    return '閘道程序正在執行 $version · $count 個工作階段';
+  }
+
+  @override
+  String rel_ops_host_health_stopped(String version, int count) {
+    return '閘道程序已停止 $version · $count 個工作階段';
+  }
+
+  @override
+  String rel_ops_host_heartbeat_stale(num seconds) {
+    return '主機心跳已過期（$seconds 秒）。';
+  }
+
+  @override
+  String get rel_ops_host_doctor => '執行 Doctor';
+
+  @override
+  String get rel_ops_host_security_audit => '安全性稽核';
+
+  @override
+  String get rel_ops_host_check_receipt => '檢查更新回條';
+
+  @override
+  String get rel_ops_host_logs => '遠端主機記錄';
+
+  @override
+  String get rel_ops_host_search_logs => '搜尋主機記錄';
+
+  @override
+  String get rel_ops_host_driver => '遠端主機驅動程式';
+
+  @override
+  String get rel_ops_host_driver_scope =>
+      '電腦操作功能的就緒狀態取決於閘道機器上的驅動程式和作業系統權限，而不是此裝置。';
+
+  @override
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  ) {
+    return '$platform · 已安裝 $installed · 已就緒 $ready';
+  }
+
+  @override
+  String get rel_ops_host_null => '無法使用';
+
+  @override
+  String get rel_ops_host_true => '是';
+
+  @override
+  String get rel_ops_host_false => '否';
+
+  @override
+  String get rel_ops_host_curator => '技能維護';
+
+  @override
+  String get rel_ops_host_curator_paused => '技能維護已暫停';
+
+  @override
+  String get rel_ops_host_curator_running => '技能維護正在執行';
+
+  @override
+  String get rel_ops_host_no_run => '尚無已完成的執行';
+
+  @override
+  String get rel_ops_host_run_curator => '立即執行技能維護';
+
+  @override
+  String get rel_ops_host_reset_memory => '重設記憶檔案';
+
+  @override
+  String get rel_ops_host_reset_user => '重設使用者檔案';
+
+  @override
+  String get rel_ops_host_reset_both => '重設兩個檔案';
+
+  @override
+  String get rel_ops_host_share_consent => '我同意從遠端主機上傳已隱去敏感資訊的診斷套件';
+
+  @override
+  String get rel_ops_host_share => '分享已隱去敏感資訊的診斷資料';
+
+  @override
+  String get rel_ops_host_update_unknown_installation => '無法識別此安裝，因此未傳送更新請求';
+
+  @override
+  String get rel_ops_host_update_busy_installation => '此安裝上有聊天正在執行';
+
+  @override
+  String get rel_ops_host_update_refused => '遠端更新遭拒';
+
+  @override
+  String get rel_ops_host_error_stale => '遠端工作區：已過期';
+
+  @override
+  String get rel_ops_host_error_mismatch => '遠端工作區：不相符';
+
+  @override
+  String get rel_ops_host_error_unbound => '遠端工作區：未綁定';
+
+  @override
+  String get rel_ops_host_error_unsupported => '遠端工作區：不支援';
+
+  @override
+  String get rel_ops_host_error_denied => '遠端工作區：存取遭拒';
+
+  @override
+  String get rel_ops_host_error_ineligible => '遠端工作區：不符合操作條件';
+
+  @override
+  String get rel_ops_host_error_unavailable => '遠端工作區：無法使用';
+
+  @override
+  String get rel_ops_host_error_invalid => '遠端工作區：無效';
+
+  @override
+  String get rel_ops_host_error_insecure => '遠端工作區：不安全';
+
+  @override
+  String get rel_ops_host_error_request => '無法完成該請求。';
 }

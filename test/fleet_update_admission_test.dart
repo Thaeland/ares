@@ -268,7 +268,13 @@ void main() {
         expect((await ssh.enrolled(d))?.encoded, second.encoded);
         await expectLater(
           ssh.enroll(d, first),
-          throwsA(isA<FleetSshException>()),
+          throwsA(
+            isA<FleetSshException>().having(
+              (e) => e.reason,
+              'reason',
+              FleetSshFailure.differentKeyPinned,
+            ),
+          ),
         );
         expect((await ssh.enrolled(d))?.encoded, second.encoded);
 

@@ -5,7 +5,35 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../l10n/l10n.dart';
 import '../services/fleet_ssh.dart';
+
+/// Render structured service refusals without giving the transport a context.
+String fleetSshFailureMessage(
+  AppLocalizations l10n,
+  FleetSshFailure reason,
+) => switch (reason) {
+  FleetSshFailure.invalidDestination => l10n.rel_ops_ssh_invalid_destination,
+  FleetSshFailure.publicKeyRequired => l10n.rel_ops_ssh_public_key_required,
+  FleetSshFailure.invalidPublicKey => l10n.rel_ops_ssh_invalid_public_key,
+  FleetSshFailure.invalidSavedKey => l10n.rel_ops_ssh_invalid_saved_key,
+  FleetSshFailure.enrollmentUnverified =>
+    l10n.rel_ops_ssh_enrollment_unverified,
+  FleetSshFailure.differentKeyPinned => l10n.rel_ops_ssh_different_key_pinned,
+  FleetSshFailure.openSshUnavailable => l10n.rel_ops_ssh_open_ssh_unavailable,
+  FleetSshFailure.confirmHostKey => l10n.rel_ops_ssh_confirm_host_key,
+  FleetSshFailure.absoluteIdentityRequired =>
+    l10n.rel_ops_ssh_absolute_identity_required,
+  FleetSshFailure.invalidRemotePort => l10n.rel_ops_ssh_invalid_remote_port,
+  FleetSshFailure.previewTooLarge => l10n.rel_ops_ssh_preview_too_large,
+  FleetSshFailure.connectionRefused => l10n.rel_ops_ssh_connection_refused,
+  FleetSshFailure.httpNotOk => l10n.rel_ops_ssh_http_not_ok,
+  FleetSshFailure.encodedResponse => l10n.rel_ops_ssh_encoded_response,
+  FleetSshFailure.previewTypeUnsupported =>
+    l10n.rel_ops_ssh_preview_type_unsupported,
+  FleetSshFailure.healthUnconfirmed => l10n.rel_ops_ssh_health_unconfirmed,
+  FleetSshFailure.enrollHostKeyFirst => l10n.rel_ops_ssh_enroll_host_key_first,
+};
 
 /// SSH is deliberately separate from HTTP saved accounts. No API key, bearer,
 /// Portal identity, Webapp SSH auto-connect or local shell fallback is used.
@@ -52,11 +80,11 @@ class _FleetSshScreenState extends State<FleetSshScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(c, false),
-              child: const Text('Cancel'),
+              child: Text(c.sharedL10n.rel_ops_ssh_cancel),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(c, true),
-              child: const Text('Confirm'),
+              child: Text(c.sharedL10n.rel_ops_ssh_confirm),
             ),
           ],
         ),
@@ -83,27 +111,44 @@ class _FleetSshScreenState extends State<FleetSshScreen> {
       if (mode == 'enroll') {
         final key = SshPublicKey.parse(keyInput.text);
         if (!await confirm(
-              'Pin this SSH host key?',
-              '${dest.label}\n${key.fingerprint}\nCompare this fingerprint with the host administrator over an independent channel. No connection will be made.',
+              context.sharedL10n.rel_ops_ssh_pin_title,
+              context.sharedL10n.rel_ops_ssh_pin_detail(
+                dest.label,
+                key.fingerprint,
+              ),
             ) ||
             !mounted) {
           return;
         }
         await client.enroll(dest, key);
-        if (mounted) setState(() => message = 'Host key pinned.');
+        if (mounted) {
+          setState(
+            () => message = context.sharedL10n.rel_ops_ssh_host_key_pinned,
+          );
+        }
         return;
       }
       final key = await client.enrolled(dest);
       if (!mounted) return;
       if (key == null) {
-        throw const FleetSshException('Enroll the host’s public key first.');
+        throw const FleetSshException(FleetSshFailure.enrollHostKeyFirst);
       }
+      final l10n = context.sharedL10n;
       final detail = mode == 'shell'
-          ? 'Open an interactive login shell.'
-          : 'Read ${mode == 'preview' ? '/' : '/api/health'} on remote 127.0.0.1:$servicePort through an SSH channel.';
+          ? l10n.rel_ops_ssh_shell_detail
+          : l10n.rel_ops_ssh_read_detail(
+              mode == 'preview' ? '/' : '/api/health',
+              servicePort,
+            );
       if (!await confirm(
-            'Connect to ${dest.label}?',
-            '$detail\n${key.fingerprint}\n${id == null ? 'Authenticate with your SSH agent.' : 'Use the selected identity file.'}',
+            l10n.rel_ops_ssh_connect_title(dest.label),
+            l10n.rel_ops_ssh_connect_detail(
+              detail,
+              key.fingerprint,
+              id == null
+                  ? l10n.rel_ops_ssh_agent_auth
+                  : l10n.rel_ops_ssh_identity_auth,
+            ),
           ) ||
           !mounted) {
         return;
@@ -113,6 +158,7 @@ class _FleetSshScreenState extends State<FleetSshScreen> {
           dest,
           preview: mode == 'preview',
           port: servicePort,
+          healthMessage: context.sharedL10n.rel_ops_ssh_gateway_responding,
           identity: id,
         );
         if (mounted) setState(() => output = s);
@@ -144,16 +190,16 @@ class _FleetSshScreenState extends State<FleetSshScreen> {
       if (mounted) {
         setState(
           () => message = rc == 0
-              ? 'SSH session closed.'
-              : 'SSH session ended without a clean exit.',
+              ? context.sharedL10n.rel_ops_ssh_session_closed
+              : context.sharedL10n.rel_ops_ssh_session_unclean,
         );
       }
     } catch (e) {
       if (mounted) {
         setState(
           () => message = e is FleetSshException
-              ? e.message
-              : 'SSH operation failed. Check the destination and identity.',
+              ? fleetSshFailureMessage(context.sharedL10n, e.reason)
+              : context.sharedL10n.rel_ops_ssh_operation_failed,
         );
       }
     } finally {
@@ -176,43 +222,41 @@ class _FleetSshScreenState extends State<FleetSshScreen> {
       );
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Verified SSH')),
+    appBar: AppBar(title: Text(context.sharedL10n.rel_ops_ssh_title)),
     body: ListView(
       padding: const EdgeInsets.all(16),
       children: [
         if (!FleetSsh.supported)
-          const Text(
-            'This device has no supported system OpenSSH transport. The pinned gateway relay automatically accepts new keys and cannot be used for verified enrollment.',
-          )
+          Text(context.sharedL10n.rel_ops_ssh_unsupported)
         else ...[
-          field(host, 'SSH host'),
-          field(port, 'SSH port'),
-          field(user, 'SSH user'),
-          field(identity, 'Identity file (optional; otherwise use SSH agent)'),
+          field(host, context.sharedL10n.rel_ops_ssh_host),
+          field(port, context.sharedL10n.rel_ops_ssh_port),
+          field(user, context.sharedL10n.rel_ops_ssh_user),
+          field(identity, context.sharedL10n.rel_ops_ssh_identity),
           field(
             keyInput,
-            'Public host key from administrator (ssh-ed25519)',
+            context.sharedL10n.rel_ops_ssh_public_key,
             multi: true,
           ),
           TextButton(
             onPressed: busy ? null : () => action('enroll'),
-            child: const Text('Review host key'),
+            child: Text(context.sharedL10n.rel_ops_ssh_review_key),
           ),
           const Divider(),
-          field(remotePort, 'Remote loopback service port'),
+          field(remotePort, context.sharedL10n.rel_ops_ssh_remote_port),
           Wrap(
             children: [
               TextButton(
                 onPressed: busy ? null : () => action('health'),
-                child: const Text('Check gateway over SSH'),
+                child: Text(context.sharedL10n.rel_ops_ssh_check_gateway),
               ),
               TextButton(
                 onPressed: busy ? null : () => action('preview'),
-                child: const Text('Preview source over SSH'),
+                child: Text(context.sharedL10n.rel_ops_ssh_preview_source),
               ),
               TextButton(
                 onPressed: busy ? null : () => action('shell'),
-                child: const Text('Open SSH shell'),
+                child: Text(context.sharedL10n.rel_ops_ssh_open_shell),
               ),
             ],
           ),
@@ -221,8 +265,8 @@ class _FleetSshScreenState extends State<FleetSshScreen> {
               controller: command,
               autocorrect: false,
               enableSuggestions: false,
-              decoration: const InputDecoration(
-                labelText: 'Line to remote shell',
+              decoration: InputDecoration(
+                labelText: context.sharedL10n.rel_ops_ssh_shell_line,
               ),
               onSubmitted: (s) {
                 if (identical(shell, p)) {
@@ -236,7 +280,7 @@ class _FleetSshScreenState extends State<FleetSshScreen> {
             ),
             TextButton(
               onPressed: () => p.kill(),
-              child: const Text('Disconnect shell'),
+              child: Text(context.sharedL10n.rel_ops_ssh_disconnect),
             ),
           ],
           if (busy && shell == null) const LinearProgressIndicator(),

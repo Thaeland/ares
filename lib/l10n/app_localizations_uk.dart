@@ -13605,4 +13605,1277 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get rel_admin_phase_undone => 'скасовано';
+
+  @override
+  String rel_ops_cap_install_blocked(String verdict, String detail) {
+    return 'Встановлення заблоковано ($verdict): $detail';
+  }
+
+  @override
+  String rel_ops_cap_scan_confirm(String verdict, String requested) {
+    return 'Результат перевірки: $verdict. Підтвердьте $requested перед встановленням.';
+  }
+
+  @override
+  String rel_ops_cap_install_unconfirmed(String requested) {
+    return 'Шлюз не підтвердив встановлення $requested.';
+  }
+
+  @override
+  String rel_ops_cap_edit_skill(String name) {
+    return 'Редагувати $name';
+  }
+
+  @override
+  String rel_ops_cap_archive_skill(String name) {
+    return 'Архівувати $name?';
+  }
+
+  @override
+  String rel_ops_cap_archive_explanation(String command) {
+    return 'Навичку буде архівовано, і її можна буде відновити командою $command.';
+  }
+
+  @override
+  String rel_ops_cap_install_anyway(String name) {
+    return 'Усе одно встановити $name';
+  }
+
+  @override
+  String rel_ops_cap_install_despite_scan(String name) {
+    return 'Встановити $name попри результат перевірки?';
+  }
+
+  @override
+  String rel_ops_cap_scan_warning(String name) {
+    return 'Перевірка безпеки заблокувала $name. Це підтвердження стосується лише $name.';
+  }
+
+  @override
+  String rel_ops_cap_accept_scan_warning(String name) {
+    return 'Прийняття можливостей не скасовує результат перевірки $name.';
+  }
+
+  @override
+  String rel_ops_cap_review_scan(String name) {
+    return 'Переглянути результат перевірки $name';
+  }
+
+  @override
+  String rel_ops_cap_desktop_grants(String description) {
+    return '$description\nДозволи на папки та скрипти попереднього перегляду залишаються в застосунку Desktop на тому комп’ютері. Видалення плагіна тут не відкликає ці локальні дозволи.';
+  }
+
+  @override
+  String rel_ops_cap_remove_plugin(String name) {
+    return 'Видалити $name?';
+  }
+
+  @override
+  String rel_ops_cap_probe_result(String name, String tools) {
+    return 'Перевірка з’єднання $name: $tools';
+  }
+
+  @override
+  String rel_ops_cap_save_tool_grants_for(String connector) {
+    return 'Зберегти дозволи інструментів для $connector';
+  }
+
+  @override
+  String rel_ops_cap_backends_for(String name) {
+    return 'Серверні модулі для $name';
+  }
+
+  @override
+  String rel_ops_cap_use_backend_confirmation(String name) {
+    return 'Використовувати $name?';
+  }
+
+  @override
+  String rel_ops_cap_unlock_source(String name) {
+    return 'Розблокувати $name';
+  }
+
+  @override
+  String get rel_ops_cap_capabilities => 'Можливості';
+
+  @override
+  String get rel_ops_cap_plugins => 'Плагіни';
+
+  @override
+  String get rel_ops_cap_connectors => 'Конектори';
+
+  @override
+  String get rel_ops_cap_backends => 'Серверні модулі';
+
+  @override
+  String get rel_ops_cap_save_skill => 'Зберегти навичку';
+
+  @override
+  String get rel_ops_cap_archive => 'Архівувати';
+
+  @override
+  String get rel_ops_cap_hub_identifier => 'Ідентифікатор Hub';
+
+  @override
+  String get rel_ops_cap_install => 'Встановити';
+
+  @override
+  String get rel_ops_cap_update_all => 'Оновити все';
+
+  @override
+  String get rel_ops_cap_unlock => 'Розблокувати';
+
+  @override
+  String get rel_ops_cap_lock => 'Заблокувати';
+
+  @override
+  String get rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet =>
+      'Це оновлення додає можливості. Поки що нічого не змінено.';
+
+  @override
+  String get rel_ops_cap_the_scan_blocked_this_plugin =>
+      'Перевірка заблокувала цей плагін.';
+
+  @override
+  String get rel_ops_cap_the_plugin_was_not_changed => 'Плагін не змінено.';
+
+  @override
+  String get rel_ops_cap_repository => 'Репозиторій';
+
+  @override
+  String get rel_ops_cap_install_plugin => 'Встановити плагін';
+
+  @override
+  String get rel_ops_cap_update_plugins => 'Оновити плагіни';
+
+  @override
+  String get rel_ops_cap_accept_capabilities => 'Прийняти можливості';
+
+  @override
+  String get rel_ops_cap_update => 'Оновити';
+
+  @override
+  String get rel_ops_cap_remove_desktop_half => 'Видалити настільний компонент';
+
+  @override
+  String get rel_ops_cap_server_name => 'Назва сервера';
+
+  @override
+  String get rel_ops_cap_command => 'Команда';
+
+  @override
+  String get rel_ops_cap_http_url => 'HTTP URL';
+
+  @override
+  String get rel_ops_cap_add_server => 'Додати сервер';
+
+  @override
+  String get rel_ops_cap_probe => 'Перевірити з’єднання';
+
+  @override
+  String get rel_ops_cap_probe_failed => 'Не вдалося перевірити з’єднання.';
+
+  @override
+  String get rel_ops_cap_logs => 'Журнали';
+
+  @override
+  String get rel_ops_cap_mcp_log => 'Журнал MCP';
+
+  @override
+  String get rel_ops_cap_connector => 'Конектор';
+
+  @override
+  String get rel_ops_cap_account_alias => 'Псевдонім облікового запису';
+
+  @override
+  String get rel_ops_cap_link_account => 'Прив’язати обліковий запис';
+
+  @override
+  String get rel_ops_cap_remove_account => 'Видалити обліковий запис';
+
+  @override
+  String get rel_ops_cap_tool_connector => 'Конектор інструментів';
+
+  @override
+  String get rel_ops_cap_load_tools => 'Завантажити інструменти';
+
+  @override
+  String get rel_ops_cap_save_tool_grants => 'Зберегти дозволи інструментів';
+
+  @override
+  String
+  get rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged =>
+      'Ця політика не має ревізії учасника, тому дозволи інструментів залишаються незмінними.';
+
+  @override
+  String get rel_ops_cap_active => 'Активний';
+
+  @override
+  String get rel_ops_cap_use => 'Використовувати';
+
+  @override
+  String get rel_ops_cap_run_setup => 'Запустити налаштування';
+
+  @override
+  String get rel_ops_cap_terminal_backends => 'Серверні модулі термінала';
+
+  @override
+  String get rel_ops_cap_this_changes_the_terminal_backend_for_this_profile =>
+      'Це змінить серверний модуль термінала для цього профілю.';
+
+  @override
+  String get rel_ops_cap_use_backend => 'Використовувати модуль';
+
+  @override
+  String get rel_ops_cap_select => 'Вибрати';
+
+  @override
+  String get rel_ops_cap_browser_vault => 'Сховище браузера';
+
+  @override
+  String
+  get rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here =>
+      'Збережені дані входу на сайти, адреси й картки. Паролі залишаються в захищених полях і тут не відображаються.';
+
+  @override
+  String get rel_ops_cap_remove_saved_item => 'Видалити збережений елемент';
+
+  @override
+  String get rel_ops_cap_delete_this_item => 'Видалити цей елемент?';
+
+  @override
+  String get rel_ops_cap_unlocked => 'Розблоковано';
+
+  @override
+  String get rel_ops_cap_locked => 'Заблоковано';
+
+  @override
+  String get rel_ops_cap_not_detected => 'Не виявлено';
+
+  @override
+  String get rel_ops_cap_master_password => 'Майстер-пароль';
+
+  @override
+  String get rel_ops_cap_login => 'Дані входу';
+
+  @override
+  String get rel_ops_cap_address => 'Адреса';
+
+  @override
+  String get rel_ops_cap_card => 'Картка';
+
+  @override
+  String get rel_ops_cap_label => 'Мітка';
+
+  @override
+  String get rel_ops_cap_site_origin => 'Джерело сайту';
+
+  @override
+  String get rel_ops_cap_identifier => 'Ідентифікатор';
+
+  @override
+  String get rel_ops_cap_password => 'Пароль';
+
+  @override
+  String get rel_ops_cap_authenticator_key => 'Ключ автентифікатора';
+
+  @override
+  String get rel_ops_cap_street => 'Вулиця';
+
+  @override
+  String get rel_ops_cap_city => 'Місто';
+
+  @override
+  String get rel_ops_cap_postal_code => 'Поштовий індекс';
+
+  @override
+  String get rel_ops_cap_country => 'Країна';
+
+  @override
+  String get rel_ops_cap_name_on_card => 'Ім’я на картці';
+
+  @override
+  String get rel_ops_cap_card_number => 'Номер картки';
+
+  @override
+  String get rel_ops_cap_expiry_month => 'Місяць завершення дії';
+
+  @override
+  String get rel_ops_cap_expiry_year => 'Рік завершення дії';
+
+  @override
+  String get rel_ops_cap_security_code => 'Код безпеки';
+
+  @override
+  String get rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method =>
+      'Цей шлюз не має методу отримання згоди на передавання спільних метрик.';
+
+  @override
+  String get rel_ops_cap_agent_policy => 'Політика агента';
+
+  @override
+  String get rel_ops_cap_loading_policy => 'Завантаження політики';
+
+  @override
+  String get rel_ops_cap_approval_timeout => 'Час очікування схвалення';
+
+  @override
+  String get rel_ops_cap_confirm_mcp_reloads =>
+      'Підтверджувати перезавантаження MCP';
+
+  @override
+  String get rel_ops_cap_command_allowlist => 'Список дозволених команд';
+
+  @override
+  String get rel_ops_cap_file_checkpoints => 'Контрольні точки файлів';
+
+  @override
+  String get rel_ops_cap_checkpoint_limit => 'Ліміт контрольних точок';
+
+  @override
+  String get rel_ops_cap_browser_private_urls => 'Приватні URL у браузері';
+
+  @override
+  String get rel_ops_cap_use_my_real_browser_profile =>
+      'Використовувати мій справжній профіль браузера';
+
+  @override
+  String get rel_ops_cap_save_policy => 'Зберегти політику';
+
+  @override
+  String get rel_ops_cap_shared_metrics_for_this_profile =>
+      'Спільні метрики цього профілю';
+
+  @override
+  String get rel_ops_cap_send_shared_metrics => 'Надсилати спільні метрики';
+
+  @override
+  String get rel_ops_cap_error_enter_a_label => 'Введіть мітку.';
+
+  @override
+  String get rel_ops_cap_error_enter_a_valid_url_like_https_example_com =>
+      'Введіть коректний URL, наприклад https://example.com.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_identifier_and_password =>
+      'Введіть ідентифікатор і пароль.';
+
+  @override
+  String
+  get rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code =>
+      'Введіть ім’я на картці, номер, термін дії та код безпеки.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_street_city_postal_code_and_country =>
+      'Введіть вулицю, місто, поштовий індекс і країну.';
+
+  @override
+  String
+  get rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read =>
+      'Шлюз повернув відповідь, яку не вдалося прочитати.';
+
+  @override
+  String rel_ops_cap_error_the_gateway_refused_the_request_status(
+    int statusCode,
+  ) {
+    return 'Шлюз відхилив запит ($statusCode).';
+  }
+
+  @override
+  String
+  rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable(
+    String method,
+  ) {
+    return 'Це з’єднання не має сокета шлюзу, тому $method недоступний.';
+  }
+
+  @override
+  String get rel_ops_cap_error_choose_a_skill => 'Виберіть навичку.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_text_was_not_returned =>
+      'Текст навички не отримано.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_saved =>
+      'Навичку не збережено.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_archived =>
+      'Навичку не архівовано.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_installed =>
+      'Навичку не встановлено.';
+
+  @override
+  String get rel_ops_cap_error_skill_updates_did_not_start =>
+      'Оновлення навичок не розпочалося.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_removed =>
+      'Навичку не видалено.';
+
+  @override
+  String get rel_ops_cap_error_enter_a_skill_or_plugin_identifier =>
+      'Введіть ідентифікатор навички або плагіна.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_plugin => 'Виберіть плагін.';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_removed =>
+      'Плагін не видалено.';
+
+  @override
+  String get rel_ops_cap_error_the_desktop_half_was_not_removed =>
+      'Настільний компонент не видалено.';
+
+  @override
+  String
+  get rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key =>
+      'Цей шлюз не призначив плагіну стабільний ключ.';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_changed =>
+      'Плагін не змінено.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_server => 'Виберіть сервер.';
+
+  @override
+  String get rel_ops_cap_error_name_the_server => 'Укажіть назву сервера.';
+
+  @override
+  String get rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url =>
+      'Укажіть для сервера команду або URL http(s).';
+
+  @override
+  String get rel_ops_cap_error_choose_a_toolset =>
+      'Виберіть набір інструментів.';
+
+  @override
+  String get rel_ops_cap_error_tool_backend_status_was_not_returned =>
+      'Стан серверного модуля інструментів не отримано.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_provider => 'Виберіть постачальника.';
+
+  @override
+  String get rel_ops_cap_error_this_provider_has_no_setup_action =>
+      'Цей постачальник не має дії налаштування.';
+
+  @override
+  String get rel_ops_cap_error_setup_did_not_start =>
+      'Налаштування не розпочалося.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_terminal_backend =>
+      'Виберіть серверний модуль термінала.';
+
+  @override
+  String get rel_ops_cap_error_name_the_connector => 'Укажіть назву конектора.';
+
+  @override
+  String get rel_ops_cap_error_choose_an_account => 'Виберіть обліковий запис.';
+
+  @override
+  String
+  get rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants =>
+      'Перезавантажте політику конектора перед зміною дозволів інструментів.';
+
+  @override
+  String get rel_ops_cap_error_choose_an_item => 'Виберіть елемент.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_source => 'Виберіть джерело.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_master_password =>
+      'Введіть майстер-пароль.';
+
+  @override
+  String get rel_ops_cap_error_gateway_config_was_not_returned =>
+      'Конфігурацію шлюзу не отримано.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_known_approval_mode =>
+      'Виберіть відомий режим схвалення.';
+
+  @override
+  String get rel_ops_cap_error_use_a_positive_limit =>
+      'Використовуйте додатний ліміт.';
+
+  @override
+  String get rel_ops_cap_error_the_policy_was_not_saved =>
+      'Політику не збережено.';
+
+  @override
+  String get rel_ops_cap_value_manual => 'вручну';
+
+  @override
+  String get rel_ops_cap_value_smart => 'інтелектуальний';
+
+  @override
+  String get rel_ops_cap_value_off => 'вимкнено';
+
+  @override
+  String get rel_ops_cap_value_safe => 'безпечно';
+
+  @override
+  String get rel_ops_cap_value_caution => 'обережно';
+
+  @override
+  String get rel_ops_cap_value_dangerous => 'небезпечно';
+
+  @override
+  String get rel_ops_cap_value_blocked => 'заблоковано';
+
+  @override
+  String get rel_ops_cap_value_clean => 'загроз немає';
+
+  @override
+  String get rel_ops_cap_value_ready => 'готово';
+
+  @override
+  String get rel_ops_cap_value_available => 'доступно';
+
+  @override
+  String get rel_ops_cap_value_unavailable => 'недоступно';
+
+  @override
+  String get rel_ops_cap_value_enabled => 'увімкнено';
+
+  @override
+  String get rel_ops_cap_value_disabled => 'вимкнено';
+
+  @override
+  String get rel_ops_cap_value_active => 'активно';
+
+  @override
+  String get rel_ops_cap_value_inactive => 'неактивно';
+
+  @override
+  String get rel_ops_cap_value_installed => 'встановлено';
+
+  @override
+  String get rel_ops_cap_value_missing => 'відсутнє';
+
+  @override
+  String get rel_ops_cap_value_configured => 'налаштовано';
+
+  @override
+  String get rel_ops_cap_value_not_configured => 'не налаштовано';
+
+  @override
+  String get rel_ops_cap_value_error => 'помилка';
+
+  @override
+  String get rel_ops_cap_value_unknown => 'невідомо';
+
+  @override
+  String get rel_ops_cap_value_login => 'дані входу';
+
+  @override
+  String get rel_ops_cap_value_address => 'адреса';
+
+  @override
+  String get rel_ops_cap_value_payment => 'платіж';
+
+  @override
+  String get rel_ops_term_connecting => 'Підключення…';
+
+  @override
+  String get rel_ops_term_unbound =>
+      'Немає відповідного активного сеансу або робочого каталогу на хості. Спочатку відкрийте пов’язаний чат.';
+
+  @override
+  String get rel_ops_term_unsupported =>
+      'Цей шлюз не надає такої можливості термінала. Локальну оболонку не було запущено.';
+
+  @override
+  String get rel_ops_term_local_pty_unavailable =>
+      'Вбудований локальний псевдотермінал (PTY) недоступний на цьому пристрої.';
+
+  @override
+  String get rel_ops_term_operation_failed =>
+      'Не вдалося відкрити термінал або керувати ним. Перевірте хост, облікові дані та відбиток. Запасну оболонку не було запущено.';
+
+  @override
+  String get rel_ops_term_input_refused =>
+      'Введення відхилено. Знову відкрийте початковий чат.';
+
+  @override
+  String get rel_ops_term_cancel => 'Скасувати';
+
+  @override
+  String get rel_ops_term_confirm => 'Підтвердити';
+
+  @override
+  String get rel_ops_term_open_device_title =>
+      'Відкрити оболонку на цьому пристрої?';
+
+  @override
+  String get rel_ops_term_ssh_shell => 'Оболонка SSH';
+
+  @override
+  String get rel_ops_term_local_shell => 'Локальна оболонка';
+
+  @override
+  String get rel_ops_term_connection_lost => 'З’єднання втрачено';
+
+  @override
+  String get rel_ops_term_shell_ended => 'Оболонку завершено';
+
+  @override
+  String get rel_ops_term_no_owner =>
+      'Цей чат не має автентифікованого власника термінала шлюзу. Самої URL-адреси або входу в хмару недостатньо для доступу до оболонки.';
+
+  @override
+  String get rel_ops_term_open_gateway_title => 'Відкрити оболонку шлюзу?';
+
+  @override
+  String get rel_ops_term_shell_expired =>
+      'Оболонку завершено або термін її дії минув';
+
+  @override
+  String get rel_ops_term_disconnected => 'Відключено';
+
+  @override
+  String get rel_ops_term_gateway_shell => 'Оболонка шлюзу';
+
+  @override
+  String get rel_ops_term_close_body =>
+      'Завершити цю оболонку. Щоб залишити її працювати, натомість приховайте панель.';
+
+  @override
+  String get rel_ops_term_closing => 'Закриття…';
+
+  @override
+  String get rel_ops_term_close_unconfirmed => 'Закриття не підтверджено';
+
+  @override
+  String get rel_ops_term_processes_require_chat =>
+      'Для процесів агента потрібен автентифікований чат, якому вони належать.';
+
+  @override
+  String get rel_ops_term_watching_processes =>
+      'Спостереження за процесами агента цього чату. Закриття дзеркального подання ніколи не зупиняє його процес.';
+
+  @override
+  String get rel_ops_term_paste_limit => 'Розмір вставлення обмежено 16 KiB.';
+
+  @override
+  String get rel_ops_term_paste => 'Вставити';
+
+  @override
+  String get rel_ops_term_select_first => 'Спочатку виділіть вивід термінала.';
+
+  @override
+  String get rel_ops_term_open_chat_to_insert =>
+      'Відкрийте початковий чат перед вставленням виводу.';
+
+  @override
+  String get rel_ops_term_added_to_draft =>
+      'Додано до чернетки початкового чату. Нічого не надіслано.';
+
+  @override
+  String get rel_ops_term_close => 'Закрити';
+
+  @override
+  String get rel_ops_term_add_selection => 'Додати виділене до чернетки чату';
+
+  @override
+  String get rel_ops_term_new_terminal => 'Новий термінал';
+
+  @override
+  String get rel_ops_term_gateway_terminal => 'Термінал хоста шлюзу';
+
+  @override
+  String get rel_ops_term_verified_ssh_terminal => 'Перевірений термінал SSH';
+
+  @override
+  String get rel_ops_term_device_local_shell =>
+      'Цей пристрій (локальна оболонка)';
+
+  @override
+  String get rel_ops_term_local_unavailable_mobile =>
+      'Локальна оболонка недоступна на мобільних пристроях';
+
+  @override
+  String get rel_ops_term_watch_processes => 'Спостерігати за процесами агента';
+
+  @override
+  String get rel_ops_term_select_output => 'Виділити або скопіювати вивід';
+
+  @override
+  String get rel_ops_term_add_selected_output =>
+      'Додати виділений вивід до чернетки чату';
+
+  @override
+  String get rel_ops_term_review_paste =>
+      'Перевірити вставлення з буфера обміну';
+
+  @override
+  String get rel_ops_term_reconnect =>
+      'Повторно підключитися до тієї самої оболонки';
+
+  @override
+  String get rel_ops_term_close_mirror => 'Закрити дзеркальне подання';
+
+  @override
+  String get rel_ops_term_close_shell => 'Закрити оболонку';
+
+  @override
+  String get rel_ops_term_empty =>
+      'Натисніть +, щоб відкрити термінал. Жодна оболонка не запускається автоматично.';
+
+  @override
+  String get rel_ops_term_reason_stale => 'застаріле';
+
+  @override
+  String get rel_ops_term_reason_mismatch => 'невідповідність';
+
+  @override
+  String get rel_ops_term_reason_unbound => 'не прив’язано';
+
+  @override
+  String get rel_ops_term_reason_unsupported => 'не підтримується';
+
+  @override
+  String get rel_ops_term_reason_denied => 'відмовлено';
+
+  @override
+  String get rel_ops_term_reason_ineligible => 'не відповідає умовам';
+
+  @override
+  String get rel_ops_term_reason_unavailable => 'недоступно';
+
+  @override
+  String get rel_ops_term_reason_invalid => 'некоректне';
+
+  @override
+  String get rel_ops_term_reason_insecure => 'небезпечно';
+
+  @override
+  String rel_ops_term_refused(String reason) {
+    return 'Шлюз відхилив цю операцію термінала ($reason).';
+  }
+
+  @override
+  String rel_ops_term_open_device_body(String connection) {
+    return 'Це пристрій з Ares, а не $connection. Оболонка використовує дозволи застосунку та запускається в його сховищі.';
+  }
+
+  @override
+  String rel_ops_term_open_gateway_body(String host) {
+    return 'Запустіть оболонку на $host у перевіреному робочому каталозі чату. Це не оболонка пристрою.';
+  }
+
+  @override
+  String rel_ops_term_close_tab_title(String label) {
+    return 'Закрити $label?';
+  }
+
+  @override
+  String rel_ops_term_read_only_status(String status) {
+    return 'Лише читання · $status';
+  }
+
+  @override
+  String rel_ops_term_paste_title(String label) {
+    return 'Вставити в $label?';
+  }
+
+  @override
+  String rel_ops_term_output_title(String label) {
+    return 'Вивід · $label';
+  }
+
+  @override
+  String rel_ops_term_mirror_status(String label) {
+    return 'Дзеркальне подання процесу лише для читання · $label';
+  }
+
+  @override
+  String rel_ops_term_status_label(String status, String label) {
+    return '$status · $label';
+  }
+
+  @override
+  String rel_ops_term_ssh_tab(String user, String host, int port, int number) {
+    return 'SSH $user@$host:$port · $number';
+  }
+
+  @override
+  String rel_ops_term_device_tab(int number) {
+    return 'Цей пристрій · $number';
+  }
+
+  @override
+  String rel_ops_term_gateway_tab(String host, int number) {
+    return 'Шлюз $host · $number';
+  }
+
+  @override
+  String get rel_ops_term_earlier_output_trimmed =>
+      '[Попередній вивід обрізано]';
+
+  @override
+  String get rel_ops_term_ssh_dialog_title =>
+      'Відкрити перевірений термінал SSH';
+
+  @override
+  String get rel_ops_term_ssh_dialog_body =>
+      'Використовуйте відбиток, отриманий незалежним шляхом від адміністратора хоста. Буде відкрито новий віддалений сеанс входу, а не шлюз чи локальну оболонку.';
+
+  @override
+  String get rel_ops_term_ssh_host => 'Хост SSH';
+
+  @override
+  String get rel_ops_term_ssh_port => 'Порт';
+
+  @override
+  String get rel_ops_term_ssh_user => 'Користувач';
+
+  @override
+  String get rel_ops_term_ssh_fingerprint => 'Відбиток ключа хоста (SHA256:…)';
+
+  @override
+  String get rel_ops_term_ssh_password => 'Пароль SSH (не зберігається)';
+
+  @override
+  String get rel_ops_term_connect => 'Підключитися';
+
+  @override
+  String get rel_ops_ssh_invalid_destination =>
+      'Недійсний хост, порт або користувач SSH.';
+
+  @override
+  String get rel_ops_ssh_public_key_required =>
+      'Потрібен відкритий ключ хоста OpenSSH Ed25519.';
+
+  @override
+  String get rel_ops_ssh_invalid_public_key => 'Недійсний ключ хоста Ed25519.';
+
+  @override
+  String get rel_ops_ssh_invalid_saved_key =>
+      'Недійсний збережений ключ хоста.';
+
+  @override
+  String get rel_ops_ssh_enrollment_unverified =>
+      'Не вдалося перевірити реєстрацію ключа хоста.';
+
+  @override
+  String get rel_ops_ssh_different_key_pinned =>
+      'Уже закріплено інший ключ. Перевірте зміну окремо.';
+
+  @override
+  String get rel_ops_ssh_open_ssh_unavailable =>
+      'Системний OpenSSH недоступний.';
+
+  @override
+  String get rel_ops_ssh_confirm_host_key =>
+      'Підтвердьте ключ хоста перед підключенням.';
+
+  @override
+  String get rel_ops_ssh_absolute_identity_required =>
+      'Виберіть файл ідентифікації з абсолютним шляхом.';
+
+  @override
+  String get rel_ops_ssh_invalid_remote_port => 'Недійсний віддалений порт.';
+
+  @override
+  String get rel_ops_ssh_preview_too_large =>
+      'Попередній перегляд перевищує обмеження в 64 KiB.';
+
+  @override
+  String get rel_ops_ssh_connection_refused =>
+      'Підключення SSH відхилено. Перевірте зареєстрований ключ хоста, дані ідентифікації та службу.';
+
+  @override
+  String get rel_ops_ssh_http_not_ok =>
+      'Віддалена служба не повернула HTTP 200.';
+
+  @override
+  String get rel_ops_ssh_encoded_response =>
+      'Цей попередній перегляд не підтримує закодовані відповіді.';
+
+  @override
+  String get rel_ops_ssh_preview_type_unsupported =>
+      'Попередній перегляд доступний лише для тексту й вихідного коду HTML.';
+
+  @override
+  String get rel_ops_ssh_health_unconfirmed =>
+      'Служба не підтвердила справність шлюзу.';
+
+  @override
+  String get rel_ops_ssh_enroll_host_key_first =>
+      'Спочатку зареєструйте відкритий ключ хоста.';
+
+  @override
+  String get rel_ops_ssh_cancel => 'Скасувати';
+
+  @override
+  String get rel_ops_ssh_confirm => 'Підтвердити';
+
+  @override
+  String get rel_ops_ssh_pin_title => 'Закріпити цей ключ хоста SSH?';
+
+  @override
+  String rel_ops_ssh_pin_detail(String destination, String fingerprint) {
+    return '$destination\n$fingerprint\nЗвірте цей відбиток з адміністратором хоста через незалежний канал. Підключення не буде встановлено.';
+  }
+
+  @override
+  String get rel_ops_ssh_host_key_pinned => 'Ключ хоста закріплено.';
+
+  @override
+  String get rel_ops_ssh_shell_detail =>
+      'Відкрити інтерактивну оболонку входу в систему.';
+
+  @override
+  String rel_ops_ssh_read_detail(String path, int port) {
+    return 'Прочитати $path за віддаленою адресою 127.0.0.1:$port через канал SSH.';
+  }
+
+  @override
+  String rel_ops_ssh_connect_title(String destination) {
+    return 'Підключитися до $destination?';
+  }
+
+  @override
+  String rel_ops_ssh_connect_detail(
+    String detail,
+    String fingerprint,
+    String authentication,
+  ) {
+    return '$detail\n$fingerprint\n$authentication';
+  }
+
+  @override
+  String get rel_ops_ssh_agent_auth =>
+      'Пройти автентифікацію за допомогою вашого агента SSH.';
+
+  @override
+  String get rel_ops_ssh_identity_auth =>
+      'Використати вибраний файл ідентифікації.';
+
+  @override
+  String rel_ops_ssh_gateway_responding(int port) {
+    return 'Шлюз відповідає на віддаленому порту петльового інтерфейсу $port.';
+  }
+
+  @override
+  String get rel_ops_ssh_session_closed => 'Сесію SSH закрито.';
+
+  @override
+  String get rel_ops_ssh_session_unclean => 'Сесія SSH завершилася некоректно.';
+
+  @override
+  String get rel_ops_ssh_operation_failed =>
+      'Помилка операції SSH. Перевірте адресу призначення й дані ідентифікації.';
+
+  @override
+  String get rel_ops_ssh_title => 'Перевірений SSH';
+
+  @override
+  String get rel_ops_ssh_unsupported =>
+      'На цьому пристрої немає підтримуваного системного транспорту OpenSSH. Ретранслятор закріпленого шлюзу автоматично приймає нові ключі й не може використовуватися для перевіреної реєстрації.';
+
+  @override
+  String get rel_ops_ssh_host => 'Хост SSH';
+
+  @override
+  String get rel_ops_ssh_port => 'Порт SSH';
+
+  @override
+  String get rel_ops_ssh_user => 'Користувач SSH';
+
+  @override
+  String get rel_ops_ssh_identity =>
+      'Файл ідентифікації (необов’язково; інакше використовується агент SSH)';
+
+  @override
+  String get rel_ops_ssh_public_key =>
+      'Відкритий ключ хоста від адміністратора (ssh-ed25519)';
+
+  @override
+  String get rel_ops_ssh_review_key => 'Переглянути ключ хоста';
+
+  @override
+  String get rel_ops_ssh_remote_port =>
+      'Віддалений порт служби на петльовому інтерфейсі';
+
+  @override
+  String get rel_ops_ssh_check_gateway => 'Перевірити шлюз через SSH';
+
+  @override
+  String get rel_ops_ssh_preview_source =>
+      'Попередній перегляд вихідного коду через SSH';
+
+  @override
+  String get rel_ops_ssh_open_shell => 'Відкрити оболонку SSH';
+
+  @override
+  String get rel_ops_ssh_shell_line => 'Рядок для віддаленої оболонки';
+
+  @override
+  String get rel_ops_ssh_disconnect => 'Відключити оболонку';
+
+  @override
+  String get rel_ops_host_cancel => 'Скасувати';
+
+  @override
+  String get rel_ops_host_confirm => 'Підтвердити';
+
+  @override
+  String get rel_ops_host_title => 'Хост';
+
+  @override
+  String get rel_ops_host_refresh => 'Оновити';
+
+  @override
+  String get rel_ops_host_update => 'Оновити Hermes на віддаленому хості';
+
+  @override
+  String rel_ops_host_update_confirmation(String profile) {
+    return 'Це запустить оновлення наявного встановлення на хості шлюзу для $profile. Ares на цьому пристрої не буде оновлено. Успіх засвідчує відповідне підтвердження оновлення, а не те, що хост залишається доступним.';
+  }
+
+  @override
+  String get rel_ops_host_update_awaiting =>
+      'Очікування відповідного підтвердження. Оновлення ще триває.';
+
+  @override
+  String get rel_ops_host_receipt_success =>
+      'Підтвердження оновлення вказує на успіх.';
+
+  @override
+  String get rel_ops_host_receipt_partial =>
+      'Оновлення застосовано, але ще потрібні подальші дії.';
+
+  @override
+  String get rel_ops_host_receipt_failed =>
+      'Підтвердження оновлення вказує на збій.';
+
+  @override
+  String get rel_ops_host_receipt_refused =>
+      'Підтвердження оновлення вказує на відмову.';
+
+  @override
+  String get rel_ops_host_update_running => 'Оновлення ще триває.';
+
+  @override
+  String get rel_ops_host_update_unknown =>
+      'Результат оновлення невідомий. Робота шлюзу не означає успішного оновлення.';
+
+  @override
+  String get rel_ops_host_default_profile => 'типовий профіль шлюзу';
+
+  @override
+  String get rel_ops_host_restart => 'Перезапустити віддалений шлюз';
+
+  @override
+  String rel_ops_host_restart_shared_confirmation(String profiles) {
+    return 'Це перезапустить шлюз, спільний для $profiles. Поточні ходи на цьому шлюзі буде перервано. Потім підключіться знову. Доступність не доводить, що перезапуск завершився.';
+  }
+
+  @override
+  String rel_ops_host_restart_confirmation(String profile) {
+    return 'Це перезапустить віддалений шлюз для $profile. Поточні ходи на цьому шлюзі буде перервано. Потім підключіться знову.';
+  }
+
+  @override
+  String get rel_ops_host_restart_running =>
+      'Команда перезапуску ще виконується.';
+
+  @override
+  String get rel_ops_host_restart_finished =>
+      'Команду перезапуску завершено. Підключіться до хоста знову вручну.';
+
+  @override
+  String get rel_ops_host_restart_failed =>
+      'Команда перезапуску завершилася помилкою.';
+
+  @override
+  String rel_ops_host_maintenance_running(String name) {
+    return '$name ще виконується';
+  }
+
+  @override
+  String rel_ops_host_maintenance_finished(String name) {
+    return '$name: виконання завершено';
+  }
+
+  @override
+  String rel_ops_host_maintenance_failed(String name) {
+    return '$name: збій виконання';
+  }
+
+  @override
+  String get rel_ops_host_curator_paused_result => 'Куратора призупинено.';
+
+  @override
+  String get rel_ops_host_curator_resumed_result =>
+      'Роботу Куратора відновлено.';
+
+  @override
+  String get rel_ops_host_reset => 'Скинути віддалені файли пам’яті';
+
+  @override
+  String rel_ops_host_reset_confirmation(String targetName, String profile) {
+    return 'Видалити файл пам’яті $targetName у $profile? Цю дію не можна скасувати з Ares.';
+  }
+
+  @override
+  String rel_ops_host_reset_result(String targetName, int count) {
+    return 'Виконано скидання $targetName. Видалено віддалених файлів: $count.';
+  }
+
+  @override
+  String get rel_ops_host_share_not_redacted =>
+      'Хост не підтвердив вилучення конфіденційних даних із пакета. Посилання не відображається.';
+
+  @override
+  String rel_ops_host_scope(String connection, String profile) {
+    return 'Ці елементи керування діють на віддалений шлюз $connection для $profile, а не на цей пристрій чи оновлення клієнта Ares.';
+  }
+
+  @override
+  String rel_ops_host_health_running(String version, int count) {
+    return 'Процес шлюзу працює $version · Сеансів: $count';
+  }
+
+  @override
+  String rel_ops_host_health_stopped(String version, int count) {
+    return 'Процес шлюзу зупинено $version · Сеансів: $count';
+  }
+
+  @override
+  String rel_ops_host_heartbeat_stale(num seconds) {
+    return 'Сигнал активності хоста застарів ($seconds с).';
+  }
+
+  @override
+  String get rel_ops_host_doctor => 'Запустити Doctor';
+
+  @override
+  String get rel_ops_host_security_audit => 'Аудит безпеки';
+
+  @override
+  String get rel_ops_host_check_receipt => 'Перевірити підтвердження оновлення';
+
+  @override
+  String get rel_ops_host_logs => 'Журнали віддаленого хоста';
+
+  @override
+  String get rel_ops_host_search_logs => 'Пошук у журналах хоста';
+
+  @override
+  String get rel_ops_host_driver => 'Драйвер віддаленого хоста';
+
+  @override
+  String get rel_ops_host_driver_scope =>
+      'Готовність керування комп’ютером визначають драйвер і дозволи ОС на машині шлюзу, а не на цьому пристрої.';
+
+  @override
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  ) {
+    return '$platform · встановлено: $installed · готово: $ready';
+  }
+
+  @override
+  String get rel_ops_host_null => 'немає даних';
+
+  @override
+  String get rel_ops_host_true => 'так';
+
+  @override
+  String get rel_ops_host_false => 'ні';
+
+  @override
+  String get rel_ops_host_curator => 'Куратор';
+
+  @override
+  String get rel_ops_host_curator_paused => 'Куратора призупинено';
+
+  @override
+  String get rel_ops_host_curator_running => 'Куратор працює';
+
+  @override
+  String get rel_ops_host_no_run => 'Немає завершених запусків';
+
+  @override
+  String get rel_ops_host_run_curator => 'Запустити Куратора зараз';
+
+  @override
+  String get rel_ops_host_reset_memory => 'Скинути файл пам’яті';
+
+  @override
+  String get rel_ops_host_reset_user => 'Скинути файл користувача';
+
+  @override
+  String get rel_ops_host_reset_both => 'Скинути обидва файли';
+
+  @override
+  String get rel_ops_host_share_consent =>
+      'Я погоджуюся завантажити діагностичний пакет із віддаленого хоста з вилученими конфіденційними даними';
+
+  @override
+  String get rel_ops_host_share =>
+      'Поділитися діагностикою без конфіденційних даних';
+
+  @override
+  String get rel_ops_host_update_unknown_installation =>
+      'Це встановлення невідоме, тому запит на оновлення не надіслано';
+
+  @override
+  String get rel_ops_host_update_busy_installation =>
+      'На цьому встановленні виконується чат';
+
+  @override
+  String get rel_ops_host_update_refused => 'Віддалене оновлення відхилено';
+
+  @override
+  String get rel_ops_host_error_stale => 'Віддалена робоча область: застаріла';
+
+  @override
+  String get rel_ops_host_error_mismatch =>
+      'Віддалена робоча область: невідповідність';
+
+  @override
+  String get rel_ops_host_error_unbound =>
+      'Віддалена робоча область: не прив’язана';
+
+  @override
+  String get rel_ops_host_error_unsupported =>
+      'Віддалена робоча область: не підтримується';
+
+  @override
+  String get rel_ops_host_error_denied =>
+      'Віддалена робоча область: доступ заборонено';
+
+  @override
+  String get rel_ops_host_error_ineligible =>
+      'Віддалена робоча область: не підходить для операції';
+
+  @override
+  String get rel_ops_host_error_unavailable =>
+      'Віддалена робоча область: недоступна';
+
+  @override
+  String get rel_ops_host_error_invalid =>
+      'Віддалена робоча область: некоректні дані';
+
+  @override
+  String get rel_ops_host_error_insecure =>
+      'Віддалена робоча область: незахищене з’єднання';
+
+  @override
+  String get rel_ops_host_error_request => 'Не вдалося виконати запит.';
 }

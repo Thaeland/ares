@@ -13108,4 +13108,1217 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get rel_admin_phase_undone => '실행 취소됨';
+
+  @override
+  String rel_ops_cap_install_blocked(String verdict, String detail) {
+    return '설치 차단됨($verdict): $detail';
+  }
+
+  @override
+  String rel_ops_cap_scan_confirm(String verdict, String requested) {
+    return '검사 결과: $verdict. 설치하기 전에 $requested을(를) 확인하세요.';
+  }
+
+  @override
+  String rel_ops_cap_install_unconfirmed(String requested) {
+    return '게이트웨이에서 $requested의 설치를 아직 확인하지 않았습니다.';
+  }
+
+  @override
+  String rel_ops_cap_edit_skill(String name) {
+    return '$name 편집';
+  }
+
+  @override
+  String rel_ops_cap_archive_skill(String name) {
+    return '$name을(를) 보관할까요?';
+  }
+
+  @override
+  String rel_ops_cap_archive_explanation(String command) {
+    return '스킬이 보관되며 $command 명령으로 복원할 수 있습니다.';
+  }
+
+  @override
+  String rel_ops_cap_install_anyway(String name) {
+    return '그래도 $name 설치';
+  }
+
+  @override
+  String rel_ops_cap_install_despite_scan(String name) {
+    return '검사 결과에도 불구하고 $name을(를) 설치할까요?';
+  }
+
+  @override
+  String rel_ops_cap_scan_warning(String name) {
+    return '보안 검사에서 $name을(를) 차단했습니다. 이 확인은 $name에만 적용됩니다.';
+  }
+
+  @override
+  String rel_ops_cap_accept_scan_warning(String name) {
+    return '기능 권한을 수락해도 $name의 검사 결과를 무시할 수 없습니다.';
+  }
+
+  @override
+  String rel_ops_cap_review_scan(String name) {
+    return '$name 검사 결과 검토';
+  }
+
+  @override
+  String rel_ops_cap_desktop_grants(String description) {
+    return '$description\n폴더 및 미리 보기 스크립트 권한은 해당 컴퓨터의 Desktop 앱에 유지됩니다. 여기서 플러그인을 제거해도 해당 로컬 권한은 취소되지 않습니다.';
+  }
+
+  @override
+  String rel_ops_cap_remove_plugin(String name) {
+    return '$name을(를) 제거할까요?';
+  }
+
+  @override
+  String rel_ops_cap_probe_result(String name, String tools) {
+    return '$name 연결 테스트: $tools';
+  }
+
+  @override
+  String rel_ops_cap_save_tool_grants_for(String connector) {
+    return '$connector의 도구 권한 저장';
+  }
+
+  @override
+  String rel_ops_cap_backends_for(String name) {
+    return '$name의 백엔드';
+  }
+
+  @override
+  String rel_ops_cap_use_backend_confirmation(String name) {
+    return '$name을(를) 사용할까요?';
+  }
+
+  @override
+  String rel_ops_cap_unlock_source(String name) {
+    return '$name 잠금 해제';
+  }
+
+  @override
+  String get rel_ops_cap_capabilities => '기능';
+
+  @override
+  String get rel_ops_cap_plugins => '플러그인';
+
+  @override
+  String get rel_ops_cap_connectors => '커넥터';
+
+  @override
+  String get rel_ops_cap_backends => '백엔드';
+
+  @override
+  String get rel_ops_cap_save_skill => '스킬 저장';
+
+  @override
+  String get rel_ops_cap_archive => '보관';
+
+  @override
+  String get rel_ops_cap_hub_identifier => 'Hub 식별자';
+
+  @override
+  String get rel_ops_cap_install => '설치';
+
+  @override
+  String get rel_ops_cap_update_all => '모두 업데이트';
+
+  @override
+  String get rel_ops_cap_unlock => '잠금 해제';
+
+  @override
+  String get rel_ops_cap_lock => '잠금';
+
+  @override
+  String get rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet =>
+      '이 업데이트는 기능을 추가합니다. 아직 변경된 사항은 없습니다.';
+
+  @override
+  String get rel_ops_cap_the_scan_blocked_this_plugin => '검사에서 이 플러그인을 차단했습니다.';
+
+  @override
+  String get rel_ops_cap_the_plugin_was_not_changed => '플러그인이 변경되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_repository => '저장소';
+
+  @override
+  String get rel_ops_cap_install_plugin => '플러그인 설치';
+
+  @override
+  String get rel_ops_cap_update_plugins => '플러그인 업데이트';
+
+  @override
+  String get rel_ops_cap_accept_capabilities => '기능 권한 수락';
+
+  @override
+  String get rel_ops_cap_update => '업데이트';
+
+  @override
+  String get rel_ops_cap_remove_desktop_half => '데스크톱 구성 요소 제거';
+
+  @override
+  String get rel_ops_cap_server_name => '서버 이름';
+
+  @override
+  String get rel_ops_cap_command => '명령';
+
+  @override
+  String get rel_ops_cap_http_url => 'HTTP URL';
+
+  @override
+  String get rel_ops_cap_add_server => '서버 추가';
+
+  @override
+  String get rel_ops_cap_probe => '연결 테스트';
+
+  @override
+  String get rel_ops_cap_probe_failed => '연결 테스트에 실패했습니다.';
+
+  @override
+  String get rel_ops_cap_logs => '로그';
+
+  @override
+  String get rel_ops_cap_mcp_log => 'MCP 로그';
+
+  @override
+  String get rel_ops_cap_connector => '커넥터';
+
+  @override
+  String get rel_ops_cap_account_alias => '계정 별칭';
+
+  @override
+  String get rel_ops_cap_link_account => '계정 연결';
+
+  @override
+  String get rel_ops_cap_remove_account => '계정 제거';
+
+  @override
+  String get rel_ops_cap_tool_connector => '도구 커넥터';
+
+  @override
+  String get rel_ops_cap_load_tools => '도구 불러오기';
+
+  @override
+  String get rel_ops_cap_save_tool_grants => '도구 권한 저장';
+
+  @override
+  String
+  get rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged =>
+      '이 정책에는 멤버 리비전이 없으므로 도구 권한이 변경되지 않습니다.';
+
+  @override
+  String get rel_ops_cap_active => '사용 중';
+
+  @override
+  String get rel_ops_cap_use => '사용';
+
+  @override
+  String get rel_ops_cap_run_setup => '설정 실행';
+
+  @override
+  String get rel_ops_cap_terminal_backends => '터미널 백엔드';
+
+  @override
+  String get rel_ops_cap_this_changes_the_terminal_backend_for_this_profile =>
+      '이 프로필의 터미널 백엔드가 변경됩니다.';
+
+  @override
+  String get rel_ops_cap_use_backend => '백엔드 사용';
+
+  @override
+  String get rel_ops_cap_select => '선택';
+
+  @override
+  String get rel_ops_cap_browser_vault => '브라우저 보관함';
+
+  @override
+  String
+  get rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here =>
+      '저장된 사이트 로그인, 주소 및 카드입니다. 비밀번호는 보안 필드에 유지되며 여기에 표시되지 않습니다.';
+
+  @override
+  String get rel_ops_cap_remove_saved_item => '저장된 항목 제거';
+
+  @override
+  String get rel_ops_cap_delete_this_item => '이 항목을 삭제할까요?';
+
+  @override
+  String get rel_ops_cap_unlocked => '잠금 해제됨';
+
+  @override
+  String get rel_ops_cap_locked => '잠김';
+
+  @override
+  String get rel_ops_cap_not_detected => '감지되지 않음';
+
+  @override
+  String get rel_ops_cap_master_password => '마스터 비밀번호';
+
+  @override
+  String get rel_ops_cap_login => '로그인 정보';
+
+  @override
+  String get rel_ops_cap_address => '주소';
+
+  @override
+  String get rel_ops_cap_card => '카드';
+
+  @override
+  String get rel_ops_cap_label => '라벨';
+
+  @override
+  String get rel_ops_cap_site_origin => '사이트 출처';
+
+  @override
+  String get rel_ops_cap_identifier => '식별자';
+
+  @override
+  String get rel_ops_cap_password => '비밀번호';
+
+  @override
+  String get rel_ops_cap_authenticator_key => '인증 키';
+
+  @override
+  String get rel_ops_cap_street => '도로명 주소';
+
+  @override
+  String get rel_ops_cap_city => '도시';
+
+  @override
+  String get rel_ops_cap_postal_code => '우편번호';
+
+  @override
+  String get rel_ops_cap_country => '국가';
+
+  @override
+  String get rel_ops_cap_name_on_card => '카드 소유자 이름';
+
+  @override
+  String get rel_ops_cap_card_number => '카드 번호';
+
+  @override
+  String get rel_ops_cap_expiry_month => '만료 월';
+
+  @override
+  String get rel_ops_cap_expiry_year => '만료 연도';
+
+  @override
+  String get rel_ops_cap_security_code => '보안 코드';
+
+  @override
+  String get rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method =>
+      '이 게이트웨이에는 공유 지표 동의 메서드가 없습니다.';
+
+  @override
+  String get rel_ops_cap_agent_policy => '에이전트 정책';
+
+  @override
+  String get rel_ops_cap_loading_policy => '정책 불러오는 중';
+
+  @override
+  String get rel_ops_cap_approval_timeout => '승인 대기 시간 제한';
+
+  @override
+  String get rel_ops_cap_confirm_mcp_reloads => 'MCP 새로고침 확인';
+
+  @override
+  String get rel_ops_cap_command_allowlist => '명령 허용 목록';
+
+  @override
+  String get rel_ops_cap_file_checkpoints => '파일 체크포인트';
+
+  @override
+  String get rel_ops_cap_checkpoint_limit => '체크포인트 한도';
+
+  @override
+  String get rel_ops_cap_browser_private_urls => '브라우저 비공개 URL';
+
+  @override
+  String get rel_ops_cap_use_my_real_browser_profile => '내 실제 브라우저 프로필 사용';
+
+  @override
+  String get rel_ops_cap_save_policy => '정책 저장';
+
+  @override
+  String get rel_ops_cap_shared_metrics_for_this_profile => '이 프로필의 공유 지표';
+
+  @override
+  String get rel_ops_cap_send_shared_metrics => '공유 지표 전송';
+
+  @override
+  String get rel_ops_cap_error_enter_a_label => '라벨을 입력하세요.';
+
+  @override
+  String get rel_ops_cap_error_enter_a_valid_url_like_https_example_com =>
+      'https://example.com과 같은 올바른 URL을 입력하세요.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_identifier_and_password =>
+      '식별자와 비밀번호를 입력하세요.';
+
+  @override
+  String
+  get rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code =>
+      '카드 소유자 이름, 번호, 만료일 및 보안 코드를 입력하세요.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_street_city_postal_code_and_country =>
+      '도로명 주소, 도시, 우편번호 및 국가를 입력하세요.';
+
+  @override
+  String
+  get rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read =>
+      '게이트웨이가 읽을 수 없는 응답을 반환했습니다.';
+
+  @override
+  String rel_ops_cap_error_the_gateway_refused_the_request_status(
+    int statusCode,
+  ) {
+    return '게이트웨이가 요청을 거부했습니다($statusCode).';
+  }
+
+  @override
+  String
+  rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable(
+    String method,
+  ) {
+    return '이 연결에는 게이트웨이 소켓이 없으므로 $method을(를) 사용할 수 없습니다.';
+  }
+
+  @override
+  String get rel_ops_cap_error_choose_a_skill => '스킬을 선택하세요.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_text_was_not_returned =>
+      '스킬 텍스트가 반환되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_saved => '스킬이 저장되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_archived => '스킬이 보관되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_installed => '스킬이 설치되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_skill_updates_did_not_start =>
+      '스킬 업데이트가 시작되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_removed => '스킬이 제거되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_enter_a_skill_or_plugin_identifier =>
+      '스킬 또는 플러그인 식별자를 입력하세요.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_plugin => '플러그인을 선택하세요.';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_removed =>
+      '플러그인이 제거되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_the_desktop_half_was_not_removed =>
+      '데스크톱 구성 요소가 제거되지 않았습니다.';
+
+  @override
+  String
+  get rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key =>
+      '이 게이트웨이는 플러그인에 안정적인 키를 부여하지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_changed =>
+      '플러그인이 변경되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_server => '서버를 선택하세요.';
+
+  @override
+  String get rel_ops_cap_error_name_the_server => '서버 이름을 지정하세요.';
+
+  @override
+  String get rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url =>
+      '서버에 명령 또는 http(s) URL을 지정하세요.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_toolset => '도구 모음을 선택하세요.';
+
+  @override
+  String get rel_ops_cap_error_tool_backend_status_was_not_returned =>
+      '도구 백엔드 상태가 반환되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_provider => '제공업체를 선택하세요.';
+
+  @override
+  String get rel_ops_cap_error_this_provider_has_no_setup_action =>
+      '이 제공업체에는 설정 작업이 없습니다.';
+
+  @override
+  String get rel_ops_cap_error_setup_did_not_start => '설정이 시작되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_terminal_backend => '터미널 백엔드를 선택하세요.';
+
+  @override
+  String get rel_ops_cap_error_name_the_connector => '커넥터 이름을 지정하세요.';
+
+  @override
+  String get rel_ops_cap_error_choose_an_account => '계정을 선택하세요.';
+
+  @override
+  String
+  get rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants =>
+      '도구 권한을 변경하기 전에 커넥터 정책을 새로고침하세요.';
+
+  @override
+  String get rel_ops_cap_error_choose_an_item => '항목을 선택하세요.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_source => '소스를 선택하세요.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_master_password => '마스터 비밀번호를 입력하세요.';
+
+  @override
+  String get rel_ops_cap_error_gateway_config_was_not_returned =>
+      '게이트웨이 구성이 반환되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_known_approval_mode =>
+      '알려진 승인 모드를 선택하세요.';
+
+  @override
+  String get rel_ops_cap_error_use_a_positive_limit => '양수인 한도를 사용하세요.';
+
+  @override
+  String get rel_ops_cap_error_the_policy_was_not_saved => '정책이 저장되지 않았습니다.';
+
+  @override
+  String get rel_ops_cap_value_manual => '수동';
+
+  @override
+  String get rel_ops_cap_value_smart => '스마트';
+
+  @override
+  String get rel_ops_cap_value_off => '꺼짐';
+
+  @override
+  String get rel_ops_cap_value_safe => '안전';
+
+  @override
+  String get rel_ops_cap_value_caution => '주의';
+
+  @override
+  String get rel_ops_cap_value_dangerous => '위험';
+
+  @override
+  String get rel_ops_cap_value_blocked => '차단됨';
+
+  @override
+  String get rel_ops_cap_value_clean => '위협 없음';
+
+  @override
+  String get rel_ops_cap_value_ready => '준비됨';
+
+  @override
+  String get rel_ops_cap_value_available => '사용 가능';
+
+  @override
+  String get rel_ops_cap_value_unavailable => '사용 불가';
+
+  @override
+  String get rel_ops_cap_value_enabled => '활성화됨';
+
+  @override
+  String get rel_ops_cap_value_disabled => '비활성화됨';
+
+  @override
+  String get rel_ops_cap_value_active => '사용 중';
+
+  @override
+  String get rel_ops_cap_value_inactive => '사용하지 않음';
+
+  @override
+  String get rel_ops_cap_value_installed => '설치됨';
+
+  @override
+  String get rel_ops_cap_value_missing => '없음';
+
+  @override
+  String get rel_ops_cap_value_configured => '구성됨';
+
+  @override
+  String get rel_ops_cap_value_not_configured => '구성되지 않음';
+
+  @override
+  String get rel_ops_cap_value_error => '오류';
+
+  @override
+  String get rel_ops_cap_value_unknown => '알 수 없음';
+
+  @override
+  String get rel_ops_cap_value_login => '로그인 정보';
+
+  @override
+  String get rel_ops_cap_value_address => '주소';
+
+  @override
+  String get rel_ops_cap_value_payment => '결제';
+
+  @override
+  String get rel_ops_term_connecting => '연결 중…';
+
+  @override
+  String get rel_ops_term_unbound =>
+      '일치하는 활성 세션이나 호스트 작업 디렉터리가 없습니다. 먼저 해당 채팅을 여세요.';
+
+  @override
+  String get rel_ops_term_unsupported =>
+      '이 게이트웨이는 이 터미널 기능을 제공하지 않습니다. 로컬 셸은 시작되지 않았습니다.';
+
+  @override
+  String get rel_ops_term_local_pty_unavailable =>
+      '포함된 로컬 PTY를 이 기기에서 사용할 수 없습니다.';
+
+  @override
+  String get rel_ops_term_operation_failed =>
+      '터미널을 열거나 제어할 수 없습니다. 호스트, 인증 정보, 지문을 확인하세요. 대체 셸은 시작되지 않았습니다.';
+
+  @override
+  String get rel_ops_term_input_refused => '입력이 거부되었습니다. 원래 채팅을 다시 여세요.';
+
+  @override
+  String get rel_ops_term_cancel => '취소';
+
+  @override
+  String get rel_ops_term_confirm => '확인';
+
+  @override
+  String get rel_ops_term_open_device_title => '이 기기에서 셸을 열까요?';
+
+  @override
+  String get rel_ops_term_ssh_shell => 'SSH 셸';
+
+  @override
+  String get rel_ops_term_local_shell => '로컬 셸';
+
+  @override
+  String get rel_ops_term_connection_lost => '연결이 끊어졌습니다';
+
+  @override
+  String get rel_ops_term_shell_ended => '셸이 종료되었습니다';
+
+  @override
+  String get rel_ops_term_no_owner =>
+      '이 채팅에는 인증된 게이트웨이 터미널 소유자가 없습니다. URL이나 클라우드 로그인만으로는 셸 액세스 권한이 부여되지 않습니다.';
+
+  @override
+  String get rel_ops_term_open_gateway_title => '게이트웨이 셸을 열까요?';
+
+  @override
+  String get rel_ops_term_shell_expired => '셸이 종료되었거나 만료되었습니다';
+
+  @override
+  String get rel_ops_term_disconnected => '연결 해제됨';
+
+  @override
+  String get rel_ops_term_gateway_shell => '게이트웨이 셸';
+
+  @override
+  String get rel_ops_term_close_body => '이 셸을 종료합니다. 계속 실행하려면 대신 창을 숨기세요.';
+
+  @override
+  String get rel_ops_term_closing => '닫는 중…';
+
+  @override
+  String get rel_ops_term_close_unconfirmed => '닫힘이 확인되지 않았습니다';
+
+  @override
+  String get rel_ops_term_processes_require_chat =>
+      '에이전트 프로세스에는 인증된 해당 채팅이 필요합니다.';
+
+  @override
+  String get rel_ops_term_watching_processes =>
+      '이 채팅의 에이전트 프로세스를 모니터링하고 있습니다. 미러 보기를 닫아도 해당 프로세스는 중지되지 않습니다.';
+
+  @override
+  String get rel_ops_term_paste_limit => '붙여넣기는 16 KiB로 제한됩니다.';
+
+  @override
+  String get rel_ops_term_paste => '붙여넣기';
+
+  @override
+  String get rel_ops_term_select_first => '먼저 터미널 출력을 선택하세요.';
+
+  @override
+  String get rel_ops_term_open_chat_to_insert => '출력을 삽입하기 전에 원래 채팅을 여세요.';
+
+  @override
+  String get rel_ops_term_added_to_draft => '원래 채팅의 초안에 추가했습니다. 전송된 내용은 없습니다.';
+
+  @override
+  String get rel_ops_term_close => '닫기';
+
+  @override
+  String get rel_ops_term_add_selection => '선택 항목을 채팅 초안에 추가';
+
+  @override
+  String get rel_ops_term_new_terminal => '새 터미널';
+
+  @override
+  String get rel_ops_term_gateway_terminal => '게이트웨이 호스트 터미널';
+
+  @override
+  String get rel_ops_term_verified_ssh_terminal => '검증된 SSH 터미널';
+
+  @override
+  String get rel_ops_term_device_local_shell => '이 기기 (로컬 셸)';
+
+  @override
+  String get rel_ops_term_local_unavailable_mobile => '모바일에서는 로컬 셸을 사용할 수 없습니다';
+
+  @override
+  String get rel_ops_term_watch_processes => '에이전트 프로세스 모니터링';
+
+  @override
+  String get rel_ops_term_select_output => '출력 선택 또는 복사';
+
+  @override
+  String get rel_ops_term_add_selected_output => '선택한 출력을 채팅 초안에 추가';
+
+  @override
+  String get rel_ops_term_review_paste => '클립보드 붙여넣기 검토';
+
+  @override
+  String get rel_ops_term_reconnect => '동일한 셸에 다시 연결';
+
+  @override
+  String get rel_ops_term_close_mirror => '미러 보기 닫기';
+
+  @override
+  String get rel_ops_term_close_shell => '셸 닫기';
+
+  @override
+  String get rel_ops_term_empty => '+를 선택하여 터미널을 여세요. 셸은 자동으로 시작되지 않습니다.';
+
+  @override
+  String get rel_ops_term_reason_stale => '오래된 상태';
+
+  @override
+  String get rel_ops_term_reason_mismatch => '불일치';
+
+  @override
+  String get rel_ops_term_reason_unbound => '연결 대상 없음';
+
+  @override
+  String get rel_ops_term_reason_unsupported => '지원되지 않음';
+
+  @override
+  String get rel_ops_term_reason_denied => '거부됨';
+
+  @override
+  String get rel_ops_term_reason_ineligible => '자격 없음';
+
+  @override
+  String get rel_ops_term_reason_unavailable => '사용할 수 없음';
+
+  @override
+  String get rel_ops_term_reason_invalid => '유효하지 않음';
+
+  @override
+  String get rel_ops_term_reason_insecure => '안전하지 않음';
+
+  @override
+  String rel_ops_term_refused(String reason) {
+    return '게이트웨이가 이 터미널 작업을 거부했습니다 ($reason).';
+  }
+
+  @override
+  String rel_ops_term_open_device_body(String connection) {
+    return '이것은 $connection이(가) 아닌 Ares 기기입니다. 셸은 앱 권한을 사용하며 앱 저장소에서 시작됩니다.';
+  }
+
+  @override
+  String rel_ops_term_open_gateway_body(String host) {
+    return '$host에서 채팅의 검증된 작업 디렉터리에 셸을 시작합니다. 기기 셸이 아닙니다.';
+  }
+
+  @override
+  String rel_ops_term_close_tab_title(String label) {
+    return '$label을(를) 닫을까요?';
+  }
+
+  @override
+  String rel_ops_term_read_only_status(String status) {
+    return '읽기 전용 · $status';
+  }
+
+  @override
+  String rel_ops_term_paste_title(String label) {
+    return '$label에 붙여넣을까요?';
+  }
+
+  @override
+  String rel_ops_term_output_title(String label) {
+    return '출력 · $label';
+  }
+
+  @override
+  String rel_ops_term_mirror_status(String label) {
+    return '읽기 전용 프로세스 미러 · $label';
+  }
+
+  @override
+  String rel_ops_term_status_label(String status, String label) {
+    return '$status · $label';
+  }
+
+  @override
+  String rel_ops_term_ssh_tab(String user, String host, int port, int number) {
+    return 'SSH $user@$host:$port · $number';
+  }
+
+  @override
+  String rel_ops_term_device_tab(int number) {
+    return '이 기기 · $number';
+  }
+
+  @override
+  String rel_ops_term_gateway_tab(String host, int number) {
+    return '게이트웨이 $host · $number';
+  }
+
+  @override
+  String get rel_ops_term_earlier_output_trimmed => '[이전 출력이 잘렸습니다]';
+
+  @override
+  String get rel_ops_term_ssh_dialog_title => '검증된 SSH 터미널 열기';
+
+  @override
+  String get rel_ops_term_ssh_dialog_body =>
+      '호스트 관리자로부터 독립적인 경로로 얻은 지문을 사용하세요. 게이트웨이나 로컬 셸이 아닌 새 원격 로그인 세션을 엽니다.';
+
+  @override
+  String get rel_ops_term_ssh_host => 'SSH 호스트';
+
+  @override
+  String get rel_ops_term_ssh_port => '포트';
+
+  @override
+  String get rel_ops_term_ssh_user => '사용자';
+
+  @override
+  String get rel_ops_term_ssh_fingerprint => '호스트 키 지문 (SHA256:…)';
+
+  @override
+  String get rel_ops_term_ssh_password => 'SSH 비밀번호 (저장되지 않음)';
+
+  @override
+  String get rel_ops_term_connect => '연결';
+
+  @override
+  String get rel_ops_ssh_invalid_destination =>
+      'SSH 호스트, 포트 또는 사용자가 올바르지 않습니다.';
+
+  @override
+  String get rel_ops_ssh_public_key_required =>
+      'OpenSSH Ed25519 형식의 호스트 공개 키가 필요합니다.';
+
+  @override
+  String get rel_ops_ssh_invalid_public_key => 'Ed25519 호스트 키가 올바르지 않습니다.';
+
+  @override
+  String get rel_ops_ssh_invalid_saved_key => '저장된 호스트 키가 올바르지 않습니다.';
+
+  @override
+  String get rel_ops_ssh_enrollment_unverified => '호스트 키 등록을 검증할 수 없습니다.';
+
+  @override
+  String get rel_ops_ssh_different_key_pinned =>
+      '다른 키가 이미 고정되어 있습니다. 변경 사항을 별도로 검증하세요.';
+
+  @override
+  String get rel_ops_ssh_open_ssh_unavailable => '시스템 OpenSSH를 사용할 수 없습니다.';
+
+  @override
+  String get rel_ops_ssh_confirm_host_key => '연결하기 전에 호스트 키를 확인하세요.';
+
+  @override
+  String get rel_ops_ssh_absolute_identity_required =>
+      '절대 경로로 지정된 인증 키 파일을 선택하세요.';
+
+  @override
+  String get rel_ops_ssh_invalid_remote_port => '원격 포트가 올바르지 않습니다.';
+
+  @override
+  String get rel_ops_ssh_preview_too_large => '미리보기가 64 KiB 제한을 초과합니다.';
+
+  @override
+  String get rel_ops_ssh_connection_refused =>
+      'SSH 연결이 거부되었습니다. 등록된 호스트 키, 인증 정보 및 서비스를 확인하세요.';
+
+  @override
+  String get rel_ops_ssh_http_not_ok => '원격 서비스가 HTTP 200을 반환하지 않았습니다.';
+
+  @override
+  String get rel_ops_ssh_encoded_response => '이 미리보기는 인코딩된 응답을 지원하지 않습니다.';
+
+  @override
+  String get rel_ops_ssh_preview_type_unsupported =>
+      '텍스트와 HTML 소스만 미리 볼 수 있습니다.';
+
+  @override
+  String get rel_ops_ssh_health_unconfirmed =>
+      '서비스가 게이트웨이의 정상 작동 상태를 확인해 주지 않았습니다.';
+
+  @override
+  String get rel_ops_ssh_enroll_host_key_first => '먼저 호스트의 공개 키를 등록하세요.';
+
+  @override
+  String get rel_ops_ssh_cancel => '취소';
+
+  @override
+  String get rel_ops_ssh_confirm => '확인';
+
+  @override
+  String get rel_ops_ssh_pin_title => '이 SSH 호스트 키를 고정하시겠습니까?';
+
+  @override
+  String rel_ops_ssh_pin_detail(String destination, String fingerprint) {
+    return '$destination\n$fingerprint\n독립적인 채널을 통해 호스트 관리자와 이 지문을 대조하세요. 연결은 이루어지지 않습니다.';
+  }
+
+  @override
+  String get rel_ops_ssh_host_key_pinned => '호스트 키가 고정되었습니다.';
+
+  @override
+  String get rel_ops_ssh_shell_detail => '대화형 로그인 셸을 엽니다.';
+
+  @override
+  String rel_ops_ssh_read_detail(String path, int port) {
+    return 'SSH 채널을 통해 원격 127.0.0.1:$port의 $path를 읽습니다.';
+  }
+
+  @override
+  String rel_ops_ssh_connect_title(String destination) {
+    return '$destination에 연결하시겠습니까?';
+  }
+
+  @override
+  String rel_ops_ssh_connect_detail(
+    String detail,
+    String fingerprint,
+    String authentication,
+  ) {
+    return '$detail\n$fingerprint\n$authentication';
+  }
+
+  @override
+  String get rel_ops_ssh_agent_auth => 'SSH 에이전트로 인증합니다.';
+
+  @override
+  String get rel_ops_ssh_identity_auth => '선택한 인증 키 파일을 사용합니다.';
+
+  @override
+  String rel_ops_ssh_gateway_responding(int port) {
+    return '게이트웨이가 원격 루프백 포트 $port에서 응답하고 있습니다.';
+  }
+
+  @override
+  String get rel_ops_ssh_session_closed => 'SSH 세션이 닫혔습니다.';
+
+  @override
+  String get rel_ops_ssh_session_unclean => 'SSH 세션이 정상적으로 종료되지 않았습니다.';
+
+  @override
+  String get rel_ops_ssh_operation_failed =>
+      'SSH 작업에 실패했습니다. 대상과 인증 정보를 확인하세요.';
+
+  @override
+  String get rel_ops_ssh_title => '검증된 SSH';
+
+  @override
+  String get rel_ops_ssh_unsupported =>
+      '이 기기에는 지원되는 시스템 OpenSSH 전송 수단이 없습니다. 고정된 게이트웨이 릴레이는 새 키를 자동으로 수락하므로 검증된 등록에 사용할 수 없습니다.';
+
+  @override
+  String get rel_ops_ssh_host => 'SSH 호스트';
+
+  @override
+  String get rel_ops_ssh_port => 'SSH 포트';
+
+  @override
+  String get rel_ops_ssh_user => 'SSH 사용자';
+
+  @override
+  String get rel_ops_ssh_identity => '인증 키 파일(선택 사항, 지정하지 않으면 SSH 에이전트 사용)';
+
+  @override
+  String get rel_ops_ssh_public_key => '관리자가 제공한 호스트 공개 키(ssh-ed25519)';
+
+  @override
+  String get rel_ops_ssh_review_key => '호스트 키 검토';
+
+  @override
+  String get rel_ops_ssh_remote_port => '원격 루프백 서비스 포트';
+
+  @override
+  String get rel_ops_ssh_check_gateway => 'SSH로 게이트웨이 확인';
+
+  @override
+  String get rel_ops_ssh_preview_source => 'SSH로 소스 미리보기';
+
+  @override
+  String get rel_ops_ssh_open_shell => 'SSH 셸 열기';
+
+  @override
+  String get rel_ops_ssh_shell_line => '원격 셸로 보낼 줄';
+
+  @override
+  String get rel_ops_ssh_disconnect => '셸 연결 해제';
+
+  @override
+  String get rel_ops_host_cancel => '취소';
+
+  @override
+  String get rel_ops_host_confirm => '확인';
+
+  @override
+  String get rel_ops_host_title => '호스트';
+
+  @override
+  String get rel_ops_host_refresh => '새로고침';
+
+  @override
+  String get rel_ops_host_update => '원격 Hermes 업데이트';
+
+  @override
+  String rel_ops_host_update_confirmation(String profile) {
+    return '$profile의 게이트웨이 호스트에서 기존 설치를 업데이트합니다. 이 기기의 Ares는 업데이트되지 않습니다. 성공 여부는 일치하는 업데이트 처리 기록으로 확인하며, 호스트에 계속 연결할 수 있다는 것만으로는 성공을 의미하지 않습니다.';
+  }
+
+  @override
+  String get rel_ops_host_update_awaiting =>
+      '일치하는 처리 기록을 기다리는 중입니다. 업데이트가 아직 실행 중입니다.';
+
+  @override
+  String get rel_ops_host_receipt_success => '업데이트 처리 기록에 성공으로 표시되어 있습니다.';
+
+  @override
+  String get rel_ops_host_receipt_partial => '업데이트가 적용되었지만 후속 단계가 아직 남아 있습니다.';
+
+  @override
+  String get rel_ops_host_receipt_failed => '업데이트 처리 기록에 실패로 표시되어 있습니다.';
+
+  @override
+  String get rel_ops_host_receipt_refused => '업데이트 처리 기록에 거부로 표시되어 있습니다.';
+
+  @override
+  String get rel_ops_host_update_running => '업데이트가 아직 실행 중입니다.';
+
+  @override
+  String get rel_ops_host_update_unknown =>
+      '업데이트 결과를 알 수 없습니다. 게이트웨이가 실행 중이라고 해서 업데이트가 성공한 것은 아닙니다.';
+
+  @override
+  String get rel_ops_host_default_profile => '게이트웨이 기본 프로필';
+
+  @override
+  String get rel_ops_host_restart => '원격 게이트웨이 다시 시작';
+
+  @override
+  String rel_ops_host_restart_shared_confirmation(String profiles) {
+    return '$profiles에서 공유하는 게이트웨이를 다시 시작합니다. 이 게이트웨이에서 진행 중인 턴이 중단됩니다. 이후 다시 연결하세요. 연결할 수 있다는 것만으로 다시 시작이 완료되었다고 볼 수는 없습니다.';
+  }
+
+  @override
+  String rel_ops_host_restart_confirmation(String profile) {
+    return '$profile의 원격 게이트웨이를 다시 시작합니다. 이 게이트웨이에서 진행 중인 턴이 중단됩니다. 이후 다시 연결하세요.';
+  }
+
+  @override
+  String get rel_ops_host_restart_running => '다시 시작 명령이 아직 실행 중입니다.';
+
+  @override
+  String get rel_ops_host_restart_finished =>
+      '다시 시작 명령이 완료되었습니다. 호스트에 직접 다시 연결하세요.';
+
+  @override
+  String get rel_ops_host_restart_failed => '다시 시작 명령이 실패했습니다.';
+
+  @override
+  String rel_ops_host_maintenance_running(String name) {
+    return '$name이(가) 아직 실행 중입니다';
+  }
+
+  @override
+  String rel_ops_host_maintenance_finished(String name) {
+    return '$name 완료';
+  }
+
+  @override
+  String rel_ops_host_maintenance_failed(String name) {
+    return '$name 실패';
+  }
+
+  @override
+  String get rel_ops_host_curator_paused_result => '큐레이터가 일시 중지되었습니다.';
+
+  @override
+  String get rel_ops_host_curator_resumed_result => '큐레이터가 재개되었습니다.';
+
+  @override
+  String get rel_ops_host_reset => '원격 메모리 파일 초기화';
+
+  @override
+  String rel_ops_host_reset_confirmation(String targetName, String profile) {
+    return '$profile의 $targetName 메모리 파일을 삭제할까요? Ares에서는 이 작업을 되돌릴 수 없습니다.';
+  }
+
+  @override
+  String rel_ops_host_reset_result(String targetName, int count) {
+    return '$targetName을(를) 초기화했습니다. 원격 파일 $count개를 삭제했습니다.';
+  }
+
+  @override
+  String get rel_ops_host_share_not_redacted =>
+      '호스트에서 진단 묶음의 민감 정보가 가려졌는지 확인하지 않았습니다. 링크가 표시되지 않습니다.';
+
+  @override
+  String rel_ops_host_scope(String connection, String profile) {
+    return '이 컨트롤은 $profile의 원격 게이트웨이 $connection을(를) 조작합니다. 이 기기나 Ares 클라이언트 업데이트에는 적용되지 않습니다.';
+  }
+
+  @override
+  String rel_ops_host_health_running(String version, int count) {
+    return '게이트웨이 프로세스 실행 중 $version · 세션 $count개';
+  }
+
+  @override
+  String rel_ops_host_health_stopped(String version, int count) {
+    return '게이트웨이 프로세스 중지됨 $version · 세션 $count개';
+  }
+
+  @override
+  String rel_ops_host_heartbeat_stale(num seconds) {
+    return '호스트의 하트비트가 오래되었습니다($seconds초).';
+  }
+
+  @override
+  String get rel_ops_host_doctor => 'Doctor 실행';
+
+  @override
+  String get rel_ops_host_security_audit => '보안 감사';
+
+  @override
+  String get rel_ops_host_check_receipt => '업데이트 처리 기록 확인';
+
+  @override
+  String get rel_ops_host_logs => '원격 호스트 로그';
+
+  @override
+  String get rel_ops_host_search_logs => '호스트 로그 검색';
+
+  @override
+  String get rel_ops_host_driver => '원격 호스트 드라이버';
+
+  @override
+  String get rel_ops_host_driver_scope =>
+      '컴퓨터 제어 준비 상태는 이 기기가 아니라 게이트웨이 컴퓨터의 드라이버 및 운영 체제 권한에 관한 것입니다.';
+
+  @override
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  ) {
+    return '$platform · 설치됨 $installed · 준비됨 $ready';
+  }
+
+  @override
+  String get rel_ops_host_null => '확인 불가';
+
+  @override
+  String get rel_ops_host_true => '예';
+
+  @override
+  String get rel_ops_host_false => '아니요';
+
+  @override
+  String get rel_ops_host_curator => '큐레이터';
+
+  @override
+  String get rel_ops_host_curator_paused => '큐레이터 일시 중지됨';
+
+  @override
+  String get rel_ops_host_curator_running => '큐레이터 실행 중';
+
+  @override
+  String get rel_ops_host_no_run => '완료된 실행 없음';
+
+  @override
+  String get rel_ops_host_run_curator => '지금 큐레이터 실행';
+
+  @override
+  String get rel_ops_host_reset_memory => '메모리 파일 초기화';
+
+  @override
+  String get rel_ops_host_reset_user => '사용자 파일 초기화';
+
+  @override
+  String get rel_ops_host_reset_both => '두 파일 모두 초기화';
+
+  @override
+  String get rel_ops_host_share_consent =>
+      '원격 호스트에서 민감 정보를 가린 진단 묶음을 업로드하는 데 동의합니다';
+
+  @override
+  String get rel_ops_host_share => '민감 정보를 가린 진단 정보 공유';
+
+  @override
+  String get rel_ops_host_update_unknown_installation =>
+      '이 설치를 식별할 수 없어 업데이트를 보내지 않았습니다';
+
+  @override
+  String get rel_ops_host_update_busy_installation => '이 설치에서 채팅이 실행 중입니다';
+
+  @override
+  String get rel_ops_host_update_refused => '원격 업데이트 거부됨';
+
+  @override
+  String get rel_ops_host_error_stale => '원격 작업 공간: 오래된 상태';
+
+  @override
+  String get rel_ops_host_error_mismatch => '원격 작업 공간: 불일치';
+
+  @override
+  String get rel_ops_host_error_unbound => '원격 작업 공간: 연결 대상 미지정';
+
+  @override
+  String get rel_ops_host_error_unsupported => '원격 작업 공간: 지원되지 않음';
+
+  @override
+  String get rel_ops_host_error_denied => '원격 작업 공간: 접근 거부됨';
+
+  @override
+  String get rel_ops_host_error_ineligible => '원격 작업 공간: 작업 대상 부적격';
+
+  @override
+  String get rel_ops_host_error_unavailable => '원격 작업 공간: 사용 불가';
+
+  @override
+  String get rel_ops_host_error_invalid => '원격 작업 공간: 유효하지 않음';
+
+  @override
+  String get rel_ops_host_error_insecure => '원격 작업 공간: 안전하지 않음';
+
+  @override
+  String get rel_ops_host_error_request => '요청을 완료하지 못했습니다.';
 }

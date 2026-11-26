@@ -13100,4 +13100,1219 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get rel_admin_phase_undone => '取り消し済み';
+
+  @override
+  String rel_ops_cap_install_blocked(String verdict, String detail) {
+    return 'インストールがブロックされました（$verdict）：$detail';
+  }
+
+  @override
+  String rel_ops_cap_scan_confirm(String verdict, String requested) {
+    return 'スキャン結果：$verdict。インストール前に $requested を確認してください。';
+  }
+
+  @override
+  String rel_ops_cap_install_unconfirmed(String requested) {
+    return 'ゲートウェイは $requested のインストールをまだ確認していません。';
+  }
+
+  @override
+  String rel_ops_cap_edit_skill(String name) {
+    return '$name を編集';
+  }
+
+  @override
+  String rel_ops_cap_archive_skill(String name) {
+    return '$name をアーカイブしますか？';
+  }
+
+  @override
+  String rel_ops_cap_archive_explanation(String command) {
+    return 'スキルはアーカイブされ、$command で復元できます。';
+  }
+
+  @override
+  String rel_ops_cap_install_anyway(String name) {
+    return 'それでも $name をインストール';
+  }
+
+  @override
+  String rel_ops_cap_install_despite_scan(String name) {
+    return 'スキャン結果にかかわらず $name をインストールしますか？';
+  }
+
+  @override
+  String rel_ops_cap_scan_warning(String name) {
+    return 'セキュリティスキャンにより $name がブロックされました。この確認は $name にのみ適用されます。';
+  }
+
+  @override
+  String rel_ops_cap_accept_scan_warning(String name) {
+    return '機能の許可を承認しても、$name のスキャン結果は無効になりません。';
+  }
+
+  @override
+  String rel_ops_cap_review_scan(String name) {
+    return '$name のスキャン結果を確認';
+  }
+
+  @override
+  String rel_ops_cap_desktop_grants(String description) {
+    return '$description\nフォルダーとプレビュースクリプトへの許可は、そのコンピューターの Desktop アプリに保持されます。ここでプラグインを削除しても、それらのローカルの許可は取り消されません。';
+  }
+
+  @override
+  String rel_ops_cap_remove_plugin(String name) {
+    return '$name を削除しますか？';
+  }
+
+  @override
+  String rel_ops_cap_probe_result(String name, String tools) {
+    return '$name の接続テスト：$tools';
+  }
+
+  @override
+  String rel_ops_cap_save_tool_grants_for(String connector) {
+    return '$connector のツールの許可を保存';
+  }
+
+  @override
+  String rel_ops_cap_backends_for(String name) {
+    return '$name のバックエンド';
+  }
+
+  @override
+  String rel_ops_cap_use_backend_confirmation(String name) {
+    return '$name を使用しますか？';
+  }
+
+  @override
+  String rel_ops_cap_unlock_source(String name) {
+    return '$name をロック解除';
+  }
+
+  @override
+  String get rel_ops_cap_capabilities => '機能';
+
+  @override
+  String get rel_ops_cap_plugins => 'プラグイン';
+
+  @override
+  String get rel_ops_cap_connectors => 'コネクター';
+
+  @override
+  String get rel_ops_cap_backends => 'バックエンド';
+
+  @override
+  String get rel_ops_cap_save_skill => 'スキルを保存';
+
+  @override
+  String get rel_ops_cap_archive => 'アーカイブ';
+
+  @override
+  String get rel_ops_cap_hub_identifier => 'Hub 識別子';
+
+  @override
+  String get rel_ops_cap_install => 'インストール';
+
+  @override
+  String get rel_ops_cap_update_all => 'すべて更新';
+
+  @override
+  String get rel_ops_cap_unlock => 'ロック解除';
+
+  @override
+  String get rel_ops_cap_lock => 'ロック';
+
+  @override
+  String get rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet =>
+      'この更新では機能が追加されます。まだ何も変更されていません。';
+
+  @override
+  String get rel_ops_cap_the_scan_blocked_this_plugin =>
+      'スキャンによりこのプラグインがブロックされました。';
+
+  @override
+  String get rel_ops_cap_the_plugin_was_not_changed => 'プラグインは変更されませんでした。';
+
+  @override
+  String get rel_ops_cap_repository => 'リポジトリ';
+
+  @override
+  String get rel_ops_cap_install_plugin => 'プラグインをインストール';
+
+  @override
+  String get rel_ops_cap_update_plugins => 'プラグインを更新';
+
+  @override
+  String get rel_ops_cap_accept_capabilities => '機能の許可を承認';
+
+  @override
+  String get rel_ops_cap_update => '更新';
+
+  @override
+  String get rel_ops_cap_remove_desktop_half => 'デスクトップ側のコンポーネントを削除';
+
+  @override
+  String get rel_ops_cap_server_name => 'サーバー名';
+
+  @override
+  String get rel_ops_cap_command => 'コマンド';
+
+  @override
+  String get rel_ops_cap_http_url => 'HTTP URL';
+
+  @override
+  String get rel_ops_cap_add_server => 'サーバーを追加';
+
+  @override
+  String get rel_ops_cap_probe => '接続テスト';
+
+  @override
+  String get rel_ops_cap_probe_failed => '接続テストに失敗しました。';
+
+  @override
+  String get rel_ops_cap_logs => 'ログ';
+
+  @override
+  String get rel_ops_cap_mcp_log => 'MCP ログ';
+
+  @override
+  String get rel_ops_cap_connector => 'コネクター';
+
+  @override
+  String get rel_ops_cap_account_alias => 'アカウントの別名';
+
+  @override
+  String get rel_ops_cap_link_account => 'アカウントを連携';
+
+  @override
+  String get rel_ops_cap_remove_account => 'アカウントを削除';
+
+  @override
+  String get rel_ops_cap_tool_connector => 'ツールコネクター';
+
+  @override
+  String get rel_ops_cap_load_tools => 'ツールを読み込む';
+
+  @override
+  String get rel_ops_cap_save_tool_grants => 'ツールの許可を保存';
+
+  @override
+  String
+  get rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged =>
+      'このポリシーにはメンバーリビジョンがないため、ツールの許可は変更されません。';
+
+  @override
+  String get rel_ops_cap_active => '使用中';
+
+  @override
+  String get rel_ops_cap_use => '使用';
+
+  @override
+  String get rel_ops_cap_run_setup => 'セットアップを実行';
+
+  @override
+  String get rel_ops_cap_terminal_backends => 'ターミナルバックエンド';
+
+  @override
+  String get rel_ops_cap_this_changes_the_terminal_backend_for_this_profile =>
+      'このプロファイルのターミナルバックエンドが変更されます。';
+
+  @override
+  String get rel_ops_cap_use_backend => 'バックエンドを使用';
+
+  @override
+  String get rel_ops_cap_select => '選択';
+
+  @override
+  String get rel_ops_cap_browser_vault => 'ブラウザー保管庫';
+
+  @override
+  String
+  get rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here =>
+      '保存されたサイトのログイン情報、住所、カード。パスワードは安全なフィールドに保持され、ここには表示されません。';
+
+  @override
+  String get rel_ops_cap_remove_saved_item => '保存済みの項目を削除';
+
+  @override
+  String get rel_ops_cap_delete_this_item => 'この項目を削除しますか？';
+
+  @override
+  String get rel_ops_cap_unlocked => 'ロック解除済み';
+
+  @override
+  String get rel_ops_cap_locked => 'ロック中';
+
+  @override
+  String get rel_ops_cap_not_detected => '未検出';
+
+  @override
+  String get rel_ops_cap_master_password => 'マスターパスワード';
+
+  @override
+  String get rel_ops_cap_login => 'ログイン情報';
+
+  @override
+  String get rel_ops_cap_address => '住所';
+
+  @override
+  String get rel_ops_cap_card => 'カード';
+
+  @override
+  String get rel_ops_cap_label => 'ラベル';
+
+  @override
+  String get rel_ops_cap_site_origin => 'サイトのオリジン';
+
+  @override
+  String get rel_ops_cap_identifier => '識別子';
+
+  @override
+  String get rel_ops_cap_password => 'パスワード';
+
+  @override
+  String get rel_ops_cap_authenticator_key => '認証キー';
+
+  @override
+  String get rel_ops_cap_street => '町名・番地';
+
+  @override
+  String get rel_ops_cap_city => '市区町村';
+
+  @override
+  String get rel_ops_cap_postal_code => '郵便番号';
+
+  @override
+  String get rel_ops_cap_country => '国・地域';
+
+  @override
+  String get rel_ops_cap_name_on_card => 'カード名義';
+
+  @override
+  String get rel_ops_cap_card_number => 'カード番号';
+
+  @override
+  String get rel_ops_cap_expiry_month => '有効期限の月';
+
+  @override
+  String get rel_ops_cap_expiry_year => '有効期限の年';
+
+  @override
+  String get rel_ops_cap_security_code => 'セキュリティコード';
+
+  @override
+  String get rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method =>
+      'このゲートウェイには共有メトリクスへの同意を設定するメソッドがありません。';
+
+  @override
+  String get rel_ops_cap_agent_policy => 'エージェントポリシー';
+
+  @override
+  String get rel_ops_cap_loading_policy => 'ポリシーを読み込み中';
+
+  @override
+  String get rel_ops_cap_approval_timeout => '承認のタイムアウト';
+
+  @override
+  String get rel_ops_cap_confirm_mcp_reloads => 'MCP の再読み込みを確認';
+
+  @override
+  String get rel_ops_cap_command_allowlist => 'コマンドの許可リスト';
+
+  @override
+  String get rel_ops_cap_file_checkpoints => 'ファイルのチェックポイント';
+
+  @override
+  String get rel_ops_cap_checkpoint_limit => 'チェックポイントの上限';
+
+  @override
+  String get rel_ops_cap_browser_private_urls => 'ブラウザーのプライベート URL';
+
+  @override
+  String get rel_ops_cap_use_my_real_browser_profile => '実際のブラウザープロファイルを使用';
+
+  @override
+  String get rel_ops_cap_save_policy => 'ポリシーを保存';
+
+  @override
+  String get rel_ops_cap_shared_metrics_for_this_profile => 'このプロファイルの共有メトリクス';
+
+  @override
+  String get rel_ops_cap_send_shared_metrics => '共有メトリクスを送信';
+
+  @override
+  String get rel_ops_cap_error_enter_a_label => 'ラベルを入力してください。';
+
+  @override
+  String get rel_ops_cap_error_enter_a_valid_url_like_https_example_com =>
+      'https://example.com のような有効な URL を入力してください。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_identifier_and_password =>
+      '識別子とパスワードを入力してください。';
+
+  @override
+  String
+  get rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code =>
+      'カード名義、番号、有効期限、セキュリティコードを入力してください。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_street_city_postal_code_and_country =>
+      '町名・番地、市区町村、郵便番号、国・地域を入力してください。';
+
+  @override
+  String
+  get rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read =>
+      'ゲートウェイから読み取れない応答が返されました。';
+
+  @override
+  String rel_ops_cap_error_the_gateway_refused_the_request_status(
+    int statusCode,
+  ) {
+    return 'ゲートウェイがリクエストを拒否しました（$statusCode）。';
+  }
+
+  @override
+  String
+  rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable(
+    String method,
+  ) {
+    return 'この接続にはゲートウェイソケットがないため、$method は使用できません。';
+  }
+
+  @override
+  String get rel_ops_cap_error_choose_a_skill => 'スキルを選択してください。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_text_was_not_returned =>
+      'スキルのテキストが返されませんでした。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_saved => 'スキルは保存されませんでした。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_archived =>
+      'スキルはアーカイブされませんでした。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_installed =>
+      'スキルはインストールされませんでした。';
+
+  @override
+  String get rel_ops_cap_error_skill_updates_did_not_start =>
+      'スキルの更新は開始されませんでした。';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_removed => 'スキルは削除されませんでした。';
+
+  @override
+  String get rel_ops_cap_error_enter_a_skill_or_plugin_identifier =>
+      'スキルまたはプラグインの識別子を入力してください。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_plugin => 'プラグインを選択してください。';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_removed =>
+      'プラグインは削除されませんでした。';
+
+  @override
+  String get rel_ops_cap_error_the_desktop_half_was_not_removed =>
+      'デスクトップ側のコンポーネントは削除されませんでした。';
+
+  @override
+  String
+  get rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key =>
+      'このゲートウェイはプラグインに安定したキーを割り当てませんでした。';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_changed =>
+      'プラグインは変更されませんでした。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_server => 'サーバーを選択してください。';
+
+  @override
+  String get rel_ops_cap_error_name_the_server => 'サーバーに名前を付けてください。';
+
+  @override
+  String get rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url =>
+      'サーバーのコマンドまたは http(s) URL を指定してください。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_toolset => 'ツールセットを選択してください。';
+
+  @override
+  String get rel_ops_cap_error_tool_backend_status_was_not_returned =>
+      'ツールバックエンドの状態が返されませんでした。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_provider => 'プロバイダーを選択してください。';
+
+  @override
+  String get rel_ops_cap_error_this_provider_has_no_setup_action =>
+      'このプロバイダーにはセットアップ操作がありません。';
+
+  @override
+  String get rel_ops_cap_error_setup_did_not_start => 'セットアップは開始されませんでした。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_terminal_backend =>
+      'ターミナルバックエンドを選択してください。';
+
+  @override
+  String get rel_ops_cap_error_name_the_connector => 'コネクターに名前を付けてください。';
+
+  @override
+  String get rel_ops_cap_error_choose_an_account => 'アカウントを選択してください。';
+
+  @override
+  String
+  get rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants =>
+      'ツールの許可を変更する前にコネクターポリシーを再読み込みしてください。';
+
+  @override
+  String get rel_ops_cap_error_choose_an_item => '項目を選択してください。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_source => 'ソースを選択してください。';
+
+  @override
+  String get rel_ops_cap_error_enter_the_master_password =>
+      'マスターパスワードを入力してください。';
+
+  @override
+  String get rel_ops_cap_error_gateway_config_was_not_returned =>
+      'ゲートウェイの設定が返されませんでした。';
+
+  @override
+  String get rel_ops_cap_error_choose_a_known_approval_mode =>
+      '既知の承認モードを選択してください。';
+
+  @override
+  String get rel_ops_cap_error_use_a_positive_limit => '上限には正の値を使用してください。';
+
+  @override
+  String get rel_ops_cap_error_the_policy_was_not_saved => 'ポリシーは保存されませんでした。';
+
+  @override
+  String get rel_ops_cap_value_manual => '手動';
+
+  @override
+  String get rel_ops_cap_value_smart => 'スマート';
+
+  @override
+  String get rel_ops_cap_value_off => 'オフ';
+
+  @override
+  String get rel_ops_cap_value_safe => '安全';
+
+  @override
+  String get rel_ops_cap_value_caution => '注意';
+
+  @override
+  String get rel_ops_cap_value_dangerous => '危険';
+
+  @override
+  String get rel_ops_cap_value_blocked => 'ブロック済み';
+
+  @override
+  String get rel_ops_cap_value_clean => '脅威なし';
+
+  @override
+  String get rel_ops_cap_value_ready => '準備完了';
+
+  @override
+  String get rel_ops_cap_value_available => '利用可能';
+
+  @override
+  String get rel_ops_cap_value_unavailable => '利用不可';
+
+  @override
+  String get rel_ops_cap_value_enabled => '有効';
+
+  @override
+  String get rel_ops_cap_value_disabled => '無効';
+
+  @override
+  String get rel_ops_cap_value_active => '使用中';
+
+  @override
+  String get rel_ops_cap_value_inactive => '未使用';
+
+  @override
+  String get rel_ops_cap_value_installed => 'インストール済み';
+
+  @override
+  String get rel_ops_cap_value_missing => '見つかりません';
+
+  @override
+  String get rel_ops_cap_value_configured => '設定済み';
+
+  @override
+  String get rel_ops_cap_value_not_configured => '未設定';
+
+  @override
+  String get rel_ops_cap_value_error => 'エラー';
+
+  @override
+  String get rel_ops_cap_value_unknown => '不明';
+
+  @override
+  String get rel_ops_cap_value_login => 'ログイン情報';
+
+  @override
+  String get rel_ops_cap_value_address => '住所';
+
+  @override
+  String get rel_ops_cap_value_payment => '支払い';
+
+  @override
+  String get rel_ops_term_connecting => '接続中…';
+
+  @override
+  String get rel_ops_term_unbound =>
+      '一致する稼働中のセッションまたはホストの作業ディレクトリがありません。先に対応するチャットを開いてください。';
+
+  @override
+  String get rel_ops_term_unsupported =>
+      'このゲートウェイはこのターミナル機能を提供していません。ローカルシェルは起動されていません。';
+
+  @override
+  String get rel_ops_term_local_pty_unavailable =>
+      '同梱のローカルPTYはこのデバイスでは利用できません。';
+
+  @override
+  String get rel_ops_term_operation_failed =>
+      'ターミナルを開くか操作することができませんでした。ホスト、認証情報、フィンガープリントを確認してください。代替シェルは起動されていません。';
+
+  @override
+  String get rel_ops_term_input_refused => '入力が拒否されました。元のチャットを開き直してください。';
+
+  @override
+  String get rel_ops_term_cancel => 'キャンセル';
+
+  @override
+  String get rel_ops_term_confirm => '確認';
+
+  @override
+  String get rel_ops_term_open_device_title => 'このデバイスでシェルを開きますか？';
+
+  @override
+  String get rel_ops_term_ssh_shell => 'SSHシェル';
+
+  @override
+  String get rel_ops_term_local_shell => 'ローカルシェル';
+
+  @override
+  String get rel_ops_term_connection_lost => '接続が失われました';
+
+  @override
+  String get rel_ops_term_shell_ended => 'シェルが終了しました';
+
+  @override
+  String get rel_ops_term_no_owner =>
+      'このチャットには認証済みのゲートウェイターミナル所有者がいません。URLまたはクラウドへのログインだけではシェルへのアクセス権は付与されません。';
+
+  @override
+  String get rel_ops_term_open_gateway_title => 'ゲートウェイのシェルを開きますか？';
+
+  @override
+  String get rel_ops_term_shell_expired => 'シェルが終了したか有効期限が切れました';
+
+  @override
+  String get rel_ops_term_disconnected => '切断済み';
+
+  @override
+  String get rel_ops_term_gateway_shell => 'ゲートウェイシェル';
+
+  @override
+  String get rel_ops_term_close_body =>
+      'このシェルを終了します。実行を続けるには、代わりにペインを非表示にしてください。';
+
+  @override
+  String get rel_ops_term_closing => '終了中…';
+
+  @override
+  String get rel_ops_term_close_unconfirmed => '終了を確認できませんでした';
+
+  @override
+  String get rel_ops_term_processes_require_chat =>
+      'エージェントプロセスには、認証済みの対応するチャットが必要です。';
+
+  @override
+  String get rel_ops_term_watching_processes =>
+      'このチャットのエージェントプロセスを監視しています。ミラー表示を閉じてもプロセスは停止しません。';
+
+  @override
+  String get rel_ops_term_paste_limit => '貼り付けは16 KiBまでです。';
+
+  @override
+  String get rel_ops_term_paste => '貼り付け';
+
+  @override
+  String get rel_ops_term_select_first => '先にターミナルの出力を選択してください。';
+
+  @override
+  String get rel_ops_term_open_chat_to_insert => '出力を挿入する前に元のチャットを開いてください。';
+
+  @override
+  String get rel_ops_term_added_to_draft => '元のチャットの下書きに追加しました。何も送信されていません。';
+
+  @override
+  String get rel_ops_term_close => '閉じる';
+
+  @override
+  String get rel_ops_term_add_selection => '選択範囲をチャットの下書きに追加';
+
+  @override
+  String get rel_ops_term_new_terminal => '新しいターミナル';
+
+  @override
+  String get rel_ops_term_gateway_terminal => 'ゲートウェイホストのターミナル';
+
+  @override
+  String get rel_ops_term_verified_ssh_terminal => '検証済みSSHターミナル';
+
+  @override
+  String get rel_ops_term_device_local_shell => 'このデバイス（ローカルシェル）';
+
+  @override
+  String get rel_ops_term_local_unavailable_mobile => 'モバイルではローカルシェルを利用できません';
+
+  @override
+  String get rel_ops_term_watch_processes => 'エージェントプロセスを監視';
+
+  @override
+  String get rel_ops_term_select_output => '出力を選択またはコピー';
+
+  @override
+  String get rel_ops_term_add_selected_output => '選択した出力をチャットの下書きに追加';
+
+  @override
+  String get rel_ops_term_review_paste => 'クリップボードからの貼り付け内容を確認';
+
+  @override
+  String get rel_ops_term_reconnect => '同じシェルに再接続';
+
+  @override
+  String get rel_ops_term_close_mirror => 'ミラー表示を閉じる';
+
+  @override
+  String get rel_ops_term_close_shell => 'シェルを閉じる';
+
+  @override
+  String get rel_ops_term_empty => '+ を選択してターミナルを開いてください。シェルが自動的に起動することはありません。';
+
+  @override
+  String get rel_ops_term_reason_stale => '古い状態';
+
+  @override
+  String get rel_ops_term_reason_mismatch => '不一致';
+
+  @override
+  String get rel_ops_term_reason_unbound => '未関連付け';
+
+  @override
+  String get rel_ops_term_reason_unsupported => '未対応';
+
+  @override
+  String get rel_ops_term_reason_denied => '拒否';
+
+  @override
+  String get rel_ops_term_reason_ineligible => '利用資格なし';
+
+  @override
+  String get rel_ops_term_reason_unavailable => '利用不可';
+
+  @override
+  String get rel_ops_term_reason_invalid => '無効';
+
+  @override
+  String get rel_ops_term_reason_insecure => '安全でない接続';
+
+  @override
+  String rel_ops_term_refused(String reason) {
+    return 'ゲートウェイがこのターミナル操作を拒否しました（$reason）。';
+  }
+
+  @override
+  String rel_ops_term_open_device_body(String connection) {
+    return 'これはAresのデバイスであり、$connectionではありません。シェルはアプリの権限を使用し、アプリのストレージで起動します。';
+  }
+
+  @override
+  String rel_ops_term_open_gateway_body(String host) {
+    return '$host上の、検証済みのチャット作業ディレクトリでシェルを起動します。これはデバイスのシェルではありません。';
+  }
+
+  @override
+  String rel_ops_term_close_tab_title(String label) {
+    return '$labelを閉じますか？';
+  }
+
+  @override
+  String rel_ops_term_read_only_status(String status) {
+    return '読み取り専用 · $status';
+  }
+
+  @override
+  String rel_ops_term_paste_title(String label) {
+    return '$labelに貼り付けますか？';
+  }
+
+  @override
+  String rel_ops_term_output_title(String label) {
+    return '出力 · $label';
+  }
+
+  @override
+  String rel_ops_term_mirror_status(String label) {
+    return '読み取り専用のプロセスミラー · $label';
+  }
+
+  @override
+  String rel_ops_term_status_label(String status, String label) {
+    return '$status · $label';
+  }
+
+  @override
+  String rel_ops_term_ssh_tab(String user, String host, int port, int number) {
+    return 'SSH $user@$host:$port · $number';
+  }
+
+  @override
+  String rel_ops_term_device_tab(int number) {
+    return 'このデバイス · $number';
+  }
+
+  @override
+  String rel_ops_term_gateway_tab(String host, int number) {
+    return 'ゲートウェイ $host · $number';
+  }
+
+  @override
+  String get rel_ops_term_earlier_output_trimmed => '[以前の出力は切り詰められました]';
+
+  @override
+  String get rel_ops_term_ssh_dialog_title => '検証済みSSHターミナルを開く';
+
+  @override
+  String get rel_ops_term_ssh_dialog_body =>
+      'ホスト管理者から独立した経路で取得したフィンガープリントを使用してください。ゲートウェイやローカルシェルではなく、新しいリモートログインセッションを開きます。';
+
+  @override
+  String get rel_ops_term_ssh_host => 'SSHホスト';
+
+  @override
+  String get rel_ops_term_ssh_port => 'ポート';
+
+  @override
+  String get rel_ops_term_ssh_user => 'ユーザー';
+
+  @override
+  String get rel_ops_term_ssh_fingerprint => 'ホスト鍵のフィンガープリント（SHA256:…）';
+
+  @override
+  String get rel_ops_term_ssh_password => 'SSHパスワード（保存されません）';
+
+  @override
+  String get rel_ops_term_connect => '接続';
+
+  @override
+  String get rel_ops_ssh_invalid_destination => 'SSHホスト、ポート、またはユーザーが無効です。';
+
+  @override
+  String get rel_ops_ssh_public_key_required =>
+      'OpenSSH Ed25519形式のホスト公開鍵が必要です。';
+
+  @override
+  String get rel_ops_ssh_invalid_public_key => 'Ed25519ホスト鍵が無効です。';
+
+  @override
+  String get rel_ops_ssh_invalid_saved_key => '保存されたホスト鍵が無効です。';
+
+  @override
+  String get rel_ops_ssh_enrollment_unverified => 'ホスト鍵の登録を検証できませんでした。';
+
+  @override
+  String get rel_ops_ssh_different_key_pinned =>
+      '別の鍵がすでに固定されています。変更を別途検証してください。';
+
+  @override
+  String get rel_ops_ssh_open_ssh_unavailable => 'システムのOpenSSHを利用できません。';
+
+  @override
+  String get rel_ops_ssh_confirm_host_key => '接続する前にホスト鍵を確認してください。';
+
+  @override
+  String get rel_ops_ssh_absolute_identity_required =>
+      '絶対パスで指定された認証鍵ファイルを選択してください。';
+
+  @override
+  String get rel_ops_ssh_invalid_remote_port => 'リモートポートが無効です。';
+
+  @override
+  String get rel_ops_ssh_preview_too_large => 'プレビューが64 KiBの上限を超えています。';
+
+  @override
+  String get rel_ops_ssh_connection_refused =>
+      'SSH接続が拒否されました。登録済みのホスト鍵、認証情報、サービスを確認してください。';
+
+  @override
+  String get rel_ops_ssh_http_not_ok => 'リモートサービスからHTTP 200が返されませんでした。';
+
+  @override
+  String get rel_ops_ssh_encoded_response => 'このプレビューはエンコードされた応答に対応していません。';
+
+  @override
+  String get rel_ops_ssh_preview_type_unsupported =>
+      'プレビューできるのはテキストとHTMLソースのみです。';
+
+  @override
+  String get rel_ops_ssh_health_unconfirmed => 'サービスからゲートウェイの正常性を確認できませんでした。';
+
+  @override
+  String get rel_ops_ssh_enroll_host_key_first => 'まずホストの公開鍵を登録してください。';
+
+  @override
+  String get rel_ops_ssh_cancel => 'キャンセル';
+
+  @override
+  String get rel_ops_ssh_confirm => '確認';
+
+  @override
+  String get rel_ops_ssh_pin_title => 'このSSHホスト鍵を固定しますか？';
+
+  @override
+  String rel_ops_ssh_pin_detail(String destination, String fingerprint) {
+    return '$destination\n$fingerprint\n独立した通信経路でホスト管理者にこのフィンガープリントを照合してください。接続は行われません。';
+  }
+
+  @override
+  String get rel_ops_ssh_host_key_pinned => 'ホスト鍵を固定しました。';
+
+  @override
+  String get rel_ops_ssh_shell_detail => '対話型ログインシェルを開きます。';
+
+  @override
+  String rel_ops_ssh_read_detail(String path, int port) {
+    return 'SSHチャネル経由でリモートの127.0.0.1:$portにある$pathを読み取ります。';
+  }
+
+  @override
+  String rel_ops_ssh_connect_title(String destination) {
+    return '$destinationに接続しますか？';
+  }
+
+  @override
+  String rel_ops_ssh_connect_detail(
+    String detail,
+    String fingerprint,
+    String authentication,
+  ) {
+    return '$detail\n$fingerprint\n$authentication';
+  }
+
+  @override
+  String get rel_ops_ssh_agent_auth => 'SSHエージェントで認証します。';
+
+  @override
+  String get rel_ops_ssh_identity_auth => '選択した認証鍵ファイルを使用します。';
+
+  @override
+  String rel_ops_ssh_gateway_responding(int port) {
+    return 'ゲートウェイがリモートのループバックポート$portで応答しています。';
+  }
+
+  @override
+  String get rel_ops_ssh_session_closed => 'SSHセッションを閉じました。';
+
+  @override
+  String get rel_ops_ssh_session_unclean => 'SSHセッションが正常に終了しませんでした。';
+
+  @override
+  String get rel_ops_ssh_operation_failed => 'SSH操作に失敗しました。接続先と認証情報を確認してください。';
+
+  @override
+  String get rel_ops_ssh_title => '検証済みSSH';
+
+  @override
+  String get rel_ops_ssh_unsupported =>
+      'このデバイスには、対応するシステムOpenSSHトランスポートがありません。固定済みゲートウェイのリレーは新しい鍵を自動的に受け入れるため、検証付きの登録には使用できません。';
+
+  @override
+  String get rel_ops_ssh_host => 'SSHホスト';
+
+  @override
+  String get rel_ops_ssh_port => 'SSHポート';
+
+  @override
+  String get rel_ops_ssh_user => 'SSHユーザー';
+
+  @override
+  String get rel_ops_ssh_identity => '認証鍵ファイル（任意。未指定の場合はSSHエージェントを使用）';
+
+  @override
+  String get rel_ops_ssh_public_key => '管理者から提供されたホスト公開鍵（ssh-ed25519）';
+
+  @override
+  String get rel_ops_ssh_review_key => 'ホスト鍵を確認';
+
+  @override
+  String get rel_ops_ssh_remote_port => 'リモートのループバックサービスポート';
+
+  @override
+  String get rel_ops_ssh_check_gateway => 'SSH経由でゲートウェイを確認';
+
+  @override
+  String get rel_ops_ssh_preview_source => 'SSH経由でソースをプレビュー';
+
+  @override
+  String get rel_ops_ssh_open_shell => 'SSHシェルを開く';
+
+  @override
+  String get rel_ops_ssh_shell_line => 'リモートシェルに送信する行';
+
+  @override
+  String get rel_ops_ssh_disconnect => 'シェルを切断';
+
+  @override
+  String get rel_ops_host_cancel => 'キャンセル';
+
+  @override
+  String get rel_ops_host_confirm => '確認';
+
+  @override
+  String get rel_ops_host_title => 'ホスト';
+
+  @override
+  String get rel_ops_host_refresh => '更新';
+
+  @override
+  String get rel_ops_host_update => 'リモートの Hermes を更新';
+
+  @override
+  String rel_ops_host_update_confirmation(String profile) {
+    return '$profile のゲートウェイホストで既存のインストールを更新します。このデバイスの Ares は更新されません。成功を示すのは対応する更新の実施記録であり、ホストに接続できる状態が続くことではありません。';
+  }
+
+  @override
+  String get rel_ops_host_update_awaiting => '対応する実施記録を待っています。更新はまだ実行中です。';
+
+  @override
+  String get rel_ops_host_receipt_success => '更新の実施記録は成功を示しています。';
+
+  @override
+  String get rel_ops_host_receipt_partial => '更新は適用されましたが、追加の手順がまだ必要です。';
+
+  @override
+  String get rel_ops_host_receipt_failed => '更新の実施記録は失敗を示しています。';
+
+  @override
+  String get rel_ops_host_receipt_refused => '更新の実施記録は拒否を示しています。';
+
+  @override
+  String get rel_ops_host_update_running => '更新はまだ実行中です。';
+
+  @override
+  String get rel_ops_host_update_unknown =>
+      '更新の結果は不明です。ゲートウェイが稼働していても、更新の成功を意味しません。';
+
+  @override
+  String get rel_ops_host_default_profile => 'ゲートウェイのデフォルトプロファイル';
+
+  @override
+  String get rel_ops_host_restart => 'リモートゲートウェイを再起動';
+
+  @override
+  String rel_ops_host_restart_shared_confirmation(String profiles) {
+    return '$profiles が共有するゲートウェイを再起動します。このゲートウェイで実行中のターンは中断されます。その後、再接続してください。接続できることは、再起動完了の証明にはなりません。';
+  }
+
+  @override
+  String rel_ops_host_restart_confirmation(String profile) {
+    return '$profile のリモートゲートウェイを再起動します。このゲートウェイで実行中のターンは中断されます。その後、再接続してください。';
+  }
+
+  @override
+  String get rel_ops_host_restart_running => '再起動コマンドはまだ実行中です。';
+
+  @override
+  String get rel_ops_host_restart_finished =>
+      '再起動コマンドが終了しました。ホストに手動で再接続してください。';
+
+  @override
+  String get rel_ops_host_restart_failed => '再起動コマンドが失敗しました。';
+
+  @override
+  String rel_ops_host_maintenance_running(String name) {
+    return '$name はまだ実行中です';
+  }
+
+  @override
+  String rel_ops_host_maintenance_finished(String name) {
+    return '$name が完了しました';
+  }
+
+  @override
+  String rel_ops_host_maintenance_failed(String name) {
+    return '$name が失敗しました';
+  }
+
+  @override
+  String get rel_ops_host_curator_paused_result => 'キュレーターを一時停止しました。';
+
+  @override
+  String get rel_ops_host_curator_resumed_result => 'キュレーターを再開しました。';
+
+  @override
+  String get rel_ops_host_reset => 'リモートのメモリファイルをリセット';
+
+  @override
+  String rel_ops_host_reset_confirmation(String targetName, String profile) {
+    return '$profile のメモリファイル $targetName を削除しますか？この操作は Ares からは元に戻せません。';
+  }
+
+  @override
+  String rel_ops_host_reset_result(String targetName, int count) {
+    return '$targetName をリセットしました。リモートファイルを $count 個削除しました。';
+  }
+
+  @override
+  String get rel_ops_host_share_not_redacted =>
+      'ホストが診断パッケージの機密情報のマスキングを確認していません。リンクは表示されません。';
+
+  @override
+  String rel_ops_host_scope(String connection, String profile) {
+    return 'これらの操作の対象は $profile のリモートゲートウェイ $connection です。このデバイスや Ares クライアントの更新は対象ではありません。';
+  }
+
+  @override
+  String rel_ops_host_health_running(String version, int count) {
+    return 'ゲートウェイプロセス稼働中 $version · $count セッション';
+  }
+
+  @override
+  String rel_ops_host_health_stopped(String version, int count) {
+    return 'ゲートウェイプロセス停止中 $version · $count セッション';
+  }
+
+  @override
+  String rel_ops_host_heartbeat_stale(num seconds) {
+    return 'ホストのハートビートが古くなっています（$seconds 秒）。';
+  }
+
+  @override
+  String get rel_ops_host_doctor => 'Doctor を実行';
+
+  @override
+  String get rel_ops_host_security_audit => 'セキュリティ監査';
+
+  @override
+  String get rel_ops_host_check_receipt => '更新の実施記録を確認';
+
+  @override
+  String get rel_ops_host_logs => 'リモートホストのログ';
+
+  @override
+  String get rel_ops_host_search_logs => 'ホストのログを検索';
+
+  @override
+  String get rel_ops_host_driver => 'リモートホストのドライバー';
+
+  @override
+  String get rel_ops_host_driver_scope =>
+      'コンピューター操作の準備状況は、ゲートウェイマシンのドライバーと OS の権限に関するもので、このデバイスのものではありません。';
+
+  @override
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  ) {
+    return '$platform · インストール済み $installed · 準備完了 $ready';
+  }
+
+  @override
+  String get rel_ops_host_null => '利用不可';
+
+  @override
+  String get rel_ops_host_true => 'はい';
+
+  @override
+  String get rel_ops_host_false => 'いいえ';
+
+  @override
+  String get rel_ops_host_curator => 'キュレーター';
+
+  @override
+  String get rel_ops_host_curator_paused => 'キュレーターは一時停止中';
+
+  @override
+  String get rel_ops_host_curator_running => 'キュレーターは実行中';
+
+  @override
+  String get rel_ops_host_no_run => '完了した実行はありません';
+
+  @override
+  String get rel_ops_host_run_curator => 'キュレーターを今すぐ実行';
+
+  @override
+  String get rel_ops_host_reset_memory => 'メモリファイルをリセット';
+
+  @override
+  String get rel_ops_host_reset_user => 'ユーザーファイルをリセット';
+
+  @override
+  String get rel_ops_host_reset_both => '両方のファイルをリセット';
+
+  @override
+  String get rel_ops_host_share_consent =>
+      'リモートホストから機密情報をマスキングした診断パッケージをアップロードすることに同意します';
+
+  @override
+  String get rel_ops_host_share => '機密情報をマスキングした診断情報を共有';
+
+  @override
+  String get rel_ops_host_update_unknown_installation =>
+      'このインストールは不明なため、更新は送信されませんでした';
+
+  @override
+  String get rel_ops_host_update_busy_installation => 'このインストールでチャットが実行中です';
+
+  @override
+  String get rel_ops_host_update_refused => 'リモート更新が拒否されました';
+
+  @override
+  String get rel_ops_host_error_stale => 'リモートワークスペース：古い状態';
+
+  @override
+  String get rel_ops_host_error_mismatch => 'リモートワークスペース：不一致';
+
+  @override
+  String get rel_ops_host_error_unbound => 'リモートワークスペース：未関連付け';
+
+  @override
+  String get rel_ops_host_error_unsupported => 'リモートワークスペース：未対応';
+
+  @override
+  String get rel_ops_host_error_denied => 'リモートワークスペース：アクセス拒否';
+
+  @override
+  String get rel_ops_host_error_ineligible => 'リモートワークスペース：対象外';
+
+  @override
+  String get rel_ops_host_error_unavailable => 'リモートワークスペース：利用不可';
+
+  @override
+  String get rel_ops_host_error_invalid => 'リモートワークスペース：無効';
+
+  @override
+  String get rel_ops_host_error_insecure => 'リモートワークスペース：安全でない接続';
+
+  @override
+  String get rel_ops_host_error_request => 'リクエストを完了できませんでした。';
 }

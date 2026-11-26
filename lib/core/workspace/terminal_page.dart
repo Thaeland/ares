@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:xterm/xterm.dart';
 
+import '../l10n/l10n.dart';
 import '../services/device_terminal.dart';
 import '../services/remote_workspace.dart' as remote;
 import 'ssh_terminal_dialog.dart';
@@ -64,7 +65,7 @@ class TerminalPage extends StatefulWidget {
 
 class _Tab {
   _Tab(this.label, this.source, {this.process});
-  final String label;
+  final String Function(BuildContext context) label;
   final TerminalChatAttachment? source;
   final String? process;
   final emulator = _ReviewedTerminal();
@@ -73,7 +74,8 @@ class _Tab {
   remote.GatewayTerminal? gateway;
   remote.WorkspacePane? pane;
   StreamSubscription<String>? subscription;
-  String status = 'Connecting…';
+  String Function(BuildContext context) status = (context) =>
+      context.sharedL10n.rel_ops_term_connecting;
   bool live = false, feeding = false;
   void feed(String s) {
     feeding = true;
@@ -100,7 +102,7 @@ class _TerminalPageState extends State<TerminalPage> {
   final tabs = <_Tab>[];
   final dismissed = <String>{};
   _Tab? active;
-  String message = '';
+  String Function(BuildContext context)? message;
   bool busy = false;
   int serial = 0;
   remote.WorkspacePane? monitorPane;
@@ -118,39 +120,64 @@ class _TerminalPageState extends State<TerminalPage> {
     }
   }
 
-  void show(String text) {
+  void show(String Function(BuildContext context) text) {
     if (current) setState(() => message = text);
   }
+
+  String failureReason(BuildContext context, remote.WorkspaceFailure reason) =>
+      switch (reason) {
+        remote.WorkspaceFailure.stale =>
+          context.sharedL10n.rel_ops_term_reason_stale,
+        remote.WorkspaceFailure.mismatch =>
+          context.sharedL10n.rel_ops_term_reason_mismatch,
+        remote.WorkspaceFailure.unbound =>
+          context.sharedL10n.rel_ops_term_reason_unbound,
+        remote.WorkspaceFailure.unsupported =>
+          context.sharedL10n.rel_ops_term_reason_unsupported,
+        remote.WorkspaceFailure.denied =>
+          context.sharedL10n.rel_ops_term_reason_denied,
+        remote.WorkspaceFailure.ineligible =>
+          context.sharedL10n.rel_ops_term_reason_ineligible,
+        remote.WorkspaceFailure.unavailable =>
+          context.sharedL10n.rel_ops_term_reason_unavailable,
+        remote.WorkspaceFailure.invalid =>
+          context.sharedL10n.rel_ops_term_reason_invalid,
+        remote.WorkspaceFailure.insecure =>
+          context.sharedL10n.rel_ops_term_reason_insecure,
+      };
 
   Future<void> run(Future<void> Function() task) async {
     if (busy || !current) return;
     setState(() {
       busy = true;
-      message = '';
+      message = null;
     });
     try {
       await task();
     } catch (e) {
-      show(switch (e) {
-        remote.WorkspaceException(reason: remote.WorkspaceFailure.unbound) =>
-          'No matching live session or host working directory. Open the owning chat first.',
-        remote.WorkspaceException(
-          reason: remote.WorkspaceFailure.unsupported,
-        ) =>
-          'This gateway does not offer this terminal capability. No local shell was started.',
-        remote.WorkspaceException() =>
-          'Gateway refused this terminal operation (${e.reason.name}).',
-        UnsupportedError() =>
-          'The packaged local PTY is unavailable on this device.',
-        _ =>
-          'Could not open or control the terminal. Check the host, credentials and fingerprint. No fallback shell was started.',
-      });
+      show(
+        (context) => switch (e) {
+          remote.WorkspaceException(reason: remote.WorkspaceFailure.unbound) =>
+            context.sharedL10n.rel_ops_term_unbound,
+          remote.WorkspaceException(
+            reason: remote.WorkspaceFailure.unsupported,
+          ) =>
+            context.sharedL10n.rel_ops_term_unsupported,
+          remote.WorkspaceException() =>
+            context.sharedL10n.rel_ops_term_refused(
+              failureReason(context, e.reason),
+            ),
+          UnsupportedError() =>
+            context.sharedL10n.rel_ops_term_local_pty_unavailable,
+          _ => context.sharedL10n.rel_ops_term_operation_failed,
+        },
+      );
     } finally {
       if (mounted) setState(() => busy = false);
     }
   }
 
-  _Tab add(String label, {String? process}) {
+  _Tab add(String Function(BuildContext context) label, {String? process}) {
     if (tabs.length >= 12) throw StateError('Tab limit');
     final tab = _Tab(label, source, process: process);
     tab.emulator.onOutput = (s) {
@@ -160,7 +187,7 @@ class _TerminalPageState extends State<TerminalPage> {
         tab.device?.write(s);
         tab.gateway?.write(s);
       } catch (_) {
-        show('Input refused. Reopen the originating chat.');
+        show((context) => context.sharedL10n.rel_ops_term_input_refused);
       }
     };
     tab.emulator.onResize = (cols, rows, _, _) {
@@ -202,11 +229,11 @@ class _TerminalPageState extends State<TerminalPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Cancel'),
+              child: Text(context.sharedL10n.rel_ops_term_cancel),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('Confirm'),
+              child: Text(context.sharedL10n.rel_ops_term_confirm),
             ),
           ],
         ),
@@ -221,18 +248,28 @@ class _TerminalPageState extends State<TerminalPage> {
             builder: (_) => const SshTerminalDialog(),
           )
         : null;
-    if (!current || !origin.current()) return;
+    if (!mounted || !current || !origin.current()) return;
     if (ssh && login == null) return;
     if (!ssh &&
         !await confirm(
-          'Open a shell on this device?',
-          'This is the Ares device, not ${origin.connection.label}. The shell uses your app permissions and starts in app storage.',
+          context.sharedL10n.rel_ops_term_open_device_title,
+          context.sharedL10n.rel_ops_term_open_device_body(
+            origin.connection.label,
+          ),
         )) {
       return;
     }
     if (!current || !origin.current()) return;
+    final number = ++serial;
     final t = add(
-      '${ssh ? 'SSH ${login!.user}@${login.host}:${login.port}' : 'This device'} · ${++serial}',
+      (context) => ssh
+          ? context.sharedL10n.rel_ops_term_ssh_tab(
+              login!.user,
+              login.host,
+              login.port,
+              number,
+            )
+          : context.sharedL10n.rel_ops_term_device_tab(number),
     );
     try {
       final dev = ssh
@@ -253,15 +290,23 @@ class _TerminalPageState extends State<TerminalPage> {
         rethrow;
       }
       t.live = true;
-      t.status = ssh ? 'SSH shell' : 'Local shell';
+      t.status = (context) => ssh
+          ? context.sharedL10n.rel_ops_term_ssh_shell
+          : context.sharedL10n.rel_ops_term_local_shell;
       t.subscription = dev.output
           .transform(const Utf8Decoder(allowMalformed: true))
           .listen(
             (s) {
               if (current && tabs.contains(t)) t.feed(s);
             },
-            onError: (Object _) => ended(t, 'Connection lost'),
-            onDone: () => ended(t, 'Shell ended'),
+            onError: (Object _) => ended(
+              t,
+              (context) => context.sharedL10n.rel_ops_term_connection_lost,
+            ),
+            onDone: () => ended(
+              t,
+              (context) => context.sharedL10n.rel_ops_term_shell_ended,
+            ),
           );
       dev.resize(t.emulator.viewWidth, t.emulator.viewHeight);
     } catch (_) {
@@ -270,7 +315,7 @@ class _TerminalPageState extends State<TerminalPage> {
     }
   }
 
-  void ended(_Tab t, String why) {
+  void ended(_Tab t, String Function(BuildContext context) why) {
     if (current && tabs.contains(t)) {
       setState(() {
         t.live = false;
@@ -282,20 +327,22 @@ class _TerminalPageState extends State<TerminalPage> {
   Future<void> startGateway() async {
     final origin = widget.target, chat = source, owner = source?.owner;
     if (owner == null || chat == null || !chat.current()) {
-      show(
-        'This chat has no authenticated gateway terminal owner. A URL or Cloud login alone does not grant a shell.',
-      );
+      show((context) => context.sharedL10n.rel_ops_term_no_owner);
       return;
     }
     final route = owner.route(storedSessionId: origin.session!.id);
     if (!await confirm(
-      'Open a gateway shell?',
-      'Start a shell on $gatewayLabel in the verified chat working directory. This is not a device shell.',
+      context.sharedL10n.rel_ops_term_open_gateway_title,
+      context.sharedL10n.rel_ops_term_open_gateway_body(gatewayLabel),
     )) {
       return;
     }
     if (!current || !origin.current() || !chat.current()) return;
-    final t = add('Gateway $gatewayLabel · ${++serial}');
+    final host = gatewayLabel;
+    final number = ++serial;
+    final t = add(
+      (context) => context.sharedL10n.rel_ops_term_gateway_tab(host, number),
+    );
     try {
       final p = t.pane = owner.pane();
       final target = await p.bind(route);
@@ -310,19 +357,26 @@ class _TerminalPageState extends State<TerminalPage> {
 
   Future<void> connect(_Tab t) async {
     check(t);
+    // The replay callback may outlive this widget; capture its display copy.
+    final trimmedNotice =
+        context.sharedL10n.rel_ops_term_earlier_output_trimmed;
     await t.gateway!.connect(
       output: t.feed,
       reset: (trimmed) {
         t.selection.clearSelection();
-        t.feed('\x1bc${trimmed ? '[Earlier output trimmed]\r\n' : ''}');
+        t.feed('\x1bc${trimmed ? '$trimmedNotice\r\n' : ''}');
       },
-      disconnected: (code) =>
-          ended(t, code == 4410 ? 'Shell ended or expired' : 'Disconnected'),
+      disconnected: (code) => ended(
+        t,
+        (context) => code == 4410
+            ? context.sharedL10n.rel_ops_term_shell_expired
+            : context.sharedL10n.rel_ops_term_disconnected,
+      ),
     );
     check(t);
     setState(() {
       t.live = true;
-      t.status = 'Gateway shell';
+      t.status = (context) => context.sharedL10n.rel_ops_term_gateway_shell;
     });
     // A trimmed replay can begin inside a full-screen program. Step one row
     // away and back so that program sees a size change, matching the host.
@@ -338,8 +392,8 @@ class _TerminalPageState extends State<TerminalPage> {
     if (t.process == null &&
         (t.live || t.gateway?.retained == true) &&
         !await confirm(
-          'Close ${t.label}?',
-          'End this shell. To keep it running, hide the pane instead.',
+          context.sharedL10n.rel_ops_term_close_tab_title(t.label(context)),
+          context.sharedL10n.rel_ops_term_close_body,
         )) {
       return;
     }
@@ -347,11 +401,14 @@ class _TerminalPageState extends State<TerminalPage> {
     // chat still being open. New input still goes through check().
     if (t.process != null) dismissed.add(t.process!);
     if (t.gateway?.retained == true) {
-      ended(t, 'Closing…');
+      ended(t, (context) => context.sharedL10n.rel_ops_term_closing);
       try {
         await t.gateway!.closeShell(requirePane: false);
       } catch (_) {
-        ended(t, 'Close not confirmed');
+        ended(
+          t,
+          (context) => context.sharedL10n.rel_ops_term_close_unconfirmed,
+        );
         rethrow;
       }
     }
@@ -361,7 +418,7 @@ class _TerminalPageState extends State<TerminalPage> {
   Future<void> monitors() async {
     final chat = source, owner = source?.owner;
     if (chat == null || owner == null || !chat.current()) {
-      show('Agent processes require the authenticated owning chat.');
+      show((context) => context.sharedL10n.rel_ops_term_processes_require_chat);
       return;
     }
     stopMonitoring?.call();
@@ -381,7 +438,9 @@ class _TerminalPageState extends State<TerminalPage> {
     _Tab? ensure(String id) {
       if (dismissed.contains(id)) return null;
       return mirror(id) ??
-          (tabs.length < 12 ? add('$gatewayLabel · $id', process: id) : null);
+          (tabs.length < 12
+              ? add((context) => '$gatewayLabel · $id', process: id)
+              : null);
     }
 
     void change(remote.ProcessChange e) {
@@ -427,7 +486,8 @@ class _TerminalPageState extends State<TerminalPage> {
       for (final r in rows) {
         final t = ensure(r.id);
         if (t != null) {
-          t.status = 'Read-only · ${r.status}';
+          t.status = (context) =>
+              context.sharedL10n.rel_ops_term_read_only_status(r.status);
           t.feed(r.tail);
         }
       }
@@ -449,9 +509,7 @@ class _TerminalPageState extends State<TerminalPage> {
         }
         change((id: id, chunk: arrived.substring(overlap)));
       }
-      show(
-        'Watching this chat’s agent processes. Closing a mirror never stops its process.',
-      );
+      show((context) => context.sharedL10n.rel_ops_term_watching_processes);
     } catch (_) {
       stop();
       rethrow;
@@ -484,10 +542,15 @@ class _TerminalPageState extends State<TerminalPage> {
     // A paste may contain a newline/escape that executes immediately. Never
     // stream a platform paste/drop to stdin without reviewing the payload.
     if (text.length > 16384) {
-      show('Paste is limited to 16 KiB.');
+      show((context) => context.sharedL10n.rel_ops_term_paste_limit);
       return;
     }
-    if (!await confirm('Paste into ${t.label}?', text)) return;
+    if (!await confirm(
+      context.sharedL10n.rel_ops_term_paste_title(t.label(context)),
+      text,
+    )) {
+      return;
+    }
     check(t);
     if (identical(active, t) && t.live) t.emulator.commitPaste(text);
   }
@@ -512,7 +575,12 @@ class _TerminalPageState extends State<TerminalPage> {
         ),
         Offset.zero & overlay.size,
       ),
-      items: const [PopupMenuItem(value: 'paste', child: Text('Paste'))],
+      items: [
+        PopupMenuItem(
+          value: 'paste',
+          child: Text(context.sharedL10n.rel_ops_term_paste),
+        ),
+      ],
     );
     if (selected == 'paste' && current) await run(() => pasteClipboard(t));
   }
@@ -520,16 +588,16 @@ class _TerminalPageState extends State<TerminalPage> {
   void insert(_Tab t, String text) {
     check(t);
     if (text.isEmpty) {
-      show('Select terminal output first.');
+      show((context) => context.sharedL10n.rel_ops_term_select_first);
       return;
     }
     final chat = t.source;
     if (chat == null || !chat.current()) {
-      show('Open the originating chat before inserting output.');
+      show((context) => context.sharedL10n.rel_ops_term_open_chat_to_insert);
       return;
     }
     chat.insert(text);
-    show('Added to the originating chat draft. Nothing was sent.');
+    show((context) => context.sharedL10n.rel_ops_term_added_to_draft);
   }
 
   Future<void> selectOutput(_Tab t) async {
@@ -539,7 +607,9 @@ class _TerminalPageState extends State<TerminalPage> {
       context: context,
       useRootNavigator: false,
       builder: (ctx) => AlertDialog(
-        title: Text('Output · ${t.label}'),
+        title: Text(
+          context.sharedL10n.rel_ops_term_output_title(t.label(context)),
+        ),
         content: SizedBox(
           width: 540,
           child: SingleChildScrollView(
@@ -553,11 +623,11 @@ class _TerminalPageState extends State<TerminalPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Close'),
+            child: Text(context.sharedL10n.rel_ops_term_close),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, selected),
-            child: const Text('Add selection to chat draft'),
+            child: Text(context.sharedL10n.rel_ops_term_add_selection),
           ),
         ],
       ),
@@ -580,58 +650,68 @@ class _TerminalPageState extends State<TerminalPage> {
         Wrap(
           children: [
             PopupMenuButton<String>(
-              tooltip: 'New terminal',
+              tooltip: context.sharedL10n.rel_ops_term_new_terminal,
               enabled: !busy && tabs.length < 12,
               icon: const Icon(Icons.add),
               onSelected: (v) => run(
                 v == 'gateway' ? startGateway : () => startDevice(v == 'ssh'),
               ),
               itemBuilder: (_) => [
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 'gateway',
-                  child: Text('Gateway host terminal'),
+                  child: Text(context.sharedL10n.rel_ops_term_gateway_terminal),
                 ),
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 'ssh',
-                  child: Text('Verified SSH terminal'),
+                  child: Text(
+                    context.sharedL10n.rel_ops_term_verified_ssh_terminal,
+                  ),
                 ),
                 PopupMenuItem(
                   value: 'local',
                   enabled: LocalTerminal.supported,
                   child: Text(
                     LocalTerminal.supported
-                        ? 'This device (local shell)'
-                        : 'Local shell unavailable on mobile',
+                        ? context.sharedL10n.rel_ops_term_device_local_shell
+                        : context
+                              .sharedL10n
+                              .rel_ops_term_local_unavailable_mobile,
                   ),
                 ),
               ],
             ),
             action(
-              'Watch agent processes',
+              context.sharedL10n.rel_ops_term_watch_processes,
               Icons.monitor_heart_outlined,
               monitors,
             ),
             if (t != null) ...[
               action(
-                'Select or copy output',
+                context.sharedL10n.rel_ops_term_select_output,
                 Icons.select_all,
                 () => selectOutput(t),
               ),
               action(
-                'Add selected output to chat draft',
+                context.sharedL10n.rel_ops_term_add_selected_output,
                 Icons.note_add_outlined,
                 () async => insert(t, t.selected),
               ),
               if (t.live && t.process == null)
                 action(
-                  'Review clipboard paste',
+                  context.sharedL10n.rel_ops_term_review_paste,
                   Icons.content_paste,
                   () => pasteClipboard(t),
                 ),
               if (!t.live && t.gateway?.retained == true)
-                action('Reconnect same shell', Icons.refresh, () => connect(t)),
+                action(
+                  context.sharedL10n.rel_ops_term_reconnect,
+                  Icons.refresh,
+                  () => connect(t),
+                ),
               action(
-                t.process != null ? 'Close mirror' : 'Close shell',
+                t.process != null
+                    ? context.sharedL10n.rel_ops_term_close_mirror
+                    : context.sharedL10n.rel_ops_term_close_shell,
                 Icons.close,
                 () => closeTab(t),
               ),
@@ -647,28 +727,29 @@ class _TerminalPageState extends State<TerminalPage> {
                 for (final tab in tabs)
                   ChoiceChip(
                     selected: tab == t,
-                    label: Text(tab.label),
+                    label: Text(tab.label(context)),
                     onSelected: (_) => setState(() => active = tab),
                   ),
               ],
             ),
           ),
-        if (message.isNotEmpty)
-          Text(message, maxLines: 4, overflow: TextOverflow.ellipsis),
+        if (message != null)
+          Text(message!(context), maxLines: 4, overflow: TextOverflow.ellipsis),
         if (busy) const LinearProgressIndicator(),
         if (t == null)
-          const Expanded(
-            child: Center(
-              child: Text(
-                'Choose + to open a terminal. No shell starts automatically.',
-              ),
-            ),
+          Expanded(
+            child: Center(child: Text(context.sharedL10n.rel_ops_term_empty)),
           )
         else ...[
           Text(
             t.process != null
-                ? 'Read-only process mirror · ${t.label}'
-                : '${t.status} · ${t.label}',
+                ? context.sharedL10n.rel_ops_term_mirror_status(
+                    t.label(context),
+                  )
+                : context.sharedL10n.rel_ops_term_status_label(
+                    t.status(context),
+                    t.label(context),
+                  ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

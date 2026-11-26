@@ -8,14 +8,34 @@ import 'package:crypto/crypto.dart';
 /// Direct OpenSSH channels. No TCP listener, proxy, `ssh -D`, inherited jump
 /// command, remote command string, forwarded agent or saved gateway bearer.
 /// A remote shell is a distinct, explicit user action and has its own child.
-class FleetSshException implements Exception {
-  const FleetSshException(this.message);
-  final String message;
-  @override
-  String toString() => message;
+enum FleetSshFailure {
+  invalidDestination,
+  publicKeyRequired,
+  invalidPublicKey,
+  invalidSavedKey,
+  enrollmentUnverified,
+  differentKeyPinned,
+  openSshUnavailable,
+  confirmHostKey,
+  absoluteIdentityRequired,
+  invalidRemotePort,
+  previewTooLarge,
+  connectionRefused,
+  httpNotOk,
+  encodedResponse,
+  previewTypeUnsupported,
+  healthUnconfirmed,
+  enrollHostKeyFirst,
 }
 
-Never _refuse(String message) => throw FleetSshException(message);
+class FleetSshException implements Exception {
+  const FleetSshException(this.reason);
+  final FleetSshFailure reason;
+  @override
+  String toString() => 'FleetSshException(${reason.name})';
+}
+
+Never _refuse(FleetSshFailure reason) => throw FleetSshException(reason);
 
 class SshDestination {
   SshDestination(this.host, this.port, this.user) {
@@ -27,7 +47,7 @@ class SshDestination {
         !RegExp(r'^[a-zA-Z0-9_][a-zA-Z0-9._-]{0,63}$').hasMatch(user) ||
         port < 1 ||
         port > 65535) {
-      _refuse('Invalid SSH host, port or user.');
+      _refuse(FleetSshFailure.invalidDestination);
     }
   }
   final String host, user;
@@ -48,7 +68,7 @@ class SshPublicKey {
     if (parts.length < 2 ||
         parts[0] != 'ssh-ed25519' ||
         !RegExp(r'^[A-Za-z0-9+/]{68}$').hasMatch(parts[1])) {
-      _refuse('An OpenSSH Ed25519 public host key is required.');
+      _refuse(FleetSshFailure.publicKeyRequired);
     }
     final bytes = base64.decode(parts[1]);
     final prefix = [0, 0, 0, 11, ...ascii.encode('ssh-ed25519'), 0, 0, 0, 32];
@@ -57,7 +77,7 @@ class SshPublicKey {
           prefix.length,
           (i) => bytes[i] == prefix[i],
         ).every((b) => b)) {
-      _refuse('Invalid Ed25519 host key.');
+      _refuse(FleetSshFailure.invalidPublicKey);
     }
     return SshPublicKey._(
       parts[1],
@@ -85,9 +105,9 @@ class FleetSsh {
     // An empty pin is an enrollment interrupted between exclusive creation
     // and the write. It pins nothing, so the host is still unenrolled.
     if (s.isEmpty) return null;
-    if (!s.startsWith('ares-pinned ')) _refuse('Invalid saved host key.');
+    if (!s.startsWith('ares-pinned ')) _refuse(FleetSshFailure.invalidSavedKey);
     final key = SshPublicKey.parse(s.substring('ares-pinned '.length));
-    if (s != key.line) _refuse('Invalid saved host key.');
+    if (s != key.line) _refuse(FleetSshFailure.invalidSavedKey);
     return key;
   }
 
@@ -126,8 +146,8 @@ class FleetSsh {
     }
     final existing = await enrolled(d);
     if (existing?.encoded == key.encoded) return;
-    if (existing == null) _refuse('Could not verify host-key enrollment.');
-    _refuse('A different key is already pinned. Verify the change separately.');
+    if (existing == null) _refuse(FleetSshFailure.enrollmentUnverified);
+    _refuse(FleetSshFailure.differentKeyPinned);
   }
 
   Future<Process> _start(
@@ -136,15 +156,15 @@ class FleetSsh {
     String? identity,
   }) async {
     if (!supported || !await File(_binary).exists()) {
-      _refuse('System OpenSSH is unavailable.');
+      _refuse(FleetSshFailure.openSshUnavailable);
     }
     if (await enrolled(d) == null) {
-      _refuse('Confirm the host key before connecting.');
+      _refuse(FleetSshFailure.confirmHostKey);
     }
     if (identity != null &&
         (!File(identity).isAbsolute ||
             identity.contains(RegExp(r'[\x00-\x1f%]')))) {
-      _refuse('Select an absolute identity file.');
+      _refuse(FleetSshFailure.absoluteIdentityRequired);
     }
     final env = Platform.environment;
     return Process.start(
@@ -215,9 +235,10 @@ class FleetSsh {
     SshDestination d, {
     required bool preview,
     required int port,
+    required String Function(int port) healthMessage,
     String? identity,
   }) async {
-    if (port < 1 || port > 65535) _refuse('Invalid remote port.');
+    if (port < 1 || port > 65535) _refuse(FleetSshFailure.invalidRemotePort);
     final p = await _start(d, [
       '-T',
       '-W',
@@ -233,14 +254,12 @@ class FleetSsh {
       await p.stdin.flush();
       await for (final chunk in p.stdout) {
         if (bytes.length + chunk.length > 65536) {
-          _refuse('Preview exceeds the 64 KiB limit.');
+          _refuse(FleetSshFailure.previewTooLarge);
         }
         bytes.add(chunk);
       }
       if (await p.exitCode != 0) {
-        _refuse(
-          'SSH connection refused. Check the enrolled host key, identity and service.',
-        );
+        _refuse(FleetSshFailure.connectionRefused);
       }
       final raw = bytes.takeBytes();
       final s = latin1.decode(raw);
@@ -248,7 +267,7 @@ class FleetSsh {
       if (i < 0 ||
           i > 8192 ||
           !RegExp(r'^HTTP/1\.[01] 200(?: |\r)').hasMatch(s)) {
-        _refuse('The remote service did not return HTTP 200.');
+        _refuse(FleetSshFailure.httpNotOk);
       }
       final headers = s.substring(0, i).toLowerCase().split('\r\n');
       if (headers.any(
@@ -256,7 +275,7 @@ class FleetSsh {
             l.startsWith('transfer-encoding:') ||
             l.startsWith('content-encoding:'),
       )) {
-        _refuse('Encoded responses are not supported by this preview.');
+        _refuse(FleetSshFailure.encodedResponse);
       }
       final body = utf8.decode(raw.sublist(i + 4));
       if (preview) {
@@ -265,15 +284,15 @@ class FleetSsh {
             r'^content-type:\s*text/(plain|html)(?:\s*;|$)',
           ).hasMatch(l),
         )) {
-          _refuse('Only text and HTML source can be previewed.');
+          _refuse(FleetSshFailure.previewTypeUnsupported);
         }
         return body;
       }
       final value = jsonDecode(body);
       if (value is! Map || value['ok'] != true) {
-        _refuse('The service did not confirm gateway health.');
+        _refuse(FleetSshFailure.healthUnconfirmed);
       }
-      return 'Gateway is responding on remote loopback port $port.';
+      return healthMessage(port);
     } finally {
       timer.cancel();
       p.kill();

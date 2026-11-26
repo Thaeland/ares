@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
 import '../services/connection_manager.dart';
 import '../services/remote_workspace.dart';
 
@@ -22,6 +23,7 @@ class HostOperationsScreen extends StatefulWidget {
 }
 
 class _HostOperationsScreenState extends State<HostOperationsScreen> {
+  // These are log identifiers and wire-level severity tokens, not UI labels.
   static const _files = ['agent', 'errors', 'gateway', 'desktop'];
   WorkspacePane? _pane;
   WorkspaceTarget? _target;
@@ -30,8 +32,10 @@ class _HostOperationsScreenState extends State<HostOperationsScreen> {
   final _search = TextEditingController();
   var _consent = false;
   var _busy = false;
-  String? _error;
-  String _output = '';
+  Object? _error;
+  // Resolve at render time, including when the locale changes after an action.
+  // Async operations (and _open from initState) never read inherited strings.
+  String Function(AppLocalizations)? _output;
   RemoteHostStatus? _status;
   RemoteHostLogs? _logs;
   HostUpdateEligibility? _eligibility;
@@ -63,6 +67,8 @@ class _HostOperationsScreenState extends State<HostOperationsScreen> {
   }
 
   Future<void> _open() async {
+    // Snapshot input before awaiting: its controller may be disposed meanwhile.
+    final search = _search.text.trim();
     setState(() {
       _busy = true;
       _error = null;
@@ -73,7 +79,7 @@ class _HostOperationsScreenState extends State<HostOperationsScreen> {
       final logs = await target.hostLogs(
         file: _file,
         level: _level,
-        search: _search.text.trim().isEmpty ? null : _search.text.trim(),
+        search: search.isEmpty ? null : search,
       );
       final eligibility = await target.updateEligibility();
       final computer = await target.computerUse();
@@ -87,10 +93,42 @@ class _HostOperationsScreenState extends State<HostOperationsScreen> {
         _curator = curator;
       });
     } catch (error) {
-      if (mounted) setState(() => _error = '$error');
+      if (mounted) setState(() => _error = error);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
+  }
+
+  String _errorText(AppLocalizations l, Object error) {
+    // Do not surface client service exception prose or raw FormatExceptions.
+    // WorkspaceException exposes the structured reason without server text.
+    if (error is WorkspaceException) {
+      return switch (error.reason) {
+        WorkspaceFailure.stale => l.rel_ops_host_error_stale,
+        WorkspaceFailure.mismatch => l.rel_ops_host_error_mismatch,
+        WorkspaceFailure.unbound => l.rel_ops_host_error_unbound,
+        WorkspaceFailure.unsupported => l.rel_ops_host_error_unsupported,
+        WorkspaceFailure.denied => l.rel_ops_host_error_denied,
+        WorkspaceFailure.ineligible => l.rel_ops_host_error_ineligible,
+        WorkspaceFailure.unavailable => l.rel_ops_host_error_unavailable,
+        WorkspaceFailure.invalid => l.rel_ops_host_error_invalid,
+        WorkspaceFailure.insecure => l.rel_ops_host_error_insecure,
+      };
+    }
+    return l.rel_ops_host_error_request;
+  }
+
+  String _refusalText(AppLocalizations l, String refusal) {
+    // The service mixes local admission messages and server refusal text in
+    // this field. Map its known local fallbacks; preserve other server prose.
+    return switch (refusal) {
+      'This installation is unknown, so the update was not sent' =>
+        l.rel_ops_host_update_unknown_installation,
+      'A chat on this installation is running' =>
+        l.rel_ops_host_update_busy_installation,
+      'Remote update refused' => l.rel_ops_host_update_refused,
+      _ => refusal,
+    };
   }
 
   Future<bool> _confirm(String title, String body) async {
@@ -102,11 +140,11 @@ class _HostOperationsScreenState extends State<HostOperationsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(context.sharedL10n.rel_ops_host_cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Confirm'),
+            child: Text(context.sharedL10n.rel_ops_host_confirm),
           ),
         ],
       ),
@@ -117,18 +155,18 @@ class _HostOperationsScreenState extends State<HostOperationsScreen> {
   Future<void> _update() async {
     final eligibility = _eligibility;
     if (eligibility == null || !hostUpdateMayStart(eligibility)) return;
+    final l = context.sharedL10n;
     final agreed = await _confirm(
-      'Update remote Hermes',
-      'This starts an in-place update on the gateway host for ${widget.route.profile}. '
-          'It does not update Ares on this device. Success is the matching update receipt, '
-          'not the host staying reachable.',
+      l.rel_ops_host_update,
+      l.rel_ops_host_update_confirmation('${widget.route.profile}'),
     );
     if (!agreed) return;
     await _guard(() async {
       final target = await _bound();
       final launch = await target.startHostUpdate();
       if (launch.refused != null) {
-        _output = launch.refused!;
+        final refusal = launch.refused!;
+        _output = (l) => _refusalText(l, refusal);
         return;
       }
       await _readUpdate(target, launch.actionId!);
@@ -154,43 +192,38 @@ class _HostOperationsScreenState extends State<HostOperationsScreen> {
     final unmatched =
         status.receipt == null || status.receipt!.actionId != actionId;
     _launchedUpdate = actionId;
-    _output = unmatched && status.running
-        ? 'Awaiting matching receipt. Update is still running.'
+    _output = (l) => unmatched && status.running
+        ? l.rel_ops_host_update_awaiting
         : switch (verdict) {
-            HostUpdateVerdict.success => 'Update receipt succeeded.',
-            HostUpdateVerdict.partial =>
-              'Update committed, with follow-up steps still owed.',
-            HostUpdateVerdict.failed => 'Update receipt failed.',
-            HostUpdateVerdict.refused => 'Update receipt refused.',
-            HostUpdateVerdict.pending => 'Update is still running.',
-            HostUpdateVerdict.unknown =>
-              'Update outcome is unknown. A live gateway is not a successful update.',
+            HostUpdateVerdict.success => l.rel_ops_host_receipt_success,
+            HostUpdateVerdict.partial => l.rel_ops_host_receipt_partial,
+            HostUpdateVerdict.failed => l.rel_ops_host_receipt_failed,
+            HostUpdateVerdict.refused => l.rel_ops_host_receipt_refused,
+            HostUpdateVerdict.pending => l.rel_ops_host_update_running,
+            HostUpdateVerdict.unknown => l.rel_ops_host_update_unknown,
           };
   }
 
   Future<void> _restart() async {
     final shared = _status?.sharedWith ?? const <String>[];
-    final profile = widget.route.profile ?? 'the gateway default';
+    final l = context.sharedL10n;
+    final profile = widget.route.profile ?? l.rel_ops_host_default_profile;
     final agreed = await _confirm(
-      'Restart remote gateway',
+      l.rel_ops_host_restart,
       shared.length > 1
-          ? 'This restarts the gateway shared by ${shared.join(', ')}. '
-                'Live turns on this gateway are interrupted. '
-                'Reconnect afterwards. Reachability is not proof the restart finished.'
-          : 'This restarts the remote gateway for $profile. '
-                'Live turns on this gateway are interrupted. '
-                'Reconnect afterwards.',
+          ? l.rel_ops_host_restart_shared_confirmation(shared.join(', '))
+          : l.rel_ops_host_restart_confirmation(profile),
     );
     if (!agreed) return;
     await _guard(() async {
       final target = await _bound();
       await target.restartHost();
       final status = await target.actionStatus('gateway-restart');
-      _output = status.running
-          ? 'Restart command is still running.'
+      _output = (l) => status.running
+          ? l.rel_ops_host_restart_running
           : status.exitCode == 0
-          ? 'Restart command finished. Reconnect to the host yourself.'
-          : 'Restart command failed.';
+          ? l.rel_ops_host_restart_finished
+          : l.rel_ops_host_restart_failed;
     });
   }
 
@@ -198,12 +231,15 @@ class _HostOperationsScreenState extends State<HostOperationsScreen> {
     await _guard(() async {
       final target = await _bound();
       final status = await target.startMaintenance(name);
-      final head = status.running
-          ? '$name is still running'
-          : status.exitCode == 0
-          ? '$name finished'
-          : '$name failed';
-      _output = '$head\n${status.lines.join('\n')}';
+      _output = (l) {
+        // name is the exact command identifier; diagnostics are server output.
+        final head = status.running
+            ? l.rel_ops_host_maintenance_running(name)
+            : status.exitCode == 0
+            ? l.rel_ops_host_maintenance_finished(name)
+            : l.rel_ops_host_maintenance_failed(name);
+        return '$head\n${status.lines.join('\n')}';
+      };
     });
   }
 
@@ -211,20 +247,23 @@ class _HostOperationsScreenState extends State<HostOperationsScreen> {
     await _guard(() async {
       final target = await _bound();
       _curator = await target.setCuratorPaused(paused);
-      _output = paused ? 'Curator paused.' : 'Curator resumed.';
+      _output = (l) => paused
+          ? l.rel_ops_host_curator_paused_result
+          : l.rel_ops_host_curator_resumed_result;
     });
   }
 
   Future<void> _reset(String targetName) async {
+    final l = context.sharedL10n;
     final agreed = await _confirm(
-      'Reset remote memory files',
-      'Delete the $targetName memory file on ${widget.route.profile}? This cannot be undone from Ares.',
+      l.rel_ops_host_reset,
+      l.rel_ops_host_reset_confirmation(targetName, '${widget.route.profile}'),
     );
     if (!agreed) return;
     await _guard(() async {
       final target = await _bound();
       final deleted = await target.resetMemoryFiles(targetName);
-      _output = 'Reset $targetName. Removed ${deleted.length} remote file(s).';
+      _output = (l) => l.rel_ops_host_reset_result(targetName, deleted.length);
     });
   }
 
@@ -234,13 +273,14 @@ class _HostOperationsScreenState extends State<HostOperationsScreen> {
       final target = await _bound();
       final share = await target.shareDiagnostics(consent: true);
       if (!share.redacted) {
-        _output =
-            'The host did not confirm the bundle was redacted. No link is shown.';
+        _output = (l) => l.rel_ops_host_share_not_redacted;
         return;
       }
-      _output = share.urls.entries
+      // Bundle identifiers and URLs come from the server and remain verbatim.
+      final links = share.urls.entries
           .map((e) => '${e.key}: ${e.value}')
           .join('\n');
+      _output = (_) => links;
     });
   }
 
@@ -251,10 +291,8 @@ class _HostOperationsScreenState extends State<HostOperationsScreen> {
     });
     try {
       await action();
-    } on WorkspaceException catch (error) {
-      _error = '$error';
-    } on FormatException catch (error) {
-      _error = error.message;
+    } catch (error) {
+      if (mounted) _error = error;
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -262,15 +300,16 @@ class _HostOperationsScreenState extends State<HostOperationsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.sharedL10n;
     final scheme = Theme.of(context).colorScheme;
     final eligibility = _eligibility;
     final mayUpdate = eligibility != null && hostUpdateMayStart(eligibility);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Host'),
+        title: Text(l.rel_ops_host_title),
         actions: [
           IconButton(
-            tooltip: 'Refresh',
+            tooltip: l.rel_ops_host_refresh,
             onPressed: _busy ? null : _open,
             icon: const Icon(Icons.refresh),
           ),
@@ -280,21 +319,30 @@ class _HostOperationsScreenState extends State<HostOperationsScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           Text(
-            'These controls operate the remote gateway ${widget.connection.label} for '
-            "${widget.route.profile ?? 'the gateway default'}"
-            ', not this device and not the Ares client update.',
+            l.rel_ops_host_scope(
+              widget.connection.label,
+              widget.route.profile ?? l.rel_ops_host_default_profile,
+            ),
             style: TextStyle(color: scheme.onSurfaceVariant),
           ),
-          if (_error != null) Text(_error!, key: const Key('host-error')),
+          if (_error != null)
+            Text(_errorText(l, _error!), key: const Key('host-error')),
           if (_status != null)
             Text(
-              '${_status!.running ? 'Gateway process running' : 'Gateway process stopped'} '
-              '${_status!.version} · ${_status!.activeSessions} sessions',
+              _status!.running
+                  ? l.rel_ops_host_health_running(
+                      _status!.version,
+                      _status!.activeSessions,
+                    )
+                  : l.rel_ops_host_health_stopped(
+                      _status!.version,
+                      _status!.activeSessions,
+                    ),
               key: const Key('host-health'),
             ),
           if (_status?.heartbeatStaleSeconds != null)
             Text(
-              'Host heartbeat is stale (${_status!.heartbeatStaleSeconds}s).',
+              l.rel_ops_host_heartbeat_stale(_status!.heartbeatStaleSeconds!),
             ),
           Wrap(
             spacing: 8,
@@ -302,34 +350,36 @@ class _HostOperationsScreenState extends State<HostOperationsScreen> {
               FilledButton(
                 key: const Key('host-restart'),
                 onPressed: _busy ? null : _restart,
-                child: const Text('Restart remote gateway'),
+                child: Text(l.rel_ops_host_restart),
               ),
               FilledButton(
                 key: const Key('host-update'),
                 onPressed: _busy || !mayUpdate ? null : _update,
-                child: const Text('Update remote Hermes'),
+                child: Text(l.rel_ops_host_update),
               ),
               OutlinedButton(
                 onPressed: _busy ? null : () => _maintenance('doctor'),
-                child: const Text('Run Doctor'),
+                child: Text(l.rel_ops_host_doctor),
               ),
               OutlinedButton(
                 onPressed: _busy ? null : () => _maintenance('security-audit'),
-                child: const Text('Security audit'),
+                child: Text(l.rel_ops_host_security_audit),
               ),
             ],
           ),
+          // Eligibility message, logs, driver checks and last-run timestamp are
+          // explicit backend diagnostics, not client-authored status labels.
           if (eligibility?.message != null)
             Text(eligibility!.message!, key: const Key('host-update-message')),
-          Text(_output, key: const Key('host-output')),
+          Text(_output?.call(l) ?? '', key: const Key('host-output')),
           if (_launchedUpdate != null)
             OutlinedButton(
               key: const Key('host-update-recheck'),
               onPressed: _busy ? null : _recheckUpdate,
-              child: const Text('Check update receipt'),
+              child: Text(l.rel_ops_host_check_receipt),
             ),
           const SizedBox(height: 12),
-          const Text('Remote host logs'),
+          Text(l.rel_ops_host_logs),
           Wrap(
             spacing: 8,
             children: [
@@ -359,55 +409,65 @@ class _HostOperationsScreenState extends State<HostOperationsScreen> {
           ),
           TextField(
             controller: _search,
-            decoration: const InputDecoration(labelText: 'Search host logs'),
+            decoration: InputDecoration(labelText: l.rel_ops_host_search_logs),
             onSubmitted: (_) => _open(),
           ),
           Text(_logs?.lines.join('\n') ?? '', key: const Key('host-logs')),
           const SizedBox(height: 12),
-          const Text('Remote host driver'),
-          Text(
-            'Computer Use readiness is the gateway machine\'s driver and OS permissions, not this device.',
-          ),
+          Text(l.rel_ops_host_driver),
+          Text(l.rel_ops_host_driver_scope),
           if (_computer != null)
             Text(
-              '${_computer!.platform} · installed ${_computer!.installed} · ready ${_computer!.ready}',
+              l.rel_ops_host_computer_status(
+                _computer!.platform,
+                _computer!.installed
+                    ? l.rel_ops_host_true
+                    : l.rel_ops_host_false,
+                switch (_computer!.ready) {
+                  true => l.rel_ops_host_true,
+                  false => l.rel_ops_host_false,
+                  null => l.rel_ops_host_null,
+                },
+              ),
               key: const Key('host-computer-use'),
             ),
           for (final check in _computer?.checks ?? const [])
             Text('${check.label}: ${check.status}. ${check.message}'),
           const SizedBox(height: 12),
-          const Text('Curator'),
+          Text(l.rel_ops_host_curator),
           if (_curator != null)
             SwitchListTile(
               key: const Key('host-curator-paused'),
               title: Text(
-                _curator!.paused ? 'Curator paused' : 'Curator running',
+                _curator!.paused
+                    ? l.rel_ops_host_curator_paused
+                    : l.rel_ops_host_curator_running,
               ),
-              subtitle: Text(_curator!.lastRunAt ?? 'No completed run'),
+              subtitle: Text(_curator!.lastRunAt ?? l.rel_ops_host_no_run),
               value: _curator!.paused,
               onChanged: _busy ? null : _pauseCurator,
             ),
           OutlinedButton(
             onPressed: _busy ? null : () => _maintenance('curator-run'),
-            child: const Text('Run Curator now'),
+            child: Text(l.rel_ops_host_run_curator),
           ),
           const SizedBox(height: 12),
-          const Text('Reset remote memory files'),
+          Text(l.rel_ops_host_reset),
           Wrap(
             spacing: 8,
             children: [
               OutlinedButton(
                 key: const Key('host-reset-memory'),
                 onPressed: _busy ? null : () => _reset('memory'),
-                child: const Text('Reset memory file'),
+                child: Text(l.rel_ops_host_reset_memory),
               ),
               OutlinedButton(
                 onPressed: _busy ? null : () => _reset('user'),
-                child: const Text('Reset user file'),
+                child: Text(l.rel_ops_host_reset_user),
               ),
               OutlinedButton(
                 onPressed: _busy ? null : () => _reset('all'),
-                child: const Text('Reset both files'),
+                child: Text(l.rel_ops_host_reset_both),
               ),
             ],
           ),
@@ -417,15 +477,13 @@ class _HostOperationsScreenState extends State<HostOperationsScreen> {
             onChanged: _busy
                 ? null
                 : (value) => setState(() => _consent = value ?? false),
-            title: const Text(
-              'I agree to upload a redacted diagnostic bundle from the remote host',
-            ),
+            title: Text(l.rel_ops_host_share_consent),
             controlAffinity: ListTileControlAffinity.leading,
           ),
           FilledButton(
             key: const Key('host-share'),
             onPressed: _busy || !_consent ? null : _share,
-            child: const Text('Share redacted diagnostics'),
+            child: Text(l.rel_ops_host_share),
           ),
         ],
       ),

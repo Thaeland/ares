@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
 import 'capability_admin.dart';
 
 /// Pushes [page] and runs [release] when the route is gone.
@@ -35,14 +36,14 @@ class _CapabilityAdminScreenState extends State<CapabilityAdminScreen> {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Capabilities'),
-          bottom: const TabBar(
+          title: Text(context.sharedL10n.rel_ops_cap_capabilities),
+          bottom: TabBar(
             isScrollable: true,
             tabs: [
-              Tab(text: 'Skills'),
-              Tab(text: 'Plugins'),
-              Tab(text: 'Connectors'),
-              Tab(text: 'Backends'),
+              Tab(text: context.sharedL10n.skills),
+              Tab(text: context.sharedL10n.rel_ops_cap_plugins),
+              Tab(text: context.sharedL10n.rel_ops_cap_connectors),
+              Tab(text: context.sharedL10n.rel_ops_cap_backends),
             ],
           ),
         ),
@@ -122,7 +123,7 @@ class _SkillsTabState extends State<_SkillsTab> {
     } catch (error) {
       if (!mounted) return;
       setState(() {
-        _error = '$error';
+        _error = _capabilityError(context, error);
         _loading = false;
       });
     }
@@ -134,7 +135,7 @@ class _SkillsTabState extends State<_SkillsTab> {
       if (mounted) await _load();
     } catch (error) {
       if (!mounted) return;
-      setState(() => _error = '$error');
+      setState(() => _error = _capabilityError(context, error));
     }
   }
 
@@ -149,15 +150,15 @@ class _SkillsTabState extends State<_SkillsTab> {
       );
       if (!mounted) return;
       if (!result.installed) {
-        final verdict = result.scan.verdict;
+        final verdict = _capabilityValue(context, result.scan.verdict);
         final detail = result.scan.findings.join('; ');
         setState(() {
           _cautionFor = result.scan.caution ? requested : null;
           _error = result.scan.blocked
-              ? 'Install blocked ($verdict): $detail'
+              ? context.sharedL10n.rel_ops_cap_install_blocked(verdict, detail)
               : result.scan.caution
-              ? 'Scan verdict: $verdict. Confirm $requested before installing.'
-              : 'The gateway has not confirmed that $requested is installed.';
+              ? context.sharedL10n.rel_ops_cap_scan_confirm(verdict, requested)
+              : context.sharedL10n.rel_ops_cap_install_unconfirmed(requested);
         });
         return;
       }
@@ -169,7 +170,7 @@ class _SkillsTabState extends State<_SkillsTab> {
       await _load();
     } catch (error) {
       if (!mounted) return;
-      setState(() => _error = '$error');
+      setState(() => _error = _capabilityError(context, error));
     }
   }
 
@@ -180,7 +181,7 @@ class _SkillsTabState extends State<_SkillsTab> {
     final saved = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Edit ${skill.name}'),
+        title: Text(context.sharedL10n.rel_ops_cap_edit_skill(skill.name)),
         content: TextField(
           controller: controller,
           key: const Key('skill-editor'),
@@ -189,11 +190,11 @@ class _SkillsTabState extends State<_SkillsTab> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(context.sharedL10n.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Save skill'),
+            child: Text(context.sharedL10n.rel_ops_cap_save_skill),
           ),
         ],
       ),
@@ -209,19 +210,21 @@ class _SkillsTabState extends State<_SkillsTab> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Archive ${skill.name}?'),
-        content: const Text(
-          'The skill is archived and can be restored with hermes curator restore.',
+        title: Text(context.sharedL10n.rel_ops_cap_archive_skill(skill.name)),
+        content: Text(
+          context.sharedL10n.rel_ops_cap_archive_explanation(
+            'hermes curator restore',
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(context.sharedL10n.cancel),
           ),
           TextButton(
             key: const Key('confirm-archive'),
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Archive'),
+            child: Text(context.sharedL10n.rel_ops_cap_archive),
           ),
         ],
       ),
@@ -240,7 +243,9 @@ class _SkillsTabState extends State<_SkillsTab> {
         TextField(
           key: const Key('hub-identifier'),
           controller: _identifier,
-          decoration: const InputDecoration(labelText: 'Hub identifier'),
+          decoration: InputDecoration(
+            labelText: context.sharedL10n.rel_ops_cap_hub_identifier,
+          ),
         ),
         Wrap(
           spacing: 8,
@@ -248,18 +253,20 @@ class _SkillsTabState extends State<_SkillsTab> {
             TextButton(
               key: const Key('hub-install'),
               onPressed: () => _install(force: false),
-              child: const Text('Install'),
+              child: Text(context.sharedL10n.rel_ops_cap_install),
             ),
             if (_cautionFor != null && _identifier.text.trim() == _cautionFor)
               TextButton(
                 key: const Key('hub-force'),
                 onPressed: () => _install(force: true, identifier: _cautionFor),
-                child: Text('Install $_cautionFor anyway'),
+                child: Text(
+                  context.sharedL10n.rel_ops_cap_install_anyway(_cautionFor!),
+                ),
               ),
             TextButton(
               key: const Key('skill-update-all'),
               onPressed: () => _run(widget.admin.updateHubSkills()),
-              child: const Text('Update all'),
+              child: Text(context.sharedL10n.rel_ops_cap_update_all),
             ),
           ],
         ),
@@ -279,7 +286,9 @@ class _SkillsTabState extends State<_SkillsTab> {
                 ),
                 IconButton(
                   key: Key('skill-lock-${skill.name}'),
-                  tooltip: skill.locked ? 'Unlock' : 'Lock',
+                  tooltip: skill.locked
+                      ? context.sharedL10n.rel_ops_cap_unlock
+                      : context.sharedL10n.rel_ops_cap_lock,
                   onPressed: () => _run(
                     widget.admin.setSkillLocked(skill.name, !skill.locked),
                   ),
@@ -288,13 +297,13 @@ class _SkillsTabState extends State<_SkillsTab> {
                 if (skill.editable) ...[
                   IconButton(
                     key: Key('skill-edit-${skill.name}'),
-                    tooltip: 'Edit',
+                    tooltip: context.sharedL10n.edit,
                     onPressed: () => _edit(skill),
                     icon: const Icon(Icons.edit_outlined),
                   ),
                   IconButton(
                     key: Key('skill-archive-${skill.name}'),
-                    tooltip: 'Archive',
+                    tooltip: context.sharedL10n.rel_ops_cap_archive,
                     onPressed: () => _archive(skill),
                     icon: const Icon(Icons.archive_outlined),
                   ),
@@ -342,7 +351,7 @@ class _PluginsTabState extends State<_PluginsTab> {
       setState(() => _plugins = plugins);
     } catch (error) {
       if (!mounted) return;
-      setState(() => _notice = '$error');
+      setState(() => _notice = _capabilityError(context, error));
     }
   }
 
@@ -354,7 +363,7 @@ class _PluginsTabState extends State<_PluginsTab> {
       await action();
     } catch (error) {
       if (!mounted) return;
-      setState(() => _notice = '$error');
+      setState(() => _notice = _capabilityError(context, error));
     }
   }
 
@@ -368,10 +377,13 @@ class _PluginsTabState extends State<_PluginsTab> {
       _notice = result.ok
           ? null
           : result.consentRequired
-          ? 'This update adds capabilities. Nothing changed yet.'
+          ? context
+                .sharedL10n
+                .rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet
           : result.scanBlocked
-          ? 'The scan blocked this plugin.'
-          : (result.message ?? 'The plugin was not changed.');
+          ? context.sharedL10n.rel_ops_cap_the_scan_blocked_this_plugin
+          : (result.message ??
+                context.sharedL10n.rel_ops_cap_the_plugin_was_not_changed);
     });
     if (result.ok) await _load();
   }
@@ -380,19 +392,17 @@ class _PluginsTabState extends State<_PluginsTab> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Install $name despite the scan?'),
-        content: Text(
-          'The security scan blocked $name. This confirmation applies only to $name.',
-        ),
+        title: Text(context.sharedL10n.rel_ops_cap_install_despite_scan(name)),
+        content: Text(context.sharedL10n.rel_ops_cap_scan_warning(name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(context.sharedL10n.cancel),
           ),
           TextButton(
             key: const Key('plugin-scan-confirm'),
             onPressed: () => Navigator.pop(context, true),
-            child: Text('Install $name anyway'),
+            child: Text(context.sharedL10n.rel_ops_cap_install_anyway(name)),
           ),
         ],
       ),
@@ -413,7 +423,9 @@ class _PluginsTabState extends State<_PluginsTab> {
         TextField(
           key: const Key('plugin-identifier'),
           controller: _identifier,
-          decoration: const InputDecoration(labelText: 'Repository'),
+          decoration: InputDecoration(
+            labelText: context.sharedL10n.rel_ops_cap_repository,
+          ),
         ),
         Wrap(
           spacing: 8,
@@ -426,13 +438,13 @@ class _PluginsTabState extends State<_PluginsTab> {
                 );
                 await _show(result, _identifier.text.trim());
               }),
-              child: const Text('Install plugin'),
+              child: Text(context.sharedL10n.rel_ops_cap_install_plugin),
             ),
             TextButton(
               onPressed: () => _guard(() async {
                 await _show(await widget.admin.updateAllPlugins(), '');
               }),
-              child: const Text('Update plugins'),
+              child: Text(context.sharedL10n.rel_ops_cap_update_plugins),
             ),
             if (_pendingName != null)
               TextButton(
@@ -441,8 +453,8 @@ class _PluginsTabState extends State<_PluginsTab> {
                   final name = _pendingName!;
                   if (!_consent) {
                     setState(() {
-                      _notice =
-                          'Accepting capabilities does not override the scan of $name.';
+                      _notice = context.sharedL10n
+                          .rel_ops_cap_accept_scan_warning(name);
                     });
                     return;
                   }
@@ -454,13 +466,15 @@ class _PluginsTabState extends State<_PluginsTab> {
                     await _show(result, name);
                   });
                 },
-                child: const Text('Accept capabilities'),
+                child: Text(context.sharedL10n.rel_ops_cap_accept_capabilities),
               ),
             if (_scanBlocked && _pendingName != null)
               TextButton(
                 key: const Key('plugin-scan-review'),
                 onPressed: () => _confirmScan(_pendingName!),
-                child: Text('Review scan for $_pendingName'),
+                child: Text(
+                  context.sharedL10n.rel_ops_cap_review_scan(_pendingName!),
+                ),
               ),
           ],
         ),
@@ -469,7 +483,9 @@ class _PluginsTabState extends State<_PluginsTab> {
             title: Text(plugin.name),
             subtitle: Text(
               plugin.hasDesktopHalf
-                  ? '${plugin.description}\nFolder and preview-script grants stay in the Desktop app on that computer. Removing the plugin here does not revoke those local grants.'
+                  ? context.sharedL10n.rel_ops_cap_desktop_grants(
+                      plugin.description,
+                    )
                   : plugin.description,
             ),
             trailing: Wrap(
@@ -485,7 +501,7 @@ class _PluginsTabState extends State<_PluginsTab> {
                   ),
                 IconButton(
                   key: Key('plugin-update-${plugin.name}'),
-                  tooltip: 'Update',
+                  tooltip: context.sharedL10n.rel_ops_cap_update,
                   onPressed: () => _guard(() async {
                     await _show(
                       await widget.admin.updatePlugin(plugin.name),
@@ -496,21 +512,25 @@ class _PluginsTabState extends State<_PluginsTab> {
                 ),
                 IconButton(
                   key: Key('plugin-remove-${plugin.name}'),
-                  tooltip: 'Remove',
+                  tooltip: context.sharedL10n.ng_remove,
                   onPressed: () async {
                     final confirmed = await showDialog<bool>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: Text('Remove ${plugin.name}?'),
+                        title: Text(
+                          context.sharedL10n.rel_ops_cap_remove_plugin(
+                            plugin.name,
+                          ),
+                        ),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context, false),
-                            child: const Text('Cancel'),
+                            child: Text(context.sharedL10n.cancel),
                           ),
                           TextButton(
                             key: const Key('confirm-remove-plugin'),
                             onPressed: () => Navigator.pop(context, true),
-                            child: const Text('Remove'),
+                            child: Text(context.sharedL10n.ng_remove),
                           ),
                         ],
                       ),
@@ -534,7 +554,7 @@ class _PluginsTabState extends State<_PluginsTab> {
                 await widget.admin.removePluginDesktopHalf(plugin.name);
                 await _load();
               }),
-              child: const Text('Remove desktop half'),
+              child: Text(context.sharedL10n.rel_ops_cap_remove_desktop_half),
             ),
         ],
       ],
@@ -571,7 +591,7 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
       await action();
     } catch (error) {
       if (!mounted) return;
-      setState(() => _error = '$error');
+      setState(() => _error = _capabilityError(context, error));
     }
   }
 
@@ -598,7 +618,7 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
       if (!mounted) return;
       setState(() => _servers = servers);
     } catch (error) {
-      if (mounted) setState(() => _error = '$error');
+      if (mounted) setState(() => _error = _capabilityError(context, error));
     }
   }
 
@@ -611,17 +631,23 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
         TextField(
           key: const Key('mcp-name'),
           controller: _name,
-          decoration: const InputDecoration(labelText: 'Server name'),
+          decoration: InputDecoration(
+            labelText: context.sharedL10n.rel_ops_cap_server_name,
+          ),
         ),
         TextField(
           key: const Key('mcp-command'),
           controller: _command,
-          decoration: const InputDecoration(labelText: 'Command'),
+          decoration: InputDecoration(
+            labelText: context.sharedL10n.rel_ops_cap_command,
+          ),
         ),
         TextField(
           key: const Key('mcp-url'),
           controller: _url,
-          decoration: const InputDecoration(labelText: 'HTTP URL'),
+          decoration: InputDecoration(
+            labelText: context.sharedL10n.rel_ops_cap_http_url,
+          ),
         ),
         TextButton(
           key: const Key('mcp-add'),
@@ -635,10 +661,12 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
               _url.clear();
               await _load();
             } catch (error) {
-              if (mounted) setState(() => _error = '$error');
+              if (mounted) {
+                setState(() => _error = _capabilityError(context, error));
+              }
             }
           },
-          child: const Text('Add server'),
+          child: Text(context.sharedL10n.rel_ops_cap_add_server),
         ),
         for (final server in _servers)
           ListTile(
@@ -656,7 +684,7 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
                 ),
                 IconButton(
                   key: Key('mcp-probe-${server.name}'),
-                  tooltip: 'Probe',
+                  tooltip: context.sharedL10n.rel_ops_cap_probe,
                   onPressed: () => _guard(() async {
                     final probe = await widget.admin.probeMcpServer(
                       server.name,
@@ -664,15 +692,19 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
                     if (!mounted) return;
                     setState(() {
                       _error = probe.ok
-                          ? 'Probe ${server.name}: ${probe.tools.join(', ')}'
-                          : (probe.error ?? 'Probe failed.');
+                          ? context.sharedL10n.rel_ops_cap_probe_result(
+                              server.name,
+                              probe.tools.join(', '),
+                            )
+                          : (probe.error ??
+                                context.sharedL10n.rel_ops_cap_probe_failed);
                     });
                   }),
                   icon: const Icon(Icons.network_check),
                 ),
                 IconButton(
                   key: Key('mcp-logs-${server.name}'),
-                  tooltip: 'Logs',
+                  tooltip: context.sharedL10n.rel_ops_cap_logs,
                   onPressed: () => _guard(() async {
                     final logs = await widget.admin.mcpLogs(
                       server: server.name,
@@ -694,16 +726,20 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
             if (!mounted) return;
             setState(() => _logs = logs);
           }),
-          child: const Text('MCP log'),
+          child: Text(context.sharedL10n.rel_ops_cap_mcp_log),
         ),
         TextField(
           key: const Key('connector-slug'),
           controller: _connector,
-          decoration: const InputDecoration(labelText: 'Connector'),
+          decoration: InputDecoration(
+            labelText: context.sharedL10n.rel_ops_cap_connector,
+          ),
         ),
         TextField(
           controller: _alias,
-          decoration: const InputDecoration(labelText: 'Account alias'),
+          decoration: InputDecoration(
+            labelText: context.sharedL10n.rel_ops_cap_account_alias,
+          ),
         ),
         TextButton(
           key: const Key('connector-link'),
@@ -716,7 +752,7 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
             if (!mounted) return;
             setState(() => _accounts = accounts);
           }),
-          child: const Text('Link account'),
+          child: Text(context.sharedL10n.rel_ops_cap_link_account),
         ),
         for (final account in _accounts)
           ListTile(
@@ -726,7 +762,7 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
             subtitle: Text(account.connector),
             trailing: IconButton(
               key: Key('account-remove-${account.connectionId}'),
-              tooltip: 'Remove account',
+              tooltip: context.sharedL10n.rel_ops_cap_remove_account,
               onPressed: () => _guard(() async {
                 await widget.admin.removeConnectorAccount(account.connectionId);
                 final accounts = await widget.admin.connectorAccounts();
@@ -739,7 +775,9 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
         TextField(
           key: const Key('tool-connector'),
           controller: _toolConnector,
-          decoration: const InputDecoration(labelText: 'Tool connector'),
+          decoration: InputDecoration(
+            labelText: context.sharedL10n.rel_ops_cap_tool_connector,
+          ),
         ),
         TextButton(
           key: const Key('tool-load'),
@@ -755,7 +793,7 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
                 ..addAll(grant.disabled);
             });
           }),
-          child: const Text('Load tools'),
+          child: Text(context.sharedL10n.rel_ops_cap_load_tools),
         ),
         if (_grant != null)
           for (final tool in _grant!.tools)
@@ -790,13 +828,17 @@ class _ConnectorsTabState extends State<_ConnectorsTab> {
             }),
             child: Text(
               _grantConnector == null
-                  ? 'Save tool grants'
-                  : 'Save tool grants for $_grantConnector',
+                  ? context.sharedL10n.rel_ops_cap_save_tool_grants
+                  : context.sharedL10n.rel_ops_cap_save_tool_grants_for(
+                      _grantConnector!,
+                    ),
             ),
           ),
         if (_grant != null && _grant!.revision == null)
-          const Text(
-            'This policy has no member revision, so tool grants stay unchanged.',
+          Text(
+            context
+                .sharedL10n
+                .rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged,
           ),
       ],
     );
@@ -828,7 +870,7 @@ class _BackendsTabState extends State<_BackendsTab> {
     try {
       await action();
     } catch (error) {
-      if (mounted) setState(() => _error = '$error');
+      if (mounted) setState(() => _error = _capabilityError(context, error));
     }
   }
 
@@ -842,7 +884,7 @@ class _BackendsTabState extends State<_BackendsTab> {
         _backends = backends;
       });
     } catch (error) {
-      if (mounted) setState(() => _error = '$error');
+      if (mounted) setState(() => _error = _capabilityError(context, error));
     }
   }
 
@@ -862,13 +904,13 @@ class _BackendsTabState extends State<_BackendsTab> {
             }),
           ),
         if (_setup != null) ...[
-          Text('Backends for ${_setup!.name}'),
+          Text(context.sharedL10n.rel_ops_cap_backends_for(_setup!.name)),
           for (final provider in _setup!.providers) ...[
             ListTile(
               title: Text(provider.name),
-              subtitle: Text(provider.status),
+              subtitle: Text(_capabilityValue(context, provider.status)),
               trailing: provider.active
-                  ? const Text('Active')
+                  ? Text(context.sharedL10n.rel_ops_cap_active)
                   : TextButton(
                       key: Key('provider-${provider.name}'),
                       onPressed: () => _guard(() async {
@@ -882,7 +924,7 @@ class _BackendsTabState extends State<_BackendsTab> {
                         if (!mounted) return;
                         setState(() => _setup = setup);
                       }),
-                      child: const Text('Use'),
+                      child: Text(context.sharedL10n.rel_ops_cap_use),
                     ),
             ),
             if (provider.setupKey != null)
@@ -894,38 +936,50 @@ class _BackendsTabState extends State<_BackendsTab> {
                     provider.setupKey!,
                   );
                 }),
-                child: const Text('Run setup'),
+                child: Text(context.sharedL10n.rel_ops_cap_run_setup),
               ),
           ],
         ],
-        const Text('Terminal backends'),
+        Text(context.sharedL10n.rel_ops_cap_terminal_backends),
         for (final backend in _backends)
           ListTile(
             title: Text(backend.label),
-            subtitle: Text('${backend.status} ${backend.detail}'.trim()),
+            subtitle: Text(
+              '${_capabilityValue(context, backend.status)} ${backend.detail}'
+                  .trim(),
+            ),
             trailing: backend.active
-                ? const Text('Active')
+                ? Text(context.sharedL10n.rel_ops_cap_active)
                 : TextButton(
                     key: Key('terminal-${backend.name}'),
                     onPressed: () async {
                       final confirmed = await showDialog<bool>(
                         context: context,
                         builder: (context) => AlertDialog(
-                          title: Text('Use ${backend.label}?'),
+                          title: Text(
+                            context.sharedL10n
+                                .rel_ops_cap_use_backend_confirmation(
+                                  backend.label,
+                                ),
+                          ),
                           content: Text(
                             backend.detail.isEmpty
-                                ? 'This changes the terminal backend for this profile.'
+                                ? context
+                                      .sharedL10n
+                                      .rel_ops_cap_this_changes_the_terminal_backend_for_this_profile
                                 : backend.detail,
                           ),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(context, false),
-                              child: const Text('Cancel'),
+                              child: Text(context.sharedL10n.cancel),
                             ),
                             TextButton(
                               key: const Key('confirm-terminal'),
                               onPressed: () => Navigator.pop(context, true),
-                              child: const Text('Use backend'),
+                              child: Text(
+                                context.sharedL10n.rel_ops_cap_use_backend,
+                              ),
                             ),
                           ],
                         ),
@@ -939,7 +993,7 @@ class _BackendsTabState extends State<_BackendsTab> {
                         });
                       }
                     },
-                    child: const Text('Select'),
+                    child: Text(context.sharedL10n.rel_ops_cap_select),
                   ),
           ),
       ],
@@ -1004,7 +1058,7 @@ class _BrowserVaultScreenState extends State<BrowserVaultScreen> {
         _error = null;
       });
     } catch (error) {
-      if (mounted) setState(() => _error = '$error');
+      if (mounted) setState(() => _error = _capabilityError(context, error));
     }
   }
 
@@ -1052,40 +1106,46 @@ class _BrowserVaultScreenState extends State<BrowserVaultScreen> {
   Widget build(BuildContext context) {
     final inventory = _inventory;
     return Scaffold(
-      appBar: AppBar(title: const Text('Browser vault')),
+      appBar: AppBar(title: Text(context.sharedL10n.rel_ops_cap_browser_vault)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           if (_error != null) Text(_error!, key: const Key('vault-error')),
-          const Text(
-            'Saved site logins, addresses and cards. Passwords stay in the secure fields and are not listed here.',
+          Text(
+            context
+                .sharedL10n
+                .rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here,
           ),
           if (inventory != null)
             for (final item in inventory.items)
               ListTile(
                 title: Text(item.label),
                 subtitle: Text(
-                  '${item.kind} ${item.origin} ${item.backend}'.trim(),
+                  '${_capabilityValue(context, item.kind)} ${item.origin} ${item.backend}'
+                      .trim(),
                 ),
                 trailing: item.removable
                     ? IconButton(
                         key: Key('vault-remove-${item.id}'),
-                        tooltip: 'Remove saved item',
+                        tooltip:
+                            context.sharedL10n.rel_ops_cap_remove_saved_item,
                         onPressed: () async {
                           final confirmed = await showDialog<bool>(
                             context: context,
                             builder: (context) => AlertDialog(
-                              title: const Text('Delete this item?'),
+                              title: Text(
+                                context.sharedL10n.rel_ops_cap_delete_this_item,
+                              ),
                               actions: [
                                 TextButton(
                                   onPressed: () =>
                                       Navigator.pop(context, false),
-                                  child: const Text('Cancel'),
+                                  child: Text(context.sharedL10n.cancel),
                                 ),
                                 TextButton(
                                   key: const Key('confirm-vault-remove'),
                                   onPressed: () => Navigator.pop(context, true),
-                                  child: const Text('Delete'),
+                                  child: Text(context.sharedL10n.delete),
                                 ),
                               ],
                             ),
@@ -1106,8 +1166,10 @@ class _BrowserVaultScreenState extends State<BrowserVaultScreen> {
                 title: Text(source.label),
                 subtitle: Text(
                   source.installed
-                      ? (source.unlocked ? 'Unlocked' : 'Locked')
-                      : 'Not detected',
+                      ? (source.unlocked
+                            ? context.sharedL10n.rel_ops_cap_unlocked
+                            : context.sharedL10n.rel_ops_cap_locked)
+                      : context.sharedL10n.rel_ops_cap_not_detected,
                 ),
                 value: source.enabled,
                 onChanged: source.installed
@@ -1127,25 +1189,33 @@ class _BrowserVaultScreenState extends State<BrowserVaultScreen> {
                           final confirmed = await showDialog<bool>(
                             context: context,
                             builder: (context) => AlertDialog(
-                              title: Text('Unlock ${source.label}'),
+                              title: Text(
+                                context.sharedL10n.rel_ops_cap_unlock_source(
+                                  source.label,
+                                ),
+                              ),
                               content: TextField(
                                 key: const Key('vault-master'),
                                 controller: password,
                                 obscureText: true,
-                                decoration: const InputDecoration(
-                                  hintText: 'Master password',
+                                decoration: InputDecoration(
+                                  hintText: context
+                                      .sharedL10n
+                                      .rel_ops_cap_master_password,
                                 ),
                               ),
                               actions: [
                                 TextButton(
                                   onPressed: () =>
                                       Navigator.pop(context, false),
-                                  child: const Text('Cancel'),
+                                  child: Text(context.sharedL10n.cancel),
                                 ),
                                 TextButton(
                                   key: const Key('confirm-unlock'),
                                   onPressed: () => Navigator.pop(context, true),
-                                  child: const Text('Unlock'),
+                                  child: Text(
+                                    context.sharedL10n.rel_ops_cap_unlock,
+                                  ),
                                 ),
                               ],
                             ),
@@ -1164,17 +1234,30 @@ class _BrowserVaultScreenState extends State<BrowserVaultScreen> {
                             await _load();
                           }
                         },
-                        child: Text(source.unlocked ? 'Lock' : 'Unlock'),
+                        child: Text(
+                          source.unlocked
+                              ? context.sharedL10n.rel_ops_cap_lock
+                              : context.sharedL10n.rel_ops_cap_unlock,
+                        ),
                       )
                     : null,
               ),
           DropdownButton<String>(
             key: const Key('vault-kind'),
             value: _kind,
-            items: const [
-              DropdownMenuItem(value: 'login', child: Text('Login')),
-              DropdownMenuItem(value: 'address', child: Text('Address')),
-              DropdownMenuItem(value: 'payment', child: Text('Card')),
+            items: [
+              DropdownMenuItem(
+                value: 'login',
+                child: Text(context.sharedL10n.rel_ops_cap_login),
+              ),
+              DropdownMenuItem(
+                value: 'address',
+                child: Text(context.sharedL10n.rel_ops_cap_address),
+              ),
+              DropdownMenuItem(
+                value: 'payment',
+                child: Text(context.sharedL10n.rel_ops_cap_card),
+              ),
             ],
             onChanged: (value) {
               if (value != null) setState(() => _kind = value);
@@ -1183,75 +1266,103 @@ class _BrowserVaultScreenState extends State<BrowserVaultScreen> {
           TextField(
             key: const Key('vault-label'),
             controller: _label,
-            decoration: const InputDecoration(labelText: 'Label'),
+            decoration: InputDecoration(
+              labelText: context.sharedL10n.rel_ops_cap_label,
+            ),
           ),
           TextField(
             key: const Key('vault-origin'),
             controller: _origin,
-            decoration: const InputDecoration(labelText: 'Site origin'),
+            decoration: InputDecoration(
+              labelText: context.sharedL10n.rel_ops_cap_site_origin,
+            ),
           ),
           if (_kind == 'login') ...[
             TextField(
               key: const Key('vault-identifier'),
               controller: _identifier,
-              decoration: const InputDecoration(labelText: 'Identifier'),
+              decoration: InputDecoration(
+                labelText: context.sharedL10n.rel_ops_cap_identifier,
+              ),
             ),
             TextField(
               key: const Key('vault-password'),
               controller: _password,
               obscureText: true,
-              decoration: const InputDecoration(labelText: 'Password'),
+              decoration: InputDecoration(
+                labelText: context.sharedL10n.rel_ops_cap_password,
+              ),
             ),
             TextField(
               key: const Key('vault-otp'),
               controller: _otp,
               obscureText: true,
-              decoration: const InputDecoration(labelText: 'Authenticator key'),
+              decoration: InputDecoration(
+                labelText: context.sharedL10n.rel_ops_cap_authenticator_key,
+              ),
             ),
           ],
           if (_kind == 'address') ...[
             TextField(
               controller: _line1,
-              decoration: const InputDecoration(labelText: 'Street'),
+              decoration: InputDecoration(
+                labelText: context.sharedL10n.rel_ops_cap_street,
+              ),
             ),
             TextField(
               controller: _city,
-              decoration: const InputDecoration(labelText: 'City'),
+              decoration: InputDecoration(
+                labelText: context.sharedL10n.rel_ops_cap_city,
+              ),
             ),
             TextField(
               controller: _postal,
-              decoration: const InputDecoration(labelText: 'Postal code'),
+              decoration: InputDecoration(
+                labelText: context.sharedL10n.rel_ops_cap_postal_code,
+              ),
             ),
             TextField(
               controller: _country,
-              decoration: const InputDecoration(labelText: 'Country'),
+              decoration: InputDecoration(
+                labelText: context.sharedL10n.rel_ops_cap_country,
+              ),
             ),
           ],
           if (_kind == 'payment') ...[
             TextField(
               key: const Key('vault-card-name'),
               controller: _cardName,
-              decoration: const InputDecoration(labelText: 'Name on card'),
+              decoration: InputDecoration(
+                labelText: context.sharedL10n.rel_ops_cap_name_on_card,
+              ),
             ),
             TextField(
               key: const Key('vault-card-number'),
               controller: _cardNumber,
               obscureText: true,
-              decoration: const InputDecoration(labelText: 'Card number'),
+              decoration: InputDecoration(
+                labelText: context.sharedL10n.rel_ops_cap_card_number,
+              ),
             ),
             TextField(
               controller: _expMonth,
-              decoration: const InputDecoration(labelText: 'Expiry month'),
+              decoration: InputDecoration(
+                labelText: context.sharedL10n.rel_ops_cap_expiry_month,
+              ),
             ),
             TextField(
               controller: _expYear,
-              decoration: const InputDecoration(labelText: 'Expiry year'),
+              decoration: InputDecoration(
+                labelText: context.sharedL10n.rel_ops_cap_expiry_year,
+              ),
             ),
             TextField(
               key: const Key('vault-cvc'),
               controller: _cvc,
               obscureText: true,
-              decoration: const InputDecoration(labelText: 'Security code'),
+              decoration: InputDecoration(
+                labelText: context.sharedL10n.rel_ops_cap_security_code,
+              ),
             ),
           ],
           TextButton(
@@ -1262,12 +1373,16 @@ class _BrowserVaultScreenState extends State<BrowserVaultScreen> {
                 _clearSecrets();
                 await _load();
               } on VaultFormException catch (error) {
-                if (mounted) setState(() => _error = error.message);
+                if (mounted) {
+                  setState(() => _error = _capabilityError(context, error));
+                }
               } catch (error) {
-                if (mounted) setState(() => _error = '$error');
+                if (mounted) {
+                  setState(() => _error = _capabilityError(context, error));
+                }
               }
             },
-            child: const Text('Save'),
+            child: Text(context.sharedL10n.save),
           ),
         ],
       ),
@@ -1307,7 +1422,7 @@ class _AgentPolicyScreenState extends State<AgentPolicyScreen> {
       _limit.text = '${policy.checkpointLimit}';
       setState(() => _policy = policy);
     } catch (error) {
-      if (mounted) setState(() => _error = '$error');
+      if (mounted) setState(() => _error = _capabilityError(context, error));
     }
     try {
       final metrics = await widget.admin.sharedMetrics();
@@ -1317,8 +1432,10 @@ class _AgentPolicyScreenState extends State<AgentPolicyScreen> {
       if (!mounted) return;
       setState(() {
         _metricsNote = error.methodMissing
-            ? 'This gateway has no shared-metrics consent method.'
-            : error.message;
+            ? context
+                  .sharedL10n
+                  .rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method
+            : _capabilityError(context, error);
       });
     }
   }
@@ -1351,9 +1468,13 @@ class _AgentPolicyScreenState extends State<AgentPolicyScreen> {
   Widget build(BuildContext context) {
     final policy = _policy;
     return Scaffold(
-      appBar: AppBar(title: const Text('Agent policy')),
+      appBar: AppBar(title: Text(context.sharedL10n.rel_ops_cap_agent_policy)),
       body: policy == null
-          ? Center(child: Text(_error ?? 'Loading policy'))
+          ? Center(
+              child: Text(
+                _error ?? context.sharedL10n.rel_ops_cap_loading_policy,
+              ),
+            )
           : ListView(
               padding: const EdgeInsets.all(16),
               children: [
@@ -1363,7 +1484,10 @@ class _AgentPolicyScreenState extends State<AgentPolicyScreen> {
                   value: policy.approvalMode,
                   items: [
                     for (final mode in AgentPolicy.modes)
-                      DropdownMenuItem(value: mode, child: Text(mode)),
+                      DropdownMenuItem(
+                        value: mode,
+                        child: Text(_capabilityValue(context, mode)),
+                      ),
                   ],
                   onChanged: (mode) {
                     if (mode == null) return;
@@ -1384,13 +1508,15 @@ class _AgentPolicyScreenState extends State<AgentPolicyScreen> {
                 TextField(
                   key: const Key('approval-timeout'),
                   controller: _timeout,
-                  decoration: const InputDecoration(
-                    labelText: 'Approval timeout',
+                  decoration: InputDecoration(
+                    labelText: context.sharedL10n.rel_ops_cap_approval_timeout,
                   ),
                 ),
                 SwitchListTile(
                   key: const Key('mcp-reload-confirm'),
-                  title: const Text('Confirm MCP reloads'),
+                  title: Text(
+                    context.sharedL10n.rel_ops_cap_confirm_mcp_reloads,
+                  ),
                   value: policy.confirmMcpReload,
                   onChanged: (value) => setState(() {
                     _policy = AgentPolicy(
@@ -1409,13 +1535,13 @@ class _AgentPolicyScreenState extends State<AgentPolicyScreen> {
                   key: const Key('command-allowlist'),
                   controller: _allowlist,
                   maxLines: 4,
-                  decoration: const InputDecoration(
-                    labelText: 'Command allowlist',
+                  decoration: InputDecoration(
+                    labelText: context.sharedL10n.rel_ops_cap_command_allowlist,
                   ),
                 ),
                 SwitchListTile(
                   key: const Key('checkpoints-enabled'),
-                  title: const Text('File checkpoints'),
+                  title: Text(context.sharedL10n.rel_ops_cap_file_checkpoints),
                   value: policy.checkpointsEnabled,
                   onChanged: (value) => setState(() {
                     _policy = AgentPolicy(
@@ -1433,13 +1559,15 @@ class _AgentPolicyScreenState extends State<AgentPolicyScreen> {
                 TextField(
                   key: const Key('checkpoint-limit'),
                   controller: _limit,
-                  decoration: const InputDecoration(
-                    labelText: 'Checkpoint limit',
+                  decoration: InputDecoration(
+                    labelText: context.sharedL10n.rel_ops_cap_checkpoint_limit,
                   ),
                 ),
                 SwitchListTile(
                   key: const Key('private-urls'),
-                  title: const Text('Browser private URLs'),
+                  title: Text(
+                    context.sharedL10n.rel_ops_cap_browser_private_urls,
+                  ),
                   value: policy.browserPrivateUrls,
                   onChanged: (value) => setState(() {
                     _policy = AgentPolicy(
@@ -1456,7 +1584,9 @@ class _AgentPolicyScreenState extends State<AgentPolicyScreen> {
                 ),
                 SwitchListTile(
                   key: const Key('real-browser-profile'),
-                  title: const Text('Use my real browser profile'),
+                  title: Text(
+                    context.sharedL10n.rel_ops_cap_use_my_real_browser_profile,
+                  ),
                   value: policy.realBrowserProfile,
                   onChanged: (value) => setState(() {
                     _policy = AgentPolicy(
@@ -1479,16 +1609,24 @@ class _AgentPolicyScreenState extends State<AgentPolicyScreen> {
                     try {
                       await _save(edited);
                     } catch (error) {
-                      if (mounted) setState(() => _error = '$error');
+                      if (mounted) {
+                        setState(
+                          () => _error = _capabilityError(context, error),
+                        );
+                      }
                     }
                   },
-                  child: const Text('Save policy'),
+                  child: Text(context.sharedL10n.rel_ops_cap_save_policy),
                 ),
                 if (_metricsNote != null) Text(_metricsNote!),
                 if (_metrics != null) ...[
                   SwitchListTile(
                     key: const Key('metrics-enabled'),
-                    title: const Text('Shared metrics for this profile'),
+                    title: Text(
+                      context
+                          .sharedL10n
+                          .rel_ops_cap_shared_metrics_for_this_profile,
+                    ),
                     value: _metrics!.enabled,
                     onChanged: (enabled) async {
                       final next = await widget.admin.setSharedMetrics(
@@ -1501,7 +1639,9 @@ class _AgentPolicyScreenState extends State<AgentPolicyScreen> {
                   ),
                   SwitchListTile(
                     key: const Key('metrics-send'),
-                    title: const Text('Send shared metrics'),
+                    title: Text(
+                      context.sharedL10n.rel_ops_cap_send_shared_metrics,
+                    ),
                     value: _metrics!.send,
                     onChanged: _metrics!.enabled
                         ? (send) async {
@@ -1520,3 +1660,143 @@ class _AgentPolicyScreenState extends State<AgentPolicyScreen> {
     );
   }
 }
+
+// Gateway-authored diagnostics and unknown wire values remain unchanged.
+String _capabilityError(BuildContext context, Object error) {
+  final reason = switch (error) {
+    CapabilityException e => e.reason,
+    VaultFormException e => e.reason,
+    _ => null,
+  };
+  if (reason == null) return error.toString();
+  return switch (reason) {
+    CapabilityFailure.enterALabel =>
+      context.sharedL10n.rel_ops_cap_error_enter_a_label,
+    CapabilityFailure.enterAValidUrlLikeHttpsExampleCom =>
+      context
+          .sharedL10n
+          .rel_ops_cap_error_enter_a_valid_url_like_https_example_com,
+    CapabilityFailure.enterTheIdentifierAndPassword =>
+      context.sharedL10n.rel_ops_cap_error_enter_the_identifier_and_password,
+    CapabilityFailure.enterTheCardNameNumberExpiryAndSecurityCode =>
+      context
+          .sharedL10n
+          .rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code,
+    CapabilityFailure.enterTheStreetCityPostalCodeAndCountry =>
+      context
+          .sharedL10n
+          .rel_ops_cap_error_enter_the_street_city_postal_code_and_country,
+    CapabilityFailure.theGatewayReturnedAResponseThatCouldNotBeRead =>
+      context
+          .sharedL10n
+          .rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read,
+    CapabilityFailure.theGatewayRefusedTheRequestStatus =>
+      context.sharedL10n
+          .rel_ops_cap_error_the_gateway_refused_the_request_status(
+            (error as CapabilityException).statusCode!,
+          ),
+    CapabilityFailure.thisConnectionHasNoGatewaySocketSoMethodIsUnavailable =>
+      context.sharedL10n
+          .rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable(
+            (error as CapabilityException).method!,
+          ),
+    CapabilityFailure.chooseASkill =>
+      context.sharedL10n.rel_ops_cap_error_choose_a_skill,
+    CapabilityFailure.theSkillTextWasNotReturned =>
+      context.sharedL10n.rel_ops_cap_error_the_skill_text_was_not_returned,
+    CapabilityFailure.theSkillWasNotSaved =>
+      context.sharedL10n.rel_ops_cap_error_the_skill_was_not_saved,
+    CapabilityFailure.theSkillWasNotArchived =>
+      context.sharedL10n.rel_ops_cap_error_the_skill_was_not_archived,
+    CapabilityFailure.theSkillWasNotInstalled =>
+      context.sharedL10n.rel_ops_cap_error_the_skill_was_not_installed,
+    CapabilityFailure.skillUpdatesDidNotStart =>
+      context.sharedL10n.rel_ops_cap_error_skill_updates_did_not_start,
+    CapabilityFailure.theSkillWasNotRemoved =>
+      context.sharedL10n.rel_ops_cap_error_the_skill_was_not_removed,
+    CapabilityFailure.enterASkillOrPluginIdentifier =>
+      context.sharedL10n.rel_ops_cap_error_enter_a_skill_or_plugin_identifier,
+    CapabilityFailure.chooseAPlugin =>
+      context.sharedL10n.rel_ops_cap_error_choose_a_plugin,
+    CapabilityFailure.thePluginWasNotRemoved =>
+      context.sharedL10n.rel_ops_cap_error_the_plugin_was_not_removed,
+    CapabilityFailure.theDesktopHalfWasNotRemoved =>
+      context.sharedL10n.rel_ops_cap_error_the_desktop_half_was_not_removed,
+    CapabilityFailure.thisGatewayDidNotGiveThePluginAStableKey =>
+      context
+          .sharedL10n
+          .rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key,
+    CapabilityFailure.thePluginWasNotChanged =>
+      context.sharedL10n.rel_ops_cap_error_the_plugin_was_not_changed,
+    CapabilityFailure.chooseAServer =>
+      context.sharedL10n.rel_ops_cap_error_choose_a_server,
+    CapabilityFailure.nameTheServer =>
+      context.sharedL10n.rel_ops_cap_error_name_the_server,
+    CapabilityFailure.giveTheServerACommandOrAnHttpSUrl =>
+      context
+          .sharedL10n
+          .rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url,
+    CapabilityFailure.chooseAToolset =>
+      context.sharedL10n.rel_ops_cap_error_choose_a_toolset,
+    CapabilityFailure.toolBackendStatusWasNotReturned =>
+      context.sharedL10n.rel_ops_cap_error_tool_backend_status_was_not_returned,
+    CapabilityFailure.chooseAProvider =>
+      context.sharedL10n.rel_ops_cap_error_choose_a_provider,
+    CapabilityFailure.thisProviderHasNoSetupAction =>
+      context.sharedL10n.rel_ops_cap_error_this_provider_has_no_setup_action,
+    CapabilityFailure.setupDidNotStart =>
+      context.sharedL10n.rel_ops_cap_error_setup_did_not_start,
+    CapabilityFailure.chooseATerminalBackend =>
+      context.sharedL10n.rel_ops_cap_error_choose_a_terminal_backend,
+    CapabilityFailure.nameTheConnector =>
+      context.sharedL10n.rel_ops_cap_error_name_the_connector,
+    CapabilityFailure.chooseAnAccount =>
+      context.sharedL10n.rel_ops_cap_error_choose_an_account,
+    CapabilityFailure.reloadTheConnectorPolicyBeforeChangingToolGrants =>
+      context
+          .sharedL10n
+          .rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants,
+    CapabilityFailure.chooseAnItem =>
+      context.sharedL10n.rel_ops_cap_error_choose_an_item,
+    CapabilityFailure.chooseASource =>
+      context.sharedL10n.rel_ops_cap_error_choose_a_source,
+    CapabilityFailure.enterTheMasterPassword =>
+      context.sharedL10n.rel_ops_cap_error_enter_the_master_password,
+    CapabilityFailure.gatewayConfigWasNotReturned =>
+      context.sharedL10n.rel_ops_cap_error_gateway_config_was_not_returned,
+    CapabilityFailure.chooseAKnownApprovalMode =>
+      context.sharedL10n.rel_ops_cap_error_choose_a_known_approval_mode,
+    CapabilityFailure.useAPositiveLimit =>
+      context.sharedL10n.rel_ops_cap_error_use_a_positive_limit,
+    CapabilityFailure.thePolicyWasNotSaved =>
+      context.sharedL10n.rel_ops_cap_error_the_policy_was_not_saved,
+  };
+}
+
+String _capabilityValue(BuildContext context, String value) => switch (value) {
+  'manual' => context.sharedL10n.rel_ops_cap_value_manual,
+  'smart' => context.sharedL10n.rel_ops_cap_value_smart,
+  'off' => context.sharedL10n.rel_ops_cap_value_off,
+  'safe' => context.sharedL10n.rel_ops_cap_value_safe,
+  'caution' => context.sharedL10n.rel_ops_cap_value_caution,
+  'dangerous' => context.sharedL10n.rel_ops_cap_value_dangerous,
+  'blocked' => context.sharedL10n.rel_ops_cap_value_blocked,
+  'clean' => context.sharedL10n.rel_ops_cap_value_clean,
+  'ready' => context.sharedL10n.rel_ops_cap_value_ready,
+  'available' => context.sharedL10n.rel_ops_cap_value_available,
+  'unavailable' => context.sharedL10n.rel_ops_cap_value_unavailable,
+  'enabled' => context.sharedL10n.rel_ops_cap_value_enabled,
+  'disabled' => context.sharedL10n.rel_ops_cap_value_disabled,
+  'active' => context.sharedL10n.rel_ops_cap_value_active,
+  'inactive' => context.sharedL10n.rel_ops_cap_value_inactive,
+  'installed' => context.sharedL10n.rel_ops_cap_value_installed,
+  'missing' => context.sharedL10n.rel_ops_cap_value_missing,
+  'configured' => context.sharedL10n.rel_ops_cap_value_configured,
+  'not_configured' => context.sharedL10n.rel_ops_cap_value_not_configured,
+  'error' => context.sharedL10n.rel_ops_cap_value_error,
+  'unknown' => context.sharedL10n.rel_ops_cap_value_unknown,
+  'login' => context.sharedL10n.rel_ops_cap_value_login,
+  'address' => context.sharedL10n.rel_ops_cap_value_address,
+  'payment' => context.sharedL10n.rel_ops_cap_value_payment,
+  _ => value,
+};

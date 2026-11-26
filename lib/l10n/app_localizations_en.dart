@@ -13463,4 +13463,1248 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rel_admin_phase_undone => 'undone';
+
+  @override
+  String rel_ops_cap_install_blocked(String verdict, String detail) {
+    return 'Install blocked ($verdict): $detail';
+  }
+
+  @override
+  String rel_ops_cap_scan_confirm(String verdict, String requested) {
+    return 'Scan verdict: $verdict. Confirm $requested before installing.';
+  }
+
+  @override
+  String rel_ops_cap_install_unconfirmed(String requested) {
+    return 'The gateway has not confirmed that $requested is installed.';
+  }
+
+  @override
+  String rel_ops_cap_edit_skill(String name) {
+    return 'Edit $name';
+  }
+
+  @override
+  String rel_ops_cap_archive_skill(String name) {
+    return 'Archive $name?';
+  }
+
+  @override
+  String rel_ops_cap_archive_explanation(String command) {
+    return 'The skill is archived and can be restored with $command.';
+  }
+
+  @override
+  String rel_ops_cap_install_anyway(String name) {
+    return 'Install $name anyway';
+  }
+
+  @override
+  String rel_ops_cap_install_despite_scan(String name) {
+    return 'Install $name despite the scan?';
+  }
+
+  @override
+  String rel_ops_cap_scan_warning(String name) {
+    return 'The security scan blocked $name. This confirmation applies only to $name.';
+  }
+
+  @override
+  String rel_ops_cap_accept_scan_warning(String name) {
+    return 'Accepting capabilities does not override the scan of $name.';
+  }
+
+  @override
+  String rel_ops_cap_review_scan(String name) {
+    return 'Review scan for $name';
+  }
+
+  @override
+  String rel_ops_cap_desktop_grants(String description) {
+    return '$description\nFolder and preview-script grants stay in the Desktop app on that computer. Removing the plugin here does not revoke those local grants.';
+  }
+
+  @override
+  String rel_ops_cap_remove_plugin(String name) {
+    return 'Remove $name?';
+  }
+
+  @override
+  String rel_ops_cap_probe_result(String name, String tools) {
+    return 'Probe $name: $tools';
+  }
+
+  @override
+  String rel_ops_cap_save_tool_grants_for(String connector) {
+    return 'Save tool grants for $connector';
+  }
+
+  @override
+  String rel_ops_cap_backends_for(String name) {
+    return 'Backends for $name';
+  }
+
+  @override
+  String rel_ops_cap_use_backend_confirmation(String name) {
+    return 'Use $name?';
+  }
+
+  @override
+  String rel_ops_cap_unlock_source(String name) {
+    return 'Unlock $name';
+  }
+
+  @override
+  String get rel_ops_cap_capabilities => 'Capabilities';
+
+  @override
+  String get rel_ops_cap_plugins => 'Plugins';
+
+  @override
+  String get rel_ops_cap_connectors => 'Connectors';
+
+  @override
+  String get rel_ops_cap_backends => 'Backends';
+
+  @override
+  String get rel_ops_cap_save_skill => 'Save skill';
+
+  @override
+  String get rel_ops_cap_archive => 'Archive';
+
+  @override
+  String get rel_ops_cap_hub_identifier => 'Hub identifier';
+
+  @override
+  String get rel_ops_cap_install => 'Install';
+
+  @override
+  String get rel_ops_cap_update_all => 'Update all';
+
+  @override
+  String get rel_ops_cap_unlock => 'Unlock';
+
+  @override
+  String get rel_ops_cap_lock => 'Lock';
+
+  @override
+  String get rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet =>
+      'This update adds capabilities. Nothing changed yet.';
+
+  @override
+  String get rel_ops_cap_the_scan_blocked_this_plugin =>
+      'The scan blocked this plugin.';
+
+  @override
+  String get rel_ops_cap_the_plugin_was_not_changed =>
+      'The plugin was not changed.';
+
+  @override
+  String get rel_ops_cap_repository => 'Repository';
+
+  @override
+  String get rel_ops_cap_install_plugin => 'Install plugin';
+
+  @override
+  String get rel_ops_cap_update_plugins => 'Update plugins';
+
+  @override
+  String get rel_ops_cap_accept_capabilities => 'Accept capabilities';
+
+  @override
+  String get rel_ops_cap_update => 'Update';
+
+  @override
+  String get rel_ops_cap_remove_desktop_half => 'Remove desktop half';
+
+  @override
+  String get rel_ops_cap_server_name => 'Server name';
+
+  @override
+  String get rel_ops_cap_command => 'Command';
+
+  @override
+  String get rel_ops_cap_http_url => 'HTTP URL';
+
+  @override
+  String get rel_ops_cap_add_server => 'Add server';
+
+  @override
+  String get rel_ops_cap_probe => 'Probe';
+
+  @override
+  String get rel_ops_cap_probe_failed => 'Probe failed.';
+
+  @override
+  String get rel_ops_cap_logs => 'Logs';
+
+  @override
+  String get rel_ops_cap_mcp_log => 'MCP log';
+
+  @override
+  String get rel_ops_cap_connector => 'Connector';
+
+  @override
+  String get rel_ops_cap_account_alias => 'Account alias';
+
+  @override
+  String get rel_ops_cap_link_account => 'Link account';
+
+  @override
+  String get rel_ops_cap_remove_account => 'Remove account';
+
+  @override
+  String get rel_ops_cap_tool_connector => 'Tool connector';
+
+  @override
+  String get rel_ops_cap_load_tools => 'Load tools';
+
+  @override
+  String get rel_ops_cap_save_tool_grants => 'Save tool grants';
+
+  @override
+  String
+  get rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged =>
+      'This policy has no member revision, so tool grants stay unchanged.';
+
+  @override
+  String get rel_ops_cap_active => 'Active';
+
+  @override
+  String get rel_ops_cap_use => 'Use';
+
+  @override
+  String get rel_ops_cap_run_setup => 'Run setup';
+
+  @override
+  String get rel_ops_cap_terminal_backends => 'Terminal backends';
+
+  @override
+  String get rel_ops_cap_this_changes_the_terminal_backend_for_this_profile =>
+      'This changes the terminal backend for this profile.';
+
+  @override
+  String get rel_ops_cap_use_backend => 'Use backend';
+
+  @override
+  String get rel_ops_cap_select => 'Select';
+
+  @override
+  String get rel_ops_cap_browser_vault => 'Browser vault';
+
+  @override
+  String
+  get rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here =>
+      'Saved site logins, addresses and cards. Passwords stay in the secure fields and are not listed here.';
+
+  @override
+  String get rel_ops_cap_remove_saved_item => 'Remove saved item';
+
+  @override
+  String get rel_ops_cap_delete_this_item => 'Delete this item?';
+
+  @override
+  String get rel_ops_cap_unlocked => 'Unlocked';
+
+  @override
+  String get rel_ops_cap_locked => 'Locked';
+
+  @override
+  String get rel_ops_cap_not_detected => 'Not detected';
+
+  @override
+  String get rel_ops_cap_master_password => 'Master password';
+
+  @override
+  String get rel_ops_cap_login => 'Login';
+
+  @override
+  String get rel_ops_cap_address => 'Address';
+
+  @override
+  String get rel_ops_cap_card => 'Card';
+
+  @override
+  String get rel_ops_cap_label => 'Label';
+
+  @override
+  String get rel_ops_cap_site_origin => 'Site origin';
+
+  @override
+  String get rel_ops_cap_identifier => 'Identifier';
+
+  @override
+  String get rel_ops_cap_password => 'Password';
+
+  @override
+  String get rel_ops_cap_authenticator_key => 'Authenticator key';
+
+  @override
+  String get rel_ops_cap_street => 'Street';
+
+  @override
+  String get rel_ops_cap_city => 'City';
+
+  @override
+  String get rel_ops_cap_postal_code => 'Postal code';
+
+  @override
+  String get rel_ops_cap_country => 'Country';
+
+  @override
+  String get rel_ops_cap_name_on_card => 'Name on card';
+
+  @override
+  String get rel_ops_cap_card_number => 'Card number';
+
+  @override
+  String get rel_ops_cap_expiry_month => 'Expiry month';
+
+  @override
+  String get rel_ops_cap_expiry_year => 'Expiry year';
+
+  @override
+  String get rel_ops_cap_security_code => 'Security code';
+
+  @override
+  String get rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method =>
+      'This gateway has no shared-metrics consent method.';
+
+  @override
+  String get rel_ops_cap_agent_policy => 'Agent policy';
+
+  @override
+  String get rel_ops_cap_loading_policy => 'Loading policy';
+
+  @override
+  String get rel_ops_cap_approval_timeout => 'Approval timeout';
+
+  @override
+  String get rel_ops_cap_confirm_mcp_reloads => 'Confirm MCP reloads';
+
+  @override
+  String get rel_ops_cap_command_allowlist => 'Command allowlist';
+
+  @override
+  String get rel_ops_cap_file_checkpoints => 'File checkpoints';
+
+  @override
+  String get rel_ops_cap_checkpoint_limit => 'Checkpoint limit';
+
+  @override
+  String get rel_ops_cap_browser_private_urls => 'Browser private URLs';
+
+  @override
+  String get rel_ops_cap_use_my_real_browser_profile =>
+      'Use my real browser profile';
+
+  @override
+  String get rel_ops_cap_save_policy => 'Save policy';
+
+  @override
+  String get rel_ops_cap_shared_metrics_for_this_profile =>
+      'Shared metrics for this profile';
+
+  @override
+  String get rel_ops_cap_send_shared_metrics => 'Send shared metrics';
+
+  @override
+  String get rel_ops_cap_error_enter_a_label => 'Enter a label.';
+
+  @override
+  String get rel_ops_cap_error_enter_a_valid_url_like_https_example_com =>
+      'Enter a valid URL like https://example.com.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_identifier_and_password =>
+      'Enter the identifier and password.';
+
+  @override
+  String
+  get rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code =>
+      'Enter the card name, number, expiry and security code.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_street_city_postal_code_and_country =>
+      'Enter the street, city, postal code and country.';
+
+  @override
+  String
+  get rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read =>
+      'The gateway returned a response that could not be read.';
+
+  @override
+  String rel_ops_cap_error_the_gateway_refused_the_request_status(
+    int statusCode,
+  ) {
+    return 'The gateway refused the request ($statusCode).';
+  }
+
+  @override
+  String
+  rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable(
+    String method,
+  ) {
+    return 'This connection has no gateway socket, so $method is unavailable.';
+  }
+
+  @override
+  String get rel_ops_cap_error_choose_a_skill => 'Choose a skill.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_text_was_not_returned =>
+      'The skill text was not returned.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_saved =>
+      'The skill was not saved.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_archived =>
+      'The skill was not archived.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_installed =>
+      'The skill was not installed.';
+
+  @override
+  String get rel_ops_cap_error_skill_updates_did_not_start =>
+      'Skill updates did not start.';
+
+  @override
+  String get rel_ops_cap_error_the_skill_was_not_removed =>
+      'The skill was not removed.';
+
+  @override
+  String get rel_ops_cap_error_enter_a_skill_or_plugin_identifier =>
+      'Enter a skill or plugin identifier.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_plugin => 'Choose a plugin.';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_removed =>
+      'The plugin was not removed.';
+
+  @override
+  String get rel_ops_cap_error_the_desktop_half_was_not_removed =>
+      'The desktop half was not removed.';
+
+  @override
+  String
+  get rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key =>
+      'This gateway did not give the plugin a stable key.';
+
+  @override
+  String get rel_ops_cap_error_the_plugin_was_not_changed =>
+      'The plugin was not changed.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_server => 'Choose a server.';
+
+  @override
+  String get rel_ops_cap_error_name_the_server => 'Name the server.';
+
+  @override
+  String get rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url =>
+      'Give the server a command or an http(s) URL.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_toolset => 'Choose a toolset.';
+
+  @override
+  String get rel_ops_cap_error_tool_backend_status_was_not_returned =>
+      'Tool backend status was not returned.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_provider => 'Choose a provider.';
+
+  @override
+  String get rel_ops_cap_error_this_provider_has_no_setup_action =>
+      'This provider has no setup action.';
+
+  @override
+  String get rel_ops_cap_error_setup_did_not_start => 'Setup did not start.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_terminal_backend =>
+      'Choose a terminal backend.';
+
+  @override
+  String get rel_ops_cap_error_name_the_connector => 'Name the connector.';
+
+  @override
+  String get rel_ops_cap_error_choose_an_account => 'Choose an account.';
+
+  @override
+  String
+  get rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants =>
+      'Reload the connector policy before changing tool grants.';
+
+  @override
+  String get rel_ops_cap_error_choose_an_item => 'Choose an item.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_source => 'Choose a source.';
+
+  @override
+  String get rel_ops_cap_error_enter_the_master_password =>
+      'Enter the master password.';
+
+  @override
+  String get rel_ops_cap_error_gateway_config_was_not_returned =>
+      'Gateway config was not returned.';
+
+  @override
+  String get rel_ops_cap_error_choose_a_known_approval_mode =>
+      'Choose a known approval mode.';
+
+  @override
+  String get rel_ops_cap_error_use_a_positive_limit => 'Use a positive limit.';
+
+  @override
+  String get rel_ops_cap_error_the_policy_was_not_saved =>
+      'The policy was not saved.';
+
+  @override
+  String get rel_ops_cap_value_manual => 'manual';
+
+  @override
+  String get rel_ops_cap_value_smart => 'smart';
+
+  @override
+  String get rel_ops_cap_value_off => 'off';
+
+  @override
+  String get rel_ops_cap_value_safe => 'safe';
+
+  @override
+  String get rel_ops_cap_value_caution => 'caution';
+
+  @override
+  String get rel_ops_cap_value_dangerous => 'dangerous';
+
+  @override
+  String get rel_ops_cap_value_blocked => 'blocked';
+
+  @override
+  String get rel_ops_cap_value_clean => 'clean';
+
+  @override
+  String get rel_ops_cap_value_ready => 'ready';
+
+  @override
+  String get rel_ops_cap_value_available => 'available';
+
+  @override
+  String get rel_ops_cap_value_unavailable => 'unavailable';
+
+  @override
+  String get rel_ops_cap_value_enabled => 'enabled';
+
+  @override
+  String get rel_ops_cap_value_disabled => 'disabled';
+
+  @override
+  String get rel_ops_cap_value_active => 'active';
+
+  @override
+  String get rel_ops_cap_value_inactive => 'inactive';
+
+  @override
+  String get rel_ops_cap_value_installed => 'installed';
+
+  @override
+  String get rel_ops_cap_value_missing => 'missing';
+
+  @override
+  String get rel_ops_cap_value_configured => 'configured';
+
+  @override
+  String get rel_ops_cap_value_not_configured => 'not_configured';
+
+  @override
+  String get rel_ops_cap_value_error => 'error';
+
+  @override
+  String get rel_ops_cap_value_unknown => 'unknown';
+
+  @override
+  String get rel_ops_cap_value_login => 'login';
+
+  @override
+  String get rel_ops_cap_value_address => 'address';
+
+  @override
+  String get rel_ops_cap_value_payment => 'payment';
+
+  @override
+  String get rel_ops_term_connecting => 'Connecting…';
+
+  @override
+  String get rel_ops_term_unbound =>
+      'No matching live session or host working directory. Open the owning chat first.';
+
+  @override
+  String get rel_ops_term_unsupported =>
+      'This gateway does not offer this terminal capability. No local shell was started.';
+
+  @override
+  String get rel_ops_term_local_pty_unavailable =>
+      'The packaged local PTY is unavailable on this device.';
+
+  @override
+  String get rel_ops_term_operation_failed =>
+      'Could not open or control the terminal. Check the host, credentials and fingerprint. No fallback shell was started.';
+
+  @override
+  String get rel_ops_term_input_refused =>
+      'Input refused. Reopen the originating chat.';
+
+  @override
+  String get rel_ops_term_cancel => 'Cancel';
+
+  @override
+  String get rel_ops_term_confirm => 'Confirm';
+
+  @override
+  String get rel_ops_term_open_device_title => 'Open a shell on this device?';
+
+  @override
+  String get rel_ops_term_ssh_shell => 'SSH shell';
+
+  @override
+  String get rel_ops_term_local_shell => 'Local shell';
+
+  @override
+  String get rel_ops_term_connection_lost => 'Connection lost';
+
+  @override
+  String get rel_ops_term_shell_ended => 'Shell ended';
+
+  @override
+  String get rel_ops_term_no_owner =>
+      'This chat has no authenticated gateway terminal owner. A URL or Cloud login alone does not grant a shell.';
+
+  @override
+  String get rel_ops_term_open_gateway_title => 'Open a gateway shell?';
+
+  @override
+  String get rel_ops_term_shell_expired => 'Shell ended or expired';
+
+  @override
+  String get rel_ops_term_disconnected => 'Disconnected';
+
+  @override
+  String get rel_ops_term_gateway_shell => 'Gateway shell';
+
+  @override
+  String get rel_ops_term_close_body =>
+      'End this shell. To keep it running, hide the pane instead.';
+
+  @override
+  String get rel_ops_term_closing => 'Closing…';
+
+  @override
+  String get rel_ops_term_close_unconfirmed => 'Close not confirmed';
+
+  @override
+  String get rel_ops_term_processes_require_chat =>
+      'Agent processes require the authenticated owning chat.';
+
+  @override
+  String get rel_ops_term_watching_processes =>
+      'Watching this chat’s agent processes. Closing a mirror never stops its process.';
+
+  @override
+  String get rel_ops_term_paste_limit => 'Paste is limited to 16 KiB.';
+
+  @override
+  String get rel_ops_term_paste => 'Paste';
+
+  @override
+  String get rel_ops_term_select_first => 'Select terminal output first.';
+
+  @override
+  String get rel_ops_term_open_chat_to_insert =>
+      'Open the originating chat before inserting output.';
+
+  @override
+  String get rel_ops_term_added_to_draft =>
+      'Added to the originating chat draft. Nothing was sent.';
+
+  @override
+  String get rel_ops_term_close => 'Close';
+
+  @override
+  String get rel_ops_term_add_selection => 'Add selection to chat draft';
+
+  @override
+  String get rel_ops_term_new_terminal => 'New terminal';
+
+  @override
+  String get rel_ops_term_gateway_terminal => 'Gateway host terminal';
+
+  @override
+  String get rel_ops_term_verified_ssh_terminal => 'Verified SSH terminal';
+
+  @override
+  String get rel_ops_term_device_local_shell => 'This device (local shell)';
+
+  @override
+  String get rel_ops_term_local_unavailable_mobile =>
+      'Local shell unavailable on mobile';
+
+  @override
+  String get rel_ops_term_watch_processes => 'Watch agent processes';
+
+  @override
+  String get rel_ops_term_select_output => 'Select or copy output';
+
+  @override
+  String get rel_ops_term_add_selected_output =>
+      'Add selected output to chat draft';
+
+  @override
+  String get rel_ops_term_review_paste => 'Review clipboard paste';
+
+  @override
+  String get rel_ops_term_reconnect => 'Reconnect same shell';
+
+  @override
+  String get rel_ops_term_close_mirror => 'Close mirror';
+
+  @override
+  String get rel_ops_term_close_shell => 'Close shell';
+
+  @override
+  String get rel_ops_term_empty =>
+      'Choose + to open a terminal. No shell starts automatically.';
+
+  @override
+  String get rel_ops_term_reason_stale => 'stale';
+
+  @override
+  String get rel_ops_term_reason_mismatch => 'mismatch';
+
+  @override
+  String get rel_ops_term_reason_unbound => 'unbound';
+
+  @override
+  String get rel_ops_term_reason_unsupported => 'unsupported';
+
+  @override
+  String get rel_ops_term_reason_denied => 'denied';
+
+  @override
+  String get rel_ops_term_reason_ineligible => 'ineligible';
+
+  @override
+  String get rel_ops_term_reason_unavailable => 'unavailable';
+
+  @override
+  String get rel_ops_term_reason_invalid => 'invalid';
+
+  @override
+  String get rel_ops_term_reason_insecure => 'insecure';
+
+  @override
+  String rel_ops_term_refused(String reason) {
+    return 'Gateway refused this terminal operation ($reason).';
+  }
+
+  @override
+  String rel_ops_term_open_device_body(String connection) {
+    return 'This is the Ares device, not $connection. The shell uses your app permissions and starts in app storage.';
+  }
+
+  @override
+  String rel_ops_term_open_gateway_body(String host) {
+    return 'Start a shell on $host in the verified chat working directory. This is not a device shell.';
+  }
+
+  @override
+  String rel_ops_term_close_tab_title(String label) {
+    return 'Close $label?';
+  }
+
+  @override
+  String rel_ops_term_read_only_status(String status) {
+    return 'Read-only · $status';
+  }
+
+  @override
+  String rel_ops_term_paste_title(String label) {
+    return 'Paste into $label?';
+  }
+
+  @override
+  String rel_ops_term_output_title(String label) {
+    return 'Output · $label';
+  }
+
+  @override
+  String rel_ops_term_mirror_status(String label) {
+    return 'Read-only process mirror · $label';
+  }
+
+  @override
+  String rel_ops_term_status_label(String status, String label) {
+    return '$status · $label';
+  }
+
+  @override
+  String rel_ops_term_ssh_tab(String user, String host, int port, int number) {
+    return 'SSH $user@$host:$port · $number';
+  }
+
+  @override
+  String rel_ops_term_device_tab(int number) {
+    return 'This device · $number';
+  }
+
+  @override
+  String rel_ops_term_gateway_tab(String host, int number) {
+    return 'Gateway $host · $number';
+  }
+
+  @override
+  String get rel_ops_term_earlier_output_trimmed => '[Earlier output trimmed]';
+
+  @override
+  String get rel_ops_term_ssh_dialog_title => 'Open a verified SSH terminal';
+
+  @override
+  String get rel_ops_term_ssh_dialog_body =>
+      'Use a fingerprint obtained independently from the host administrator. This opens a new remote login, not the gateway or a local shell.';
+
+  @override
+  String get rel_ops_term_ssh_host => 'SSH host';
+
+  @override
+  String get rel_ops_term_ssh_port => 'Port';
+
+  @override
+  String get rel_ops_term_ssh_user => 'User';
+
+  @override
+  String get rel_ops_term_ssh_fingerprint => 'Host key fingerprint (SHA256:…)';
+
+  @override
+  String get rel_ops_term_ssh_password => 'SSH password (not saved)';
+
+  @override
+  String get rel_ops_term_connect => 'Connect';
+
+  @override
+  String get rel_ops_ssh_invalid_destination =>
+      'Invalid SSH host, port or user.';
+
+  @override
+  String get rel_ops_ssh_public_key_required =>
+      'An OpenSSH Ed25519 public host key is required.';
+
+  @override
+  String get rel_ops_ssh_invalid_public_key => 'Invalid Ed25519 host key.';
+
+  @override
+  String get rel_ops_ssh_invalid_saved_key => 'Invalid saved host key.';
+
+  @override
+  String get rel_ops_ssh_enrollment_unverified =>
+      'Could not verify host-key enrollment.';
+
+  @override
+  String get rel_ops_ssh_different_key_pinned =>
+      'A different key is already pinned. Verify the change separately.';
+
+  @override
+  String get rel_ops_ssh_open_ssh_unavailable =>
+      'System OpenSSH is unavailable.';
+
+  @override
+  String get rel_ops_ssh_confirm_host_key =>
+      'Confirm the host key before connecting.';
+
+  @override
+  String get rel_ops_ssh_absolute_identity_required =>
+      'Select an absolute identity file.';
+
+  @override
+  String get rel_ops_ssh_invalid_remote_port => 'Invalid remote port.';
+
+  @override
+  String get rel_ops_ssh_preview_too_large =>
+      'Preview exceeds the 64 KiB limit.';
+
+  @override
+  String get rel_ops_ssh_connection_refused =>
+      'SSH connection refused. Check the enrolled host key, identity and service.';
+
+  @override
+  String get rel_ops_ssh_http_not_ok =>
+      'The remote service did not return HTTP 200.';
+
+  @override
+  String get rel_ops_ssh_encoded_response =>
+      'Encoded responses are not supported by this preview.';
+
+  @override
+  String get rel_ops_ssh_preview_type_unsupported =>
+      'Only text and HTML source can be previewed.';
+
+  @override
+  String get rel_ops_ssh_health_unconfirmed =>
+      'The service did not confirm gateway health.';
+
+  @override
+  String get rel_ops_ssh_enroll_host_key_first =>
+      'Enroll the host’s public key first.';
+
+  @override
+  String get rel_ops_ssh_cancel => 'Cancel';
+
+  @override
+  String get rel_ops_ssh_confirm => 'Confirm';
+
+  @override
+  String get rel_ops_ssh_pin_title => 'Pin this SSH host key?';
+
+  @override
+  String rel_ops_ssh_pin_detail(String destination, String fingerprint) {
+    return '$destination\n$fingerprint\nCompare this fingerprint with the host administrator over an independent channel. No connection will be made.';
+  }
+
+  @override
+  String get rel_ops_ssh_host_key_pinned => 'Host key pinned.';
+
+  @override
+  String get rel_ops_ssh_shell_detail => 'Open an interactive login shell.';
+
+  @override
+  String rel_ops_ssh_read_detail(String path, int port) {
+    return 'Read $path on remote 127.0.0.1:$port through an SSH channel.';
+  }
+
+  @override
+  String rel_ops_ssh_connect_title(String destination) {
+    return 'Connect to $destination?';
+  }
+
+  @override
+  String rel_ops_ssh_connect_detail(
+    String detail,
+    String fingerprint,
+    String authentication,
+  ) {
+    return '$detail\n$fingerprint\n$authentication';
+  }
+
+  @override
+  String get rel_ops_ssh_agent_auth => 'Authenticate with your SSH agent.';
+
+  @override
+  String get rel_ops_ssh_identity_auth => 'Use the selected identity file.';
+
+  @override
+  String rel_ops_ssh_gateway_responding(int port) {
+    return 'Gateway is responding on remote loopback port $port.';
+  }
+
+  @override
+  String get rel_ops_ssh_session_closed => 'SSH session closed.';
+
+  @override
+  String get rel_ops_ssh_session_unclean =>
+      'SSH session ended without a clean exit.';
+
+  @override
+  String get rel_ops_ssh_operation_failed =>
+      'SSH operation failed. Check the destination and identity.';
+
+  @override
+  String get rel_ops_ssh_title => 'Verified SSH';
+
+  @override
+  String get rel_ops_ssh_unsupported =>
+      'This device has no supported system OpenSSH transport. The pinned gateway relay automatically accepts new keys and cannot be used for verified enrollment.';
+
+  @override
+  String get rel_ops_ssh_host => 'SSH host';
+
+  @override
+  String get rel_ops_ssh_port => 'SSH port';
+
+  @override
+  String get rel_ops_ssh_user => 'SSH user';
+
+  @override
+  String get rel_ops_ssh_identity =>
+      'Identity file (optional; otherwise use SSH agent)';
+
+  @override
+  String get rel_ops_ssh_public_key =>
+      'Public host key from administrator (ssh-ed25519)';
+
+  @override
+  String get rel_ops_ssh_review_key => 'Review host key';
+
+  @override
+  String get rel_ops_ssh_remote_port => 'Remote loopback service port';
+
+  @override
+  String get rel_ops_ssh_check_gateway => 'Check gateway over SSH';
+
+  @override
+  String get rel_ops_ssh_preview_source => 'Preview source over SSH';
+
+  @override
+  String get rel_ops_ssh_open_shell => 'Open SSH shell';
+
+  @override
+  String get rel_ops_ssh_shell_line => 'Line to remote shell';
+
+  @override
+  String get rel_ops_ssh_disconnect => 'Disconnect shell';
+
+  @override
+  String get rel_ops_host_cancel => 'Cancel';
+
+  @override
+  String get rel_ops_host_confirm => 'Confirm';
+
+  @override
+  String get rel_ops_host_title => 'Host';
+
+  @override
+  String get rel_ops_host_refresh => 'Refresh';
+
+  @override
+  String get rel_ops_host_update => 'Update remote Hermes';
+
+  @override
+  String rel_ops_host_update_confirmation(String profile) {
+    return 'This starts an in-place update on the gateway host for $profile. It does not update Ares on this device. Success is the matching update receipt, not the host staying reachable.';
+  }
+
+  @override
+  String get rel_ops_host_update_awaiting =>
+      'Awaiting matching receipt. Update is still running.';
+
+  @override
+  String get rel_ops_host_receipt_success => 'Update receipt succeeded.';
+
+  @override
+  String get rel_ops_host_receipt_partial =>
+      'Update committed, with follow-up steps still owed.';
+
+  @override
+  String get rel_ops_host_receipt_failed => 'Update receipt failed.';
+
+  @override
+  String get rel_ops_host_receipt_refused => 'Update receipt refused.';
+
+  @override
+  String get rel_ops_host_update_running => 'Update is still running.';
+
+  @override
+  String get rel_ops_host_update_unknown =>
+      'Update outcome is unknown. A live gateway is not a successful update.';
+
+  @override
+  String get rel_ops_host_default_profile => 'the gateway default';
+
+  @override
+  String get rel_ops_host_restart => 'Restart remote gateway';
+
+  @override
+  String rel_ops_host_restart_shared_confirmation(String profiles) {
+    return 'This restarts the gateway shared by $profiles. Live turns on this gateway are interrupted. Reconnect afterwards. Reachability is not proof the restart finished.';
+  }
+
+  @override
+  String rel_ops_host_restart_confirmation(String profile) {
+    return 'This restarts the remote gateway for $profile. Live turns on this gateway are interrupted. Reconnect afterwards.';
+  }
+
+  @override
+  String get rel_ops_host_restart_running =>
+      'Restart command is still running.';
+
+  @override
+  String get rel_ops_host_restart_finished =>
+      'Restart command finished. Reconnect to the host yourself.';
+
+  @override
+  String get rel_ops_host_restart_failed => 'Restart command failed.';
+
+  @override
+  String rel_ops_host_maintenance_running(String name) {
+    return '$name is still running';
+  }
+
+  @override
+  String rel_ops_host_maintenance_finished(String name) {
+    return '$name finished';
+  }
+
+  @override
+  String rel_ops_host_maintenance_failed(String name) {
+    return '$name failed';
+  }
+
+  @override
+  String get rel_ops_host_curator_paused_result => 'Curator paused.';
+
+  @override
+  String get rel_ops_host_curator_resumed_result => 'Curator resumed.';
+
+  @override
+  String get rel_ops_host_reset => 'Reset remote memory files';
+
+  @override
+  String rel_ops_host_reset_confirmation(String targetName, String profile) {
+    return 'Delete the $targetName memory file on $profile? This cannot be undone from Ares.';
+  }
+
+  @override
+  String rel_ops_host_reset_result(String targetName, int count) {
+    return 'Reset $targetName. Removed $count remote file(s).';
+  }
+
+  @override
+  String get rel_ops_host_share_not_redacted =>
+      'The host did not confirm the bundle was redacted. No link is shown.';
+
+  @override
+  String rel_ops_host_scope(String connection, String profile) {
+    return 'These controls operate the remote gateway $connection for $profile, not this device and not the Ares client update.';
+  }
+
+  @override
+  String rel_ops_host_health_running(String version, int count) {
+    return 'Gateway process running $version · $count sessions';
+  }
+
+  @override
+  String rel_ops_host_health_stopped(String version, int count) {
+    return 'Gateway process stopped $version · $count sessions';
+  }
+
+  @override
+  String rel_ops_host_heartbeat_stale(num seconds) {
+    return 'Host heartbeat is stale (${seconds}s).';
+  }
+
+  @override
+  String get rel_ops_host_doctor => 'Run Doctor';
+
+  @override
+  String get rel_ops_host_security_audit => 'Security audit';
+
+  @override
+  String get rel_ops_host_check_receipt => 'Check update receipt';
+
+  @override
+  String get rel_ops_host_logs => 'Remote host logs';
+
+  @override
+  String get rel_ops_host_search_logs => 'Search host logs';
+
+  @override
+  String get rel_ops_host_driver => 'Remote host driver';
+
+  @override
+  String get rel_ops_host_driver_scope =>
+      'Computer Use readiness is the gateway machine\'s driver and OS permissions, not this device.';
+
+  @override
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  ) {
+    return '$platform · installed $installed · ready $ready';
+  }
+
+  @override
+  String get rel_ops_host_null => 'null';
+
+  @override
+  String get rel_ops_host_true => 'true';
+
+  @override
+  String get rel_ops_host_false => 'false';
+
+  @override
+  String get rel_ops_host_curator => 'Curator';
+
+  @override
+  String get rel_ops_host_curator_paused => 'Curator paused';
+
+  @override
+  String get rel_ops_host_curator_running => 'Curator running';
+
+  @override
+  String get rel_ops_host_no_run => 'No completed run';
+
+  @override
+  String get rel_ops_host_run_curator => 'Run Curator now';
+
+  @override
+  String get rel_ops_host_reset_memory => 'Reset memory file';
+
+  @override
+  String get rel_ops_host_reset_user => 'Reset user file';
+
+  @override
+  String get rel_ops_host_reset_both => 'Reset both files';
+
+  @override
+  String get rel_ops_host_share_consent =>
+      'I agree to upload a redacted diagnostic bundle from the remote host';
+
+  @override
+  String get rel_ops_host_share => 'Share redacted diagnostics';
+
+  @override
+  String get rel_ops_host_update_unknown_installation =>
+      'This installation is unknown, so the update was not sent';
+
+  @override
+  String get rel_ops_host_update_busy_installation =>
+      'A chat on this installation is running';
+
+  @override
+  String get rel_ops_host_update_refused => 'Remote update refused';
+
+  @override
+  String get rel_ops_host_error_stale => 'Remote workspace: stale';
+
+  @override
+  String get rel_ops_host_error_mismatch => 'Remote workspace: mismatch';
+
+  @override
+  String get rel_ops_host_error_unbound => 'Remote workspace: unbound';
+
+  @override
+  String get rel_ops_host_error_unsupported => 'Remote workspace: unsupported';
+
+  @override
+  String get rel_ops_host_error_denied => 'Remote workspace: denied';
+
+  @override
+  String get rel_ops_host_error_ineligible => 'Remote workspace: ineligible';
+
+  @override
+  String get rel_ops_host_error_unavailable => 'Remote workspace: unavailable';
+
+  @override
+  String get rel_ops_host_error_invalid => 'Remote workspace: invalid';
+
+  @override
+  String get rel_ops_host_error_insecure => 'Remote workspace: insecure';
+
+  @override
+  String get rel_ops_host_error_request => 'Could not complete that request.';
 }

@@ -5276,5 +5276,1709 @@
   "rel_admin_phase_undone": "取り消し済み",
   "@rel_admin_phase_undone": {
     "description": "Release administration: undone"
+  },
+  "rel_ops_cap_install_blocked": "インストールがブロックされました（{verdict}）：{detail}",
+  "@rel_ops_cap_install_blocked": {
+    "description": "Capability administration: Install blocked ({verdict}): {detail}",
+    "placeholders": {
+      "verdict": {
+        "type": "String"
+      },
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_scan_confirm": "スキャン結果：{verdict}。インストール前に {requested} を確認してください。",
+  "@rel_ops_cap_scan_confirm": {
+    "description": "Capability administration: Scan verdict: {verdict}. Confirm {requested} before installing.",
+    "placeholders": {
+      "verdict": {
+        "type": "String"
+      },
+      "requested": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_install_unconfirmed": "ゲートウェイは {requested} のインストールをまだ確認していません。",
+  "@rel_ops_cap_install_unconfirmed": {
+    "description": "Capability administration: The gateway has not confirmed that {requested} is installed.",
+    "placeholders": {
+      "requested": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_edit_skill": "{name} を編集",
+  "@rel_ops_cap_edit_skill": {
+    "description": "Capability administration: Edit {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_archive_skill": "{name} をアーカイブしますか？",
+  "@rel_ops_cap_archive_skill": {
+    "description": "Capability administration: Archive {name}?",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_archive_explanation": "スキルはアーカイブされ、{command} で復元できます。",
+  "@rel_ops_cap_archive_explanation": {
+    "description": "Archive confirmation. The command placeholder is the literal CLI command hermes curator restore; do not translate or alter the command.",
+    "placeholders": {
+      "command": {
+        "type": "String",
+        "example": "hermes curator restore"
+      }
+    }
+  },
+  "rel_ops_cap_install_anyway": "それでも {name} をインストール",
+  "@rel_ops_cap_install_anyway": {
+    "description": "Capability administration: Install {name} anyway",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_install_despite_scan": "スキャン結果にかかわらず {name} をインストールしますか？",
+  "@rel_ops_cap_install_despite_scan": {
+    "description": "Capability administration: Install {name} despite the scan?",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_scan_warning": "セキュリティスキャンにより {name} がブロックされました。この確認は {name} にのみ適用されます。",
+  "@rel_ops_cap_scan_warning": {
+    "description": "Capability administration: The security scan blocked {name}. This confirmation applies only to {name}.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_accept_scan_warning": "機能の許可を承認しても、{name} のスキャン結果は無効になりません。",
+  "@rel_ops_cap_accept_scan_warning": {
+    "description": "Capability administration: Accepting capabilities does not override the scan of {name}.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_review_scan": "{name} のスキャン結果を確認",
+  "@rel_ops_cap_review_scan": {
+    "description": "Capability administration: Review scan for {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_desktop_grants": "{description}\nフォルダーとプレビュースクリプトへの許可は、そのコンピューターの Desktop アプリに保持されます。ここでプラグインを削除しても、それらのローカルの許可は取り消されません。",
+  "@rel_ops_cap_desktop_grants": {
+    "description": "Plugin description followed by a warning about local Desktop app grants. Desktop is the app name; preserve it.",
+    "placeholders": {
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_remove_plugin": "{name} を削除しますか？",
+  "@rel_ops_cap_remove_plugin": {
+    "description": "Capability administration: Remove {name}?",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_probe_result": "{name} の接続テスト：{tools}",
+  "@rel_ops_cap_probe_result": {
+    "description": "Capability administration: Probe {name}: {tools}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "tools": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_save_tool_grants_for": "{connector} のツールの許可を保存",
+  "@rel_ops_cap_save_tool_grants_for": {
+    "description": "Capability administration: Save tool grants for {connector}",
+    "placeholders": {
+      "connector": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_backends_for": "{name} のバックエンド",
+  "@rel_ops_cap_backends_for": {
+    "description": "Capability administration: Backends for {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_use_backend_confirmation": "{name} を使用しますか？",
+  "@rel_ops_cap_use_backend_confirmation": {
+    "description": "Capability administration: Use {name}?",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_unlock_source": "{name} をロック解除",
+  "@rel_ops_cap_unlock_source": {
+    "description": "Capability administration: Unlock {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_capabilities": "機能",
+  "@rel_ops_cap_capabilities": {
+    "description": "Capability administration: Capabilities"
+  },
+  "rel_ops_cap_plugins": "プラグイン",
+  "@rel_ops_cap_plugins": {
+    "description": "Capability administration: Plugins"
+  },
+  "rel_ops_cap_connectors": "コネクター",
+  "@rel_ops_cap_connectors": {
+    "description": "Capability administration: Connectors"
+  },
+  "rel_ops_cap_backends": "バックエンド",
+  "@rel_ops_cap_backends": {
+    "description": "Capability administration: Backends"
+  },
+  "rel_ops_cap_save_skill": "スキルを保存",
+  "@rel_ops_cap_save_skill": {
+    "description": "Capability administration: Save skill"
+  },
+  "rel_ops_cap_archive": "アーカイブ",
+  "@rel_ops_cap_archive": {
+    "description": "Capability administration: Archive"
+  },
+  "rel_ops_cap_hub_identifier": "Hub 識別子",
+  "@rel_ops_cap_hub_identifier": {
+    "description": "Capability administration: Hub identifier"
+  },
+  "rel_ops_cap_install": "インストール",
+  "@rel_ops_cap_install": {
+    "description": "Capability administration: Install"
+  },
+  "rel_ops_cap_update_all": "すべて更新",
+  "@rel_ops_cap_update_all": {
+    "description": "Capability administration: Update all"
+  },
+  "rel_ops_cap_unlock": "ロック解除",
+  "@rel_ops_cap_unlock": {
+    "description": "Capability administration: Unlock"
+  },
+  "rel_ops_cap_lock": "ロック",
+  "@rel_ops_cap_lock": {
+    "description": "Capability administration: Lock"
+  },
+  "rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet": "この更新では機能が追加されます。まだ何も変更されていません。",
+  "@rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet": {
+    "description": "Capability administration: This update adds capabilities. Nothing changed yet."
+  },
+  "rel_ops_cap_the_scan_blocked_this_plugin": "スキャンによりこのプラグインがブロックされました。",
+  "@rel_ops_cap_the_scan_blocked_this_plugin": {
+    "description": "Capability administration: The scan blocked this plugin."
+  },
+  "rel_ops_cap_the_plugin_was_not_changed": "プラグインは変更されませんでした。",
+  "@rel_ops_cap_the_plugin_was_not_changed": {
+    "description": "Capability administration: The plugin was not changed."
+  },
+  "rel_ops_cap_repository": "リポジトリ",
+  "@rel_ops_cap_repository": {
+    "description": "Capability administration: Repository"
+  },
+  "rel_ops_cap_install_plugin": "プラグインをインストール",
+  "@rel_ops_cap_install_plugin": {
+    "description": "Capability administration: Install plugin"
+  },
+  "rel_ops_cap_update_plugins": "プラグインを更新",
+  "@rel_ops_cap_update_plugins": {
+    "description": "Capability administration: Update plugins"
+  },
+  "rel_ops_cap_accept_capabilities": "機能の許可を承認",
+  "@rel_ops_cap_accept_capabilities": {
+    "description": "Capability administration: Accept capabilities"
+  },
+  "rel_ops_cap_update": "更新",
+  "@rel_ops_cap_update": {
+    "description": "Capability administration: Update"
+  },
+  "rel_ops_cap_remove_desktop_half": "デスクトップ側のコンポーネントを削除",
+  "@rel_ops_cap_remove_desktop_half": {
+    "description": "Capability administration: Remove desktop half"
+  },
+  "rel_ops_cap_server_name": "サーバー名",
+  "@rel_ops_cap_server_name": {
+    "description": "Capability administration: Server name"
+  },
+  "rel_ops_cap_command": "コマンド",
+  "@rel_ops_cap_command": {
+    "description": "Capability administration: Command"
+  },
+  "rel_ops_cap_http_url": "HTTP URL",
+  "@rel_ops_cap_http_url": {
+    "description": "Capability administration: HTTP URL"
+  },
+  "rel_ops_cap_add_server": "サーバーを追加",
+  "@rel_ops_cap_add_server": {
+    "description": "Capability administration: Add server"
+  },
+  "rel_ops_cap_probe": "接続テスト",
+  "@rel_ops_cap_probe": {
+    "description": "Capability administration: Probe"
+  },
+  "rel_ops_cap_probe_failed": "接続テストに失敗しました。",
+  "@rel_ops_cap_probe_failed": {
+    "description": "Capability administration: Probe failed."
+  },
+  "rel_ops_cap_logs": "ログ",
+  "@rel_ops_cap_logs": {
+    "description": "Capability administration: Logs"
+  },
+  "rel_ops_cap_mcp_log": "MCP ログ",
+  "@rel_ops_cap_mcp_log": {
+    "description": "Capability administration: MCP log"
+  },
+  "rel_ops_cap_connector": "コネクター",
+  "@rel_ops_cap_connector": {
+    "description": "Capability administration: Connector"
+  },
+  "rel_ops_cap_account_alias": "アカウントの別名",
+  "@rel_ops_cap_account_alias": {
+    "description": "Capability administration: Account alias"
+  },
+  "rel_ops_cap_link_account": "アカウントを連携",
+  "@rel_ops_cap_link_account": {
+    "description": "Capability administration: Link account"
+  },
+  "rel_ops_cap_remove_account": "アカウントを削除",
+  "@rel_ops_cap_remove_account": {
+    "description": "Capability administration: Remove account"
+  },
+  "rel_ops_cap_tool_connector": "ツールコネクター",
+  "@rel_ops_cap_tool_connector": {
+    "description": "Capability administration: Tool connector"
+  },
+  "rel_ops_cap_load_tools": "ツールを読み込む",
+  "@rel_ops_cap_load_tools": {
+    "description": "Capability administration: Load tools"
+  },
+  "rel_ops_cap_save_tool_grants": "ツールの許可を保存",
+  "@rel_ops_cap_save_tool_grants": {
+    "description": "Capability administration: Save tool grants"
+  },
+  "rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged": "このポリシーにはメンバーリビジョンがないため、ツールの許可は変更されません。",
+  "@rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged": {
+    "description": "Capability administration: This policy has no member revision, so tool grants stay unchanged."
+  },
+  "rel_ops_cap_active": "使用中",
+  "@rel_ops_cap_active": {
+    "description": "Capability administration: Active"
+  },
+  "rel_ops_cap_use": "使用",
+  "@rel_ops_cap_use": {
+    "description": "Capability administration: Use"
+  },
+  "rel_ops_cap_run_setup": "セットアップを実行",
+  "@rel_ops_cap_run_setup": {
+    "description": "Capability administration: Run setup"
+  },
+  "rel_ops_cap_terminal_backends": "ターミナルバックエンド",
+  "@rel_ops_cap_terminal_backends": {
+    "description": "Capability administration: Terminal backends"
+  },
+  "rel_ops_cap_this_changes_the_terminal_backend_for_this_profile": "このプロファイルのターミナルバックエンドが変更されます。",
+  "@rel_ops_cap_this_changes_the_terminal_backend_for_this_profile": {
+    "description": "Capability administration: This changes the terminal backend for this profile."
+  },
+  "rel_ops_cap_use_backend": "バックエンドを使用",
+  "@rel_ops_cap_use_backend": {
+    "description": "Capability administration: Use backend"
+  },
+  "rel_ops_cap_select": "選択",
+  "@rel_ops_cap_select": {
+    "description": "Capability administration: Select"
+  },
+  "rel_ops_cap_browser_vault": "ブラウザー保管庫",
+  "@rel_ops_cap_browser_vault": {
+    "description": "Capability administration: Browser vault"
+  },
+  "rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here": "保存されたサイトのログイン情報、住所、カード。パスワードは安全なフィールドに保持され、ここには表示されません。",
+  "@rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here": {
+    "description": "Capability administration: Saved site logins, addresses and cards. Passwords stay in the secure fields and are not listed here."
+  },
+  "rel_ops_cap_remove_saved_item": "保存済みの項目を削除",
+  "@rel_ops_cap_remove_saved_item": {
+    "description": "Capability administration: Remove saved item"
+  },
+  "rel_ops_cap_delete_this_item": "この項目を削除しますか？",
+  "@rel_ops_cap_delete_this_item": {
+    "description": "Capability administration: Delete this item?"
+  },
+  "rel_ops_cap_unlocked": "ロック解除済み",
+  "@rel_ops_cap_unlocked": {
+    "description": "Capability administration: Unlocked"
+  },
+  "rel_ops_cap_locked": "ロック中",
+  "@rel_ops_cap_locked": {
+    "description": "Capability administration: Locked"
+  },
+  "rel_ops_cap_not_detected": "未検出",
+  "@rel_ops_cap_not_detected": {
+    "description": "Capability administration: Not detected"
+  },
+  "rel_ops_cap_master_password": "マスターパスワード",
+  "@rel_ops_cap_master_password": {
+    "description": "Capability administration: Master password"
+  },
+  "rel_ops_cap_login": "ログイン情報",
+  "@rel_ops_cap_login": {
+    "description": "Capability administration: Login"
+  },
+  "rel_ops_cap_address": "住所",
+  "@rel_ops_cap_address": {
+    "description": "Capability administration: Address"
+  },
+  "rel_ops_cap_card": "カード",
+  "@rel_ops_cap_card": {
+    "description": "Capability administration: Card"
+  },
+  "rel_ops_cap_label": "ラベル",
+  "@rel_ops_cap_label": {
+    "description": "Capability administration: Label"
+  },
+  "rel_ops_cap_site_origin": "サイトのオリジン",
+  "@rel_ops_cap_site_origin": {
+    "description": "Capability administration: Site origin"
+  },
+  "rel_ops_cap_identifier": "識別子",
+  "@rel_ops_cap_identifier": {
+    "description": "Capability administration: Identifier"
+  },
+  "rel_ops_cap_password": "パスワード",
+  "@rel_ops_cap_password": {
+    "description": "Capability administration: Password"
+  },
+  "rel_ops_cap_authenticator_key": "認証キー",
+  "@rel_ops_cap_authenticator_key": {
+    "description": "Capability administration: Authenticator key"
+  },
+  "rel_ops_cap_street": "町名・番地",
+  "@rel_ops_cap_street": {
+    "description": "Capability administration: Street"
+  },
+  "rel_ops_cap_city": "市区町村",
+  "@rel_ops_cap_city": {
+    "description": "Capability administration: City"
+  },
+  "rel_ops_cap_postal_code": "郵便番号",
+  "@rel_ops_cap_postal_code": {
+    "description": "Capability administration: Postal code"
+  },
+  "rel_ops_cap_country": "国・地域",
+  "@rel_ops_cap_country": {
+    "description": "Capability administration: Country"
+  },
+  "rel_ops_cap_name_on_card": "カード名義",
+  "@rel_ops_cap_name_on_card": {
+    "description": "Capability administration: Name on card"
+  },
+  "rel_ops_cap_card_number": "カード番号",
+  "@rel_ops_cap_card_number": {
+    "description": "Capability administration: Card number"
+  },
+  "rel_ops_cap_expiry_month": "有効期限の月",
+  "@rel_ops_cap_expiry_month": {
+    "description": "Capability administration: Expiry month"
+  },
+  "rel_ops_cap_expiry_year": "有効期限の年",
+  "@rel_ops_cap_expiry_year": {
+    "description": "Capability administration: Expiry year"
+  },
+  "rel_ops_cap_security_code": "セキュリティコード",
+  "@rel_ops_cap_security_code": {
+    "description": "Capability administration: Security code"
+  },
+  "rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method": "このゲートウェイには共有メトリクスへの同意を設定するメソッドがありません。",
+  "@rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method": {
+    "description": "Capability administration: This gateway has no shared-metrics consent method."
+  },
+  "rel_ops_cap_agent_policy": "エージェントポリシー",
+  "@rel_ops_cap_agent_policy": {
+    "description": "Capability administration: Agent policy"
+  },
+  "rel_ops_cap_loading_policy": "ポリシーを読み込み中",
+  "@rel_ops_cap_loading_policy": {
+    "description": "Capability administration: Loading policy"
+  },
+  "rel_ops_cap_approval_timeout": "承認のタイムアウト",
+  "@rel_ops_cap_approval_timeout": {
+    "description": "Capability administration: Approval timeout"
+  },
+  "rel_ops_cap_confirm_mcp_reloads": "MCP の再読み込みを確認",
+  "@rel_ops_cap_confirm_mcp_reloads": {
+    "description": "Capability administration: Confirm MCP reloads"
+  },
+  "rel_ops_cap_command_allowlist": "コマンドの許可リスト",
+  "@rel_ops_cap_command_allowlist": {
+    "description": "Capability administration: Command allowlist"
+  },
+  "rel_ops_cap_file_checkpoints": "ファイルのチェックポイント",
+  "@rel_ops_cap_file_checkpoints": {
+    "description": "Capability administration: File checkpoints"
+  },
+  "rel_ops_cap_checkpoint_limit": "チェックポイントの上限",
+  "@rel_ops_cap_checkpoint_limit": {
+    "description": "Capability administration: Checkpoint limit"
+  },
+  "rel_ops_cap_browser_private_urls": "ブラウザーのプライベート URL",
+  "@rel_ops_cap_browser_private_urls": {
+    "description": "Capability administration: Browser private URLs"
+  },
+  "rel_ops_cap_use_my_real_browser_profile": "実際のブラウザープロファイルを使用",
+  "@rel_ops_cap_use_my_real_browser_profile": {
+    "description": "Capability administration: Use my real browser profile"
+  },
+  "rel_ops_cap_save_policy": "ポリシーを保存",
+  "@rel_ops_cap_save_policy": {
+    "description": "Capability administration: Save policy"
+  },
+  "rel_ops_cap_shared_metrics_for_this_profile": "このプロファイルの共有メトリクス",
+  "@rel_ops_cap_shared_metrics_for_this_profile": {
+    "description": "Capability administration: Shared metrics for this profile"
+  },
+  "rel_ops_cap_send_shared_metrics": "共有メトリクスを送信",
+  "@rel_ops_cap_send_shared_metrics": {
+    "description": "Capability administration: Send shared metrics"
+  },
+  "rel_ops_cap_error_enter_a_label": "ラベルを入力してください。",
+  "@rel_ops_cap_error_enter_a_label": {
+    "description": "Capability administration: Enter a label."
+  },
+  "rel_ops_cap_error_enter_a_valid_url_like_https_example_com": "https://example.com のような有効な URL を入力してください。",
+  "@rel_ops_cap_error_enter_a_valid_url_like_https_example_com": {
+    "description": "Capability administration: Enter a valid URL like https://example.com."
+  },
+  "rel_ops_cap_error_enter_the_identifier_and_password": "識別子とパスワードを入力してください。",
+  "@rel_ops_cap_error_enter_the_identifier_and_password": {
+    "description": "Capability administration: Enter the identifier and password."
+  },
+  "rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code": "カード名義、番号、有効期限、セキュリティコードを入力してください。",
+  "@rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code": {
+    "description": "Capability administration: Enter the card name, number, expiry and security code."
+  },
+  "rel_ops_cap_error_enter_the_street_city_postal_code_and_country": "町名・番地、市区町村、郵便番号、国・地域を入力してください。",
+  "@rel_ops_cap_error_enter_the_street_city_postal_code_and_country": {
+    "description": "Capability administration: Enter the street, city, postal code and country."
+  },
+  "rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read": "ゲートウェイから読み取れない応答が返されました。",
+  "@rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read": {
+    "description": "Capability administration: The gateway returned a response that could not be read."
+  },
+  "rel_ops_cap_error_the_gateway_refused_the_request_status": "ゲートウェイがリクエストを拒否しました（{statusCode}）。",
+  "@rel_ops_cap_error_the_gateway_refused_the_request_status": {
+    "description": "Capability administration: The gateway refused the request ({statusCode}).",
+    "placeholders": {
+      "statusCode": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable": "この接続にはゲートウェイソケットがないため、{method} は使用できません。",
+  "@rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable": {
+    "description": "Missing gateway socket error. The method placeholder is a JSON-RPC wire method; do not translate it.",
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_error_choose_a_skill": "スキルを選択してください。",
+  "@rel_ops_cap_error_choose_a_skill": {
+    "description": "Capability administration: Choose a skill."
+  },
+  "rel_ops_cap_error_the_skill_text_was_not_returned": "スキルのテキストが返されませんでした。",
+  "@rel_ops_cap_error_the_skill_text_was_not_returned": {
+    "description": "Capability administration: The skill text was not returned."
+  },
+  "rel_ops_cap_error_the_skill_was_not_saved": "スキルは保存されませんでした。",
+  "@rel_ops_cap_error_the_skill_was_not_saved": {
+    "description": "Capability administration: The skill was not saved."
+  },
+  "rel_ops_cap_error_the_skill_was_not_archived": "スキルはアーカイブされませんでした。",
+  "@rel_ops_cap_error_the_skill_was_not_archived": {
+    "description": "Capability administration: The skill was not archived."
+  },
+  "rel_ops_cap_error_the_skill_was_not_installed": "スキルはインストールされませんでした。",
+  "@rel_ops_cap_error_the_skill_was_not_installed": {
+    "description": "Capability administration: The skill was not installed."
+  },
+  "rel_ops_cap_error_skill_updates_did_not_start": "スキルの更新は開始されませんでした。",
+  "@rel_ops_cap_error_skill_updates_did_not_start": {
+    "description": "Capability administration: Skill updates did not start."
+  },
+  "rel_ops_cap_error_the_skill_was_not_removed": "スキルは削除されませんでした。",
+  "@rel_ops_cap_error_the_skill_was_not_removed": {
+    "description": "Capability administration: The skill was not removed."
+  },
+  "rel_ops_cap_error_enter_a_skill_or_plugin_identifier": "スキルまたはプラグインの識別子を入力してください。",
+  "@rel_ops_cap_error_enter_a_skill_or_plugin_identifier": {
+    "description": "Capability administration: Enter a skill or plugin identifier."
+  },
+  "rel_ops_cap_error_choose_a_plugin": "プラグインを選択してください。",
+  "@rel_ops_cap_error_choose_a_plugin": {
+    "description": "Capability administration: Choose a plugin."
+  },
+  "rel_ops_cap_error_the_plugin_was_not_removed": "プラグインは削除されませんでした。",
+  "@rel_ops_cap_error_the_plugin_was_not_removed": {
+    "description": "Capability administration: The plugin was not removed."
+  },
+  "rel_ops_cap_error_the_desktop_half_was_not_removed": "デスクトップ側のコンポーネントは削除されませんでした。",
+  "@rel_ops_cap_error_the_desktop_half_was_not_removed": {
+    "description": "Capability administration: The desktop half was not removed."
+  },
+  "rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key": "このゲートウェイはプラグインに安定したキーを割り当てませんでした。",
+  "@rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key": {
+    "description": "Capability administration: This gateway did not give the plugin a stable key."
+  },
+  "rel_ops_cap_error_the_plugin_was_not_changed": "プラグインは変更されませんでした。",
+  "@rel_ops_cap_error_the_plugin_was_not_changed": {
+    "description": "Capability administration: The plugin was not changed."
+  },
+  "rel_ops_cap_error_choose_a_server": "サーバーを選択してください。",
+  "@rel_ops_cap_error_choose_a_server": {
+    "description": "Capability administration: Choose a server."
+  },
+  "rel_ops_cap_error_name_the_server": "サーバーに名前を付けてください。",
+  "@rel_ops_cap_error_name_the_server": {
+    "description": "Capability administration: Name the server."
+  },
+  "rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url": "サーバーのコマンドまたは http(s) URL を指定してください。",
+  "@rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url": {
+    "description": "Capability administration: Give the server a command or an http(s) URL."
+  },
+  "rel_ops_cap_error_choose_a_toolset": "ツールセットを選択してください。",
+  "@rel_ops_cap_error_choose_a_toolset": {
+    "description": "Capability administration: Choose a toolset."
+  },
+  "rel_ops_cap_error_tool_backend_status_was_not_returned": "ツールバックエンドの状態が返されませんでした。",
+  "@rel_ops_cap_error_tool_backend_status_was_not_returned": {
+    "description": "Capability administration: Tool backend status was not returned."
+  },
+  "rel_ops_cap_error_choose_a_provider": "プロバイダーを選択してください。",
+  "@rel_ops_cap_error_choose_a_provider": {
+    "description": "Capability administration: Choose a provider."
+  },
+  "rel_ops_cap_error_this_provider_has_no_setup_action": "このプロバイダーにはセットアップ操作がありません。",
+  "@rel_ops_cap_error_this_provider_has_no_setup_action": {
+    "description": "Capability administration: This provider has no setup action."
+  },
+  "rel_ops_cap_error_setup_did_not_start": "セットアップは開始されませんでした。",
+  "@rel_ops_cap_error_setup_did_not_start": {
+    "description": "Capability administration: Setup did not start."
+  },
+  "rel_ops_cap_error_choose_a_terminal_backend": "ターミナルバックエンドを選択してください。",
+  "@rel_ops_cap_error_choose_a_terminal_backend": {
+    "description": "Capability administration: Choose a terminal backend."
+  },
+  "rel_ops_cap_error_name_the_connector": "コネクターに名前を付けてください。",
+  "@rel_ops_cap_error_name_the_connector": {
+    "description": "Capability administration: Name the connector."
+  },
+  "rel_ops_cap_error_choose_an_account": "アカウントを選択してください。",
+  "@rel_ops_cap_error_choose_an_account": {
+    "description": "Capability administration: Choose an account."
+  },
+  "rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants": "ツールの許可を変更する前にコネクターポリシーを再読み込みしてください。",
+  "@rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants": {
+    "description": "Capability administration: Reload the connector policy before changing tool grants."
+  },
+  "rel_ops_cap_error_choose_an_item": "項目を選択してください。",
+  "@rel_ops_cap_error_choose_an_item": {
+    "description": "Capability administration: Choose an item."
+  },
+  "rel_ops_cap_error_choose_a_source": "ソースを選択してください。",
+  "@rel_ops_cap_error_choose_a_source": {
+    "description": "Capability administration: Choose a source."
+  },
+  "rel_ops_cap_error_enter_the_master_password": "マスターパスワードを入力してください。",
+  "@rel_ops_cap_error_enter_the_master_password": {
+    "description": "Capability administration: Enter the master password."
+  },
+  "rel_ops_cap_error_gateway_config_was_not_returned": "ゲートウェイの設定が返されませんでした。",
+  "@rel_ops_cap_error_gateway_config_was_not_returned": {
+    "description": "Capability administration: Gateway config was not returned."
+  },
+  "rel_ops_cap_error_choose_a_known_approval_mode": "既知の承認モードを選択してください。",
+  "@rel_ops_cap_error_choose_a_known_approval_mode": {
+    "description": "Capability administration: Choose a known approval mode."
+  },
+  "rel_ops_cap_error_use_a_positive_limit": "上限には正の値を使用してください。",
+  "@rel_ops_cap_error_use_a_positive_limit": {
+    "description": "Capability administration: Use a positive limit."
+  },
+  "rel_ops_cap_error_the_policy_was_not_saved": "ポリシーは保存されませんでした。",
+  "@rel_ops_cap_error_the_policy_was_not_saved": {
+    "description": "Capability administration: The policy was not saved."
+  },
+  "rel_ops_cap_value_manual": "手動",
+  "@rel_ops_cap_value_manual": {
+    "description": "Capability _capabilityValue display label for wire value manual. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_smart": "スマート",
+  "@rel_ops_cap_value_smart": {
+    "description": "Capability _capabilityValue display label for wire value smart. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_off": "オフ",
+  "@rel_ops_cap_value_off": {
+    "description": "Capability _capabilityValue display label for wire value off. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_safe": "安全",
+  "@rel_ops_cap_value_safe": {
+    "description": "Capability _capabilityValue display label for wire value safe. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_caution": "注意",
+  "@rel_ops_cap_value_caution": {
+    "description": "Capability _capabilityValue display label for wire value caution. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_dangerous": "危険",
+  "@rel_ops_cap_value_dangerous": {
+    "description": "Capability _capabilityValue display label for wire value dangerous. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_blocked": "ブロック済み",
+  "@rel_ops_cap_value_blocked": {
+    "description": "Capability _capabilityValue display label for wire value blocked. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_clean": "脅威なし",
+  "@rel_ops_cap_value_clean": {
+    "description": "Capability _capabilityValue display label for wire value clean. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_ready": "準備完了",
+  "@rel_ops_cap_value_ready": {
+    "description": "Capability _capabilityValue display label for wire value ready. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_available": "利用可能",
+  "@rel_ops_cap_value_available": {
+    "description": "Capability _capabilityValue display label for wire value available. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_unavailable": "利用不可",
+  "@rel_ops_cap_value_unavailable": {
+    "description": "Capability _capabilityValue display label for wire value unavailable. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_enabled": "有効",
+  "@rel_ops_cap_value_enabled": {
+    "description": "Capability _capabilityValue display label for wire value enabled. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_disabled": "無効",
+  "@rel_ops_cap_value_disabled": {
+    "description": "Capability _capabilityValue display label for wire value disabled. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_active": "使用中",
+  "@rel_ops_cap_value_active": {
+    "description": "Capability _capabilityValue display label for wire value active. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_inactive": "未使用",
+  "@rel_ops_cap_value_inactive": {
+    "description": "Capability _capabilityValue display label for wire value inactive. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_installed": "インストール済み",
+  "@rel_ops_cap_value_installed": {
+    "description": "Capability _capabilityValue display label for wire value installed. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_missing": "見つかりません",
+  "@rel_ops_cap_value_missing": {
+    "description": "Capability _capabilityValue display label for wire value missing. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_configured": "設定済み",
+  "@rel_ops_cap_value_configured": {
+    "description": "Capability _capabilityValue display label for wire value configured. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_not_configured": "未設定",
+  "@rel_ops_cap_value_not_configured": {
+    "description": "Capability _capabilityValue display label for wire value not_configured. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_error": "エラー",
+  "@rel_ops_cap_value_error": {
+    "description": "Capability _capabilityValue display label for wire value error. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_unknown": "不明",
+  "@rel_ops_cap_value_unknown": {
+    "description": "Capability _capabilityValue display label for wire value unknown. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_login": "ログイン情報",
+  "@rel_ops_cap_value_login": {
+    "description": "Capability _capabilityValue display label for wire value login. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_address": "住所",
+  "@rel_ops_cap_value_address": {
+    "description": "Capability _capabilityValue display label for wire value address. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_payment": "支払い",
+  "@rel_ops_cap_value_payment": {
+    "description": "Capability _capabilityValue display label for wire value payment. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_term_connecting": "接続中…",
+  "@rel_ops_term_connecting": {
+    "description": "Terminal connection status."
+  },
+  "rel_ops_term_unbound": "一致する稼働中のセッションまたはホストの作業ディレクトリがありません。先に対応するチャットを開いてください。",
+  "@rel_ops_term_unbound": {
+    "description": "Terminal page: unbound."
+  },
+  "rel_ops_term_unsupported": "このゲートウェイはこのターミナル機能を提供していません。ローカルシェルは起動されていません。",
+  "@rel_ops_term_unsupported": {
+    "description": "Terminal page: unsupported."
+  },
+  "rel_ops_term_local_pty_unavailable": "同梱のローカルPTYはこのデバイスでは利用できません。",
+  "@rel_ops_term_local_pty_unavailable": {
+    "description": "Terminal page: local pty unavailable."
+  },
+  "rel_ops_term_operation_failed": "ターミナルを開くか操作することができませんでした。ホスト、認証情報、フィンガープリントを確認してください。代替シェルは起動されていません。",
+  "@rel_ops_term_operation_failed": {
+    "description": "Terminal page: operation failed."
+  },
+  "rel_ops_term_input_refused": "入力が拒否されました。元のチャットを開き直してください。",
+  "@rel_ops_term_input_refused": {
+    "description": "Terminal page: input refused."
+  },
+  "rel_ops_term_cancel": "キャンセル",
+  "@rel_ops_term_cancel": {
+    "description": "Terminal page: cancel."
+  },
+  "rel_ops_term_confirm": "確認",
+  "@rel_ops_term_confirm": {
+    "description": "Terminal page: confirm."
+  },
+  "rel_ops_term_open_device_title": "このデバイスでシェルを開きますか？",
+  "@rel_ops_term_open_device_title": {
+    "description": "Terminal page: open device title."
+  },
+  "rel_ops_term_ssh_shell": "SSHシェル",
+  "@rel_ops_term_ssh_shell": {
+    "description": "Terminal page: ssh shell."
+  },
+  "rel_ops_term_local_shell": "ローカルシェル",
+  "@rel_ops_term_local_shell": {
+    "description": "Terminal page: local shell."
+  },
+  "rel_ops_term_connection_lost": "接続が失われました",
+  "@rel_ops_term_connection_lost": {
+    "description": "Terminal page: connection lost."
+  },
+  "rel_ops_term_shell_ended": "シェルが終了しました",
+  "@rel_ops_term_shell_ended": {
+    "description": "Terminal page: shell ended."
+  },
+  "rel_ops_term_no_owner": "このチャットには認証済みのゲートウェイターミナル所有者がいません。URLまたはクラウドへのログインだけではシェルへのアクセス権は付与されません。",
+  "@rel_ops_term_no_owner": {
+    "description": "Terminal page: no owner."
+  },
+  "rel_ops_term_open_gateway_title": "ゲートウェイのシェルを開きますか？",
+  "@rel_ops_term_open_gateway_title": {
+    "description": "Terminal page: open gateway title."
+  },
+  "rel_ops_term_shell_expired": "シェルが終了したか有効期限が切れました",
+  "@rel_ops_term_shell_expired": {
+    "description": "Terminal page: shell expired."
+  },
+  "rel_ops_term_disconnected": "切断済み",
+  "@rel_ops_term_disconnected": {
+    "description": "Terminal page: disconnected."
+  },
+  "rel_ops_term_gateway_shell": "ゲートウェイシェル",
+  "@rel_ops_term_gateway_shell": {
+    "description": "Terminal page: gateway shell."
+  },
+  "rel_ops_term_close_body": "このシェルを終了します。実行を続けるには、代わりにペインを非表示にしてください。",
+  "@rel_ops_term_close_body": {
+    "description": "Terminal page: close body."
+  },
+  "rel_ops_term_closing": "終了中…",
+  "@rel_ops_term_closing": {
+    "description": "Terminal page: closing."
+  },
+  "rel_ops_term_close_unconfirmed": "終了を確認できませんでした",
+  "@rel_ops_term_close_unconfirmed": {
+    "description": "Terminal page: close unconfirmed."
+  },
+  "rel_ops_term_processes_require_chat": "エージェントプロセスには、認証済みの対応するチャットが必要です。",
+  "@rel_ops_term_processes_require_chat": {
+    "description": "Terminal page: processes require chat."
+  },
+  "rel_ops_term_watching_processes": "このチャットのエージェントプロセスを監視しています。ミラー表示を閉じてもプロセスは停止しません。",
+  "@rel_ops_term_watching_processes": {
+    "description": "Terminal page: watching processes."
+  },
+  "rel_ops_term_paste_limit": "貼り付けは16 KiBまでです。",
+  "@rel_ops_term_paste_limit": {
+    "description": "Terminal page: paste limit."
+  },
+  "rel_ops_term_paste": "貼り付け",
+  "@rel_ops_term_paste": {
+    "description": "Terminal page: paste."
+  },
+  "rel_ops_term_select_first": "先にターミナルの出力を選択してください。",
+  "@rel_ops_term_select_first": {
+    "description": "Terminal page: select first."
+  },
+  "rel_ops_term_open_chat_to_insert": "出力を挿入する前に元のチャットを開いてください。",
+  "@rel_ops_term_open_chat_to_insert": {
+    "description": "Terminal page: open chat to insert."
+  },
+  "rel_ops_term_added_to_draft": "元のチャットの下書きに追加しました。何も送信されていません。",
+  "@rel_ops_term_added_to_draft": {
+    "description": "Terminal page: added to draft."
+  },
+  "rel_ops_term_close": "閉じる",
+  "@rel_ops_term_close": {
+    "description": "Terminal page: close."
+  },
+  "rel_ops_term_add_selection": "選択範囲をチャットの下書きに追加",
+  "@rel_ops_term_add_selection": {
+    "description": "Terminal page: add selection."
+  },
+  "rel_ops_term_new_terminal": "新しいターミナル",
+  "@rel_ops_term_new_terminal": {
+    "description": "Terminal page: new terminal."
+  },
+  "rel_ops_term_gateway_terminal": "ゲートウェイホストのターミナル",
+  "@rel_ops_term_gateway_terminal": {
+    "description": "Terminal page: gateway terminal."
+  },
+  "rel_ops_term_verified_ssh_terminal": "検証済みSSHターミナル",
+  "@rel_ops_term_verified_ssh_terminal": {
+    "description": "Terminal page: verified ssh terminal."
+  },
+  "rel_ops_term_device_local_shell": "このデバイス（ローカルシェル）",
+  "@rel_ops_term_device_local_shell": {
+    "description": "Terminal page: device local shell."
+  },
+  "rel_ops_term_local_unavailable_mobile": "モバイルではローカルシェルを利用できません",
+  "@rel_ops_term_local_unavailable_mobile": {
+    "description": "Terminal page: local unavailable mobile."
+  },
+  "rel_ops_term_watch_processes": "エージェントプロセスを監視",
+  "@rel_ops_term_watch_processes": {
+    "description": "Terminal page: watch processes."
+  },
+  "rel_ops_term_select_output": "出力を選択またはコピー",
+  "@rel_ops_term_select_output": {
+    "description": "Terminal page: select output."
+  },
+  "rel_ops_term_add_selected_output": "選択した出力をチャットの下書きに追加",
+  "@rel_ops_term_add_selected_output": {
+    "description": "Terminal page: add selected output."
+  },
+  "rel_ops_term_review_paste": "クリップボードからの貼り付け内容を確認",
+  "@rel_ops_term_review_paste": {
+    "description": "Terminal page: review paste."
+  },
+  "rel_ops_term_reconnect": "同じシェルに再接続",
+  "@rel_ops_term_reconnect": {
+    "description": "Terminal page: reconnect."
+  },
+  "rel_ops_term_close_mirror": "ミラー表示を閉じる",
+  "@rel_ops_term_close_mirror": {
+    "description": "Terminal page: close mirror."
+  },
+  "rel_ops_term_close_shell": "シェルを閉じる",
+  "@rel_ops_term_close_shell": {
+    "description": "Terminal page: close shell."
+  },
+  "rel_ops_term_empty": "+ を選択してターミナルを開いてください。シェルが自動的に起動することはありません。",
+  "@rel_ops_term_empty": {
+    "description": "Terminal page: empty."
+  },
+  "rel_ops_term_reason_stale": "古い状態",
+  "@rel_ops_term_reason_stale": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_mismatch": "不一致",
+  "@rel_ops_term_reason_mismatch": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_unbound": "未関連付け",
+  "@rel_ops_term_reason_unbound": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_unsupported": "未対応",
+  "@rel_ops_term_reason_unsupported": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_denied": "拒否",
+  "@rel_ops_term_reason_denied": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_ineligible": "利用資格なし",
+  "@rel_ops_term_reason_ineligible": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_unavailable": "利用不可",
+  "@rel_ops_term_reason_unavailable": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_invalid": "無効",
+  "@rel_ops_term_reason_invalid": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_insecure": "安全でない接続",
+  "@rel_ops_term_reason_insecure": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_refused": "ゲートウェイがこのターミナル操作を拒否しました（{reason}）。",
+  "@rel_ops_term_refused": {
+    "description": "Terminal page: refused. Preserve server/user placeholder values.",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_open_device_body": "これはAresのデバイスであり、{connection}ではありません。シェルはアプリの権限を使用し、アプリのストレージで起動します。",
+  "@rel_ops_term_open_device_body": {
+    "description": "Terminal page: open device body. Preserve server/user placeholder values.",
+    "placeholders": {
+      "connection": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_open_gateway_body": "{host}上の、検証済みのチャット作業ディレクトリでシェルを起動します。これはデバイスのシェルではありません。",
+  "@rel_ops_term_open_gateway_body": {
+    "description": "Terminal page: open gateway body. Preserve server/user placeholder values.",
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_close_tab_title": "{label}を閉じますか？",
+  "@rel_ops_term_close_tab_title": {
+    "description": "Terminal page: close tab title. Preserve server/user placeholder values.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_read_only_status": "読み取り専用 · {status}",
+  "@rel_ops_term_read_only_status": {
+    "description": "Terminal page: read only status. Preserve server/user placeholder values.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_paste_title": "{label}に貼り付けますか？",
+  "@rel_ops_term_paste_title": {
+    "description": "Terminal page: paste title. Preserve server/user placeholder values.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_output_title": "出力 · {label}",
+  "@rel_ops_term_output_title": {
+    "description": "Terminal page: output title. Preserve server/user placeholder values.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_mirror_status": "読み取り専用のプロセスミラー · {label}",
+  "@rel_ops_term_mirror_status": {
+    "description": "Terminal page: mirror status. Preserve server/user placeholder values.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_status_label": "{status} · {label}",
+  "@rel_ops_term_status_label": {
+    "description": "Terminal page: status label. Preserve server/user placeholder values.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_ssh_tab": "SSH {user}@{host}:{port} · {number}",
+  "@rel_ops_term_ssh_tab": {
+    "description": "SSH tab label. Preserve SSH and the login address.",
+    "placeholders": {
+      "user": {
+        "type": "String"
+      },
+      "host": {
+        "type": "String"
+      },
+      "port": {
+        "type": "int"
+      },
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_term_device_tab": "このデバイス · {number}",
+  "@rel_ops_term_device_tab": {
+    "description": "Local device shell tab label.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_term_gateway_tab": "ゲートウェイ {host} · {number}",
+  "@rel_ops_term_gateway_tab": {
+    "description": "Gateway shell tab label; host is unchanged.",
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_term_earlier_output_trimmed": "[以前の出力は切り詰められました]",
+  "@rel_ops_term_earlier_output_trimmed": {
+    "description": "App-authored terminal replay notice, not shell output."
+  },
+  "rel_ops_term_ssh_dialog_title": "検証済みSSHターミナルを開く",
+  "@rel_ops_term_ssh_dialog_title": {
+    "description": "SSH terminal dialog: ssh dialog title. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_dialog_body": "ホスト管理者から独立した経路で取得したフィンガープリントを使用してください。ゲートウェイやローカルシェルではなく、新しいリモートログインセッションを開きます。",
+  "@rel_ops_term_ssh_dialog_body": {
+    "description": "SSH terminal dialog: ssh dialog body. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_host": "SSHホスト",
+  "@rel_ops_term_ssh_host": {
+    "description": "SSH terminal dialog: ssh host. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_port": "ポート",
+  "@rel_ops_term_ssh_port": {
+    "description": "SSH terminal dialog: ssh port. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_user": "ユーザー",
+  "@rel_ops_term_ssh_user": {
+    "description": "SSH terminal dialog: ssh user. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_fingerprint": "ホスト鍵のフィンガープリント（SHA256:…）",
+  "@rel_ops_term_ssh_fingerprint": {
+    "description": "SSH terminal dialog: ssh fingerprint. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_password": "SSHパスワード（保存されません）",
+  "@rel_ops_term_ssh_password": {
+    "description": "SSH terminal dialog: ssh password. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_connect": "接続",
+  "@rel_ops_term_connect": {
+    "description": "SSH terminal dialog: connect. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_ssh_invalid_destination": "SSHホスト、ポート、またはユーザーが無効です。",
+  "@rel_ops_ssh_invalid_destination": {
+    "description": "Verified SSH destination validation refusal."
+  },
+  "rel_ops_ssh_public_key_required": "OpenSSH Ed25519形式のホスト公開鍵が必要です。",
+  "@rel_ops_ssh_public_key_required": {
+    "description": "Verified SSH key format refusal. Preserve OpenSSH and Ed25519."
+  },
+  "rel_ops_ssh_invalid_public_key": "Ed25519ホスト鍵が無効です。",
+  "@rel_ops_ssh_invalid_public_key": {
+    "description": "Verified SSH key binary validation refusal."
+  },
+  "rel_ops_ssh_invalid_saved_key": "保存されたホスト鍵が無効です。",
+  "@rel_ops_ssh_invalid_saved_key": {
+    "description": "Saved SSH pin failed validation."
+  },
+  "rel_ops_ssh_enrollment_unverified": "ホスト鍵の登録を検証できませんでした。",
+  "@rel_ops_ssh_enrollment_unverified": {
+    "description": "Host key enrollment could not be read back."
+  },
+  "rel_ops_ssh_different_key_pinned": "別の鍵がすでに固定されています。変更を別途検証してください。",
+  "@rel_ops_ssh_different_key_pinned": {
+    "description": "SSH pin replacement refusal. Preserve separate verification requirement."
+  },
+  "rel_ops_ssh_open_ssh_unavailable": "システムのOpenSSHを利用できません。",
+  "@rel_ops_ssh_open_ssh_unavailable": {
+    "description": "System OpenSSH transport unavailable refusal."
+  },
+  "rel_ops_ssh_confirm_host_key": "接続する前にホスト鍵を確認してください。",
+  "@rel_ops_ssh_confirm_host_key": {
+    "description": "Connection refused before explicit host key enrollment."
+  },
+  "rel_ops_ssh_absolute_identity_required": "絶対パスで指定された認証鍵ファイルを選択してください。",
+  "@rel_ops_ssh_absolute_identity_required": {
+    "description": "Unsafe or relative SSH identity path refusal."
+  },
+  "rel_ops_ssh_invalid_remote_port": "リモートポートが無効です。",
+  "@rel_ops_ssh_invalid_remote_port": {
+    "description": "Remote loopback port validation refusal."
+  },
+  "rel_ops_ssh_preview_too_large": "プレビューが64 KiBの上限を超えています。",
+  "@rel_ops_ssh_preview_too_large": {
+    "description": "SSH preview response size refusal. Preserve 64 KiB limit."
+  },
+  "rel_ops_ssh_connection_refused": "SSH接続が拒否されました。登録済みのホスト鍵、認証情報、サービスを確認してください。",
+  "@rel_ops_ssh_connection_refused": {
+    "description": "SSH subprocess nonzero exit refusal."
+  },
+  "rel_ops_ssh_http_not_ok": "リモートサービスからHTTP 200が返されませんでした。",
+  "@rel_ops_ssh_http_not_ok": {
+    "description": "Remote HTTP status or header validation refusal. Preserve HTTP 200."
+  },
+  "rel_ops_ssh_encoded_response": "このプレビューはエンコードされた応答に対応していません。",
+  "@rel_ops_ssh_encoded_response": {
+    "description": "Encoded remote HTTP response refusal."
+  },
+  "rel_ops_ssh_preview_type_unsupported": "プレビューできるのはテキストとHTMLソースのみです。",
+  "@rel_ops_ssh_preview_type_unsupported": {
+    "description": "Unsupported remote preview content type refusal."
+  },
+  "rel_ops_ssh_health_unconfirmed": "サービスからゲートウェイの正常性を確認できませんでした。",
+  "@rel_ops_ssh_health_unconfirmed": {
+    "description": "Remote health response did not affirm ok."
+  },
+  "rel_ops_ssh_enroll_host_key_first": "まずホストの公開鍵を登録してください。",
+  "@rel_ops_ssh_enroll_host_key_first": {
+    "description": "SSH screen notice for an unenrolled destination."
+  },
+  "rel_ops_ssh_cancel": "キャンセル",
+  "@rel_ops_ssh_cancel": {
+    "description": "Cancel an SSH enrollment or connection confirmation."
+  },
+  "rel_ops_ssh_confirm": "確認",
+  "@rel_ops_ssh_confirm": {
+    "description": "Confirm an SSH enrollment or connection."
+  },
+  "rel_ops_ssh_pin_title": "このSSHホスト鍵を固定しますか？",
+  "@rel_ops_ssh_pin_title": {
+    "description": "Explicit SSH host key enrollment confirmation title."
+  },
+  "rel_ops_ssh_pin_detail": "{destination}\n{fingerprint}\n独立した通信経路でホスト管理者にこのフィンガープリントを照合してください。接続は行われません。",
+  "@rel_ops_ssh_pin_detail": {
+    "description": "Host key enrollment consent. Preserve independent-channel verification and no-connection assurance. Values are verbatim SSH identifiers.",
+    "placeholders": {
+      "destination": {
+        "type": "String"
+      },
+      "fingerprint": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_ssh_host_key_pinned": "ホスト鍵を固定しました。",
+  "@rel_ops_ssh_host_key_pinned": {
+    "description": "Successful host key enrollment notice."
+  },
+  "rel_ops_ssh_shell_detail": "対話型ログインシェルを開きます。",
+  "@rel_ops_ssh_shell_detail": {
+    "description": "SSH remote shell connection consent detail."
+  },
+  "rel_ops_ssh_read_detail": "SSHチャネル経由でリモートの127.0.0.1:{port}にある{path}を読み取ります。",
+  "@rel_ops_ssh_read_detail": {
+    "description": "Remote loopback HTTP read consent. Preserve literal loopback address; path is / or /api/health and must remain unchanged.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "port": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_ssh_connect_title": "{destination}に接続しますか？",
+  "@rel_ops_ssh_connect_title": {
+    "description": "SSH connection confirmation title; destination is verbatim user@host:port.",
+    "placeholders": {
+      "destination": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_ssh_connect_detail": "{detail}\n{fingerprint}\n{authentication}",
+  "@rel_ops_ssh_connect_detail": {
+    "description": "SSH connection confirmation layout combining localized operation and authentication consent with a verbatim fingerprint.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      },
+      "fingerprint": {
+        "type": "String"
+      },
+      "authentication": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_ssh_agent_auth": "SSHエージェントで認証します。",
+  "@rel_ops_ssh_agent_auth": {
+    "description": "SSH agent authentication consent detail."
+  },
+  "rel_ops_ssh_identity_auth": "選択した認証鍵ファイルを使用します。",
+  "@rel_ops_ssh_identity_auth": {
+    "description": "Selected SSH identity file authentication consent detail."
+  },
+  "rel_ops_ssh_gateway_responding": "ゲートウェイがリモートのループバックポート{port}で応答しています。",
+  "@rel_ops_ssh_gateway_responding": {
+    "description": "Successful SSH remote gateway health check result.",
+    "placeholders": {
+      "port": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_ssh_session_closed": "SSHセッションを閉じました。",
+  "@rel_ops_ssh_session_closed": {
+    "description": "Remote SSH shell exited cleanly."
+  },
+  "rel_ops_ssh_session_unclean": "SSHセッションが正常に終了しませんでした。",
+  "@rel_ops_ssh_session_unclean": {
+    "description": "Remote SSH shell exited with nonzero status."
+  },
+  "rel_ops_ssh_operation_failed": "SSH操作に失敗しました。接続先と認証情報を確認してください。",
+  "@rel_ops_ssh_operation_failed": {
+    "description": "Safe SSH operation failure notice replacing untrusted system errors."
+  },
+  "rel_ops_ssh_title": "検証済みSSH",
+  "@rel_ops_ssh_title": {
+    "description": "Verified SSH screen title."
+  },
+  "rel_ops_ssh_unsupported": "このデバイスには、対応するシステムOpenSSHトランスポートがありません。固定済みゲートウェイのリレーは新しい鍵を自動的に受け入れるため、検証付きの登録には使用できません。",
+  "@rel_ops_ssh_unsupported": {
+    "description": "Security explanation on unsupported devices. Preserve the relay enrollment restriction."
+  },
+  "rel_ops_ssh_host": "SSHホスト",
+  "@rel_ops_ssh_host": {
+    "description": "SSH hostname input label."
+  },
+  "rel_ops_ssh_port": "SSHポート",
+  "@rel_ops_ssh_port": {
+    "description": "SSH transport port input label."
+  },
+  "rel_ops_ssh_user": "SSHユーザー",
+  "@rel_ops_ssh_user": {
+    "description": "SSH username input label."
+  },
+  "rel_ops_ssh_identity": "認証鍵ファイル（任意。未指定の場合はSSHエージェントを使用）",
+  "@rel_ops_ssh_identity": {
+    "description": "SSH identity path input label and agent fallback explanation."
+  },
+  "rel_ops_ssh_public_key": "管理者から提供されたホスト公開鍵（ssh-ed25519）",
+  "@rel_ops_ssh_public_key": {
+    "description": "Public host key input label. Preserve ssh-ed25519 algorithm token."
+  },
+  "rel_ops_ssh_review_key": "ホスト鍵を確認",
+  "@rel_ops_ssh_review_key": {
+    "description": "Open SSH host key enrollment review."
+  },
+  "rel_ops_ssh_remote_port": "リモートのループバックサービスポート",
+  "@rel_ops_ssh_remote_port": {
+    "description": "Remote HTTP service loopback port input label."
+  },
+  "rel_ops_ssh_check_gateway": "SSH経由でゲートウェイを確認",
+  "@rel_ops_ssh_check_gateway": {
+    "description": "Check remote gateway health through SSH."
+  },
+  "rel_ops_ssh_preview_source": "SSH経由でソースをプレビュー",
+  "@rel_ops_ssh_preview_source": {
+    "description": "Read remote text or HTML source through SSH."
+  },
+  "rel_ops_ssh_open_shell": "SSHシェルを開く",
+  "@rel_ops_ssh_open_shell": {
+    "description": "Explicitly open a remote SSH login shell."
+  },
+  "rel_ops_ssh_shell_line": "リモートシェルに送信する行",
+  "@rel_ops_ssh_shell_line": {
+    "description": "Input label for a line sent to the active remote shell."
+  },
+  "rel_ops_ssh_disconnect": "シェルを切断",
+  "@rel_ops_ssh_disconnect": {
+    "description": "Terminate the active SSH shell subprocess."
+  },
+  "rel_ops_host_cancel": "キャンセル",
+  "@rel_ops_host_cancel": {
+    "description": "Cancel a remote host operation confirmation."
+  },
+  "rel_ops_host_confirm": "確認",
+  "@rel_ops_host_confirm": {
+    "description": "Confirm a remote host operation."
+  },
+  "rel_ops_host_title": "ホスト",
+  "@rel_ops_host_title": {
+    "description": "Remote host operations screen title."
+  },
+  "rel_ops_host_refresh": "更新",
+  "@rel_ops_host_refresh": {
+    "description": "Refresh remote host status and logs."
+  },
+  "rel_ops_host_update": "リモートの Hermes を更新",
+  "@rel_ops_host_update": {
+    "description": "Start an update on the remote gateway host, not the Ares client."
+  },
+  "rel_ops_host_update_confirmation": "{profile} のゲートウェイホストで既存のインストールを更新します。このデバイスの Ares は更新されません。成功を示すのは対応する更新の実施記録であり、ホストに接続できる状態が続くことではありません。",
+  "@rel_ops_host_update_confirmation": {
+    "description": "Remote Hermes update confirmation. Preserve the profile identifier verbatim.",
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_update_awaiting": "対応する実施記録を待っています。更新はまだ実行中です。",
+  "@rel_ops_host_update_awaiting": {
+    "description": "Update is running but no matching receipt has arrived."
+  },
+  "rel_ops_host_receipt_success": "更新の実施記録は成功を示しています。",
+  "@rel_ops_host_receipt_success": {
+    "description": "Matching remote update receipt reports success."
+  },
+  "rel_ops_host_receipt_partial": "更新は適用されましたが、追加の手順がまだ必要です。",
+  "@rel_ops_host_receipt_partial": {
+    "description": "Remote update committed but still requires follow-up work."
+  },
+  "rel_ops_host_receipt_failed": "更新の実施記録は失敗を示しています。",
+  "@rel_ops_host_receipt_failed": {
+    "description": "Matching remote update receipt reports failure."
+  },
+  "rel_ops_host_receipt_refused": "更新の実施記録は拒否を示しています。",
+  "@rel_ops_host_receipt_refused": {
+    "description": "Matching remote update receipt reports refusal."
+  },
+  "rel_ops_host_update_running": "更新はまだ実行中です。",
+  "@rel_ops_host_update_running": {
+    "description": "Remote update remains in progress."
+  },
+  "rel_ops_host_update_unknown": "更新の結果は不明です。ゲートウェイが稼働していても、更新の成功を意味しません。",
+  "@rel_ops_host_update_unknown": {
+    "description": "No matching receipt verifies the remote update outcome."
+  },
+  "rel_ops_host_default_profile": "ゲートウェイのデフォルトプロファイル",
+  "@rel_ops_host_default_profile": {
+    "description": "Display name for an unspecified gateway profile, not a wire identifier."
+  },
+  "rel_ops_host_restart": "リモートゲートウェイを再起動",
+  "@rel_ops_host_restart": {
+    "description": "Restart the gateway on the remote host."
+  },
+  "rel_ops_host_restart_shared_confirmation": "{profiles} が共有するゲートウェイを再起動します。このゲートウェイで実行中のターンは中断されます。その後、再接続してください。接続できることは、再起動完了の証明にはなりません。",
+  "@rel_ops_host_restart_shared_confirmation": {
+    "description": "Warn that restarting a shared gateway interrupts all listed profiles. Keep profile identifiers unchanged.",
+    "placeholders": {
+      "profiles": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_restart_confirmation": "{profile} のリモートゲートウェイを再起動します。このゲートウェイで実行中のターンは中断されます。その後、再接続してください。",
+  "@rel_ops_host_restart_confirmation": {
+    "description": "Remote gateway restart confirmation.",
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_restart_running": "再起動コマンドはまだ実行中です。",
+  "@rel_ops_host_restart_running": {
+    "description": "Remote restart command is still running."
+  },
+  "rel_ops_host_restart_finished": "再起動コマンドが終了しました。ホストに手動で再接続してください。",
+  "@rel_ops_host_restart_finished": {
+    "description": "Remote restart command exited successfully; reconnection remains manual."
+  },
+  "rel_ops_host_restart_failed": "再起動コマンドが失敗しました。",
+  "@rel_ops_host_restart_failed": {
+    "description": "Remote restart command exited unsuccessfully."
+  },
+  "rel_ops_host_maintenance_running": "{name} はまだ実行中です",
+  "@rel_ops_host_maintenance_running": {
+    "description": "Remote maintenance command status. The name is a command identifier such as doctor, security-audit or curator-run; do not translate it.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_maintenance_finished": "{name} が完了しました",
+  "@rel_ops_host_maintenance_finished": {
+    "description": "Remote maintenance command succeeded. Keep the command identifier unchanged.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_maintenance_failed": "{name} が失敗しました",
+  "@rel_ops_host_maintenance_failed": {
+    "description": "Remote maintenance command failed. Keep the command identifier unchanged.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_curator_paused_result": "キュレーターを一時停止しました。",
+  "@rel_ops_host_curator_paused_result": {
+    "description": "Confirmation that the remote Curator was paused."
+  },
+  "rel_ops_host_curator_resumed_result": "キュレーターを再開しました。",
+  "@rel_ops_host_curator_resumed_result": {
+    "description": "Confirmation that the remote Curator was resumed."
+  },
+  "rel_ops_host_reset": "リモートのメモリファイルをリセット",
+  "@rel_ops_host_reset": {
+    "description": "Remote memory file reset section and confirmation title."
+  },
+  "rel_ops_host_reset_confirmation": "{profile} のメモリファイル {targetName} を削除しますか？この操作は Ares からは元に戻せません。",
+  "@rel_ops_host_reset_confirmation": {
+    "description": "Destructive remote memory reset warning. Preserve the target token (memory, user or all) and profile identifier.",
+    "placeholders": {
+      "targetName": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_reset_result": "{targetName} をリセットしました。リモートファイルを {count} 個削除しました。",
+  "@rel_ops_host_reset_result": {
+    "description": "Remote memory reset result. Preserve the target token unchanged.",
+    "placeholders": {
+      "targetName": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_host_share_not_redacted": "ホストが診断パッケージの機密情報のマスキングを確認していません。リンクは表示されません。",
+  "@rel_ops_host_share_not_redacted": {
+    "description": "Diagnostic sharing is blocked without server confirmation of redaction."
+  },
+  "rel_ops_host_scope": "これらの操作の対象は {profile} のリモートゲートウェイ {connection} です。このデバイスや Ares クライアントの更新は対象ではありません。",
+  "@rel_ops_host_scope": {
+    "description": "Explain that controls target the named remote connection and profile, never this device. Preserve the connection label and profile identifier.",
+    "placeholders": {
+      "connection": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_health_running": "ゲートウェイプロセス稼働中 {version} · {count} セッション",
+  "@rel_ops_host_health_running": {
+    "description": "Remote gateway health with running process, server version and active session count.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_host_health_stopped": "ゲートウェイプロセス停止中 {version} · {count} セッション",
+  "@rel_ops_host_health_stopped": {
+    "description": "Remote gateway health with stopped process, server version and active session count.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_host_heartbeat_stale": "ホストのハートビートが古くなっています（{seconds} 秒）。",
+  "@rel_ops_host_heartbeat_stale": {
+    "description": "Remote host heartbeat age in seconds; the gateway may return fractional seconds.",
+    "placeholders": {
+      "seconds": {
+        "type": "num"
+      }
+    }
+  },
+  "rel_ops_host_doctor": "Doctor を実行",
+  "@rel_ops_host_doctor": {
+    "description": "Run remote host diagnostics using the Doctor command."
+  },
+  "rel_ops_host_security_audit": "セキュリティ監査",
+  "@rel_ops_host_security_audit": {
+    "description": "Run the remote host security audit."
+  },
+  "rel_ops_host_check_receipt": "更新の実施記録を確認",
+  "@rel_ops_host_check_receipt": {
+    "description": "Read the receipt for the already-started remote update, without starting another."
+  },
+  "rel_ops_host_logs": "リモートホストのログ",
+  "@rel_ops_host_logs": {
+    "description": "Remote gateway logs section heading."
+  },
+  "rel_ops_host_search_logs": "ホストのログを検索",
+  "@rel_ops_host_search_logs": {
+    "description": "Search field label for remote host logs."
+  },
+  "rel_ops_host_driver": "リモートホストのドライバー",
+  "@rel_ops_host_driver": {
+    "description": "Remote Computer Use driver section heading."
+  },
+  "rel_ops_host_driver_scope": "コンピューター操作の準備状況は、ゲートウェイマシンのドライバーと OS の権限に関するもので、このデバイスのものではありません。",
+  "@rel_ops_host_driver_scope": {
+    "description": "Clarify that driver readiness and OS permissions refer only to the remote gateway machine."
+  },
+  "rel_ops_host_computer_status": "{platform} · インストール済み {installed} · 準備完了 {ready}",
+  "@rel_ops_host_computer_status": {
+    "description": "Computer Use driver status. Platform is a server identifier; installed and ready are localized boolean display values.",
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      },
+      "installed": {
+        "type": "String"
+      },
+      "ready": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_null": "利用不可",
+  "@rel_ops_host_null": {
+    "description": "Human-readable unavailable readiness value from a nullable remote driver status; never sent over the wire."
+  },
+  "rel_ops_host_true": "はい",
+  "@rel_ops_host_true": {
+    "description": "Human-readable affirmative boolean in remote driver status; never sent over the wire."
+  },
+  "rel_ops_host_false": "いいえ",
+  "@rel_ops_host_false": {
+    "description": "Human-readable negative boolean in remote driver status; never sent over the wire."
+  },
+  "rel_ops_host_curator": "キュレーター",
+  "@rel_ops_host_curator": {
+    "description": "Remote Curator section heading."
+  },
+  "rel_ops_host_curator_paused": "キュレーターは一時停止中",
+  "@rel_ops_host_curator_paused": {
+    "description": "Remote Curator paused status label."
+  },
+  "rel_ops_host_curator_running": "キュレーターは実行中",
+  "@rel_ops_host_curator_running": {
+    "description": "Remote Curator running status label."
+  },
+  "rel_ops_host_no_run": "完了した実行はありません",
+  "@rel_ops_host_no_run": {
+    "description": "No completed remote Curator run timestamp is available."
+  },
+  "rel_ops_host_run_curator": "キュレーターを今すぐ実行",
+  "@rel_ops_host_run_curator": {
+    "description": "Start a remote Curator maintenance run immediately."
+  },
+  "rel_ops_host_reset_memory": "メモリファイルをリセット",
+  "@rel_ops_host_reset_memory": {
+    "description": "Delete the remote memory file after confirmation."
+  },
+  "rel_ops_host_reset_user": "ユーザーファイルをリセット",
+  "@rel_ops_host_reset_user": {
+    "description": "Delete the remote user memory file after confirmation."
+  },
+  "rel_ops_host_reset_both": "両方のファイルをリセット",
+  "@rel_ops_host_reset_both": {
+    "description": "Delete both remote memory files after confirmation."
+  },
+  "rel_ops_host_share_consent": "リモートホストから機密情報をマスキングした診断パッケージをアップロードすることに同意します",
+  "@rel_ops_host_share_consent": {
+    "description": "Explicit consent to upload a redacted remote host diagnostic bundle; do not weaken the consent or remote-host scope."
+  },
+  "rel_ops_host_share": "機密情報をマスキングした診断情報を共有",
+  "@rel_ops_host_share": {
+    "description": "Upload redacted remote diagnostic bundle after explicit consent."
+  },
+  "rel_ops_host_update_unknown_installation": "このインストールは不明なため、更新は送信されませんでした",
+  "@rel_ops_host_update_unknown_installation": {
+    "description": "Local admission refusal when the gateway installation cannot be identified."
+  },
+  "rel_ops_host_update_busy_installation": "このインストールでチャットが実行中です",
+  "@rel_ops_host_update_busy_installation": {
+    "description": "Local admission refusal when an active chat or agent blocks the remote update."
+  },
+  "rel_ops_host_update_refused": "リモート更新が拒否されました",
+  "@rel_ops_host_update_refused": {
+    "description": "Local fallback when the server refuses an update without a message."
+  },
+  "rel_ops_host_error_stale": "リモートワークスペース：古い状態",
+  "@rel_ops_host_error_stale": {
+    "description": "Workspace failure: the remote owner or connection is no longer current."
+  },
+  "rel_ops_host_error_mismatch": "リモートワークスペース：不一致",
+  "@rel_ops_host_error_mismatch": {
+    "description": "Workspace failure: remote owner or action result does not match the requested target."
+  },
+  "rel_ops_host_error_unbound": "リモートワークスペース：未関連付け",
+  "@rel_ops_host_error_unbound": {
+    "description": "Workspace failure: no authenticated remote target has been bound."
+  },
+  "rel_ops_host_error_unsupported": "リモートワークスペース：未対応",
+  "@rel_ops_host_error_unsupported": {
+    "description": "Workspace failure: the gateway does not support this operation."
+  },
+  "rel_ops_host_error_denied": "リモートワークスペース：アクセス拒否",
+  "@rel_ops_host_error_denied": {
+    "description": "Workspace failure: the remote host operation was denied."
+  },
+  "rel_ops_host_error_ineligible": "リモートワークスペース：対象外",
+  "@rel_ops_host_error_ineligible": {
+    "description": "Workspace failure: the remote target is not eligible for this operation."
+  },
+  "rel_ops_host_error_unavailable": "リモートワークスペース：利用不可",
+  "@rel_ops_host_error_unavailable": {
+    "description": "Workspace failure: the remote host operation is unavailable."
+  },
+  "rel_ops_host_error_invalid": "リモートワークスペース：無効",
+  "@rel_ops_host_error_invalid": {
+    "description": "Workspace failure: the request or gateway response was invalid."
+  },
+  "rel_ops_host_error_insecure": "リモートワークスペース：安全でない接続",
+  "@rel_ops_host_error_insecure": {
+    "description": "Workspace failure: the remote connection does not meet security requirements."
+  },
+  "rel_ops_host_error_request": "リクエストを完了できませんでした。",
+  "@rel_ops_host_error_request": {
+    "description": "Safe host-operation failure fallback when no structured reason is available. Do not expose client-authored service exception prose."
   }
 }

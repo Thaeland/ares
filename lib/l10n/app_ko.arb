@@ -5276,5 +5276,1709 @@
   "rel_admin_phase_undone": "실행 취소됨",
   "@rel_admin_phase_undone": {
     "description": "Release administration: undone"
+  },
+  "rel_ops_cap_install_blocked": "설치 차단됨({verdict}): {detail}",
+  "@rel_ops_cap_install_blocked": {
+    "description": "Capability administration: Install blocked ({verdict}): {detail}",
+    "placeholders": {
+      "verdict": {
+        "type": "String"
+      },
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_scan_confirm": "검사 결과: {verdict}. 설치하기 전에 {requested}을(를) 확인하세요.",
+  "@rel_ops_cap_scan_confirm": {
+    "description": "Capability administration: Scan verdict: {verdict}. Confirm {requested} before installing.",
+    "placeholders": {
+      "verdict": {
+        "type": "String"
+      },
+      "requested": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_install_unconfirmed": "게이트웨이에서 {requested}의 설치를 아직 확인하지 않았습니다.",
+  "@rel_ops_cap_install_unconfirmed": {
+    "description": "Capability administration: The gateway has not confirmed that {requested} is installed.",
+    "placeholders": {
+      "requested": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_edit_skill": "{name} 편집",
+  "@rel_ops_cap_edit_skill": {
+    "description": "Capability administration: Edit {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_archive_skill": "{name}을(를) 보관할까요?",
+  "@rel_ops_cap_archive_skill": {
+    "description": "Capability administration: Archive {name}?",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_archive_explanation": "스킬이 보관되며 {command} 명령으로 복원할 수 있습니다.",
+  "@rel_ops_cap_archive_explanation": {
+    "description": "Archive confirmation. The command placeholder is the literal CLI command hermes curator restore; do not translate or alter the command.",
+    "placeholders": {
+      "command": {
+        "type": "String",
+        "example": "hermes curator restore"
+      }
+    }
+  },
+  "rel_ops_cap_install_anyway": "그래도 {name} 설치",
+  "@rel_ops_cap_install_anyway": {
+    "description": "Capability administration: Install {name} anyway",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_install_despite_scan": "검사 결과에도 불구하고 {name}을(를) 설치할까요?",
+  "@rel_ops_cap_install_despite_scan": {
+    "description": "Capability administration: Install {name} despite the scan?",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_scan_warning": "보안 검사에서 {name}을(를) 차단했습니다. 이 확인은 {name}에만 적용됩니다.",
+  "@rel_ops_cap_scan_warning": {
+    "description": "Capability administration: The security scan blocked {name}. This confirmation applies only to {name}.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_accept_scan_warning": "기능 권한을 수락해도 {name}의 검사 결과를 무시할 수 없습니다.",
+  "@rel_ops_cap_accept_scan_warning": {
+    "description": "Capability administration: Accepting capabilities does not override the scan of {name}.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_review_scan": "{name} 검사 결과 검토",
+  "@rel_ops_cap_review_scan": {
+    "description": "Capability administration: Review scan for {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_desktop_grants": "{description}\n폴더 및 미리 보기 스크립트 권한은 해당 컴퓨터의 Desktop 앱에 유지됩니다. 여기서 플러그인을 제거해도 해당 로컬 권한은 취소되지 않습니다.",
+  "@rel_ops_cap_desktop_grants": {
+    "description": "Plugin description followed by a warning about local Desktop app grants. Desktop is the app name; preserve it.",
+    "placeholders": {
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_remove_plugin": "{name}을(를) 제거할까요?",
+  "@rel_ops_cap_remove_plugin": {
+    "description": "Capability administration: Remove {name}?",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_probe_result": "{name} 연결 테스트: {tools}",
+  "@rel_ops_cap_probe_result": {
+    "description": "Capability administration: Probe {name}: {tools}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "tools": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_save_tool_grants_for": "{connector}의 도구 권한 저장",
+  "@rel_ops_cap_save_tool_grants_for": {
+    "description": "Capability administration: Save tool grants for {connector}",
+    "placeholders": {
+      "connector": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_backends_for": "{name}의 백엔드",
+  "@rel_ops_cap_backends_for": {
+    "description": "Capability administration: Backends for {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_use_backend_confirmation": "{name}을(를) 사용할까요?",
+  "@rel_ops_cap_use_backend_confirmation": {
+    "description": "Capability administration: Use {name}?",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_unlock_source": "{name} 잠금 해제",
+  "@rel_ops_cap_unlock_source": {
+    "description": "Capability administration: Unlock {name}",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_capabilities": "기능",
+  "@rel_ops_cap_capabilities": {
+    "description": "Capability administration: Capabilities"
+  },
+  "rel_ops_cap_plugins": "플러그인",
+  "@rel_ops_cap_plugins": {
+    "description": "Capability administration: Plugins"
+  },
+  "rel_ops_cap_connectors": "커넥터",
+  "@rel_ops_cap_connectors": {
+    "description": "Capability administration: Connectors"
+  },
+  "rel_ops_cap_backends": "백엔드",
+  "@rel_ops_cap_backends": {
+    "description": "Capability administration: Backends"
+  },
+  "rel_ops_cap_save_skill": "스킬 저장",
+  "@rel_ops_cap_save_skill": {
+    "description": "Capability administration: Save skill"
+  },
+  "rel_ops_cap_archive": "보관",
+  "@rel_ops_cap_archive": {
+    "description": "Capability administration: Archive"
+  },
+  "rel_ops_cap_hub_identifier": "Hub 식별자",
+  "@rel_ops_cap_hub_identifier": {
+    "description": "Capability administration: Hub identifier"
+  },
+  "rel_ops_cap_install": "설치",
+  "@rel_ops_cap_install": {
+    "description": "Capability administration: Install"
+  },
+  "rel_ops_cap_update_all": "모두 업데이트",
+  "@rel_ops_cap_update_all": {
+    "description": "Capability administration: Update all"
+  },
+  "rel_ops_cap_unlock": "잠금 해제",
+  "@rel_ops_cap_unlock": {
+    "description": "Capability administration: Unlock"
+  },
+  "rel_ops_cap_lock": "잠금",
+  "@rel_ops_cap_lock": {
+    "description": "Capability administration: Lock"
+  },
+  "rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet": "이 업데이트는 기능을 추가합니다. 아직 변경된 사항은 없습니다.",
+  "@rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet": {
+    "description": "Capability administration: This update adds capabilities. Nothing changed yet."
+  },
+  "rel_ops_cap_the_scan_blocked_this_plugin": "검사에서 이 플러그인을 차단했습니다.",
+  "@rel_ops_cap_the_scan_blocked_this_plugin": {
+    "description": "Capability administration: The scan blocked this plugin."
+  },
+  "rel_ops_cap_the_plugin_was_not_changed": "플러그인이 변경되지 않았습니다.",
+  "@rel_ops_cap_the_plugin_was_not_changed": {
+    "description": "Capability administration: The plugin was not changed."
+  },
+  "rel_ops_cap_repository": "저장소",
+  "@rel_ops_cap_repository": {
+    "description": "Capability administration: Repository"
+  },
+  "rel_ops_cap_install_plugin": "플러그인 설치",
+  "@rel_ops_cap_install_plugin": {
+    "description": "Capability administration: Install plugin"
+  },
+  "rel_ops_cap_update_plugins": "플러그인 업데이트",
+  "@rel_ops_cap_update_plugins": {
+    "description": "Capability administration: Update plugins"
+  },
+  "rel_ops_cap_accept_capabilities": "기능 권한 수락",
+  "@rel_ops_cap_accept_capabilities": {
+    "description": "Capability administration: Accept capabilities"
+  },
+  "rel_ops_cap_update": "업데이트",
+  "@rel_ops_cap_update": {
+    "description": "Capability administration: Update"
+  },
+  "rel_ops_cap_remove_desktop_half": "데스크톱 구성 요소 제거",
+  "@rel_ops_cap_remove_desktop_half": {
+    "description": "Capability administration: Remove desktop half"
+  },
+  "rel_ops_cap_server_name": "서버 이름",
+  "@rel_ops_cap_server_name": {
+    "description": "Capability administration: Server name"
+  },
+  "rel_ops_cap_command": "명령",
+  "@rel_ops_cap_command": {
+    "description": "Capability administration: Command"
+  },
+  "rel_ops_cap_http_url": "HTTP URL",
+  "@rel_ops_cap_http_url": {
+    "description": "Capability administration: HTTP URL"
+  },
+  "rel_ops_cap_add_server": "서버 추가",
+  "@rel_ops_cap_add_server": {
+    "description": "Capability administration: Add server"
+  },
+  "rel_ops_cap_probe": "연결 테스트",
+  "@rel_ops_cap_probe": {
+    "description": "Capability administration: Probe"
+  },
+  "rel_ops_cap_probe_failed": "연결 테스트에 실패했습니다.",
+  "@rel_ops_cap_probe_failed": {
+    "description": "Capability administration: Probe failed."
+  },
+  "rel_ops_cap_logs": "로그",
+  "@rel_ops_cap_logs": {
+    "description": "Capability administration: Logs"
+  },
+  "rel_ops_cap_mcp_log": "MCP 로그",
+  "@rel_ops_cap_mcp_log": {
+    "description": "Capability administration: MCP log"
+  },
+  "rel_ops_cap_connector": "커넥터",
+  "@rel_ops_cap_connector": {
+    "description": "Capability administration: Connector"
+  },
+  "rel_ops_cap_account_alias": "계정 별칭",
+  "@rel_ops_cap_account_alias": {
+    "description": "Capability administration: Account alias"
+  },
+  "rel_ops_cap_link_account": "계정 연결",
+  "@rel_ops_cap_link_account": {
+    "description": "Capability administration: Link account"
+  },
+  "rel_ops_cap_remove_account": "계정 제거",
+  "@rel_ops_cap_remove_account": {
+    "description": "Capability administration: Remove account"
+  },
+  "rel_ops_cap_tool_connector": "도구 커넥터",
+  "@rel_ops_cap_tool_connector": {
+    "description": "Capability administration: Tool connector"
+  },
+  "rel_ops_cap_load_tools": "도구 불러오기",
+  "@rel_ops_cap_load_tools": {
+    "description": "Capability administration: Load tools"
+  },
+  "rel_ops_cap_save_tool_grants": "도구 권한 저장",
+  "@rel_ops_cap_save_tool_grants": {
+    "description": "Capability administration: Save tool grants"
+  },
+  "rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged": "이 정책에는 멤버 리비전이 없으므로 도구 권한이 변경되지 않습니다.",
+  "@rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged": {
+    "description": "Capability administration: This policy has no member revision, so tool grants stay unchanged."
+  },
+  "rel_ops_cap_active": "사용 중",
+  "@rel_ops_cap_active": {
+    "description": "Capability administration: Active"
+  },
+  "rel_ops_cap_use": "사용",
+  "@rel_ops_cap_use": {
+    "description": "Capability administration: Use"
+  },
+  "rel_ops_cap_run_setup": "설정 실행",
+  "@rel_ops_cap_run_setup": {
+    "description": "Capability administration: Run setup"
+  },
+  "rel_ops_cap_terminal_backends": "터미널 백엔드",
+  "@rel_ops_cap_terminal_backends": {
+    "description": "Capability administration: Terminal backends"
+  },
+  "rel_ops_cap_this_changes_the_terminal_backend_for_this_profile": "이 프로필의 터미널 백엔드가 변경됩니다.",
+  "@rel_ops_cap_this_changes_the_terminal_backend_for_this_profile": {
+    "description": "Capability administration: This changes the terminal backend for this profile."
+  },
+  "rel_ops_cap_use_backend": "백엔드 사용",
+  "@rel_ops_cap_use_backend": {
+    "description": "Capability administration: Use backend"
+  },
+  "rel_ops_cap_select": "선택",
+  "@rel_ops_cap_select": {
+    "description": "Capability administration: Select"
+  },
+  "rel_ops_cap_browser_vault": "브라우저 보관함",
+  "@rel_ops_cap_browser_vault": {
+    "description": "Capability administration: Browser vault"
+  },
+  "rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here": "저장된 사이트 로그인, 주소 및 카드입니다. 비밀번호는 보안 필드에 유지되며 여기에 표시되지 않습니다.",
+  "@rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here": {
+    "description": "Capability administration: Saved site logins, addresses and cards. Passwords stay in the secure fields and are not listed here."
+  },
+  "rel_ops_cap_remove_saved_item": "저장된 항목 제거",
+  "@rel_ops_cap_remove_saved_item": {
+    "description": "Capability administration: Remove saved item"
+  },
+  "rel_ops_cap_delete_this_item": "이 항목을 삭제할까요?",
+  "@rel_ops_cap_delete_this_item": {
+    "description": "Capability administration: Delete this item?"
+  },
+  "rel_ops_cap_unlocked": "잠금 해제됨",
+  "@rel_ops_cap_unlocked": {
+    "description": "Capability administration: Unlocked"
+  },
+  "rel_ops_cap_locked": "잠김",
+  "@rel_ops_cap_locked": {
+    "description": "Capability administration: Locked"
+  },
+  "rel_ops_cap_not_detected": "감지되지 않음",
+  "@rel_ops_cap_not_detected": {
+    "description": "Capability administration: Not detected"
+  },
+  "rel_ops_cap_master_password": "마스터 비밀번호",
+  "@rel_ops_cap_master_password": {
+    "description": "Capability administration: Master password"
+  },
+  "rel_ops_cap_login": "로그인 정보",
+  "@rel_ops_cap_login": {
+    "description": "Capability administration: Login"
+  },
+  "rel_ops_cap_address": "주소",
+  "@rel_ops_cap_address": {
+    "description": "Capability administration: Address"
+  },
+  "rel_ops_cap_card": "카드",
+  "@rel_ops_cap_card": {
+    "description": "Capability administration: Card"
+  },
+  "rel_ops_cap_label": "라벨",
+  "@rel_ops_cap_label": {
+    "description": "Capability administration: Label"
+  },
+  "rel_ops_cap_site_origin": "사이트 출처",
+  "@rel_ops_cap_site_origin": {
+    "description": "Capability administration: Site origin"
+  },
+  "rel_ops_cap_identifier": "식별자",
+  "@rel_ops_cap_identifier": {
+    "description": "Capability administration: Identifier"
+  },
+  "rel_ops_cap_password": "비밀번호",
+  "@rel_ops_cap_password": {
+    "description": "Capability administration: Password"
+  },
+  "rel_ops_cap_authenticator_key": "인증 키",
+  "@rel_ops_cap_authenticator_key": {
+    "description": "Capability administration: Authenticator key"
+  },
+  "rel_ops_cap_street": "도로명 주소",
+  "@rel_ops_cap_street": {
+    "description": "Capability administration: Street"
+  },
+  "rel_ops_cap_city": "도시",
+  "@rel_ops_cap_city": {
+    "description": "Capability administration: City"
+  },
+  "rel_ops_cap_postal_code": "우편번호",
+  "@rel_ops_cap_postal_code": {
+    "description": "Capability administration: Postal code"
+  },
+  "rel_ops_cap_country": "국가",
+  "@rel_ops_cap_country": {
+    "description": "Capability administration: Country"
+  },
+  "rel_ops_cap_name_on_card": "카드 소유자 이름",
+  "@rel_ops_cap_name_on_card": {
+    "description": "Capability administration: Name on card"
+  },
+  "rel_ops_cap_card_number": "카드 번호",
+  "@rel_ops_cap_card_number": {
+    "description": "Capability administration: Card number"
+  },
+  "rel_ops_cap_expiry_month": "만료 월",
+  "@rel_ops_cap_expiry_month": {
+    "description": "Capability administration: Expiry month"
+  },
+  "rel_ops_cap_expiry_year": "만료 연도",
+  "@rel_ops_cap_expiry_year": {
+    "description": "Capability administration: Expiry year"
+  },
+  "rel_ops_cap_security_code": "보안 코드",
+  "@rel_ops_cap_security_code": {
+    "description": "Capability administration: Security code"
+  },
+  "rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method": "이 게이트웨이에는 공유 지표 동의 메서드가 없습니다.",
+  "@rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method": {
+    "description": "Capability administration: This gateway has no shared-metrics consent method."
+  },
+  "rel_ops_cap_agent_policy": "에이전트 정책",
+  "@rel_ops_cap_agent_policy": {
+    "description": "Capability administration: Agent policy"
+  },
+  "rel_ops_cap_loading_policy": "정책 불러오는 중",
+  "@rel_ops_cap_loading_policy": {
+    "description": "Capability administration: Loading policy"
+  },
+  "rel_ops_cap_approval_timeout": "승인 대기 시간 제한",
+  "@rel_ops_cap_approval_timeout": {
+    "description": "Capability administration: Approval timeout"
+  },
+  "rel_ops_cap_confirm_mcp_reloads": "MCP 새로고침 확인",
+  "@rel_ops_cap_confirm_mcp_reloads": {
+    "description": "Capability administration: Confirm MCP reloads"
+  },
+  "rel_ops_cap_command_allowlist": "명령 허용 목록",
+  "@rel_ops_cap_command_allowlist": {
+    "description": "Capability administration: Command allowlist"
+  },
+  "rel_ops_cap_file_checkpoints": "파일 체크포인트",
+  "@rel_ops_cap_file_checkpoints": {
+    "description": "Capability administration: File checkpoints"
+  },
+  "rel_ops_cap_checkpoint_limit": "체크포인트 한도",
+  "@rel_ops_cap_checkpoint_limit": {
+    "description": "Capability administration: Checkpoint limit"
+  },
+  "rel_ops_cap_browser_private_urls": "브라우저 비공개 URL",
+  "@rel_ops_cap_browser_private_urls": {
+    "description": "Capability administration: Browser private URLs"
+  },
+  "rel_ops_cap_use_my_real_browser_profile": "내 실제 브라우저 프로필 사용",
+  "@rel_ops_cap_use_my_real_browser_profile": {
+    "description": "Capability administration: Use my real browser profile"
+  },
+  "rel_ops_cap_save_policy": "정책 저장",
+  "@rel_ops_cap_save_policy": {
+    "description": "Capability administration: Save policy"
+  },
+  "rel_ops_cap_shared_metrics_for_this_profile": "이 프로필의 공유 지표",
+  "@rel_ops_cap_shared_metrics_for_this_profile": {
+    "description": "Capability administration: Shared metrics for this profile"
+  },
+  "rel_ops_cap_send_shared_metrics": "공유 지표 전송",
+  "@rel_ops_cap_send_shared_metrics": {
+    "description": "Capability administration: Send shared metrics"
+  },
+  "rel_ops_cap_error_enter_a_label": "라벨을 입력하세요.",
+  "@rel_ops_cap_error_enter_a_label": {
+    "description": "Capability administration: Enter a label."
+  },
+  "rel_ops_cap_error_enter_a_valid_url_like_https_example_com": "https://example.com과 같은 올바른 URL을 입력하세요.",
+  "@rel_ops_cap_error_enter_a_valid_url_like_https_example_com": {
+    "description": "Capability administration: Enter a valid URL like https://example.com."
+  },
+  "rel_ops_cap_error_enter_the_identifier_and_password": "식별자와 비밀번호를 입력하세요.",
+  "@rel_ops_cap_error_enter_the_identifier_and_password": {
+    "description": "Capability administration: Enter the identifier and password."
+  },
+  "rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code": "카드 소유자 이름, 번호, 만료일 및 보안 코드를 입력하세요.",
+  "@rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code": {
+    "description": "Capability administration: Enter the card name, number, expiry and security code."
+  },
+  "rel_ops_cap_error_enter_the_street_city_postal_code_and_country": "도로명 주소, 도시, 우편번호 및 국가를 입력하세요.",
+  "@rel_ops_cap_error_enter_the_street_city_postal_code_and_country": {
+    "description": "Capability administration: Enter the street, city, postal code and country."
+  },
+  "rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read": "게이트웨이가 읽을 수 없는 응답을 반환했습니다.",
+  "@rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read": {
+    "description": "Capability administration: The gateway returned a response that could not be read."
+  },
+  "rel_ops_cap_error_the_gateway_refused_the_request_status": "게이트웨이가 요청을 거부했습니다({statusCode}).",
+  "@rel_ops_cap_error_the_gateway_refused_the_request_status": {
+    "description": "Capability administration: The gateway refused the request ({statusCode}).",
+    "placeholders": {
+      "statusCode": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable": "이 연결에는 게이트웨이 소켓이 없으므로 {method}을(를) 사용할 수 없습니다.",
+  "@rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable": {
+    "description": "Missing gateway socket error. The method placeholder is a JSON-RPC wire method; do not translate it.",
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_cap_error_choose_a_skill": "스킬을 선택하세요.",
+  "@rel_ops_cap_error_choose_a_skill": {
+    "description": "Capability administration: Choose a skill."
+  },
+  "rel_ops_cap_error_the_skill_text_was_not_returned": "스킬 텍스트가 반환되지 않았습니다.",
+  "@rel_ops_cap_error_the_skill_text_was_not_returned": {
+    "description": "Capability administration: The skill text was not returned."
+  },
+  "rel_ops_cap_error_the_skill_was_not_saved": "스킬이 저장되지 않았습니다.",
+  "@rel_ops_cap_error_the_skill_was_not_saved": {
+    "description": "Capability administration: The skill was not saved."
+  },
+  "rel_ops_cap_error_the_skill_was_not_archived": "스킬이 보관되지 않았습니다.",
+  "@rel_ops_cap_error_the_skill_was_not_archived": {
+    "description": "Capability administration: The skill was not archived."
+  },
+  "rel_ops_cap_error_the_skill_was_not_installed": "스킬이 설치되지 않았습니다.",
+  "@rel_ops_cap_error_the_skill_was_not_installed": {
+    "description": "Capability administration: The skill was not installed."
+  },
+  "rel_ops_cap_error_skill_updates_did_not_start": "스킬 업데이트가 시작되지 않았습니다.",
+  "@rel_ops_cap_error_skill_updates_did_not_start": {
+    "description": "Capability administration: Skill updates did not start."
+  },
+  "rel_ops_cap_error_the_skill_was_not_removed": "스킬이 제거되지 않았습니다.",
+  "@rel_ops_cap_error_the_skill_was_not_removed": {
+    "description": "Capability administration: The skill was not removed."
+  },
+  "rel_ops_cap_error_enter_a_skill_or_plugin_identifier": "스킬 또는 플러그인 식별자를 입력하세요.",
+  "@rel_ops_cap_error_enter_a_skill_or_plugin_identifier": {
+    "description": "Capability administration: Enter a skill or plugin identifier."
+  },
+  "rel_ops_cap_error_choose_a_plugin": "플러그인을 선택하세요.",
+  "@rel_ops_cap_error_choose_a_plugin": {
+    "description": "Capability administration: Choose a plugin."
+  },
+  "rel_ops_cap_error_the_plugin_was_not_removed": "플러그인이 제거되지 않았습니다.",
+  "@rel_ops_cap_error_the_plugin_was_not_removed": {
+    "description": "Capability administration: The plugin was not removed."
+  },
+  "rel_ops_cap_error_the_desktop_half_was_not_removed": "데스크톱 구성 요소가 제거되지 않았습니다.",
+  "@rel_ops_cap_error_the_desktop_half_was_not_removed": {
+    "description": "Capability administration: The desktop half was not removed."
+  },
+  "rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key": "이 게이트웨이는 플러그인에 안정적인 키를 부여하지 않았습니다.",
+  "@rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key": {
+    "description": "Capability administration: This gateway did not give the plugin a stable key."
+  },
+  "rel_ops_cap_error_the_plugin_was_not_changed": "플러그인이 변경되지 않았습니다.",
+  "@rel_ops_cap_error_the_plugin_was_not_changed": {
+    "description": "Capability administration: The plugin was not changed."
+  },
+  "rel_ops_cap_error_choose_a_server": "서버를 선택하세요.",
+  "@rel_ops_cap_error_choose_a_server": {
+    "description": "Capability administration: Choose a server."
+  },
+  "rel_ops_cap_error_name_the_server": "서버 이름을 지정하세요.",
+  "@rel_ops_cap_error_name_the_server": {
+    "description": "Capability administration: Name the server."
+  },
+  "rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url": "서버에 명령 또는 http(s) URL을 지정하세요.",
+  "@rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url": {
+    "description": "Capability administration: Give the server a command or an http(s) URL."
+  },
+  "rel_ops_cap_error_choose_a_toolset": "도구 모음을 선택하세요.",
+  "@rel_ops_cap_error_choose_a_toolset": {
+    "description": "Capability administration: Choose a toolset."
+  },
+  "rel_ops_cap_error_tool_backend_status_was_not_returned": "도구 백엔드 상태가 반환되지 않았습니다.",
+  "@rel_ops_cap_error_tool_backend_status_was_not_returned": {
+    "description": "Capability administration: Tool backend status was not returned."
+  },
+  "rel_ops_cap_error_choose_a_provider": "제공업체를 선택하세요.",
+  "@rel_ops_cap_error_choose_a_provider": {
+    "description": "Capability administration: Choose a provider."
+  },
+  "rel_ops_cap_error_this_provider_has_no_setup_action": "이 제공업체에는 설정 작업이 없습니다.",
+  "@rel_ops_cap_error_this_provider_has_no_setup_action": {
+    "description": "Capability administration: This provider has no setup action."
+  },
+  "rel_ops_cap_error_setup_did_not_start": "설정이 시작되지 않았습니다.",
+  "@rel_ops_cap_error_setup_did_not_start": {
+    "description": "Capability administration: Setup did not start."
+  },
+  "rel_ops_cap_error_choose_a_terminal_backend": "터미널 백엔드를 선택하세요.",
+  "@rel_ops_cap_error_choose_a_terminal_backend": {
+    "description": "Capability administration: Choose a terminal backend."
+  },
+  "rel_ops_cap_error_name_the_connector": "커넥터 이름을 지정하세요.",
+  "@rel_ops_cap_error_name_the_connector": {
+    "description": "Capability administration: Name the connector."
+  },
+  "rel_ops_cap_error_choose_an_account": "계정을 선택하세요.",
+  "@rel_ops_cap_error_choose_an_account": {
+    "description": "Capability administration: Choose an account."
+  },
+  "rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants": "도구 권한을 변경하기 전에 커넥터 정책을 새로고침하세요.",
+  "@rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants": {
+    "description": "Capability administration: Reload the connector policy before changing tool grants."
+  },
+  "rel_ops_cap_error_choose_an_item": "항목을 선택하세요.",
+  "@rel_ops_cap_error_choose_an_item": {
+    "description": "Capability administration: Choose an item."
+  },
+  "rel_ops_cap_error_choose_a_source": "소스를 선택하세요.",
+  "@rel_ops_cap_error_choose_a_source": {
+    "description": "Capability administration: Choose a source."
+  },
+  "rel_ops_cap_error_enter_the_master_password": "마스터 비밀번호를 입력하세요.",
+  "@rel_ops_cap_error_enter_the_master_password": {
+    "description": "Capability administration: Enter the master password."
+  },
+  "rel_ops_cap_error_gateway_config_was_not_returned": "게이트웨이 구성이 반환되지 않았습니다.",
+  "@rel_ops_cap_error_gateway_config_was_not_returned": {
+    "description": "Capability administration: Gateway config was not returned."
+  },
+  "rel_ops_cap_error_choose_a_known_approval_mode": "알려진 승인 모드를 선택하세요.",
+  "@rel_ops_cap_error_choose_a_known_approval_mode": {
+    "description": "Capability administration: Choose a known approval mode."
+  },
+  "rel_ops_cap_error_use_a_positive_limit": "양수인 한도를 사용하세요.",
+  "@rel_ops_cap_error_use_a_positive_limit": {
+    "description": "Capability administration: Use a positive limit."
+  },
+  "rel_ops_cap_error_the_policy_was_not_saved": "정책이 저장되지 않았습니다.",
+  "@rel_ops_cap_error_the_policy_was_not_saved": {
+    "description": "Capability administration: The policy was not saved."
+  },
+  "rel_ops_cap_value_manual": "수동",
+  "@rel_ops_cap_value_manual": {
+    "description": "Capability _capabilityValue display label for wire value manual. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_smart": "스마트",
+  "@rel_ops_cap_value_smart": {
+    "description": "Capability _capabilityValue display label for wire value smart. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_off": "꺼짐",
+  "@rel_ops_cap_value_off": {
+    "description": "Capability _capabilityValue display label for wire value off. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_safe": "안전",
+  "@rel_ops_cap_value_safe": {
+    "description": "Capability _capabilityValue display label for wire value safe. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_caution": "주의",
+  "@rel_ops_cap_value_caution": {
+    "description": "Capability _capabilityValue display label for wire value caution. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_dangerous": "위험",
+  "@rel_ops_cap_value_dangerous": {
+    "description": "Capability _capabilityValue display label for wire value dangerous. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_blocked": "차단됨",
+  "@rel_ops_cap_value_blocked": {
+    "description": "Capability _capabilityValue display label for wire value blocked. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_clean": "위협 없음",
+  "@rel_ops_cap_value_clean": {
+    "description": "Capability _capabilityValue display label for wire value clean. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_ready": "준비됨",
+  "@rel_ops_cap_value_ready": {
+    "description": "Capability _capabilityValue display label for wire value ready. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_available": "사용 가능",
+  "@rel_ops_cap_value_available": {
+    "description": "Capability _capabilityValue display label for wire value available. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_unavailable": "사용 불가",
+  "@rel_ops_cap_value_unavailable": {
+    "description": "Capability _capabilityValue display label for wire value unavailable. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_enabled": "활성화됨",
+  "@rel_ops_cap_value_enabled": {
+    "description": "Capability _capabilityValue display label for wire value enabled. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_disabled": "비활성화됨",
+  "@rel_ops_cap_value_disabled": {
+    "description": "Capability _capabilityValue display label for wire value disabled. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_active": "사용 중",
+  "@rel_ops_cap_value_active": {
+    "description": "Capability _capabilityValue display label for wire value active. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_inactive": "사용하지 않음",
+  "@rel_ops_cap_value_inactive": {
+    "description": "Capability _capabilityValue display label for wire value inactive. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_installed": "설치됨",
+  "@rel_ops_cap_value_installed": {
+    "description": "Capability _capabilityValue display label for wire value installed. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_missing": "없음",
+  "@rel_ops_cap_value_missing": {
+    "description": "Capability _capabilityValue display label for wire value missing. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_configured": "구성됨",
+  "@rel_ops_cap_value_configured": {
+    "description": "Capability _capabilityValue display label for wire value configured. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_not_configured": "구성되지 않음",
+  "@rel_ops_cap_value_not_configured": {
+    "description": "Capability _capabilityValue display label for wire value not_configured. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_error": "오류",
+  "@rel_ops_cap_value_error": {
+    "description": "Capability _capabilityValue display label for wire value error. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_unknown": "알 수 없음",
+  "@rel_ops_cap_value_unknown": {
+    "description": "Capability _capabilityValue display label for wire value unknown. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_login": "로그인 정보",
+  "@rel_ops_cap_value_login": {
+    "description": "Capability _capabilityValue display label for wire value login. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_address": "주소",
+  "@rel_ops_cap_value_address": {
+    "description": "Capability _capabilityValue display label for wire value address. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_cap_value_payment": "결제",
+  "@rel_ops_cap_value_payment": {
+    "description": "Capability _capabilityValue display label for wire value payment. Keep wire identifiers unchanged; localise only this display label."
+  },
+  "rel_ops_term_connecting": "연결 중…",
+  "@rel_ops_term_connecting": {
+    "description": "Terminal connection status."
+  },
+  "rel_ops_term_unbound": "일치하는 활성 세션이나 호스트 작업 디렉터리가 없습니다. 먼저 해당 채팅을 여세요.",
+  "@rel_ops_term_unbound": {
+    "description": "Terminal page: unbound."
+  },
+  "rel_ops_term_unsupported": "이 게이트웨이는 이 터미널 기능을 제공하지 않습니다. 로컬 셸은 시작되지 않았습니다.",
+  "@rel_ops_term_unsupported": {
+    "description": "Terminal page: unsupported."
+  },
+  "rel_ops_term_local_pty_unavailable": "포함된 로컬 PTY를 이 기기에서 사용할 수 없습니다.",
+  "@rel_ops_term_local_pty_unavailable": {
+    "description": "Terminal page: local pty unavailable."
+  },
+  "rel_ops_term_operation_failed": "터미널을 열거나 제어할 수 없습니다. 호스트, 인증 정보, 지문을 확인하세요. 대체 셸은 시작되지 않았습니다.",
+  "@rel_ops_term_operation_failed": {
+    "description": "Terminal page: operation failed."
+  },
+  "rel_ops_term_input_refused": "입력이 거부되었습니다. 원래 채팅을 다시 여세요.",
+  "@rel_ops_term_input_refused": {
+    "description": "Terminal page: input refused."
+  },
+  "rel_ops_term_cancel": "취소",
+  "@rel_ops_term_cancel": {
+    "description": "Terminal page: cancel."
+  },
+  "rel_ops_term_confirm": "확인",
+  "@rel_ops_term_confirm": {
+    "description": "Terminal page: confirm."
+  },
+  "rel_ops_term_open_device_title": "이 기기에서 셸을 열까요?",
+  "@rel_ops_term_open_device_title": {
+    "description": "Terminal page: open device title."
+  },
+  "rel_ops_term_ssh_shell": "SSH 셸",
+  "@rel_ops_term_ssh_shell": {
+    "description": "Terminal page: ssh shell."
+  },
+  "rel_ops_term_local_shell": "로컬 셸",
+  "@rel_ops_term_local_shell": {
+    "description": "Terminal page: local shell."
+  },
+  "rel_ops_term_connection_lost": "연결이 끊어졌습니다",
+  "@rel_ops_term_connection_lost": {
+    "description": "Terminal page: connection lost."
+  },
+  "rel_ops_term_shell_ended": "셸이 종료되었습니다",
+  "@rel_ops_term_shell_ended": {
+    "description": "Terminal page: shell ended."
+  },
+  "rel_ops_term_no_owner": "이 채팅에는 인증된 게이트웨이 터미널 소유자가 없습니다. URL이나 클라우드 로그인만으로는 셸 액세스 권한이 부여되지 않습니다.",
+  "@rel_ops_term_no_owner": {
+    "description": "Terminal page: no owner."
+  },
+  "rel_ops_term_open_gateway_title": "게이트웨이 셸을 열까요?",
+  "@rel_ops_term_open_gateway_title": {
+    "description": "Terminal page: open gateway title."
+  },
+  "rel_ops_term_shell_expired": "셸이 종료되었거나 만료되었습니다",
+  "@rel_ops_term_shell_expired": {
+    "description": "Terminal page: shell expired."
+  },
+  "rel_ops_term_disconnected": "연결 해제됨",
+  "@rel_ops_term_disconnected": {
+    "description": "Terminal page: disconnected."
+  },
+  "rel_ops_term_gateway_shell": "게이트웨이 셸",
+  "@rel_ops_term_gateway_shell": {
+    "description": "Terminal page: gateway shell."
+  },
+  "rel_ops_term_close_body": "이 셸을 종료합니다. 계속 실행하려면 대신 창을 숨기세요.",
+  "@rel_ops_term_close_body": {
+    "description": "Terminal page: close body."
+  },
+  "rel_ops_term_closing": "닫는 중…",
+  "@rel_ops_term_closing": {
+    "description": "Terminal page: closing."
+  },
+  "rel_ops_term_close_unconfirmed": "닫힘이 확인되지 않았습니다",
+  "@rel_ops_term_close_unconfirmed": {
+    "description": "Terminal page: close unconfirmed."
+  },
+  "rel_ops_term_processes_require_chat": "에이전트 프로세스에는 인증된 해당 채팅이 필요합니다.",
+  "@rel_ops_term_processes_require_chat": {
+    "description": "Terminal page: processes require chat."
+  },
+  "rel_ops_term_watching_processes": "이 채팅의 에이전트 프로세스를 모니터링하고 있습니다. 미러 보기를 닫아도 해당 프로세스는 중지되지 않습니다.",
+  "@rel_ops_term_watching_processes": {
+    "description": "Terminal page: watching processes."
+  },
+  "rel_ops_term_paste_limit": "붙여넣기는 16 KiB로 제한됩니다.",
+  "@rel_ops_term_paste_limit": {
+    "description": "Terminal page: paste limit."
+  },
+  "rel_ops_term_paste": "붙여넣기",
+  "@rel_ops_term_paste": {
+    "description": "Terminal page: paste."
+  },
+  "rel_ops_term_select_first": "먼저 터미널 출력을 선택하세요.",
+  "@rel_ops_term_select_first": {
+    "description": "Terminal page: select first."
+  },
+  "rel_ops_term_open_chat_to_insert": "출력을 삽입하기 전에 원래 채팅을 여세요.",
+  "@rel_ops_term_open_chat_to_insert": {
+    "description": "Terminal page: open chat to insert."
+  },
+  "rel_ops_term_added_to_draft": "원래 채팅의 초안에 추가했습니다. 전송된 내용은 없습니다.",
+  "@rel_ops_term_added_to_draft": {
+    "description": "Terminal page: added to draft."
+  },
+  "rel_ops_term_close": "닫기",
+  "@rel_ops_term_close": {
+    "description": "Terminal page: close."
+  },
+  "rel_ops_term_add_selection": "선택 항목을 채팅 초안에 추가",
+  "@rel_ops_term_add_selection": {
+    "description": "Terminal page: add selection."
+  },
+  "rel_ops_term_new_terminal": "새 터미널",
+  "@rel_ops_term_new_terminal": {
+    "description": "Terminal page: new terminal."
+  },
+  "rel_ops_term_gateway_terminal": "게이트웨이 호스트 터미널",
+  "@rel_ops_term_gateway_terminal": {
+    "description": "Terminal page: gateway terminal."
+  },
+  "rel_ops_term_verified_ssh_terminal": "검증된 SSH 터미널",
+  "@rel_ops_term_verified_ssh_terminal": {
+    "description": "Terminal page: verified ssh terminal."
+  },
+  "rel_ops_term_device_local_shell": "이 기기 (로컬 셸)",
+  "@rel_ops_term_device_local_shell": {
+    "description": "Terminal page: device local shell."
+  },
+  "rel_ops_term_local_unavailable_mobile": "모바일에서는 로컬 셸을 사용할 수 없습니다",
+  "@rel_ops_term_local_unavailable_mobile": {
+    "description": "Terminal page: local unavailable mobile."
+  },
+  "rel_ops_term_watch_processes": "에이전트 프로세스 모니터링",
+  "@rel_ops_term_watch_processes": {
+    "description": "Terminal page: watch processes."
+  },
+  "rel_ops_term_select_output": "출력 선택 또는 복사",
+  "@rel_ops_term_select_output": {
+    "description": "Terminal page: select output."
+  },
+  "rel_ops_term_add_selected_output": "선택한 출력을 채팅 초안에 추가",
+  "@rel_ops_term_add_selected_output": {
+    "description": "Terminal page: add selected output."
+  },
+  "rel_ops_term_review_paste": "클립보드 붙여넣기 검토",
+  "@rel_ops_term_review_paste": {
+    "description": "Terminal page: review paste."
+  },
+  "rel_ops_term_reconnect": "동일한 셸에 다시 연결",
+  "@rel_ops_term_reconnect": {
+    "description": "Terminal page: reconnect."
+  },
+  "rel_ops_term_close_mirror": "미러 보기 닫기",
+  "@rel_ops_term_close_mirror": {
+    "description": "Terminal page: close mirror."
+  },
+  "rel_ops_term_close_shell": "셸 닫기",
+  "@rel_ops_term_close_shell": {
+    "description": "Terminal page: close shell."
+  },
+  "rel_ops_term_empty": "+를 선택하여 터미널을 여세요. 셸은 자동으로 시작되지 않습니다.",
+  "@rel_ops_term_empty": {
+    "description": "Terminal page: empty."
+  },
+  "rel_ops_term_reason_stale": "오래된 상태",
+  "@rel_ops_term_reason_stale": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_mismatch": "불일치",
+  "@rel_ops_term_reason_mismatch": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_unbound": "연결 대상 없음",
+  "@rel_ops_term_reason_unbound": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_unsupported": "지원되지 않음",
+  "@rel_ops_term_reason_unsupported": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_denied": "거부됨",
+  "@rel_ops_term_reason_denied": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_ineligible": "자격 없음",
+  "@rel_ops_term_reason_ineligible": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_unavailable": "사용할 수 없음",
+  "@rel_ops_term_reason_unavailable": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_invalid": "유효하지 않음",
+  "@rel_ops_term_reason_invalid": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_reason_insecure": "안전하지 않음",
+  "@rel_ops_term_reason_insecure": {
+    "description": "Terminal failure reason; English preserves the existing enum-name wording."
+  },
+  "rel_ops_term_refused": "게이트웨이가 이 터미널 작업을 거부했습니다 ({reason}).",
+  "@rel_ops_term_refused": {
+    "description": "Terminal page: refused. Preserve server/user placeholder values.",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_open_device_body": "이것은 {connection}이(가) 아닌 Ares 기기입니다. 셸은 앱 권한을 사용하며 앱 저장소에서 시작됩니다.",
+  "@rel_ops_term_open_device_body": {
+    "description": "Terminal page: open device body. Preserve server/user placeholder values.",
+    "placeholders": {
+      "connection": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_open_gateway_body": "{host}에서 채팅의 검증된 작업 디렉터리에 셸을 시작합니다. 기기 셸이 아닙니다.",
+  "@rel_ops_term_open_gateway_body": {
+    "description": "Terminal page: open gateway body. Preserve server/user placeholder values.",
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_close_tab_title": "{label}을(를) 닫을까요?",
+  "@rel_ops_term_close_tab_title": {
+    "description": "Terminal page: close tab title. Preserve server/user placeholder values.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_read_only_status": "읽기 전용 · {status}",
+  "@rel_ops_term_read_only_status": {
+    "description": "Terminal page: read only status. Preserve server/user placeholder values.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_paste_title": "{label}에 붙여넣을까요?",
+  "@rel_ops_term_paste_title": {
+    "description": "Terminal page: paste title. Preserve server/user placeholder values.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_output_title": "출력 · {label}",
+  "@rel_ops_term_output_title": {
+    "description": "Terminal page: output title. Preserve server/user placeholder values.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_mirror_status": "읽기 전용 프로세스 미러 · {label}",
+  "@rel_ops_term_mirror_status": {
+    "description": "Terminal page: mirror status. Preserve server/user placeholder values.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_status_label": "{status} · {label}",
+  "@rel_ops_term_status_label": {
+    "description": "Terminal page: status label. Preserve server/user placeholder values.",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_term_ssh_tab": "SSH {user}@{host}:{port} · {number}",
+  "@rel_ops_term_ssh_tab": {
+    "description": "SSH tab label. Preserve SSH and the login address.",
+    "placeholders": {
+      "user": {
+        "type": "String"
+      },
+      "host": {
+        "type": "String"
+      },
+      "port": {
+        "type": "int"
+      },
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_term_device_tab": "이 기기 · {number}",
+  "@rel_ops_term_device_tab": {
+    "description": "Local device shell tab label.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_term_gateway_tab": "게이트웨이 {host} · {number}",
+  "@rel_ops_term_gateway_tab": {
+    "description": "Gateway shell tab label; host is unchanged.",
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_term_earlier_output_trimmed": "[이전 출력이 잘렸습니다]",
+  "@rel_ops_term_earlier_output_trimmed": {
+    "description": "App-authored terminal replay notice, not shell output."
+  },
+  "rel_ops_term_ssh_dialog_title": "검증된 SSH 터미널 열기",
+  "@rel_ops_term_ssh_dialog_title": {
+    "description": "SSH terminal dialog: ssh dialog title. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_dialog_body": "호스트 관리자로부터 독립적인 경로로 얻은 지문을 사용하세요. 게이트웨이나 로컬 셸이 아닌 새 원격 로그인 세션을 엽니다.",
+  "@rel_ops_term_ssh_dialog_body": {
+    "description": "SSH terminal dialog: ssh dialog body. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_host": "SSH 호스트",
+  "@rel_ops_term_ssh_host": {
+    "description": "SSH terminal dialog: ssh host. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_port": "포트",
+  "@rel_ops_term_ssh_port": {
+    "description": "SSH terminal dialog: ssh port. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_user": "사용자",
+  "@rel_ops_term_ssh_user": {
+    "description": "SSH terminal dialog: ssh user. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_fingerprint": "호스트 키 지문 (SHA256:…)",
+  "@rel_ops_term_ssh_fingerprint": {
+    "description": "SSH terminal dialog: ssh fingerprint. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_ssh_password": "SSH 비밀번호 (저장되지 않음)",
+  "@rel_ops_term_ssh_password": {
+    "description": "SSH terminal dialog: ssh password. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_term_connect": "연결",
+  "@rel_ops_term_connect": {
+    "description": "SSH terminal dialog: connect. Keep SSH/SHA256 protocol notation unchanged."
+  },
+  "rel_ops_ssh_invalid_destination": "SSH 호스트, 포트 또는 사용자가 올바르지 않습니다.",
+  "@rel_ops_ssh_invalid_destination": {
+    "description": "Verified SSH destination validation refusal."
+  },
+  "rel_ops_ssh_public_key_required": "OpenSSH Ed25519 형식의 호스트 공개 키가 필요합니다.",
+  "@rel_ops_ssh_public_key_required": {
+    "description": "Verified SSH key format refusal. Preserve OpenSSH and Ed25519."
+  },
+  "rel_ops_ssh_invalid_public_key": "Ed25519 호스트 키가 올바르지 않습니다.",
+  "@rel_ops_ssh_invalid_public_key": {
+    "description": "Verified SSH key binary validation refusal."
+  },
+  "rel_ops_ssh_invalid_saved_key": "저장된 호스트 키가 올바르지 않습니다.",
+  "@rel_ops_ssh_invalid_saved_key": {
+    "description": "Saved SSH pin failed validation."
+  },
+  "rel_ops_ssh_enrollment_unverified": "호스트 키 등록을 검증할 수 없습니다.",
+  "@rel_ops_ssh_enrollment_unverified": {
+    "description": "Host key enrollment could not be read back."
+  },
+  "rel_ops_ssh_different_key_pinned": "다른 키가 이미 고정되어 있습니다. 변경 사항을 별도로 검증하세요.",
+  "@rel_ops_ssh_different_key_pinned": {
+    "description": "SSH pin replacement refusal. Preserve separate verification requirement."
+  },
+  "rel_ops_ssh_open_ssh_unavailable": "시스템 OpenSSH를 사용할 수 없습니다.",
+  "@rel_ops_ssh_open_ssh_unavailable": {
+    "description": "System OpenSSH transport unavailable refusal."
+  },
+  "rel_ops_ssh_confirm_host_key": "연결하기 전에 호스트 키를 확인하세요.",
+  "@rel_ops_ssh_confirm_host_key": {
+    "description": "Connection refused before explicit host key enrollment."
+  },
+  "rel_ops_ssh_absolute_identity_required": "절대 경로로 지정된 인증 키 파일을 선택하세요.",
+  "@rel_ops_ssh_absolute_identity_required": {
+    "description": "Unsafe or relative SSH identity path refusal."
+  },
+  "rel_ops_ssh_invalid_remote_port": "원격 포트가 올바르지 않습니다.",
+  "@rel_ops_ssh_invalid_remote_port": {
+    "description": "Remote loopback port validation refusal."
+  },
+  "rel_ops_ssh_preview_too_large": "미리보기가 64 KiB 제한을 초과합니다.",
+  "@rel_ops_ssh_preview_too_large": {
+    "description": "SSH preview response size refusal. Preserve 64 KiB limit."
+  },
+  "rel_ops_ssh_connection_refused": "SSH 연결이 거부되었습니다. 등록된 호스트 키, 인증 정보 및 서비스를 확인하세요.",
+  "@rel_ops_ssh_connection_refused": {
+    "description": "SSH subprocess nonzero exit refusal."
+  },
+  "rel_ops_ssh_http_not_ok": "원격 서비스가 HTTP 200을 반환하지 않았습니다.",
+  "@rel_ops_ssh_http_not_ok": {
+    "description": "Remote HTTP status or header validation refusal. Preserve HTTP 200."
+  },
+  "rel_ops_ssh_encoded_response": "이 미리보기는 인코딩된 응답을 지원하지 않습니다.",
+  "@rel_ops_ssh_encoded_response": {
+    "description": "Encoded remote HTTP response refusal."
+  },
+  "rel_ops_ssh_preview_type_unsupported": "텍스트와 HTML 소스만 미리 볼 수 있습니다.",
+  "@rel_ops_ssh_preview_type_unsupported": {
+    "description": "Unsupported remote preview content type refusal."
+  },
+  "rel_ops_ssh_health_unconfirmed": "서비스가 게이트웨이의 정상 작동 상태를 확인해 주지 않았습니다.",
+  "@rel_ops_ssh_health_unconfirmed": {
+    "description": "Remote health response did not affirm ok."
+  },
+  "rel_ops_ssh_enroll_host_key_first": "먼저 호스트의 공개 키를 등록하세요.",
+  "@rel_ops_ssh_enroll_host_key_first": {
+    "description": "SSH screen notice for an unenrolled destination."
+  },
+  "rel_ops_ssh_cancel": "취소",
+  "@rel_ops_ssh_cancel": {
+    "description": "Cancel an SSH enrollment or connection confirmation."
+  },
+  "rel_ops_ssh_confirm": "확인",
+  "@rel_ops_ssh_confirm": {
+    "description": "Confirm an SSH enrollment or connection."
+  },
+  "rel_ops_ssh_pin_title": "이 SSH 호스트 키를 고정하시겠습니까?",
+  "@rel_ops_ssh_pin_title": {
+    "description": "Explicit SSH host key enrollment confirmation title."
+  },
+  "rel_ops_ssh_pin_detail": "{destination}\n{fingerprint}\n독립적인 채널을 통해 호스트 관리자와 이 지문을 대조하세요. 연결은 이루어지지 않습니다.",
+  "@rel_ops_ssh_pin_detail": {
+    "description": "Host key enrollment consent. Preserve independent-channel verification and no-connection assurance. Values are verbatim SSH identifiers.",
+    "placeholders": {
+      "destination": {
+        "type": "String"
+      },
+      "fingerprint": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_ssh_host_key_pinned": "호스트 키가 고정되었습니다.",
+  "@rel_ops_ssh_host_key_pinned": {
+    "description": "Successful host key enrollment notice."
+  },
+  "rel_ops_ssh_shell_detail": "대화형 로그인 셸을 엽니다.",
+  "@rel_ops_ssh_shell_detail": {
+    "description": "SSH remote shell connection consent detail."
+  },
+  "rel_ops_ssh_read_detail": "SSH 채널을 통해 원격 127.0.0.1:{port}의 {path}를 읽습니다.",
+  "@rel_ops_ssh_read_detail": {
+    "description": "Remote loopback HTTP read consent. Preserve literal loopback address; path is / or /api/health and must remain unchanged.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "port": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_ssh_connect_title": "{destination}에 연결하시겠습니까?",
+  "@rel_ops_ssh_connect_title": {
+    "description": "SSH connection confirmation title; destination is verbatim user@host:port.",
+    "placeholders": {
+      "destination": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_ssh_connect_detail": "{detail}\n{fingerprint}\n{authentication}",
+  "@rel_ops_ssh_connect_detail": {
+    "description": "SSH connection confirmation layout combining localized operation and authentication consent with a verbatim fingerprint.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      },
+      "fingerprint": {
+        "type": "String"
+      },
+      "authentication": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_ssh_agent_auth": "SSH 에이전트로 인증합니다.",
+  "@rel_ops_ssh_agent_auth": {
+    "description": "SSH agent authentication consent detail."
+  },
+  "rel_ops_ssh_identity_auth": "선택한 인증 키 파일을 사용합니다.",
+  "@rel_ops_ssh_identity_auth": {
+    "description": "Selected SSH identity file authentication consent detail."
+  },
+  "rel_ops_ssh_gateway_responding": "게이트웨이가 원격 루프백 포트 {port}에서 응답하고 있습니다.",
+  "@rel_ops_ssh_gateway_responding": {
+    "description": "Successful SSH remote gateway health check result.",
+    "placeholders": {
+      "port": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_ssh_session_closed": "SSH 세션이 닫혔습니다.",
+  "@rel_ops_ssh_session_closed": {
+    "description": "Remote SSH shell exited cleanly."
+  },
+  "rel_ops_ssh_session_unclean": "SSH 세션이 정상적으로 종료되지 않았습니다.",
+  "@rel_ops_ssh_session_unclean": {
+    "description": "Remote SSH shell exited with nonzero status."
+  },
+  "rel_ops_ssh_operation_failed": "SSH 작업에 실패했습니다. 대상과 인증 정보를 확인하세요.",
+  "@rel_ops_ssh_operation_failed": {
+    "description": "Safe SSH operation failure notice replacing untrusted system errors."
+  },
+  "rel_ops_ssh_title": "검증된 SSH",
+  "@rel_ops_ssh_title": {
+    "description": "Verified SSH screen title."
+  },
+  "rel_ops_ssh_unsupported": "이 기기에는 지원되는 시스템 OpenSSH 전송 수단이 없습니다. 고정된 게이트웨이 릴레이는 새 키를 자동으로 수락하므로 검증된 등록에 사용할 수 없습니다.",
+  "@rel_ops_ssh_unsupported": {
+    "description": "Security explanation on unsupported devices. Preserve the relay enrollment restriction."
+  },
+  "rel_ops_ssh_host": "SSH 호스트",
+  "@rel_ops_ssh_host": {
+    "description": "SSH hostname input label."
+  },
+  "rel_ops_ssh_port": "SSH 포트",
+  "@rel_ops_ssh_port": {
+    "description": "SSH transport port input label."
+  },
+  "rel_ops_ssh_user": "SSH 사용자",
+  "@rel_ops_ssh_user": {
+    "description": "SSH username input label."
+  },
+  "rel_ops_ssh_identity": "인증 키 파일(선택 사항, 지정하지 않으면 SSH 에이전트 사용)",
+  "@rel_ops_ssh_identity": {
+    "description": "SSH identity path input label and agent fallback explanation."
+  },
+  "rel_ops_ssh_public_key": "관리자가 제공한 호스트 공개 키(ssh-ed25519)",
+  "@rel_ops_ssh_public_key": {
+    "description": "Public host key input label. Preserve ssh-ed25519 algorithm token."
+  },
+  "rel_ops_ssh_review_key": "호스트 키 검토",
+  "@rel_ops_ssh_review_key": {
+    "description": "Open SSH host key enrollment review."
+  },
+  "rel_ops_ssh_remote_port": "원격 루프백 서비스 포트",
+  "@rel_ops_ssh_remote_port": {
+    "description": "Remote HTTP service loopback port input label."
+  },
+  "rel_ops_ssh_check_gateway": "SSH로 게이트웨이 확인",
+  "@rel_ops_ssh_check_gateway": {
+    "description": "Check remote gateway health through SSH."
+  },
+  "rel_ops_ssh_preview_source": "SSH로 소스 미리보기",
+  "@rel_ops_ssh_preview_source": {
+    "description": "Read remote text or HTML source through SSH."
+  },
+  "rel_ops_ssh_open_shell": "SSH 셸 열기",
+  "@rel_ops_ssh_open_shell": {
+    "description": "Explicitly open a remote SSH login shell."
+  },
+  "rel_ops_ssh_shell_line": "원격 셸로 보낼 줄",
+  "@rel_ops_ssh_shell_line": {
+    "description": "Input label for a line sent to the active remote shell."
+  },
+  "rel_ops_ssh_disconnect": "셸 연결 해제",
+  "@rel_ops_ssh_disconnect": {
+    "description": "Terminate the active SSH shell subprocess."
+  },
+  "rel_ops_host_cancel": "취소",
+  "@rel_ops_host_cancel": {
+    "description": "Cancel a remote host operation confirmation."
+  },
+  "rel_ops_host_confirm": "확인",
+  "@rel_ops_host_confirm": {
+    "description": "Confirm a remote host operation."
+  },
+  "rel_ops_host_title": "호스트",
+  "@rel_ops_host_title": {
+    "description": "Remote host operations screen title."
+  },
+  "rel_ops_host_refresh": "새로고침",
+  "@rel_ops_host_refresh": {
+    "description": "Refresh remote host status and logs."
+  },
+  "rel_ops_host_update": "원격 Hermes 업데이트",
+  "@rel_ops_host_update": {
+    "description": "Start an update on the remote gateway host, not the Ares client."
+  },
+  "rel_ops_host_update_confirmation": "{profile}의 게이트웨이 호스트에서 기존 설치를 업데이트합니다. 이 기기의 Ares는 업데이트되지 않습니다. 성공 여부는 일치하는 업데이트 처리 기록으로 확인하며, 호스트에 계속 연결할 수 있다는 것만으로는 성공을 의미하지 않습니다.",
+  "@rel_ops_host_update_confirmation": {
+    "description": "Remote Hermes update confirmation. Preserve the profile identifier verbatim.",
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_update_awaiting": "일치하는 처리 기록을 기다리는 중입니다. 업데이트가 아직 실행 중입니다.",
+  "@rel_ops_host_update_awaiting": {
+    "description": "Update is running but no matching receipt has arrived."
+  },
+  "rel_ops_host_receipt_success": "업데이트 처리 기록에 성공으로 표시되어 있습니다.",
+  "@rel_ops_host_receipt_success": {
+    "description": "Matching remote update receipt reports success."
+  },
+  "rel_ops_host_receipt_partial": "업데이트가 적용되었지만 후속 단계가 아직 남아 있습니다.",
+  "@rel_ops_host_receipt_partial": {
+    "description": "Remote update committed but still requires follow-up work."
+  },
+  "rel_ops_host_receipt_failed": "업데이트 처리 기록에 실패로 표시되어 있습니다.",
+  "@rel_ops_host_receipt_failed": {
+    "description": "Matching remote update receipt reports failure."
+  },
+  "rel_ops_host_receipt_refused": "업데이트 처리 기록에 거부로 표시되어 있습니다.",
+  "@rel_ops_host_receipt_refused": {
+    "description": "Matching remote update receipt reports refusal."
+  },
+  "rel_ops_host_update_running": "업데이트가 아직 실행 중입니다.",
+  "@rel_ops_host_update_running": {
+    "description": "Remote update remains in progress."
+  },
+  "rel_ops_host_update_unknown": "업데이트 결과를 알 수 없습니다. 게이트웨이가 실행 중이라고 해서 업데이트가 성공한 것은 아닙니다.",
+  "@rel_ops_host_update_unknown": {
+    "description": "No matching receipt verifies the remote update outcome."
+  },
+  "rel_ops_host_default_profile": "게이트웨이 기본 프로필",
+  "@rel_ops_host_default_profile": {
+    "description": "Display name for an unspecified gateway profile, not a wire identifier."
+  },
+  "rel_ops_host_restart": "원격 게이트웨이 다시 시작",
+  "@rel_ops_host_restart": {
+    "description": "Restart the gateway on the remote host."
+  },
+  "rel_ops_host_restart_shared_confirmation": "{profiles}에서 공유하는 게이트웨이를 다시 시작합니다. 이 게이트웨이에서 진행 중인 턴이 중단됩니다. 이후 다시 연결하세요. 연결할 수 있다는 것만으로 다시 시작이 완료되었다고 볼 수는 없습니다.",
+  "@rel_ops_host_restart_shared_confirmation": {
+    "description": "Warn that restarting a shared gateway interrupts all listed profiles. Keep profile identifiers unchanged.",
+    "placeholders": {
+      "profiles": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_restart_confirmation": "{profile}의 원격 게이트웨이를 다시 시작합니다. 이 게이트웨이에서 진행 중인 턴이 중단됩니다. 이후 다시 연결하세요.",
+  "@rel_ops_host_restart_confirmation": {
+    "description": "Remote gateway restart confirmation.",
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_restart_running": "다시 시작 명령이 아직 실행 중입니다.",
+  "@rel_ops_host_restart_running": {
+    "description": "Remote restart command is still running."
+  },
+  "rel_ops_host_restart_finished": "다시 시작 명령이 완료되었습니다. 호스트에 직접 다시 연결하세요.",
+  "@rel_ops_host_restart_finished": {
+    "description": "Remote restart command exited successfully; reconnection remains manual."
+  },
+  "rel_ops_host_restart_failed": "다시 시작 명령이 실패했습니다.",
+  "@rel_ops_host_restart_failed": {
+    "description": "Remote restart command exited unsuccessfully."
+  },
+  "rel_ops_host_maintenance_running": "{name}이(가) 아직 실행 중입니다",
+  "@rel_ops_host_maintenance_running": {
+    "description": "Remote maintenance command status. The name is a command identifier such as doctor, security-audit or curator-run; do not translate it.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_maintenance_finished": "{name} 완료",
+  "@rel_ops_host_maintenance_finished": {
+    "description": "Remote maintenance command succeeded. Keep the command identifier unchanged.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_maintenance_failed": "{name} 실패",
+  "@rel_ops_host_maintenance_failed": {
+    "description": "Remote maintenance command failed. Keep the command identifier unchanged.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_curator_paused_result": "큐레이터가 일시 중지되었습니다.",
+  "@rel_ops_host_curator_paused_result": {
+    "description": "Confirmation that the remote Curator was paused."
+  },
+  "rel_ops_host_curator_resumed_result": "큐레이터가 재개되었습니다.",
+  "@rel_ops_host_curator_resumed_result": {
+    "description": "Confirmation that the remote Curator was resumed."
+  },
+  "rel_ops_host_reset": "원격 메모리 파일 초기화",
+  "@rel_ops_host_reset": {
+    "description": "Remote memory file reset section and confirmation title."
+  },
+  "rel_ops_host_reset_confirmation": "{profile}의 {targetName} 메모리 파일을 삭제할까요? Ares에서는 이 작업을 되돌릴 수 없습니다.",
+  "@rel_ops_host_reset_confirmation": {
+    "description": "Destructive remote memory reset warning. Preserve the target token (memory, user or all) and profile identifier.",
+    "placeholders": {
+      "targetName": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_reset_result": "{targetName}을(를) 초기화했습니다. 원격 파일 {count}개를 삭제했습니다.",
+  "@rel_ops_host_reset_result": {
+    "description": "Remote memory reset result. Preserve the target token unchanged.",
+    "placeholders": {
+      "targetName": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_host_share_not_redacted": "호스트에서 진단 묶음의 민감 정보가 가려졌는지 확인하지 않았습니다. 링크가 표시되지 않습니다.",
+  "@rel_ops_host_share_not_redacted": {
+    "description": "Diagnostic sharing is blocked without server confirmation of redaction."
+  },
+  "rel_ops_host_scope": "이 컨트롤은 {profile}의 원격 게이트웨이 {connection}을(를) 조작합니다. 이 기기나 Ares 클라이언트 업데이트에는 적용되지 않습니다.",
+  "@rel_ops_host_scope": {
+    "description": "Explain that controls target the named remote connection and profile, never this device. Preserve the connection label and profile identifier.",
+    "placeholders": {
+      "connection": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_health_running": "게이트웨이 프로세스 실행 중 {version} · 세션 {count}개",
+  "@rel_ops_host_health_running": {
+    "description": "Remote gateway health with running process, server version and active session count.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_host_health_stopped": "게이트웨이 프로세스 중지됨 {version} · 세션 {count}개",
+  "@rel_ops_host_health_stopped": {
+    "description": "Remote gateway health with stopped process, server version and active session count.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rel_ops_host_heartbeat_stale": "호스트의 하트비트가 오래되었습니다({seconds}초).",
+  "@rel_ops_host_heartbeat_stale": {
+    "description": "Remote host heartbeat age in seconds; the gateway may return fractional seconds.",
+    "placeholders": {
+      "seconds": {
+        "type": "num"
+      }
+    }
+  },
+  "rel_ops_host_doctor": "Doctor 실행",
+  "@rel_ops_host_doctor": {
+    "description": "Run remote host diagnostics using the Doctor command."
+  },
+  "rel_ops_host_security_audit": "보안 감사",
+  "@rel_ops_host_security_audit": {
+    "description": "Run the remote host security audit."
+  },
+  "rel_ops_host_check_receipt": "업데이트 처리 기록 확인",
+  "@rel_ops_host_check_receipt": {
+    "description": "Read the receipt for the already-started remote update, without starting another."
+  },
+  "rel_ops_host_logs": "원격 호스트 로그",
+  "@rel_ops_host_logs": {
+    "description": "Remote gateway logs section heading."
+  },
+  "rel_ops_host_search_logs": "호스트 로그 검색",
+  "@rel_ops_host_search_logs": {
+    "description": "Search field label for remote host logs."
+  },
+  "rel_ops_host_driver": "원격 호스트 드라이버",
+  "@rel_ops_host_driver": {
+    "description": "Remote Computer Use driver section heading."
+  },
+  "rel_ops_host_driver_scope": "컴퓨터 제어 준비 상태는 이 기기가 아니라 게이트웨이 컴퓨터의 드라이버 및 운영 체제 권한에 관한 것입니다.",
+  "@rel_ops_host_driver_scope": {
+    "description": "Clarify that driver readiness and OS permissions refer only to the remote gateway machine."
+  },
+  "rel_ops_host_computer_status": "{platform} · 설치됨 {installed} · 준비됨 {ready}",
+  "@rel_ops_host_computer_status": {
+    "description": "Computer Use driver status. Platform is a server identifier; installed and ready are localized boolean display values.",
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      },
+      "installed": {
+        "type": "String"
+      },
+      "ready": {
+        "type": "String"
+      }
+    }
+  },
+  "rel_ops_host_null": "확인 불가",
+  "@rel_ops_host_null": {
+    "description": "Human-readable unavailable readiness value from a nullable remote driver status; never sent over the wire."
+  },
+  "rel_ops_host_true": "예",
+  "@rel_ops_host_true": {
+    "description": "Human-readable affirmative boolean in remote driver status; never sent over the wire."
+  },
+  "rel_ops_host_false": "아니요",
+  "@rel_ops_host_false": {
+    "description": "Human-readable negative boolean in remote driver status; never sent over the wire."
+  },
+  "rel_ops_host_curator": "큐레이터",
+  "@rel_ops_host_curator": {
+    "description": "Remote Curator section heading."
+  },
+  "rel_ops_host_curator_paused": "큐레이터 일시 중지됨",
+  "@rel_ops_host_curator_paused": {
+    "description": "Remote Curator paused status label."
+  },
+  "rel_ops_host_curator_running": "큐레이터 실행 중",
+  "@rel_ops_host_curator_running": {
+    "description": "Remote Curator running status label."
+  },
+  "rel_ops_host_no_run": "완료된 실행 없음",
+  "@rel_ops_host_no_run": {
+    "description": "No completed remote Curator run timestamp is available."
+  },
+  "rel_ops_host_run_curator": "지금 큐레이터 실행",
+  "@rel_ops_host_run_curator": {
+    "description": "Start a remote Curator maintenance run immediately."
+  },
+  "rel_ops_host_reset_memory": "메모리 파일 초기화",
+  "@rel_ops_host_reset_memory": {
+    "description": "Delete the remote memory file after confirmation."
+  },
+  "rel_ops_host_reset_user": "사용자 파일 초기화",
+  "@rel_ops_host_reset_user": {
+    "description": "Delete the remote user memory file after confirmation."
+  },
+  "rel_ops_host_reset_both": "두 파일 모두 초기화",
+  "@rel_ops_host_reset_both": {
+    "description": "Delete both remote memory files after confirmation."
+  },
+  "rel_ops_host_share_consent": "원격 호스트에서 민감 정보를 가린 진단 묶음을 업로드하는 데 동의합니다",
+  "@rel_ops_host_share_consent": {
+    "description": "Explicit consent to upload a redacted remote host diagnostic bundle; do not weaken the consent or remote-host scope."
+  },
+  "rel_ops_host_share": "민감 정보를 가린 진단 정보 공유",
+  "@rel_ops_host_share": {
+    "description": "Upload redacted remote diagnostic bundle after explicit consent."
+  },
+  "rel_ops_host_update_unknown_installation": "이 설치를 식별할 수 없어 업데이트를 보내지 않았습니다",
+  "@rel_ops_host_update_unknown_installation": {
+    "description": "Local admission refusal when the gateway installation cannot be identified."
+  },
+  "rel_ops_host_update_busy_installation": "이 설치에서 채팅이 실행 중입니다",
+  "@rel_ops_host_update_busy_installation": {
+    "description": "Local admission refusal when an active chat or agent blocks the remote update."
+  },
+  "rel_ops_host_update_refused": "원격 업데이트 거부됨",
+  "@rel_ops_host_update_refused": {
+    "description": "Local fallback when the server refuses an update without a message."
+  },
+  "rel_ops_host_error_stale": "원격 작업 공간: 오래된 상태",
+  "@rel_ops_host_error_stale": {
+    "description": "Workspace failure: the remote owner or connection is no longer current."
+  },
+  "rel_ops_host_error_mismatch": "원격 작업 공간: 불일치",
+  "@rel_ops_host_error_mismatch": {
+    "description": "Workspace failure: remote owner or action result does not match the requested target."
+  },
+  "rel_ops_host_error_unbound": "원격 작업 공간: 연결 대상 미지정",
+  "@rel_ops_host_error_unbound": {
+    "description": "Workspace failure: no authenticated remote target has been bound."
+  },
+  "rel_ops_host_error_unsupported": "원격 작업 공간: 지원되지 않음",
+  "@rel_ops_host_error_unsupported": {
+    "description": "Workspace failure: the gateway does not support this operation."
+  },
+  "rel_ops_host_error_denied": "원격 작업 공간: 접근 거부됨",
+  "@rel_ops_host_error_denied": {
+    "description": "Workspace failure: the remote host operation was denied."
+  },
+  "rel_ops_host_error_ineligible": "원격 작업 공간: 작업 대상 부적격",
+  "@rel_ops_host_error_ineligible": {
+    "description": "Workspace failure: the remote target is not eligible for this operation."
+  },
+  "rel_ops_host_error_unavailable": "원격 작업 공간: 사용 불가",
+  "@rel_ops_host_error_unavailable": {
+    "description": "Workspace failure: the remote host operation is unavailable."
+  },
+  "rel_ops_host_error_invalid": "원격 작업 공간: 유효하지 않음",
+  "@rel_ops_host_error_invalid": {
+    "description": "Workspace failure: the request or gateway response was invalid."
+  },
+  "rel_ops_host_error_insecure": "원격 작업 공간: 안전하지 않음",
+  "@rel_ops_host_error_insecure": {
+    "description": "Workspace failure: the remote connection does not meet security requirements."
+  },
+  "rel_ops_host_error_request": "요청을 완료하지 못했습니다.",
+  "@rel_ops_host_error_request": {
+    "description": "Safe host-operation failure fallback when no structured reason is available. Do not expose client-authored service exception prose."
   }
 }

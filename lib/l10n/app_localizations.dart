@@ -22050,6 +22050,2119 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'undone'**
   String get rel_admin_phase_undone;
+
+  /// Capability administration: Install blocked ({verdict}): {detail}
+  ///
+  /// In en, this message translates to:
+  /// **'Install blocked ({verdict}): {detail}'**
+  String rel_ops_cap_install_blocked(String verdict, String detail);
+
+  /// Capability administration: Scan verdict: {verdict}. Confirm {requested} before installing.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan verdict: {verdict}. Confirm {requested} before installing.'**
+  String rel_ops_cap_scan_confirm(String verdict, String requested);
+
+  /// Capability administration: The gateway has not confirmed that {requested} is installed.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway has not confirmed that {requested} is installed.'**
+  String rel_ops_cap_install_unconfirmed(String requested);
+
+  /// Capability administration: Edit {name}
+  ///
+  /// In en, this message translates to:
+  /// **'Edit {name}'**
+  String rel_ops_cap_edit_skill(String name);
+
+  /// Capability administration: Archive {name}?
+  ///
+  /// In en, this message translates to:
+  /// **'Archive {name}?'**
+  String rel_ops_cap_archive_skill(String name);
+
+  /// Archive confirmation. The command placeholder is the literal CLI command hermes curator restore; do not translate or alter the command.
+  ///
+  /// In en, this message translates to:
+  /// **'The skill is archived and can be restored with {command}.'**
+  String rel_ops_cap_archive_explanation(String command);
+
+  /// Capability administration: Install {name} anyway
+  ///
+  /// In en, this message translates to:
+  /// **'Install {name} anyway'**
+  String rel_ops_cap_install_anyway(String name);
+
+  /// Capability administration: Install {name} despite the scan?
+  ///
+  /// In en, this message translates to:
+  /// **'Install {name} despite the scan?'**
+  String rel_ops_cap_install_despite_scan(String name);
+
+  /// Capability administration: The security scan blocked {name}. This confirmation applies only to {name}.
+  ///
+  /// In en, this message translates to:
+  /// **'The security scan blocked {name}. This confirmation applies only to {name}.'**
+  String rel_ops_cap_scan_warning(String name);
+
+  /// Capability administration: Accepting capabilities does not override the scan of {name}.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepting capabilities does not override the scan of {name}.'**
+  String rel_ops_cap_accept_scan_warning(String name);
+
+  /// Capability administration: Review scan for {name}
+  ///
+  /// In en, this message translates to:
+  /// **'Review scan for {name}'**
+  String rel_ops_cap_review_scan(String name);
+
+  /// Plugin description followed by a warning about local Desktop app grants. Desktop is the app name; preserve it.
+  ///
+  /// In en, this message translates to:
+  /// **'{description}\nFolder and preview-script grants stay in the Desktop app on that computer. Removing the plugin here does not revoke those local grants.'**
+  String rel_ops_cap_desktop_grants(String description);
+
+  /// Capability administration: Remove {name}?
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {name}?'**
+  String rel_ops_cap_remove_plugin(String name);
+
+  /// Capability administration: Probe {name}: {tools}
+  ///
+  /// In en, this message translates to:
+  /// **'Probe {name}: {tools}'**
+  String rel_ops_cap_probe_result(String name, String tools);
+
+  /// Capability administration: Save tool grants for {connector}
+  ///
+  /// In en, this message translates to:
+  /// **'Save tool grants for {connector}'**
+  String rel_ops_cap_save_tool_grants_for(String connector);
+
+  /// Capability administration: Backends for {name}
+  ///
+  /// In en, this message translates to:
+  /// **'Backends for {name}'**
+  String rel_ops_cap_backends_for(String name);
+
+  /// Capability administration: Use {name}?
+  ///
+  /// In en, this message translates to:
+  /// **'Use {name}?'**
+  String rel_ops_cap_use_backend_confirmation(String name);
+
+  /// Capability administration: Unlock {name}
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock {name}'**
+  String rel_ops_cap_unlock_source(String name);
+
+  /// Capability administration: Capabilities
+  ///
+  /// In en, this message translates to:
+  /// **'Capabilities'**
+  String get rel_ops_cap_capabilities;
+
+  /// Capability administration: Plugins
+  ///
+  /// In en, this message translates to:
+  /// **'Plugins'**
+  String get rel_ops_cap_plugins;
+
+  /// Capability administration: Connectors
+  ///
+  /// In en, this message translates to:
+  /// **'Connectors'**
+  String get rel_ops_cap_connectors;
+
+  /// Capability administration: Backends
+  ///
+  /// In en, this message translates to:
+  /// **'Backends'**
+  String get rel_ops_cap_backends;
+
+  /// Capability administration: Save skill
+  ///
+  /// In en, this message translates to:
+  /// **'Save skill'**
+  String get rel_ops_cap_save_skill;
+
+  /// Capability administration: Archive
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get rel_ops_cap_archive;
+
+  /// Capability administration: Hub identifier
+  ///
+  /// In en, this message translates to:
+  /// **'Hub identifier'**
+  String get rel_ops_cap_hub_identifier;
+
+  /// Capability administration: Install
+  ///
+  /// In en, this message translates to:
+  /// **'Install'**
+  String get rel_ops_cap_install;
+
+  /// Capability administration: Update all
+  ///
+  /// In en, this message translates to:
+  /// **'Update all'**
+  String get rel_ops_cap_update_all;
+
+  /// Capability administration: Unlock
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock'**
+  String get rel_ops_cap_unlock;
+
+  /// Capability administration: Lock
+  ///
+  /// In en, this message translates to:
+  /// **'Lock'**
+  String get rel_ops_cap_lock;
+
+  /// Capability administration: This update adds capabilities. Nothing changed yet.
+  ///
+  /// In en, this message translates to:
+  /// **'This update adds capabilities. Nothing changed yet.'**
+  String get rel_ops_cap_this_update_adds_capabilities_nothing_changed_yet;
+
+  /// Capability administration: The scan blocked this plugin.
+  ///
+  /// In en, this message translates to:
+  /// **'The scan blocked this plugin.'**
+  String get rel_ops_cap_the_scan_blocked_this_plugin;
+
+  /// Capability administration: The plugin was not changed.
+  ///
+  /// In en, this message translates to:
+  /// **'The plugin was not changed.'**
+  String get rel_ops_cap_the_plugin_was_not_changed;
+
+  /// Capability administration: Repository
+  ///
+  /// In en, this message translates to:
+  /// **'Repository'**
+  String get rel_ops_cap_repository;
+
+  /// Capability administration: Install plugin
+  ///
+  /// In en, this message translates to:
+  /// **'Install plugin'**
+  String get rel_ops_cap_install_plugin;
+
+  /// Capability administration: Update plugins
+  ///
+  /// In en, this message translates to:
+  /// **'Update plugins'**
+  String get rel_ops_cap_update_plugins;
+
+  /// Capability administration: Accept capabilities
+  ///
+  /// In en, this message translates to:
+  /// **'Accept capabilities'**
+  String get rel_ops_cap_accept_capabilities;
+
+  /// Capability administration: Update
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get rel_ops_cap_update;
+
+  /// Capability administration: Remove desktop half
+  ///
+  /// In en, this message translates to:
+  /// **'Remove desktop half'**
+  String get rel_ops_cap_remove_desktop_half;
+
+  /// Capability administration: Server name
+  ///
+  /// In en, this message translates to:
+  /// **'Server name'**
+  String get rel_ops_cap_server_name;
+
+  /// Capability administration: Command
+  ///
+  /// In en, this message translates to:
+  /// **'Command'**
+  String get rel_ops_cap_command;
+
+  /// Capability administration: HTTP URL
+  ///
+  /// In en, this message translates to:
+  /// **'HTTP URL'**
+  String get rel_ops_cap_http_url;
+
+  /// Capability administration: Add server
+  ///
+  /// In en, this message translates to:
+  /// **'Add server'**
+  String get rel_ops_cap_add_server;
+
+  /// Capability administration: Probe
+  ///
+  /// In en, this message translates to:
+  /// **'Probe'**
+  String get rel_ops_cap_probe;
+
+  /// Capability administration: Probe failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Probe failed.'**
+  String get rel_ops_cap_probe_failed;
+
+  /// Capability administration: Logs
+  ///
+  /// In en, this message translates to:
+  /// **'Logs'**
+  String get rel_ops_cap_logs;
+
+  /// Capability administration: MCP log
+  ///
+  /// In en, this message translates to:
+  /// **'MCP log'**
+  String get rel_ops_cap_mcp_log;
+
+  /// Capability administration: Connector
+  ///
+  /// In en, this message translates to:
+  /// **'Connector'**
+  String get rel_ops_cap_connector;
+
+  /// Capability administration: Account alias
+  ///
+  /// In en, this message translates to:
+  /// **'Account alias'**
+  String get rel_ops_cap_account_alias;
+
+  /// Capability administration: Link account
+  ///
+  /// In en, this message translates to:
+  /// **'Link account'**
+  String get rel_ops_cap_link_account;
+
+  /// Capability administration: Remove account
+  ///
+  /// In en, this message translates to:
+  /// **'Remove account'**
+  String get rel_ops_cap_remove_account;
+
+  /// Capability administration: Tool connector
+  ///
+  /// In en, this message translates to:
+  /// **'Tool connector'**
+  String get rel_ops_cap_tool_connector;
+
+  /// Capability administration: Load tools
+  ///
+  /// In en, this message translates to:
+  /// **'Load tools'**
+  String get rel_ops_cap_load_tools;
+
+  /// Capability administration: Save tool grants
+  ///
+  /// In en, this message translates to:
+  /// **'Save tool grants'**
+  String get rel_ops_cap_save_tool_grants;
+
+  /// Capability administration: This policy has no member revision, so tool grants stay unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'This policy has no member revision, so tool grants stay unchanged.'**
+  String
+  get rel_ops_cap_this_policy_has_no_member_revision_so_tool_grants_stay_unchanged;
+
+  /// Capability administration: Active
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get rel_ops_cap_active;
+
+  /// Capability administration: Use
+  ///
+  /// In en, this message translates to:
+  /// **'Use'**
+  String get rel_ops_cap_use;
+
+  /// Capability administration: Run setup
+  ///
+  /// In en, this message translates to:
+  /// **'Run setup'**
+  String get rel_ops_cap_run_setup;
+
+  /// Capability administration: Terminal backends
+  ///
+  /// In en, this message translates to:
+  /// **'Terminal backends'**
+  String get rel_ops_cap_terminal_backends;
+
+  /// Capability administration: This changes the terminal backend for this profile.
+  ///
+  /// In en, this message translates to:
+  /// **'This changes the terminal backend for this profile.'**
+  String get rel_ops_cap_this_changes_the_terminal_backend_for_this_profile;
+
+  /// Capability administration: Use backend
+  ///
+  /// In en, this message translates to:
+  /// **'Use backend'**
+  String get rel_ops_cap_use_backend;
+
+  /// Capability administration: Select
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get rel_ops_cap_select;
+
+  /// Capability administration: Browser vault
+  ///
+  /// In en, this message translates to:
+  /// **'Browser vault'**
+  String get rel_ops_cap_browser_vault;
+
+  /// Capability administration: Saved site logins, addresses and cards. Passwords stay in the secure fields and are not listed here.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved site logins, addresses and cards. Passwords stay in the secure fields and are not listed here.'**
+  String
+  get rel_ops_cap_saved_site_logins_addresses_and_cards_passwords_stay_in_the_secure_fields_and_are_not_listed_here;
+
+  /// Capability administration: Remove saved item
+  ///
+  /// In en, this message translates to:
+  /// **'Remove saved item'**
+  String get rel_ops_cap_remove_saved_item;
+
+  /// Capability administration: Delete this item?
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this item?'**
+  String get rel_ops_cap_delete_this_item;
+
+  /// Capability administration: Unlocked
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocked'**
+  String get rel_ops_cap_unlocked;
+
+  /// Capability administration: Locked
+  ///
+  /// In en, this message translates to:
+  /// **'Locked'**
+  String get rel_ops_cap_locked;
+
+  /// Capability administration: Not detected
+  ///
+  /// In en, this message translates to:
+  /// **'Not detected'**
+  String get rel_ops_cap_not_detected;
+
+  /// Capability administration: Master password
+  ///
+  /// In en, this message translates to:
+  /// **'Master password'**
+  String get rel_ops_cap_master_password;
+
+  /// Capability administration: Login
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get rel_ops_cap_login;
+
+  /// Capability administration: Address
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get rel_ops_cap_address;
+
+  /// Capability administration: Card
+  ///
+  /// In en, this message translates to:
+  /// **'Card'**
+  String get rel_ops_cap_card;
+
+  /// Capability administration: Label
+  ///
+  /// In en, this message translates to:
+  /// **'Label'**
+  String get rel_ops_cap_label;
+
+  /// Capability administration: Site origin
+  ///
+  /// In en, this message translates to:
+  /// **'Site origin'**
+  String get rel_ops_cap_site_origin;
+
+  /// Capability administration: Identifier
+  ///
+  /// In en, this message translates to:
+  /// **'Identifier'**
+  String get rel_ops_cap_identifier;
+
+  /// Capability administration: Password
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get rel_ops_cap_password;
+
+  /// Capability administration: Authenticator key
+  ///
+  /// In en, this message translates to:
+  /// **'Authenticator key'**
+  String get rel_ops_cap_authenticator_key;
+
+  /// Capability administration: Street
+  ///
+  /// In en, this message translates to:
+  /// **'Street'**
+  String get rel_ops_cap_street;
+
+  /// Capability administration: City
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get rel_ops_cap_city;
+
+  /// Capability administration: Postal code
+  ///
+  /// In en, this message translates to:
+  /// **'Postal code'**
+  String get rel_ops_cap_postal_code;
+
+  /// Capability administration: Country
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get rel_ops_cap_country;
+
+  /// Capability administration: Name on card
+  ///
+  /// In en, this message translates to:
+  /// **'Name on card'**
+  String get rel_ops_cap_name_on_card;
+
+  /// Capability administration: Card number
+  ///
+  /// In en, this message translates to:
+  /// **'Card number'**
+  String get rel_ops_cap_card_number;
+
+  /// Capability administration: Expiry month
+  ///
+  /// In en, this message translates to:
+  /// **'Expiry month'**
+  String get rel_ops_cap_expiry_month;
+
+  /// Capability administration: Expiry year
+  ///
+  /// In en, this message translates to:
+  /// **'Expiry year'**
+  String get rel_ops_cap_expiry_year;
+
+  /// Capability administration: Security code
+  ///
+  /// In en, this message translates to:
+  /// **'Security code'**
+  String get rel_ops_cap_security_code;
+
+  /// Capability administration: This gateway has no shared-metrics consent method.
+  ///
+  /// In en, this message translates to:
+  /// **'This gateway has no shared-metrics consent method.'**
+  String get rel_ops_cap_this_gateway_has_no_shared_metrics_consent_method;
+
+  /// Capability administration: Agent policy
+  ///
+  /// In en, this message translates to:
+  /// **'Agent policy'**
+  String get rel_ops_cap_agent_policy;
+
+  /// Capability administration: Loading policy
+  ///
+  /// In en, this message translates to:
+  /// **'Loading policy'**
+  String get rel_ops_cap_loading_policy;
+
+  /// Capability administration: Approval timeout
+  ///
+  /// In en, this message translates to:
+  /// **'Approval timeout'**
+  String get rel_ops_cap_approval_timeout;
+
+  /// Capability administration: Confirm MCP reloads
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm MCP reloads'**
+  String get rel_ops_cap_confirm_mcp_reloads;
+
+  /// Capability administration: Command allowlist
+  ///
+  /// In en, this message translates to:
+  /// **'Command allowlist'**
+  String get rel_ops_cap_command_allowlist;
+
+  /// Capability administration: File checkpoints
+  ///
+  /// In en, this message translates to:
+  /// **'File checkpoints'**
+  String get rel_ops_cap_file_checkpoints;
+
+  /// Capability administration: Checkpoint limit
+  ///
+  /// In en, this message translates to:
+  /// **'Checkpoint limit'**
+  String get rel_ops_cap_checkpoint_limit;
+
+  /// Capability administration: Browser private URLs
+  ///
+  /// In en, this message translates to:
+  /// **'Browser private URLs'**
+  String get rel_ops_cap_browser_private_urls;
+
+  /// Capability administration: Use my real browser profile
+  ///
+  /// In en, this message translates to:
+  /// **'Use my real browser profile'**
+  String get rel_ops_cap_use_my_real_browser_profile;
+
+  /// Capability administration: Save policy
+  ///
+  /// In en, this message translates to:
+  /// **'Save policy'**
+  String get rel_ops_cap_save_policy;
+
+  /// Capability administration: Shared metrics for this profile
+  ///
+  /// In en, this message translates to:
+  /// **'Shared metrics for this profile'**
+  String get rel_ops_cap_shared_metrics_for_this_profile;
+
+  /// Capability administration: Send shared metrics
+  ///
+  /// In en, this message translates to:
+  /// **'Send shared metrics'**
+  String get rel_ops_cap_send_shared_metrics;
+
+  /// Capability administration: Enter a label.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a label.'**
+  String get rel_ops_cap_error_enter_a_label;
+
+  /// Capability administration: Enter a valid URL like https://example.com.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid URL like https://example.com.'**
+  String get rel_ops_cap_error_enter_a_valid_url_like_https_example_com;
+
+  /// Capability administration: Enter the identifier and password.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the identifier and password.'**
+  String get rel_ops_cap_error_enter_the_identifier_and_password;
+
+  /// Capability administration: Enter the card name, number, expiry and security code.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the card name, number, expiry and security code.'**
+  String
+  get rel_ops_cap_error_enter_the_card_name_number_expiry_and_security_code;
+
+  /// Capability administration: Enter the street, city, postal code and country.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the street, city, postal code and country.'**
+  String get rel_ops_cap_error_enter_the_street_city_postal_code_and_country;
+
+  /// Capability administration: The gateway returned a response that could not be read.
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway returned a response that could not be read.'**
+  String
+  get rel_ops_cap_error_the_gateway_returned_a_response_that_could_not_be_read;
+
+  /// Capability administration: The gateway refused the request ({statusCode}).
+  ///
+  /// In en, this message translates to:
+  /// **'The gateway refused the request ({statusCode}).'**
+  String rel_ops_cap_error_the_gateway_refused_the_request_status(
+    int statusCode,
+  );
+
+  /// Missing gateway socket error. The method placeholder is a JSON-RPC wire method; do not translate it.
+  ///
+  /// In en, this message translates to:
+  /// **'This connection has no gateway socket, so {method} is unavailable.'**
+  String
+  rel_ops_cap_error_this_connection_has_no_gateway_socket_so_method_is_unavailable(
+    String method,
+  );
+
+  /// Capability administration: Choose a skill.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a skill.'**
+  String get rel_ops_cap_error_choose_a_skill;
+
+  /// Capability administration: The skill text was not returned.
+  ///
+  /// In en, this message translates to:
+  /// **'The skill text was not returned.'**
+  String get rel_ops_cap_error_the_skill_text_was_not_returned;
+
+  /// Capability administration: The skill was not saved.
+  ///
+  /// In en, this message translates to:
+  /// **'The skill was not saved.'**
+  String get rel_ops_cap_error_the_skill_was_not_saved;
+
+  /// Capability administration: The skill was not archived.
+  ///
+  /// In en, this message translates to:
+  /// **'The skill was not archived.'**
+  String get rel_ops_cap_error_the_skill_was_not_archived;
+
+  /// Capability administration: The skill was not installed.
+  ///
+  /// In en, this message translates to:
+  /// **'The skill was not installed.'**
+  String get rel_ops_cap_error_the_skill_was_not_installed;
+
+  /// Capability administration: Skill updates did not start.
+  ///
+  /// In en, this message translates to:
+  /// **'Skill updates did not start.'**
+  String get rel_ops_cap_error_skill_updates_did_not_start;
+
+  /// Capability administration: The skill was not removed.
+  ///
+  /// In en, this message translates to:
+  /// **'The skill was not removed.'**
+  String get rel_ops_cap_error_the_skill_was_not_removed;
+
+  /// Capability administration: Enter a skill or plugin identifier.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a skill or plugin identifier.'**
+  String get rel_ops_cap_error_enter_a_skill_or_plugin_identifier;
+
+  /// Capability administration: Choose a plugin.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a plugin.'**
+  String get rel_ops_cap_error_choose_a_plugin;
+
+  /// Capability administration: The plugin was not removed.
+  ///
+  /// In en, this message translates to:
+  /// **'The plugin was not removed.'**
+  String get rel_ops_cap_error_the_plugin_was_not_removed;
+
+  /// Capability administration: The desktop half was not removed.
+  ///
+  /// In en, this message translates to:
+  /// **'The desktop half was not removed.'**
+  String get rel_ops_cap_error_the_desktop_half_was_not_removed;
+
+  /// Capability administration: This gateway did not give the plugin a stable key.
+  ///
+  /// In en, this message translates to:
+  /// **'This gateway did not give the plugin a stable key.'**
+  String
+  get rel_ops_cap_error_this_gateway_did_not_give_the_plugin_a_stable_key;
+
+  /// Capability administration: The plugin was not changed.
+  ///
+  /// In en, this message translates to:
+  /// **'The plugin was not changed.'**
+  String get rel_ops_cap_error_the_plugin_was_not_changed;
+
+  /// Capability administration: Choose a server.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a server.'**
+  String get rel_ops_cap_error_choose_a_server;
+
+  /// Capability administration: Name the server.
+  ///
+  /// In en, this message translates to:
+  /// **'Name the server.'**
+  String get rel_ops_cap_error_name_the_server;
+
+  /// Capability administration: Give the server a command or an http(s) URL.
+  ///
+  /// In en, this message translates to:
+  /// **'Give the server a command or an http(s) URL.'**
+  String get rel_ops_cap_error_give_the_server_a_command_or_an_http_s_url;
+
+  /// Capability administration: Choose a toolset.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a toolset.'**
+  String get rel_ops_cap_error_choose_a_toolset;
+
+  /// Capability administration: Tool backend status was not returned.
+  ///
+  /// In en, this message translates to:
+  /// **'Tool backend status was not returned.'**
+  String get rel_ops_cap_error_tool_backend_status_was_not_returned;
+
+  /// Capability administration: Choose a provider.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a provider.'**
+  String get rel_ops_cap_error_choose_a_provider;
+
+  /// Capability administration: This provider has no setup action.
+  ///
+  /// In en, this message translates to:
+  /// **'This provider has no setup action.'**
+  String get rel_ops_cap_error_this_provider_has_no_setup_action;
+
+  /// Capability administration: Setup did not start.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup did not start.'**
+  String get rel_ops_cap_error_setup_did_not_start;
+
+  /// Capability administration: Choose a terminal backend.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a terminal backend.'**
+  String get rel_ops_cap_error_choose_a_terminal_backend;
+
+  /// Capability administration: Name the connector.
+  ///
+  /// In en, this message translates to:
+  /// **'Name the connector.'**
+  String get rel_ops_cap_error_name_the_connector;
+
+  /// Capability administration: Choose an account.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an account.'**
+  String get rel_ops_cap_error_choose_an_account;
+
+  /// Capability administration: Reload the connector policy before changing tool grants.
+  ///
+  /// In en, this message translates to:
+  /// **'Reload the connector policy before changing tool grants.'**
+  String
+  get rel_ops_cap_error_reload_the_connector_policy_before_changing_tool_grants;
+
+  /// Capability administration: Choose an item.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an item.'**
+  String get rel_ops_cap_error_choose_an_item;
+
+  /// Capability administration: Choose a source.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a source.'**
+  String get rel_ops_cap_error_choose_a_source;
+
+  /// Capability administration: Enter the master password.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the master password.'**
+  String get rel_ops_cap_error_enter_the_master_password;
+
+  /// Capability administration: Gateway config was not returned.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway config was not returned.'**
+  String get rel_ops_cap_error_gateway_config_was_not_returned;
+
+  /// Capability administration: Choose a known approval mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a known approval mode.'**
+  String get rel_ops_cap_error_choose_a_known_approval_mode;
+
+  /// Capability administration: Use a positive limit.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a positive limit.'**
+  String get rel_ops_cap_error_use_a_positive_limit;
+
+  /// Capability administration: The policy was not saved.
+  ///
+  /// In en, this message translates to:
+  /// **'The policy was not saved.'**
+  String get rel_ops_cap_error_the_policy_was_not_saved;
+
+  /// Capability _capabilityValue display label for wire value manual. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'manual'**
+  String get rel_ops_cap_value_manual;
+
+  /// Capability _capabilityValue display label for wire value smart. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'smart'**
+  String get rel_ops_cap_value_smart;
+
+  /// Capability _capabilityValue display label for wire value off. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'off'**
+  String get rel_ops_cap_value_off;
+
+  /// Capability _capabilityValue display label for wire value safe. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'safe'**
+  String get rel_ops_cap_value_safe;
+
+  /// Capability _capabilityValue display label for wire value caution. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'caution'**
+  String get rel_ops_cap_value_caution;
+
+  /// Capability _capabilityValue display label for wire value dangerous. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'dangerous'**
+  String get rel_ops_cap_value_dangerous;
+
+  /// Capability _capabilityValue display label for wire value blocked. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'blocked'**
+  String get rel_ops_cap_value_blocked;
+
+  /// Capability _capabilityValue display label for wire value clean. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'clean'**
+  String get rel_ops_cap_value_clean;
+
+  /// Capability _capabilityValue display label for wire value ready. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'ready'**
+  String get rel_ops_cap_value_ready;
+
+  /// Capability _capabilityValue display label for wire value available. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'available'**
+  String get rel_ops_cap_value_available;
+
+  /// Capability _capabilityValue display label for wire value unavailable. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'unavailable'**
+  String get rel_ops_cap_value_unavailable;
+
+  /// Capability _capabilityValue display label for wire value enabled. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'enabled'**
+  String get rel_ops_cap_value_enabled;
+
+  /// Capability _capabilityValue display label for wire value disabled. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'disabled'**
+  String get rel_ops_cap_value_disabled;
+
+  /// Capability _capabilityValue display label for wire value active. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'active'**
+  String get rel_ops_cap_value_active;
+
+  /// Capability _capabilityValue display label for wire value inactive. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'inactive'**
+  String get rel_ops_cap_value_inactive;
+
+  /// Capability _capabilityValue display label for wire value installed. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'installed'**
+  String get rel_ops_cap_value_installed;
+
+  /// Capability _capabilityValue display label for wire value missing. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'missing'**
+  String get rel_ops_cap_value_missing;
+
+  /// Capability _capabilityValue display label for wire value configured. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'configured'**
+  String get rel_ops_cap_value_configured;
+
+  /// Capability _capabilityValue display label for wire value not_configured. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'not_configured'**
+  String get rel_ops_cap_value_not_configured;
+
+  /// Capability _capabilityValue display label for wire value error. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'error'**
+  String get rel_ops_cap_value_error;
+
+  /// Capability _capabilityValue display label for wire value unknown. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'unknown'**
+  String get rel_ops_cap_value_unknown;
+
+  /// Capability _capabilityValue display label for wire value login. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'login'**
+  String get rel_ops_cap_value_login;
+
+  /// Capability _capabilityValue display label for wire value address. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'address'**
+  String get rel_ops_cap_value_address;
+
+  /// Capability _capabilityValue display label for wire value payment. Keep wire identifiers unchanged; localise only this display label.
+  ///
+  /// In en, this message translates to:
+  /// **'payment'**
+  String get rel_ops_cap_value_payment;
+
+  /// Terminal connection status.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting…'**
+  String get rel_ops_term_connecting;
+
+  /// Terminal page: unbound.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching live session or host working directory. Open the owning chat first.'**
+  String get rel_ops_term_unbound;
+
+  /// Terminal page: unsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This gateway does not offer this terminal capability. No local shell was started.'**
+  String get rel_ops_term_unsupported;
+
+  /// Terminal page: local pty unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The packaged local PTY is unavailable on this device.'**
+  String get rel_ops_term_local_pty_unavailable;
+
+  /// Terminal page: operation failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open or control the terminal. Check the host, credentials and fingerprint. No fallback shell was started.'**
+  String get rel_ops_term_operation_failed;
+
+  /// Terminal page: input refused.
+  ///
+  /// In en, this message translates to:
+  /// **'Input refused. Reopen the originating chat.'**
+  String get rel_ops_term_input_refused;
+
+  /// Terminal page: cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get rel_ops_term_cancel;
+
+  /// Terminal page: confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get rel_ops_term_confirm;
+
+  /// Terminal page: open device title.
+  ///
+  /// In en, this message translates to:
+  /// **'Open a shell on this device?'**
+  String get rel_ops_term_open_device_title;
+
+  /// Terminal page: ssh shell.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH shell'**
+  String get rel_ops_term_ssh_shell;
+
+  /// Terminal page: local shell.
+  ///
+  /// In en, this message translates to:
+  /// **'Local shell'**
+  String get rel_ops_term_local_shell;
+
+  /// Terminal page: connection lost.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection lost'**
+  String get rel_ops_term_connection_lost;
+
+  /// Terminal page: shell ended.
+  ///
+  /// In en, this message translates to:
+  /// **'Shell ended'**
+  String get rel_ops_term_shell_ended;
+
+  /// Terminal page: no owner.
+  ///
+  /// In en, this message translates to:
+  /// **'This chat has no authenticated gateway terminal owner. A URL or Cloud login alone does not grant a shell.'**
+  String get rel_ops_term_no_owner;
+
+  /// Terminal page: open gateway title.
+  ///
+  /// In en, this message translates to:
+  /// **'Open a gateway shell?'**
+  String get rel_ops_term_open_gateway_title;
+
+  /// Terminal page: shell expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Shell ended or expired'**
+  String get rel_ops_term_shell_expired;
+
+  /// Terminal page: disconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnected'**
+  String get rel_ops_term_disconnected;
+
+  /// Terminal page: gateway shell.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway shell'**
+  String get rel_ops_term_gateway_shell;
+
+  /// Terminal page: close body.
+  ///
+  /// In en, this message translates to:
+  /// **'End this shell. To keep it running, hide the pane instead.'**
+  String get rel_ops_term_close_body;
+
+  /// Terminal page: closing.
+  ///
+  /// In en, this message translates to:
+  /// **'Closing…'**
+  String get rel_ops_term_closing;
+
+  /// Terminal page: close unconfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Close not confirmed'**
+  String get rel_ops_term_close_unconfirmed;
+
+  /// Terminal page: processes require chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Agent processes require the authenticated owning chat.'**
+  String get rel_ops_term_processes_require_chat;
+
+  /// Terminal page: watching processes.
+  ///
+  /// In en, this message translates to:
+  /// **'Watching this chat’s agent processes. Closing a mirror never stops its process.'**
+  String get rel_ops_term_watching_processes;
+
+  /// Terminal page: paste limit.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste is limited to 16 KiB.'**
+  String get rel_ops_term_paste_limit;
+
+  /// Terminal page: paste.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste'**
+  String get rel_ops_term_paste;
+
+  /// Terminal page: select first.
+  ///
+  /// In en, this message translates to:
+  /// **'Select terminal output first.'**
+  String get rel_ops_term_select_first;
+
+  /// Terminal page: open chat to insert.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the originating chat before inserting output.'**
+  String get rel_ops_term_open_chat_to_insert;
+
+  /// Terminal page: added to draft.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to the originating chat draft. Nothing was sent.'**
+  String get rel_ops_term_added_to_draft;
+
+  /// Terminal page: close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get rel_ops_term_close;
+
+  /// Terminal page: add selection.
+  ///
+  /// In en, this message translates to:
+  /// **'Add selection to chat draft'**
+  String get rel_ops_term_add_selection;
+
+  /// Terminal page: new terminal.
+  ///
+  /// In en, this message translates to:
+  /// **'New terminal'**
+  String get rel_ops_term_new_terminal;
+
+  /// Terminal page: gateway terminal.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway host terminal'**
+  String get rel_ops_term_gateway_terminal;
+
+  /// Terminal page: verified ssh terminal.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified SSH terminal'**
+  String get rel_ops_term_verified_ssh_terminal;
+
+  /// Terminal page: device local shell.
+  ///
+  /// In en, this message translates to:
+  /// **'This device (local shell)'**
+  String get rel_ops_term_device_local_shell;
+
+  /// Terminal page: local unavailable mobile.
+  ///
+  /// In en, this message translates to:
+  /// **'Local shell unavailable on mobile'**
+  String get rel_ops_term_local_unavailable_mobile;
+
+  /// Terminal page: watch processes.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch agent processes'**
+  String get rel_ops_term_watch_processes;
+
+  /// Terminal page: select output.
+  ///
+  /// In en, this message translates to:
+  /// **'Select or copy output'**
+  String get rel_ops_term_select_output;
+
+  /// Terminal page: add selected output.
+  ///
+  /// In en, this message translates to:
+  /// **'Add selected output to chat draft'**
+  String get rel_ops_term_add_selected_output;
+
+  /// Terminal page: review paste.
+  ///
+  /// In en, this message translates to:
+  /// **'Review clipboard paste'**
+  String get rel_ops_term_review_paste;
+
+  /// Terminal page: reconnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect same shell'**
+  String get rel_ops_term_reconnect;
+
+  /// Terminal page: close mirror.
+  ///
+  /// In en, this message translates to:
+  /// **'Close mirror'**
+  String get rel_ops_term_close_mirror;
+
+  /// Terminal page: close shell.
+  ///
+  /// In en, this message translates to:
+  /// **'Close shell'**
+  String get rel_ops_term_close_shell;
+
+  /// Terminal page: empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose + to open a terminal. No shell starts automatically.'**
+  String get rel_ops_term_empty;
+
+  /// Terminal failure reason; English preserves the existing enum-name wording.
+  ///
+  /// In en, this message translates to:
+  /// **'stale'**
+  String get rel_ops_term_reason_stale;
+
+  /// Terminal failure reason; English preserves the existing enum-name wording.
+  ///
+  /// In en, this message translates to:
+  /// **'mismatch'**
+  String get rel_ops_term_reason_mismatch;
+
+  /// Terminal failure reason; English preserves the existing enum-name wording.
+  ///
+  /// In en, this message translates to:
+  /// **'unbound'**
+  String get rel_ops_term_reason_unbound;
+
+  /// Terminal failure reason; English preserves the existing enum-name wording.
+  ///
+  /// In en, this message translates to:
+  /// **'unsupported'**
+  String get rel_ops_term_reason_unsupported;
+
+  /// Terminal failure reason; English preserves the existing enum-name wording.
+  ///
+  /// In en, this message translates to:
+  /// **'denied'**
+  String get rel_ops_term_reason_denied;
+
+  /// Terminal failure reason; English preserves the existing enum-name wording.
+  ///
+  /// In en, this message translates to:
+  /// **'ineligible'**
+  String get rel_ops_term_reason_ineligible;
+
+  /// Terminal failure reason; English preserves the existing enum-name wording.
+  ///
+  /// In en, this message translates to:
+  /// **'unavailable'**
+  String get rel_ops_term_reason_unavailable;
+
+  /// Terminal failure reason; English preserves the existing enum-name wording.
+  ///
+  /// In en, this message translates to:
+  /// **'invalid'**
+  String get rel_ops_term_reason_invalid;
+
+  /// Terminal failure reason; English preserves the existing enum-name wording.
+  ///
+  /// In en, this message translates to:
+  /// **'insecure'**
+  String get rel_ops_term_reason_insecure;
+
+  /// Terminal page: refused. Preserve server/user placeholder values.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway refused this terminal operation ({reason}).'**
+  String rel_ops_term_refused(String reason);
+
+  /// Terminal page: open device body. Preserve server/user placeholder values.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the Ares device, not {connection}. The shell uses your app permissions and starts in app storage.'**
+  String rel_ops_term_open_device_body(String connection);
+
+  /// Terminal page: open gateway body. Preserve server/user placeholder values.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a shell on {host} in the verified chat working directory. This is not a device shell.'**
+  String rel_ops_term_open_gateway_body(String host);
+
+  /// Terminal page: close tab title. Preserve server/user placeholder values.
+  ///
+  /// In en, this message translates to:
+  /// **'Close {label}?'**
+  String rel_ops_term_close_tab_title(String label);
+
+  /// Terminal page: read only status. Preserve server/user placeholder values.
+  ///
+  /// In en, this message translates to:
+  /// **'Read-only · {status}'**
+  String rel_ops_term_read_only_status(String status);
+
+  /// Terminal page: paste title. Preserve server/user placeholder values.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste into {label}?'**
+  String rel_ops_term_paste_title(String label);
+
+  /// Terminal page: output title. Preserve server/user placeholder values.
+  ///
+  /// In en, this message translates to:
+  /// **'Output · {label}'**
+  String rel_ops_term_output_title(String label);
+
+  /// Terminal page: mirror status. Preserve server/user placeholder values.
+  ///
+  /// In en, this message translates to:
+  /// **'Read-only process mirror · {label}'**
+  String rel_ops_term_mirror_status(String label);
+
+  /// Terminal page: status label. Preserve server/user placeholder values.
+  ///
+  /// In en, this message translates to:
+  /// **'{status} · {label}'**
+  String rel_ops_term_status_label(String status, String label);
+
+  /// SSH tab label. Preserve SSH and the login address.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH {user}@{host}:{port} · {number}'**
+  String rel_ops_term_ssh_tab(String user, String host, int port, int number);
+
+  /// Local device shell tab label.
+  ///
+  /// In en, this message translates to:
+  /// **'This device · {number}'**
+  String rel_ops_term_device_tab(int number);
+
+  /// Gateway shell tab label; host is unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway {host} · {number}'**
+  String rel_ops_term_gateway_tab(String host, int number);
+
+  /// App-authored terminal replay notice, not shell output.
+  ///
+  /// In en, this message translates to:
+  /// **'[Earlier output trimmed]'**
+  String get rel_ops_term_earlier_output_trimmed;
+
+  /// SSH terminal dialog: ssh dialog title. Keep SSH/SHA256 protocol notation unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Open a verified SSH terminal'**
+  String get rel_ops_term_ssh_dialog_title;
+
+  /// SSH terminal dialog: ssh dialog body. Keep SSH/SHA256 protocol notation unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a fingerprint obtained independently from the host administrator. This opens a new remote login, not the gateway or a local shell.'**
+  String get rel_ops_term_ssh_dialog_body;
+
+  /// SSH terminal dialog: ssh host. Keep SSH/SHA256 protocol notation unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH host'**
+  String get rel_ops_term_ssh_host;
+
+  /// SSH terminal dialog: ssh port. Keep SSH/SHA256 protocol notation unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Port'**
+  String get rel_ops_term_ssh_port;
+
+  /// SSH terminal dialog: ssh user. Keep SSH/SHA256 protocol notation unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get rel_ops_term_ssh_user;
+
+  /// SSH terminal dialog: ssh fingerprint. Keep SSH/SHA256 protocol notation unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Host key fingerprint (SHA256:…)'**
+  String get rel_ops_term_ssh_fingerprint;
+
+  /// SSH terminal dialog: ssh password. Keep SSH/SHA256 protocol notation unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH password (not saved)'**
+  String get rel_ops_term_ssh_password;
+
+  /// SSH terminal dialog: connect. Keep SSH/SHA256 protocol notation unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get rel_ops_term_connect;
+
+  /// Verified SSH destination validation refusal.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid SSH host, port or user.'**
+  String get rel_ops_ssh_invalid_destination;
+
+  /// Verified SSH key format refusal. Preserve OpenSSH and Ed25519.
+  ///
+  /// In en, this message translates to:
+  /// **'An OpenSSH Ed25519 public host key is required.'**
+  String get rel_ops_ssh_public_key_required;
+
+  /// Verified SSH key binary validation refusal.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid Ed25519 host key.'**
+  String get rel_ops_ssh_invalid_public_key;
+
+  /// Saved SSH pin failed validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid saved host key.'**
+  String get rel_ops_ssh_invalid_saved_key;
+
+  /// Host key enrollment could not be read back.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not verify host-key enrollment.'**
+  String get rel_ops_ssh_enrollment_unverified;
+
+  /// SSH pin replacement refusal. Preserve separate verification requirement.
+  ///
+  /// In en, this message translates to:
+  /// **'A different key is already pinned. Verify the change separately.'**
+  String get rel_ops_ssh_different_key_pinned;
+
+  /// System OpenSSH transport unavailable refusal.
+  ///
+  /// In en, this message translates to:
+  /// **'System OpenSSH is unavailable.'**
+  String get rel_ops_ssh_open_ssh_unavailable;
+
+  /// Connection refused before explicit host key enrollment.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm the host key before connecting.'**
+  String get rel_ops_ssh_confirm_host_key;
+
+  /// Unsafe or relative SSH identity path refusal.
+  ///
+  /// In en, this message translates to:
+  /// **'Select an absolute identity file.'**
+  String get rel_ops_ssh_absolute_identity_required;
+
+  /// Remote loopback port validation refusal.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid remote port.'**
+  String get rel_ops_ssh_invalid_remote_port;
+
+  /// SSH preview response size refusal. Preserve 64 KiB limit.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview exceeds the 64 KiB limit.'**
+  String get rel_ops_ssh_preview_too_large;
+
+  /// SSH subprocess nonzero exit refusal.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH connection refused. Check the enrolled host key, identity and service.'**
+  String get rel_ops_ssh_connection_refused;
+
+  /// Remote HTTP status or header validation refusal. Preserve HTTP 200.
+  ///
+  /// In en, this message translates to:
+  /// **'The remote service did not return HTTP 200.'**
+  String get rel_ops_ssh_http_not_ok;
+
+  /// Encoded remote HTTP response refusal.
+  ///
+  /// In en, this message translates to:
+  /// **'Encoded responses are not supported by this preview.'**
+  String get rel_ops_ssh_encoded_response;
+
+  /// Unsupported remote preview content type refusal.
+  ///
+  /// In en, this message translates to:
+  /// **'Only text and HTML source can be previewed.'**
+  String get rel_ops_ssh_preview_type_unsupported;
+
+  /// Remote health response did not affirm ok.
+  ///
+  /// In en, this message translates to:
+  /// **'The service did not confirm gateway health.'**
+  String get rel_ops_ssh_health_unconfirmed;
+
+  /// SSH screen notice for an unenrolled destination.
+  ///
+  /// In en, this message translates to:
+  /// **'Enroll the host’s public key first.'**
+  String get rel_ops_ssh_enroll_host_key_first;
+
+  /// Cancel an SSH enrollment or connection confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get rel_ops_ssh_cancel;
+
+  /// Confirm an SSH enrollment or connection.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get rel_ops_ssh_confirm;
+
+  /// Explicit SSH host key enrollment confirmation title.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin this SSH host key?'**
+  String get rel_ops_ssh_pin_title;
+
+  /// Host key enrollment consent. Preserve independent-channel verification and no-connection assurance. Values are verbatim SSH identifiers.
+  ///
+  /// In en, this message translates to:
+  /// **'{destination}\n{fingerprint}\nCompare this fingerprint with the host administrator over an independent channel. No connection will be made.'**
+  String rel_ops_ssh_pin_detail(String destination, String fingerprint);
+
+  /// Successful host key enrollment notice.
+  ///
+  /// In en, this message translates to:
+  /// **'Host key pinned.'**
+  String get rel_ops_ssh_host_key_pinned;
+
+  /// SSH remote shell connection consent detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Open an interactive login shell.'**
+  String get rel_ops_ssh_shell_detail;
+
+  /// Remote loopback HTTP read consent. Preserve literal loopback address; path is / or /api/health and must remain unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Read {path} on remote 127.0.0.1:{port} through an SSH channel.'**
+  String rel_ops_ssh_read_detail(String path, int port);
+
+  /// SSH connection confirmation title; destination is verbatim user@host:port.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to {destination}?'**
+  String rel_ops_ssh_connect_title(String destination);
+
+  /// SSH connection confirmation layout combining localized operation and authentication consent with a verbatim fingerprint.
+  ///
+  /// In en, this message translates to:
+  /// **'{detail}\n{fingerprint}\n{authentication}'**
+  String rel_ops_ssh_connect_detail(
+    String detail,
+    String fingerprint,
+    String authentication,
+  );
+
+  /// SSH agent authentication consent detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Authenticate with your SSH agent.'**
+  String get rel_ops_ssh_agent_auth;
+
+  /// Selected SSH identity file authentication consent detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the selected identity file.'**
+  String get rel_ops_ssh_identity_auth;
+
+  /// Successful SSH remote gateway health check result.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway is responding on remote loopback port {port}.'**
+  String rel_ops_ssh_gateway_responding(int port);
+
+  /// Remote SSH shell exited cleanly.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH session closed.'**
+  String get rel_ops_ssh_session_closed;
+
+  /// Remote SSH shell exited with nonzero status.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH session ended without a clean exit.'**
+  String get rel_ops_ssh_session_unclean;
+
+  /// Safe SSH operation failure notice replacing untrusted system errors.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH operation failed. Check the destination and identity.'**
+  String get rel_ops_ssh_operation_failed;
+
+  /// Verified SSH screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified SSH'**
+  String get rel_ops_ssh_title;
+
+  /// Security explanation on unsupported devices. Preserve the relay enrollment restriction.
+  ///
+  /// In en, this message translates to:
+  /// **'This device has no supported system OpenSSH transport. The pinned gateway relay automatically accepts new keys and cannot be used for verified enrollment.'**
+  String get rel_ops_ssh_unsupported;
+
+  /// SSH hostname input label.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH host'**
+  String get rel_ops_ssh_host;
+
+  /// SSH transport port input label.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH port'**
+  String get rel_ops_ssh_port;
+
+  /// SSH username input label.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH user'**
+  String get rel_ops_ssh_user;
+
+  /// SSH identity path input label and agent fallback explanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Identity file (optional; otherwise use SSH agent)'**
+  String get rel_ops_ssh_identity;
+
+  /// Public host key input label. Preserve ssh-ed25519 algorithm token.
+  ///
+  /// In en, this message translates to:
+  /// **'Public host key from administrator (ssh-ed25519)'**
+  String get rel_ops_ssh_public_key;
+
+  /// Open SSH host key enrollment review.
+  ///
+  /// In en, this message translates to:
+  /// **'Review host key'**
+  String get rel_ops_ssh_review_key;
+
+  /// Remote HTTP service loopback port input label.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote loopback service port'**
+  String get rel_ops_ssh_remote_port;
+
+  /// Check remote gateway health through SSH.
+  ///
+  /// In en, this message translates to:
+  /// **'Check gateway over SSH'**
+  String get rel_ops_ssh_check_gateway;
+
+  /// Read remote text or HTML source through SSH.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview source over SSH'**
+  String get rel_ops_ssh_preview_source;
+
+  /// Explicitly open a remote SSH login shell.
+  ///
+  /// In en, this message translates to:
+  /// **'Open SSH shell'**
+  String get rel_ops_ssh_open_shell;
+
+  /// Input label for a line sent to the active remote shell.
+  ///
+  /// In en, this message translates to:
+  /// **'Line to remote shell'**
+  String get rel_ops_ssh_shell_line;
+
+  /// Terminate the active SSH shell subprocess.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect shell'**
+  String get rel_ops_ssh_disconnect;
+
+  /// Cancel a remote host operation confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get rel_ops_host_cancel;
+
+  /// Confirm a remote host operation.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get rel_ops_host_confirm;
+
+  /// Remote host operations screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'Host'**
+  String get rel_ops_host_title;
+
+  /// Refresh remote host status and logs.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get rel_ops_host_refresh;
+
+  /// Start an update on the remote gateway host, not the Ares client.
+  ///
+  /// In en, this message translates to:
+  /// **'Update remote Hermes'**
+  String get rel_ops_host_update;
+
+  /// Remote Hermes update confirmation. Preserve the profile identifier verbatim.
+  ///
+  /// In en, this message translates to:
+  /// **'This starts an in-place update on the gateway host for {profile}. It does not update Ares on this device. Success is the matching update receipt, not the host staying reachable.'**
+  String rel_ops_host_update_confirmation(String profile);
+
+  /// Update is running but no matching receipt has arrived.
+  ///
+  /// In en, this message translates to:
+  /// **'Awaiting matching receipt. Update is still running.'**
+  String get rel_ops_host_update_awaiting;
+
+  /// Matching remote update receipt reports success.
+  ///
+  /// In en, this message translates to:
+  /// **'Update receipt succeeded.'**
+  String get rel_ops_host_receipt_success;
+
+  /// Remote update committed but still requires follow-up work.
+  ///
+  /// In en, this message translates to:
+  /// **'Update committed, with follow-up steps still owed.'**
+  String get rel_ops_host_receipt_partial;
+
+  /// Matching remote update receipt reports failure.
+  ///
+  /// In en, this message translates to:
+  /// **'Update receipt failed.'**
+  String get rel_ops_host_receipt_failed;
+
+  /// Matching remote update receipt reports refusal.
+  ///
+  /// In en, this message translates to:
+  /// **'Update receipt refused.'**
+  String get rel_ops_host_receipt_refused;
+
+  /// Remote update remains in progress.
+  ///
+  /// In en, this message translates to:
+  /// **'Update is still running.'**
+  String get rel_ops_host_update_running;
+
+  /// No matching receipt verifies the remote update outcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Update outcome is unknown. A live gateway is not a successful update.'**
+  String get rel_ops_host_update_unknown;
+
+  /// Display name for an unspecified gateway profile, not a wire identifier.
+  ///
+  /// In en, this message translates to:
+  /// **'the gateway default'**
+  String get rel_ops_host_default_profile;
+
+  /// Restart the gateway on the remote host.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart remote gateway'**
+  String get rel_ops_host_restart;
+
+  /// Warn that restarting a shared gateway interrupts all listed profiles. Keep profile identifiers unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'This restarts the gateway shared by {profiles}. Live turns on this gateway are interrupted. Reconnect afterwards. Reachability is not proof the restart finished.'**
+  String rel_ops_host_restart_shared_confirmation(String profiles);
+
+  /// Remote gateway restart confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'This restarts the remote gateway for {profile}. Live turns on this gateway are interrupted. Reconnect afterwards.'**
+  String rel_ops_host_restart_confirmation(String profile);
+
+  /// Remote restart command is still running.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart command is still running.'**
+  String get rel_ops_host_restart_running;
+
+  /// Remote restart command exited successfully; reconnection remains manual.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart command finished. Reconnect to the host yourself.'**
+  String get rel_ops_host_restart_finished;
+
+  /// Remote restart command exited unsuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart command failed.'**
+  String get rel_ops_host_restart_failed;
+
+  /// Remote maintenance command status. The name is a command identifier such as doctor, security-audit or curator-run; do not translate it.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is still running'**
+  String rel_ops_host_maintenance_running(String name);
+
+  /// Remote maintenance command succeeded. Keep the command identifier unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} finished'**
+  String rel_ops_host_maintenance_finished(String name);
+
+  /// Remote maintenance command failed. Keep the command identifier unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} failed'**
+  String rel_ops_host_maintenance_failed(String name);
+
+  /// Confirmation that the remote Curator was paused.
+  ///
+  /// In en, this message translates to:
+  /// **'Curator paused.'**
+  String get rel_ops_host_curator_paused_result;
+
+  /// Confirmation that the remote Curator was resumed.
+  ///
+  /// In en, this message translates to:
+  /// **'Curator resumed.'**
+  String get rel_ops_host_curator_resumed_result;
+
+  /// Remote memory file reset section and confirmation title.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset remote memory files'**
+  String get rel_ops_host_reset;
+
+  /// Destructive remote memory reset warning. Preserve the target token (memory, user or all) and profile identifier.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the {targetName} memory file on {profile}? This cannot be undone from Ares.'**
+  String rel_ops_host_reset_confirmation(String targetName, String profile);
+
+  /// Remote memory reset result. Preserve the target token unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset {targetName}. Removed {count} remote file(s).'**
+  String rel_ops_host_reset_result(String targetName, int count);
+
+  /// Diagnostic sharing is blocked without server confirmation of redaction.
+  ///
+  /// In en, this message translates to:
+  /// **'The host did not confirm the bundle was redacted. No link is shown.'**
+  String get rel_ops_host_share_not_redacted;
+
+  /// Explain that controls target the named remote connection and profile, never this device. Preserve the connection label and profile identifier.
+  ///
+  /// In en, this message translates to:
+  /// **'These controls operate the remote gateway {connection} for {profile}, not this device and not the Ares client update.'**
+  String rel_ops_host_scope(String connection, String profile);
+
+  /// Remote gateway health with running process, server version and active session count.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway process running {version} · {count} sessions'**
+  String rel_ops_host_health_running(String version, int count);
+
+  /// Remote gateway health with stopped process, server version and active session count.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway process stopped {version} · {count} sessions'**
+  String rel_ops_host_health_stopped(String version, int count);
+
+  /// Remote host heartbeat age in seconds; the gateway may return fractional seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Host heartbeat is stale ({seconds}s).'**
+  String rel_ops_host_heartbeat_stale(num seconds);
+
+  /// Run remote host diagnostics using the Doctor command.
+  ///
+  /// In en, this message translates to:
+  /// **'Run Doctor'**
+  String get rel_ops_host_doctor;
+
+  /// Run the remote host security audit.
+  ///
+  /// In en, this message translates to:
+  /// **'Security audit'**
+  String get rel_ops_host_security_audit;
+
+  /// Read the receipt for the already-started remote update, without starting another.
+  ///
+  /// In en, this message translates to:
+  /// **'Check update receipt'**
+  String get rel_ops_host_check_receipt;
+
+  /// Remote gateway logs section heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote host logs'**
+  String get rel_ops_host_logs;
+
+  /// Search field label for remote host logs.
+  ///
+  /// In en, this message translates to:
+  /// **'Search host logs'**
+  String get rel_ops_host_search_logs;
+
+  /// Remote Computer Use driver section heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote host driver'**
+  String get rel_ops_host_driver;
+
+  /// Clarify that driver readiness and OS permissions refer only to the remote gateway machine.
+  ///
+  /// In en, this message translates to:
+  /// **'Computer Use readiness is the gateway machine\'s driver and OS permissions, not this device.'**
+  String get rel_ops_host_driver_scope;
+
+  /// Computer Use driver status. Platform is a server identifier; installed and ready are localized boolean display values.
+  ///
+  /// In en, this message translates to:
+  /// **'{platform} · installed {installed} · ready {ready}'**
+  String rel_ops_host_computer_status(
+    String platform,
+    String installed,
+    String ready,
+  );
+
+  /// Human-readable unavailable readiness value from a nullable remote driver status; never sent over the wire.
+  ///
+  /// In en, this message translates to:
+  /// **'null'**
+  String get rel_ops_host_null;
+
+  /// Human-readable affirmative boolean in remote driver status; never sent over the wire.
+  ///
+  /// In en, this message translates to:
+  /// **'true'**
+  String get rel_ops_host_true;
+
+  /// Human-readable negative boolean in remote driver status; never sent over the wire.
+  ///
+  /// In en, this message translates to:
+  /// **'false'**
+  String get rel_ops_host_false;
+
+  /// Remote Curator section heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Curator'**
+  String get rel_ops_host_curator;
+
+  /// Remote Curator paused status label.
+  ///
+  /// In en, this message translates to:
+  /// **'Curator paused'**
+  String get rel_ops_host_curator_paused;
+
+  /// Remote Curator running status label.
+  ///
+  /// In en, this message translates to:
+  /// **'Curator running'**
+  String get rel_ops_host_curator_running;
+
+  /// No completed remote Curator run timestamp is available.
+  ///
+  /// In en, this message translates to:
+  /// **'No completed run'**
+  String get rel_ops_host_no_run;
+
+  /// Start a remote Curator maintenance run immediately.
+  ///
+  /// In en, this message translates to:
+  /// **'Run Curator now'**
+  String get rel_ops_host_run_curator;
+
+  /// Delete the remote memory file after confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset memory file'**
+  String get rel_ops_host_reset_memory;
+
+  /// Delete the remote user memory file after confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset user file'**
+  String get rel_ops_host_reset_user;
+
+  /// Delete both remote memory files after confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset both files'**
+  String get rel_ops_host_reset_both;
+
+  /// Explicit consent to upload a redacted remote host diagnostic bundle; do not weaken the consent or remote-host scope.
+  ///
+  /// In en, this message translates to:
+  /// **'I agree to upload a redacted diagnostic bundle from the remote host'**
+  String get rel_ops_host_share_consent;
+
+  /// Upload redacted remote diagnostic bundle after explicit consent.
+  ///
+  /// In en, this message translates to:
+  /// **'Share redacted diagnostics'**
+  String get rel_ops_host_share;
+
+  /// Local admission refusal when the gateway installation cannot be identified.
+  ///
+  /// In en, this message translates to:
+  /// **'This installation is unknown, so the update was not sent'**
+  String get rel_ops_host_update_unknown_installation;
+
+  /// Local admission refusal when an active chat or agent blocks the remote update.
+  ///
+  /// In en, this message translates to:
+  /// **'A chat on this installation is running'**
+  String get rel_ops_host_update_busy_installation;
+
+  /// Local fallback when the server refuses an update without a message.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote update refused'**
+  String get rel_ops_host_update_refused;
+
+  /// Workspace failure: the remote owner or connection is no longer current.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote workspace: stale'**
+  String get rel_ops_host_error_stale;
+
+  /// Workspace failure: remote owner or action result does not match the requested target.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote workspace: mismatch'**
+  String get rel_ops_host_error_mismatch;
+
+  /// Workspace failure: no authenticated remote target has been bound.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote workspace: unbound'**
+  String get rel_ops_host_error_unbound;
+
+  /// Workspace failure: the gateway does not support this operation.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote workspace: unsupported'**
+  String get rel_ops_host_error_unsupported;
+
+  /// Workspace failure: the remote host operation was denied.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote workspace: denied'**
+  String get rel_ops_host_error_denied;
+
+  /// Workspace failure: the remote target is not eligible for this operation.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote workspace: ineligible'**
+  String get rel_ops_host_error_ineligible;
+
+  /// Workspace failure: the remote host operation is unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote workspace: unavailable'**
+  String get rel_ops_host_error_unavailable;
+
+  /// Workspace failure: the request or gateway response was invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote workspace: invalid'**
+  String get rel_ops_host_error_invalid;
+
+  /// Workspace failure: the remote connection does not meet security requirements.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote workspace: insecure'**
+  String get rel_ops_host_error_insecure;
+
+  /// Safe host-operation failure fallback when no structured reason is available. Do not expose client-authored service exception prose.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not complete that request.'**
+  String get rel_ops_host_error_request;
 }
 
 class _AppLocalizationsDelegate
