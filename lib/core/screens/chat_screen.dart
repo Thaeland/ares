@@ -2310,6 +2310,26 @@ class _ChatScreenState extends State<ChatScreen>
     );
   }
 
+  /// The bubble's Regenerate (message sheet and quick action), offered on
+  /// every assistant reply as it always was. Where the transport truncates
+  /// ([_canRegenerate]) it replaces the turn ([_retryPrompt]). Elsewhere
+  /// (REST, an owner with no Desktop client) there is nothing to replace
+  /// it with, so it asks again as it always has there: the reply's prompt
+  /// goes out as a new turn. The composer is not touched either way (a
+  /// newer draft stays, staged attachments stay staged).
+  Future<void> _regenerateResponse(String text) async {
+    if (_canRegenerate) return _retryPrompt(text);
+    if (_archiving ||
+        _sending ||
+        _streaming ||
+        _preparingSend ||
+        _pendingReattachResync ||
+        text.trim().isEmpty) {
+      return;
+    }
+    await _sendMessage(textOverride: text.trim());
+  }
+
   void _showRetryNotice(String text) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
@@ -10430,11 +10450,11 @@ class _ChatScreenState extends State<ChatScreen>
           ? null
           : () => _readAssistantText(content, announce: true),
       onEdit: isUser ? () => _editAndResend(content) : null,
-      // Regenerate needs a transport that truncates; elsewhere Retry would
-      // only append the same turn again.
-      onRetry: isUser || !_canRegenerate
+      // Every assistant reply offers Regenerate; whether it replaces the
+      // turn or asks again is decided when it is chosen.
+      onRetry: isUser
           ? null
-          : () => _retryPrompt(msg['_retry_prompt']?.toString() ?? ''),
+          : () => _regenerateResponse(msg['_retry_prompt']?.toString() ?? ''),
       showQuickActions:
           !isUser &&
           isLast &&

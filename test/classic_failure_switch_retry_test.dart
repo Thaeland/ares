@@ -424,10 +424,12 @@ void main() {
   Future<({_Server server, ValueNotifier<String> which})> mount(
     WidgetTester tester, {
     _V2Session? v2,
+    List<Map<String, dynamic>>? rows,
   }) async {
     await tester.binding.setSurfaceSize(const Size(4000, 2400));
     addTearDown(() => tester.binding.setSurfaceSize(null));
     final server = (await tester.runAsync(_Server.start))!;
+    if (rows != null) server.rows = rows;
     addTearDown(() async {
       await tester.runAsync(server.close);
     });
@@ -660,6 +662,83 @@ void main() {
       await _finish(tester, h.server);
     });
   }
+
+  // The bubble's Regenerate on a Desktop chat is the truncating regenerate,
+  // never the ask-again of a transport that cannot truncate
+  // (classic_bubble_regenerate_test.dart).
+  group('the bubble Regenerate on a Desktop chat', () {
+    const answer = 'A saved answer';
+    List<Map<String, dynamic>> saved() => [
+      {'id': 1, 'role': 'user', 'content': 'hello there'},
+      {
+        'id': 2,
+        'role': 'assistant',
+        'content': answer,
+        'finish_reason': 'stop',
+      },
+    ];
+
+    Future<void> regenerate(WidgetTester tester) async {
+      final reply = find.descendant(
+        of: find.byWidgetPredicate(
+          (widget) =>
+              widget is MessageBubble &&
+              !widget.isUser &&
+              widget.content == answer,
+        ),
+        matching: find.byKey(const Key('message-bubble')),
+      );
+      await _until(tester, () => reply.evaluate().isNotEmpty);
+      expect(reply.hitTestable(), findsOneWidget);
+      await tester.enterText(find.byKey(_composerKey), 'my newer draft');
+      await tester.pump();
+      await tester.longPress(reply);
+      await _pump(tester);
+      expect(find.text('Regenerate response'), findsOneWidget);
+      await tester.tap(find.text('Regenerate response'));
+      await _pump(tester);
+    }
+
+    testWidgets('replaces the turn: one prompt.submit with confirm_truncate '
+        'and the durable row; a newer draft stays', (tester) async {
+      final h = await mount(tester, rows: saved());
+      h.server.history = [
+        {'role': 'user', 'text': 'hello there', 'row_id': 7},
+      ];
+      await regenerate(tester);
+      await _until(tester, () => h.server.of('prompt.submit').isNotEmpty);
+      await _pump(tester, rounds: 40);
+      final submits = h.server.of('prompt.submit');
+      expect(submits, hasLength(1));
+      final retry = submits.single['params'] as Map;
+      expect(retry['text'], 'hello there');
+      expect(retry['confirm_truncate'], isTrue);
+      expect(retry['truncate_before_row_id'], 7);
+      expect(retry['confirm_empty_truncate'], isTrue);
+      expect(
+        tester.widget<TextField>(find.byKey(_composerKey)).controller!.text,
+        'my newer draft',
+      );
+      await _finish(tester, h.server);
+    });
+
+    testWidgets('with no durable row it says so and sends nothing: never a '
+        'plain resend', (tester) async {
+      final h = await mount(tester, rows: saved());
+      h.server.history = [];
+      await regenerate(tester);
+      await _until(tester, () => h.server.of('session.history').isNotEmpty);
+      await _pump(tester, rounds: 40);
+      expect(h.server.of('session.history'), hasLength(1));
+      expect(h.server.of('prompt.submit'), isEmpty);
+      expect(find.textContaining('Nothing was sent again'), findsOneWidget);
+      expect(
+        tester.widget<TextField>(find.byKey(_composerKey)).controller!.text,
+        'my newer draft',
+      );
+      await _finish(tester, h.server);
+    });
+  });
 
   // /bg on an older gateway without prompt.background: as Desktop's slash.ts
   // (isMissingRpcMethod), it runs through slash.exec instead; a real failure
