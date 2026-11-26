@@ -594,6 +594,7 @@ class DashboardApiClient extends ApiClient {
     try {
       final probe = await GatewayProbe().probe(
         GatewayUrl.parse(dashboard.baseUrl),
+        customHeaders: dashboard.customHeaders,
       );
       if (probe is! ProbeReachable) {
         return ApiHealthCheckResult.httpFailure(status, 503);

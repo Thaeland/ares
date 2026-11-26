@@ -20,6 +20,7 @@ import '../presentation/transcript_reading.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:uuid/uuid.dart';
 import '../controllers/hands_free_conversation_controller.dart';
+import '../services/hermes_deeplink.dart' show appendComposerPrefill;
 import '../services/hands_free_preference.dart';
 import '../services/hands_free_voice_platform.dart';
 import '../services/android_voice_composer_adapter.dart';
@@ -153,6 +154,7 @@ import '../widgets/failure_recovery_card.dart';
 import '../widgets/prompt_snippet_sheet.dart';
 import '../widgets/resume_session_picker.dart';
 import '../widgets/orphan_draft_recovery.dart';
+import '../desktop/screen_capture.dart';
 
 /// Recovery v2 opens a new server session and cannot yet target an existing
 /// Gateway session. Keep it confined to locally-created drafts; a session from
@@ -644,6 +646,33 @@ class ChatScreen extends StatefulWidget {
   /// composer; sending remains an explicit user action.
   final String? initialComposerText;
 
+  /// When true, [initialComposerText] (a `hermes://` link's prefill) is
+  /// appended to the chat's unsent draft instead of replacing it.
+  final bool initialComposerAppends;
+
+  /// Mounted chats by connection and session (the latest mount wins), so a
+  /// deep-link prefill for a chat that is already open goes into its live
+  /// composer rather than a second copy of the chat.
+  static final Map<String, _ChatScreenState> _mounted = {};
+
+  static String _mountKey(String connectionId, String sessionId) =>
+      '$connectionId\u0000$sessionId';
+
+  /// Appends [text] to the composer of the open chat [sessionId] on
+  /// [connectionId], after its unsent draft, and returns that chat's route
+  /// so the caller can bring it forward. Null when the chat is not open.
+  /// Nothing is sent.
+  static ModalRoute<Object?>? appendToOpenChat({
+    required String connectionId,
+    required String sessionId,
+    required String text,
+  }) {
+    final state = _mounted[_mountKey(connectionId, sessionId)];
+    if (state == null || !state.mounted) return null;
+    unawaited(state._appendLinkPrefill(text));
+    return ModalRoute.of(state.context);
+  }
+
   /// Validated app-private files supplied by Android's share sheet.
   final List<AttachmentDraft> initialAttachmentDrafts;
 
@@ -657,6 +686,9 @@ class ChatScreen extends StatefulWidget {
 
   @visibleForTesting
   final AttachmentDraftService? testAttachmentDraftService;
+
+  /// Desktop screen capture; tests pass a fake-channel controller.
+  final ScreenCaptureController? screenCapture;
 
   @visibleForTesting
   final TestRemotePromptSubmit? testRemotePromptSubmit;
@@ -703,6 +735,9 @@ class ChatScreen extends StatefulWidget {
   /// instead of popping the enclosing route. Null keeps the normal pushed
   /// full-screen behaviour (back button pops the route).
   final VoidCallback? onClose;
+
+  /// Opens the app-wide command palette owned by the enclosing workspace.
+  final VoidCallback? onOpenAppCommandPalette;
 
   /// Lets a test observe what the chat posts to Android when a turn settles,
   /// without touching the notification platform channel.
@@ -768,6 +803,7 @@ class ChatScreen extends StatefulWidget {
     this.projectName,
     this.projectWorkingDirectory,
     this.initialComposerText,
+    this.initialComposerAppends = false,
     this.initialAttachmentDrafts = const [],
     this.turnApplicationController,
     this.testTurnApplicationSession,
@@ -776,6 +812,7 @@ class ChatScreen extends StatefulWidget {
     this.testRemotePromptSubmit,
     this.testNormalResume,
     this.testServerFilePicker,
+    this.screenCapture,
     this.testRemoteAttachmentUpload,
     this.testInitialAttachmentDrafts = const [],
     this.testComposerDraftReader,
@@ -788,6 +825,7 @@ class ChatScreen extends StatefulWidget {
     this.singleSession = false,
     this.notifications,
     this.onClose,
+    this.onOpenAppCommandPalette,
     this.testTurnNotifications,
     this.testDesktopConnectionHook,
     this.testDesktopGateway,
@@ -1135,6 +1173,11 @@ class _ChatScreenState extends State<ChatScreen>
   @override
   void initState() {
     super.initState();
+    ChatScreen._mounted[ChatScreen._mountKey(
+          widget.connection.id,
+          widget.session.id,
+        )] =
+        this;
     CompanionDraft.pending.addListener(_applyCompanionDraft);
     _composerFocus.addListener(_syncComposerKeyboardEndScroll);
     _notificationApprovalOrigin = NotificationApprovalAuthority.origin(
@@ -1183,10 +1226,15 @@ class _ChatScreenState extends State<ChatScreen>
     }
     _textController.addListener(_onComposerChanged);
     if (widget.initialComposerText case final shared?) {
-      _textController.text = shared;
-      _textController.selection = TextSelection.collapsed(
-        offset: shared.length,
-      );
+      if (widget.initialComposerAppends) {
+        // A link's prefill goes after the unsent draft, never over it.
+        unawaited(_appendLinkPrefill(shared));
+      } else {
+        _textController.text = shared;
+        _textController.selection = TextSelection.collapsed(
+          offset: shared.length,
+        );
+      }
     }
     _turnNotifications =
         widget.testTurnNotifications ??
@@ -1823,6 +1871,29 @@ class _ChatScreenState extends State<ChatScreen>
     );
   }
 
+  /// Puts a `hermes://` link's prefill into the composer after whatever is
+  /// there or saved (an unsent draft is never replaced). Reads the draft
+  /// first so a restore that has not landed yet is not lost.
+  Future<void> _appendLinkPrefill(String prefill) async {
+    String? draft;
+    try {
+      draft = await _draftWriter
+          .read(reader: widget.testComposerDraftReader)
+          .timeout(const Duration(seconds: 5));
+    } catch (_) {
+      draft = null;
+    }
+    if (!mounted) return;
+    final current = _textController.text;
+    final base = current.trim().isNotEmpty ? current : (draft ?? '');
+    final text = appendComposerPrefill(base, prefill);
+    if (text == current) return;
+    _textController.value = TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
+  }
+
   Future<void> _restoreComposerDraft() async {
     final revision = _composerRevision;
     await _normalSession?.ready;
@@ -2038,6 +2109,13 @@ class _ChatScreenState extends State<ChatScreen>
 
   @override
   void dispose() {
+    final mountKey = ChatScreen._mountKey(
+      widget.connection.id,
+      widget.session.id,
+    );
+    if (identical(ChatScreen._mounted[mountKey], this)) {
+      ChatScreen._mounted.remove(mountKey);
+    }
     final pendingSubmission = _recoverableSubmissionState;
     if (pendingSubmission != null && !pendingSubmission.isCompleted) {
       pendingSubmission.complete();
@@ -4200,6 +4278,8 @@ class _ChatScreenState extends State<ChatScreen>
         _pendingReattachResync) {
       return;
     }
+    final offerCapture = await screenCaptureOffered(widget.screenCapture);
+    if (!mounted) return;
 
     await showModalBottomSheet<void>(
       context: context,
@@ -4246,6 +4326,17 @@ class _ChatScreenState extends State<ChatScreen>
                 );
               },
             ),
+            if (offerCapture)
+              ListTile(
+                key: const Key('classic-attach-capture-screen'),
+                leading: const Icon(Icons.screenshot_monitor_outlined),
+                title: Text(context.l10n.capture_screen_action),
+                subtitle: Text(context.l10n.capture_screen_help),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  unawaited(_captureScreen());
+                },
+              ),
             if (_desktopGateway != null)
               ListTile(
                 leading: const Icon(Icons.description_outlined),
@@ -4261,6 +4352,17 @@ class _ChatScreenState extends State<ChatScreen>
           ],
         ),
       ),
+    );
+  }
+
+  /// Adds a screen capture as an image draft through the picked-image
+  /// path. Never sends.
+  Future<void> _captureScreen() async {
+    await captureScreenIntoDraft(
+      context,
+      controller: widget.screenCapture,
+      attach: (png, name) =>
+          _preparePickedImages([XFile(png.path, name: name)]),
     );
   }
 
@@ -8908,6 +9010,13 @@ class _ChatScreenState extends State<ChatScreen>
               ),
             ),
           if (!compactTools) ...[
+            if (widget.onOpenAppCommandPalette != null)
+              IconButton(
+                key: const ValueKey('app-command-palette-button'),
+                tooltip: context.l10n.palette_open,
+                icon: const Icon(Icons.keyboard_command_key),
+                onPressed: widget.onOpenAppCommandPalette,
+              ),
             if (_desktopGateway != null)
               IconButton(
                 tooltip: 'Open browser preview',
@@ -8928,7 +9037,8 @@ class _ChatScreenState extends State<ChatScreen>
               ),
           ] else if (_desktopGateway != null ||
               workers != null ||
-              radio != null)
+              radio != null ||
+              widget.onOpenAppCommandPalette != null)
             // One always-visible menu on narrow panes, also while a reply
             // streams (the gateway queue matters most then). The radio's
             // controls move here from the app bar.
@@ -8937,6 +9047,10 @@ class _ChatScreenState extends State<ChatScreen>
               tooltip: 'More chat tools',
               icon: const Icon(Icons.widgets_outlined),
               onSelected: (tool) {
+                if (tool == 'app-command-palette') {
+                  widget.onOpenAppCommandPalette?.call();
+                  return;
+                }
                 if (tool == radioToolValue) {
                   final current = compactRadioTool(context);
                   if (current != null) {
@@ -8958,6 +9072,14 @@ class _ChatScreenState extends State<ChatScreen>
                 }
               },
               itemBuilder: (_) => [
+                if (widget.onOpenAppCommandPalette != null)
+                  PopupMenuItem(
+                    value: 'app-command-palette',
+                    child: ListTile(
+                      leading: const Icon(Icons.keyboard_command_key),
+                      title: Text(context.l10n.palette_open),
+                    ),
+                  ),
                 if (_desktopGateway != null)
                   const PopupMenuItem(
                     value: 'browser',

@@ -20,6 +20,7 @@ import 'core/services/config_backup_service.dart';
 import 'core/services/connection_keepalive_service.dart';
 import 'core/services/connection_manager.dart';
 import 'core/services/desktop_gateway_client.dart';
+import 'core/services/gateway_headers.dart';
 import 'core/services/background_work_prefs.dart';
 import 'core/services/gateway_turn_application_controller.dart';
 import 'core/services/local_chat_pin_store.dart';
@@ -29,6 +30,13 @@ import 'core/services/connection_mutation_barrier.dart';
 import 'core/services/notification_prefs.dart';
 import 'core/services/hands_free_preference.dart';
 import 'core/services/hermes_sign_in.dart';
+import 'core/services/hermes_deeplink.dart';
+import 'core/services/keep_awake.dart';
+import 'core/services/shortcuts_store.dart';
+import 'core/desktop/desktop_integration.dart';
+import 'core/desktop/desktop_os.dart';
+import 'core/desktop/quick_entry.dart' show quickEntryMarker;
+import 'core/desktop/quick_entry_window.dart';
 import 'core/services/locale_preference.dart';
 import 'core/services/lan_discovery_service.dart';
 import 'core/services/text_size_preference.dart';
@@ -68,6 +76,10 @@ void main([List<String> args = const []]) {
   }
   if (args.contains(petWindowMarker)) {
     unawaited(runPetCompanionChild());
+    return;
+  }
+  if (args.contains(quickEntryMarker)) {
+    runQuickEntryChild(args);
     return;
   }
   // Remove any private key left behind by a cancelled connection import.
@@ -413,6 +425,12 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
   /// notification.
   final ConnectionKeepAliveService _keepAlive = ConnectionKeepAliveService();
 
+  /// Opt-in "keep the computer awake" policy (Dart-side, device-local).
+  KeepAwakeController? _keepAwake;
+  ShortcutsStore? _shortcutsStore;
+  DesktopIntegration? _desktop;
+  VoidCallback? _keepAwakePreferenceListener;
+
   Object? _keepAliveTurnActivityToken;
   bool _background = false;
   bool _closingTurnOwner = false;
@@ -469,6 +487,30 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
     );
     notificationPrefs.addListener(_syncOngoingChats);
     _mobilePush.addListener(_onMobilePushChanged);
+    // Validated deep links: the primary window owns the channel; shells
+    // consume pendingLink and route/prefill without sending.
+    unawaited(HermesDeepLinkService.shared.initialize());
+    _keepAwake = KeepAwakeController(
+      adapter: const MethodChannelKeepAwakeAdapter(),
+      store: KeepAwakePolicyStore(widget.connManager.prefs),
+      background:
+          lifecycle == AppLifecycleState.paused ||
+          lifecycle == AppLifecycleState.detached,
+    )..setWorking(_hasActiveTurn);
+    _shortcutsStore = ShortcutsStore(widget.connManager.prefs);
+    // Native tray, quick entry, hotkey and power events: desktop primary
+    // window only, every feature opt-in.
+    if (isDesktopOs) {
+      _desktop = DesktopIntegration(
+        preferences: widget.connManager.prefs,
+        connections: widget.connManager.getConnections,
+        openOwner: _openQuickEntryOwner,
+      )..start();
+    }
+    _keepAwakePreferenceListener = () {
+      _keepAwake?.refreshFromStore();
+    };
+    keepAwakePolicyChanges.addListener(_keepAwakePreferenceListener!);
     _turnApplicationController.conversationTarget = (c, id) =>
         TurnNotificationService.conversationTarget(widget.connManager, c, id);
     _autoMessaging = AutoMessagingService(
@@ -565,6 +607,15 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
     );
     _syncOngoingChats();
     _keepAlive.onAppLifecycleState(state, hasActiveTurn: _hasActiveTurn);
+    // Keep-awake is released in the background (paused) and on exit
+    // (detached), and taken again on resume if still wanted. A minimised
+    // desktop window reports hidden and keeps it.
+    if (state == AppLifecycleState.resumed) {
+      _keepAwake?.setBackground(false);
+    } else if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
+      _keepAwake?.setBackground(true);
+    }
   }
 
   void _pruneApprovalActions() {
@@ -611,6 +662,7 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
     if (_closingTurnOwner) return;
     _keepAlive.onTurnActivityChanged(_hasActiveTurn);
     _syncOngoingChats();
+    _keepAwake?.setWorking(_hasActiveTurn);
   }
 
   void _onBackgroundWorkPolicyConfirmed() {
@@ -985,6 +1037,31 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
         .firstOrNull;
   }
 
+  /// A quick-entry hand-back waits in the deep-link service for the shell
+  /// of [connection] (its owner): bring that shell forward. NextGen
+  /// switches its connection; Classic opens the workspace for it unless one
+  /// is already mounted. The owned link is consumed there, never elsewhere.
+  void _openQuickEntryOwner(SavedConnection connection) {
+    if (!mounted || _closingTurnOwner) return;
+    if (nextGenEnabled.value) {
+      nextGenConnectionRequest.value = connection.id;
+      return;
+    }
+    if (WorkspaceScreen.isOpenFor(connection.id)) return;
+    final navigator = _navigatorKey.currentState;
+    if (navigator == null || !navigator.mounted) return;
+    unawaited(
+      navigator.push(
+        MaterialPageRoute<void>(
+          builder: (_) => WorkspaceScreen(
+            connection: connection,
+            turnApplicationController: _turnApplicationController,
+          ),
+        ),
+      ),
+    );
+  }
+
   void _pruneNotificationChatRoutes() {
     final navigator = _navigatorKey.currentState;
     _notificationChatRoutes.removeWhere(
@@ -1344,6 +1421,7 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
               child: FleetScope(
                 fleet: _fleet,
                 child: DesktopShortcuts(
+                  store: _shortcutsStore,
                   child: nextGen ? NgLocalizationScope(child: child!) : child!,
                 ),
               ),
@@ -1394,6 +1472,14 @@ class HermesAppState extends State<HermesApp> with WidgetsBindingObserver {
       _turnApplicationController.removeTurnActivityListener(token);
       _keepAliveTurnActivityToken = null;
     }
+    final keepAwakeListener = _keepAwakePreferenceListener;
+    if (keepAwakeListener != null) {
+      keepAwakePolicyChanges.removeListener(keepAwakeListener);
+    }
+    _keepAwake?.dispose();
+    _keepAwake = null;
+    unawaited(_desktop?.dispose());
+    _desktop = null;
     // Belt for the detached case: if the widget tree tears down while the
     // service is up, the native side must not outlive its only controller.
     unawaited(_keepAlive.stop());
@@ -1815,6 +1901,8 @@ class HomeScreenState extends State<HomeScreen> {
               gatewayProfile,
               clientCertificate,
               clearClientCertificate = false,
+              deploymentToken,
+              customHeaders = const <String, String>{},
             }) async {
               if (existing == null) {
                 await widget.connManager.saveConnection(
@@ -1831,6 +1919,8 @@ class HomeScreenState extends State<HomeScreen> {
                   dashboardPassword: dashboardPassword,
                   gatewayProfile: gatewayProfile,
                   clientCertificate: clientCertificate,
+                  deploymentToken: deploymentToken,
+                  customHeaders: customHeaders,
                 );
               } else {
                 await widget.connManager.updateConnection(
@@ -1849,6 +1939,10 @@ class HomeScreenState extends State<HomeScreen> {
                   gatewayProfile: gatewayProfile,
                   clientCertificate: clientCertificate,
                   clearClientCertificate: clearClientCertificate,
+                  deploymentToken: deploymentToken,
+                  customHeaders: customHeaders,
+                  clearDeploymentToken: deploymentToken == null,
+                  clearCustomHeaders: customHeaders.isEmpty,
                 );
               }
               _refresh();
@@ -1940,6 +2034,7 @@ class HomeScreenState extends State<HomeScreen> {
                           pathPrefix: conn.gatewayPrefix ?? '',
                           gatewayProfile: conn.gatewayProfile,
                           clientCertificate: conn.clientCertificate,
+                          customHeaders: conn.customHeaders,
                         );
                         final result = await client.checkHealth();
                         client.close();
@@ -2160,6 +2255,7 @@ class HomeScreenState extends State<HomeScreen> {
                           apiKey: conn.apiKey,
                           pathPrefix: gatewayPrefix,
                           clientCertificate: conn.clientCertificate,
+                          customHeaders: conn.customHeaders,
                         );
                         final result = await apiClient.checkHealth();
                         apiClient.close();
@@ -2465,6 +2561,8 @@ class _AddDialog extends StatefulWidget {
     String? gatewayProfile,
     ClientCertificateConfig? clientCertificate,
     bool clearClientCertificate,
+    String? deploymentToken,
+    Map<String, String> customHeaders,
   })
   onSave;
   final String? initialHost;
@@ -2496,6 +2594,8 @@ class _AddDialogState extends State<_AddDialog> {
   late final TextEditingController _dashPass;
   late final TextEditingController _desktopGatewayUrl;
   late final TextEditingController _gatewayProfile;
+  late final TextEditingController _deploymentToken;
+  late final TextEditingController _customHeaders;
   late final TextEditingController _certificatePassword;
   late final ClientCertificateService _certificateService;
   final _certificateFileLease = ClientCertificateFileLease();
@@ -2563,6 +2663,12 @@ class _AddDialogState extends State<_AddDialog> {
       text: conn?.desktopGatewayUrl ?? '',
     );
     _gatewayProfile = TextEditingController(text: conn?.gatewayProfile ?? '');
+    _deploymentToken = TextEditingController(text: conn?.deploymentToken ?? '');
+    _customHeaders = TextEditingController(
+      text: headersBlockFromMap(
+        conn?.customHeaders ?? const <String, String>{},
+      ),
+    );
     _certificateService = ClientCertificateService();
     _certificatePassword = TextEditingController();
     _certificatePassword.addListener(_onCertificatePasswordChanged);
@@ -2583,6 +2689,8 @@ class _AddDialogState extends State<_AddDialog> {
         conn?.dashboardPortOverride != null ||
         conn?.dashboardUsername?.isNotEmpty == true ||
         conn?.dashboardPassword?.isNotEmpty == true ||
+        conn?.deploymentToken?.isNotEmpty == true ||
+        conn?.customHeaders.isNotEmpty == true ||
         _dashboardProxied ||
         conn?.desktopGatewayUrl?.isNotEmpty == true;
   }
@@ -2965,6 +3073,15 @@ class _AddDialogState extends State<_AddDialog> {
       return;
     }
 
+    final parsedHeaders = parseRemoteHeadersBlock(_customHeaders.text);
+    if (parsedHeaders.problems.isNotEmpty) {
+      setState(() {
+        _error = describeHeaderIssue(context.l10n, parsedHeaders.issues.first);
+        _showDashboard = true;
+      });
+      return;
+    }
+
     setState(() {
       _validating = true;
       _error = null;
@@ -2985,6 +3102,7 @@ class _AddDialogState extends State<_AddDialog> {
         apiKey: apiKey,
         pathPrefix: gatewayPrefix,
         clientCertificate: clientCertificate,
+        customHeaders: parsedHeaders.headers,
       );
       final result = await client.checkHealth();
       client.close();
@@ -3004,6 +3122,7 @@ class _AddDialogState extends State<_AddDialog> {
       final dashPass = _dashPass.text.trim();
       final desktopGatewayUrl = _desktopGatewayUrl.text.trim();
       final gatewayProfile = _gatewayProfile.text.trim();
+      final deploymentToken = _deploymentToken.text.trim();
       if (gatewayProfile.contains('/') ||
           gatewayProfile.contains(RegExp(r'\s'))) {
         setState(() {
@@ -3022,6 +3141,7 @@ class _AddDialogState extends State<_AddDialog> {
       if (dashPortText.isNotEmpty ||
           dashUser.isNotEmpty ||
           dashPass.isNotEmpty ||
+          deploymentToken.isNotEmpty ||
           desktopGatewayUrl.isNotEmpty ||
           dashboardPrefix.isNotEmpty ||
           _dashboardProxied) {
@@ -3041,6 +3161,8 @@ class _AddDialogState extends State<_AddDialog> {
             desktopGatewayUrl: desktopGatewayUrl,
             gatewayProfile: gatewayProfile,
             clientCertificate: clientCertificate,
+            deploymentToken: deploymentToken.isEmpty ? null : deploymentToken,
+            customHeaders: parsedHeaders.headers,
           ),
         );
         try {
@@ -3087,6 +3209,8 @@ class _AddDialogState extends State<_AddDialog> {
         gatewayProfile: gatewayProfile.isEmpty ? null : gatewayProfile,
         clientCertificate: savedCertificate,
         clearClientCertificate: savedCertificate == null,
+        deploymentToken: deploymentToken.isEmpty ? null : deploymentToken,
+        customHeaders: parsedHeaders.headers,
       );
       _certificateSaved = true;
       if (mounted) Navigator.pop(context);
@@ -3305,6 +3429,34 @@ class _AddDialogState extends State<_AddDialog> {
                 autocorrect: false,
               ),
             ],
+            if (_showDashboard) ...[
+              const SizedBox(height: 8),
+              TextField(
+                controller: _deploymentToken,
+                decoration: InputDecoration(
+                  labelText: context.l10n.deployment_token_label,
+                  hintText: context.l10n.deployment_token_hint,
+                  helperText: context.l10n.deployment_token_helper,
+                  helperMaxLines: 2,
+                ),
+                obscureText: true,
+                autocorrect: false,
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                key: const Key('connection_custom_headers_field'),
+                controller: _customHeaders,
+                decoration: InputDecoration(
+                  labelText: context.l10n.custom_headers_label,
+                  hintText: context.l10n.custom_headers_hint,
+                  helperText: context.l10n.custom_headers_helper,
+                  helperMaxLines: 3,
+                ),
+                maxLines: 4,
+                minLines: 2,
+                autocorrect: false,
+              ),
+            ],
             if (_isHttpsInput || _useClientCertificate) ...[
               const Divider(height: 24),
               SwitchListTile(
@@ -3517,6 +3669,8 @@ class _AddDialogState extends State<_AddDialog> {
     _dashPass.dispose();
     _desktopGatewayUrl.dispose();
     _gatewayProfile.dispose();
+    _deploymentToken.dispose();
+    _customHeaders.dispose();
     _certificatePassword.dispose();
     super.dispose();
   }

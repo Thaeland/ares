@@ -14,6 +14,7 @@ import 'gateway_turn_journal.dart';
 import 'projects_gateway_client.dart';
 import 'remote_workspace.dart';
 import 'ws_client.dart';
+import 'system_sleep_gate.dart';
 
 typedef DesktopAsyncEventCallback =
     void Function(String mobileSessionId, StreamEvent event);
@@ -48,6 +49,7 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
   /// let the server use its own. See [SavedConnection.gatewayProfile].
   final String? _gatewayProfile;
   final ClientCertificateConfig? _clientCertificate;
+  final Map<String, String> _customHeaders;
   WsClient? _ws;
   bool get sessionAuthority => _ws?.sessionAuthority == true;
   Future<WsClient>? _socketInFlight;
@@ -110,6 +112,7 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
     required this._dashboard,
     this._gatewayProfile,
     this._clientCertificate,
+    this._customHeaders = const <String, String>{},
   }) {
     workspace = RemoteWorkspaceOwner(
       connectionId: _connectionId,
@@ -119,9 +122,63 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
       connect: _ensureSocket,
       ownsSocket: _ownsSocket,
     );
+    SystemSleepGate.instance.addListener(_onSystemSleep);
   }
 
   late final RemoteWorkspaceOwner workspace;
+
+  /// True while the computer sleeps or the session is locked: the socket is
+  /// closed and nothing reconnects until [SystemSleepGate] clears.
+  bool _systemPaused = false;
+  bool _reconnectAfterPause = false;
+
+  void _onSystemSleep() {
+    if (_closed) return;
+    final paused = SystemSleepGate.instance.value;
+    if (paused == _systemPaused) return;
+    _systemPaused = paused;
+    if (paused) {
+      // Only a client that had a live socket reconnects on its own later;
+      // an idle client reconnects lazily on its next call.
+      _reconnectAfterPause =
+          _ws?.isConnected == true ||
+          _socketInFlight != null ||
+          _reconnectTimer != null;
+      _reconnectTimer?.cancel();
+      _reconnectTimer = null;
+      _reconnectAttempts = 0;
+      final ws = _ws;
+      if (ws != null) {
+        // Report the drop like a lost connection; stored session ids stay,
+        // so the next socket re-binds each with session.resume.
+        _ws = null;
+        _gatewaySessionIds.clear();
+        ws.close();
+        _connectionListener?.call(DesktopConnectionState.disconnected);
+      }
+      return;
+    }
+    // A background policy that holds reconnects keeps the request until
+    // setReconnectAllowed(true).
+    if (!_reconnectAfterPause || !_reconnectAllowed) return;
+    _reconnectAfterPause = false;
+    _reconnectNow();
+  }
+
+  void _checkNotPaused() {
+    if (_systemPaused) {
+      throw StateError('Paused while the computer sleeps.');
+    }
+  }
+
+  void _reconnectNow() {
+    _ensureSocket().then<void>(
+      (_) {},
+      onError: (Object _) {
+        if (!_closed && !_systemPaused) _scheduleReconnect();
+      },
+    );
+  }
 
   /// The terminal executor reported by the live resume binding, if any.
   String? boundTerminalBackend(String storedSessionId) =>
@@ -227,9 +284,12 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
         password: connection.dashboardPassword,
         gatewayProfile: connection.gatewayProfile,
         clientCertificate: connection.clientCertificate,
+        deploymentToken: connection.deploymentToken,
+        customHeaders: connection.customHeaders,
       ),
       gatewayProfile: connection.gatewayProfile,
       clientCertificate: connection.clientCertificate,
+      customHeaders: connection.customHeaders,
     );
   }
 
@@ -320,6 +380,11 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
   /// bridge attached.
   Future<WsClient> _ensureSocket({Future<bool> Function()? beforeRequest}) {
     _checkOpen();
+    if (_systemPaused) {
+      // No network while the computer sleeps or the session is locked; a
+      // caller retries after resume instead of racing the suspend.
+      return Future.error(StateError('Paused while the computer sleeps.'));
+    }
     final existing = _ws;
     if (existing != null && existing.isConnected) {
       return Future.value(existing);
@@ -360,17 +425,21 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
     // on the new socket re-populates protocol/advertisement.
     _capabilities.reset();
     _checkOpen();
-    final ticket = await _dashboard.mintWebSocketTicket();
+    final deploymentToken = _dashboard.deploymentToken;
+    final ticket = deploymentToken != null
+        ? null
+        : await _dashboard.mintWebSocketTicket();
     if (beforeRequest != null && !await beforeRequest()) {
       throw StateError('Notification admission revoked');
     }
     _checkOpen();
-    final client = WsClient(
-      _baseUrl,
+    // The computer slept or the session locked while the ticket was minted:
+    // do not open a socket during the pause. The pause remembered this dial
+    // and reconnects when it lifts.
+    _checkNotPaused();
+    final client = _socketClient(
+      deploymentToken: deploymentToken,
       ticket: ticket,
-      ticketInSubprotocol: true,
-      profile: _gatewayProfile,
-      clientCertificate: _clientCertificate,
     );
     _installAsyncEventBridge(client);
     final inheritedConnectionListener = client.onConnectionChanged;
@@ -417,6 +486,9 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
         client.close();
         throw StateError('DesktopGatewayClient is closed.');
       }
+      // A dial in flight when the pause began must not leave a live socket
+      // behind it: close it and let the wake reconnect.
+      _checkNotPaused();
       _ws = client;
       return client;
     } catch (_) {
@@ -433,7 +505,12 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
   /// detached-turn recovery has no safe deadline after which a reply may be
   /// abandoned. The delay remains capped so a long outage does not spin.
   void _scheduleReconnect() {
-    if (_closed || !_reconnectAllowed || _reconnectTimer != null) return;
+    if (_closed ||
+        _systemPaused ||
+        !_reconnectAllowed ||
+        _reconnectTimer != null) {
+      return;
+    }
     _reconnectAttempts++;
     final exponent = _reconnectAttempts.clamp(1, 5);
     final delay = Duration(seconds: (1 << (exponent - 1)).clamp(2, 30));
@@ -779,6 +856,9 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
     if (!allowed) {
       _reconnectTimer?.cancel();
       _reconnectTimer = null;
+    } else if (_reconnectAfterPause && !_systemPaused) {
+      _reconnectAfterPause = false;
+      _reconnectNow();
     }
   }
 
@@ -853,6 +933,30 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
   /// Opens (or reuses) the gateway socket without binding it to a session.
   Future<WsClient> _connectControl() => _ensureSocket();
 
+  /// The gateway socket, authenticated the way Hermes Desktop does it. A
+  /// deployment-token connection puts the token in `?token=`, which loopback,
+  /// `--insecure` and gated gateways all accept (a loopback gateway cannot
+  /// mint `POST /api/auth/ws-ticket` tickets); every other connection spends
+  /// a single-use ticket in the subprotocol. The upgrade never follows a
+  /// redirect either way.
+  WsClient _socketClient({String? deploymentToken, String? ticket}) =>
+      deploymentToken != null
+      ? WsClient(
+          _baseUrl,
+          token: deploymentToken,
+          profile: _gatewayProfile,
+          clientCertificate: _clientCertificate,
+          customHeaders: _customHeaders,
+        )
+      : WsClient(
+          _baseUrl,
+          ticket: ticket,
+          ticketInSubprotocol: true,
+          profile: _gatewayProfile,
+          clientCertificate: _clientCertificate,
+          customHeaders: _customHeaders,
+        );
+
   /// Creates the source-only recovery-v2 registry without changing any legacy
   /// session, submit, interrupt, or event route in this client.
   GatewayTurnCoordinatorRegistry enableTurnRecoveryCoordinator({
@@ -866,14 +970,14 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
             journal: journal ?? GatewayTurnJournal(),
             freshSocketFactory: () async {
               _checkOpen();
-              final ticket = await _dashboard.mintWebSocketTicket();
+              final deploymentToken = _dashboard.deploymentToken;
+              final ticket = deploymentToken != null
+                  ? null
+                  : await _dashboard.mintWebSocketTicket();
               _checkOpen();
-              final client = WsClient(
-                _baseUrl,
+              final client = _socketClient(
+                deploymentToken: deploymentToken,
                 ticket: ticket,
-                ticketInSubprotocol: true,
-                profile: _gatewayProfile,
-                clientCertificate: _clientCertificate,
               );
               _installAsyncEventBridge(client);
               return client;
@@ -1723,6 +1827,7 @@ class DesktopGatewayClient implements SlashCommandGateway, ComposerSessionRpc {
     // Idempotent: a double close must not re-enter or corrupt state.
     if (_closed) return;
     _closed = true;
+    SystemSleepGate.instance.removeListener(_onSystemSleep);
     workspace.close();
     slashRefusals.reset();
     _reconnectTimer?.cancel();

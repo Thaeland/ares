@@ -7073,4 +7073,321 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get catalog_scan_failed => 'не пройдена';
+
+  @override
+  String get deployment_token_label => 'Токен развёртывания (необязательно)';
+
+  @override
+  String get deployment_token_helper =>
+      'Для токенов сеанса Hermes Dashboard, отправляемых как X-Hermes-Session-Token. Не хранится открытым текстом в настройках.';
+
+  @override
+  String get deployment_token_hint => 'Токен сеанса панели';
+
+  @override
+  String get custom_headers_label => 'Свои заголовки (необязательно)';
+
+  @override
+  String get custom_headers_helper =>
+      'По одному в строке, например X-Custom: значение. Запрещённые заголовки отклоняются.';
+
+  @override
+  String get custom_headers_hint => 'например X-Custom-Header: значение';
+
+  @override
+  String get desktop_tray_open => 'Открыть Ares';
+
+  @override
+  String get desktop_tray_new_chat => 'Новый чат';
+
+  @override
+  String get desktop_tray_quick_entry => 'Быстрый ввод…';
+
+  @override
+  String get desktop_tray_pause_notifications => 'Приостановить уведомления';
+
+  @override
+  String get desktop_tray_quit => 'Выйти из Ares';
+
+  @override
+  String get desktop_integration_title => 'Интеграция с рабочим столом';
+
+  @override
+  String get desktop_tray_setting =>
+      'Показывать Ares в системном трее или строке меню';
+
+  @override
+  String get desktop_tray_setting_help =>
+      'Через значок можно открыть Ares, начать чат, открыть быстрый ввод, приостановить уведомления или выйти.';
+
+  @override
+  String get desktop_close_to_tray_setting =>
+      'Продолжать работу в трее после закрытия окна';
+
+  @override
+  String get desktop_tray_unsupported =>
+      'В этой среде нет системного трея, доступного для Ares.';
+
+  @override
+  String get quick_entry_title => 'Быстрый ввод';
+
+  @override
+  String get quick_entry_hint => 'Введите запрос для Ares…';
+
+  @override
+  String get quick_entry_submit => 'Вставить в поле ввода';
+
+  @override
+  String get quick_entry_never_sends =>
+      'Enter вставляет текст в поле ввода чата. Ничего не отправляется, пока вы не нажмёте «Отправить».';
+
+  @override
+  String get quick_entry_unavailable =>
+      'Не удалось открыть быстрый ввод. Попробуйте ещё раз.';
+
+  @override
+  String get desktop_hotkey_setting => 'Сочетание клавиш для быстрого ввода';
+
+  @override
+  String desktop_hotkey_help(String shortcut) {
+    return 'Нажмите $shortcut где угодно, чтобы открыть быстрый ввод.';
+  }
+
+  @override
+  String desktop_hotkey_conflict(String shortcut) {
+    return '$shortcut уже использует другое приложение. Выберите другое сочетание.';
+  }
+
+  @override
+  String get desktop_hotkey_unsupported =>
+      'Эта среда не позволяет приложениям регистрировать глобальные сочетания клавиш (например, Wayland).';
+
+  @override
+  String get desktop_hotkey_no_modifier => 'Добавьте Cmd, Ctrl или Alt.';
+
+  @override
+  String get desktop_hotkey_super_key =>
+      'Клавиша Windows или Super зарезервирована системой.';
+
+  @override
+  String get desktop_hotkey_reserved => 'Это сочетание уже использует система.';
+
+  @override
+  String desktop_hotkey_in_app(String action) {
+    return 'Ares уже использует это сочетание для действия «$action».';
+  }
+
+  @override
+  String get desktop_hotkey_change => 'Изменить';
+
+  @override
+  String get desktop_hotkey_reset => 'По умолчанию';
+
+  @override
+  String get capture_screen_action => 'Снимок экрана';
+
+  @override
+  String get capture_screen_help =>
+      'Добавляет снимок экрана в сообщение как черновик. Ничего не отправляется, пока вы не нажмёте «Отправить».';
+
+  @override
+  String get capture_screen_unavailable =>
+      'Снимок экрана недоступен в этой среде.';
+
+  @override
+  String get capture_screen_failed =>
+      'Не удалось сделать снимок экрана. Попробуйте ещё раз.';
+
+  @override
+  String get capture_permission_title => 'Разрешите запись экрана';
+
+  @override
+  String get capture_permission_body =>
+      'Чтобы сделать снимок окна, Ares нужно разрешение на запись экрана. Включите Ares в разделе «Системные настройки» > «Конфиденциальность и безопасность» > «Запись экрана» и повторите попытку.';
+
+  @override
+  String get capture_open_settings => 'Открыть Системные настройки';
+
+  @override
+  String get keep_awake_title => 'Не давать компьютеру засыпать';
+
+  @override
+  String get keep_awake_title_mobile => 'Не выключать экран';
+
+  @override
+  String get keep_awake_mode_off => 'Выкл.';
+
+  @override
+  String get keep_awake_mode_while_working => 'Во время работы';
+
+  @override
+  String get keep_awake_mode_always => 'Всегда';
+
+  @override
+  String get keep_awake_off_help =>
+      'Никогда не мешать переходу в сон (по умолчанию).';
+
+  @override
+  String get keep_awake_while_working_help =>
+      'Не давать засыпать от бездействия, только пока идёт ход агента.';
+
+  @override
+  String get keep_awake_always_help =>
+      'Не давать засыпать от бездействия, пока Ares открыт на этом устройстве.';
+
+  @override
+  String get keep_awake_off_help_mobile =>
+      'Экран выключается как обычно (по умолчанию).';
+
+  @override
+  String get keep_awake_while_working_help_mobile =>
+      'Не выключать экран, пока идёт ход агента и Ares открыт.';
+
+  @override
+  String get keep_awake_always_help_mobile =>
+      'Не выключать экран, пока Ares открыт.';
+
+  @override
+  String get ng_token_gateway_has_no_sign_in =>
+      'У этого шлюза нет входа, поэтому он не может проверить токен развёртывания. Включите аутентификацию панели на хосте (или обновите Hermes) и повторите попытку.';
+
+  @override
+  String get palette_open => 'Палитра команд приложения';
+
+  @override
+  String get palette_no_matches => 'Нет подходящих действий';
+
+  @override
+  String get palette_filter_hint =>
+      'Введите текст, чтобы отфильтровать действия…';
+
+  @override
+  String get palette_keys_move => '↑↓ — перемещение';
+
+  @override
+  String get palette_keys_run => 'Enter — выполнить';
+
+  @override
+  String get palette_keys_close => 'Esc — закрыть';
+
+  @override
+  String get palette_search_sessions => 'Поиск сеансов';
+
+  @override
+  String get palette_scheduled_crons => 'Запланированные / Cron';
+
+  @override
+  String get palette_capabilities_skills => 'Возможности и навыки';
+
+  @override
+  String get palette_insights_usage => 'Аналитика и использование';
+
+  @override
+  String get palette_more_projects => 'Ещё и проекты';
+
+  @override
+  String get deeplink_chat_not_found =>
+      'Чат не найден в списке. Возможно, он ещё не загрузился.';
+
+  @override
+  String get keyboard_shortcuts_title => 'Сочетания клавиш';
+
+  @override
+  String get shortcuts_reset_all => 'Сбросить все';
+
+  @override
+  String get shortcuts_reset_to_default => 'Вернуть по умолчанию';
+
+  @override
+  String get shortcut_action_command_palette => 'Палитра команд';
+
+  @override
+  String get shortcut_action_new_chat => 'Новый чат';
+
+  @override
+  String get shortcut_action_search => 'Поиск';
+
+  @override
+  String get shortcut_action_settings => 'Настройки';
+
+  @override
+  String shortcut_action_go_to_tab(int number) {
+    return 'Перейти на вкладку $number';
+  }
+
+  @override
+  String shortcuts_conflict(String first, String second, String chord) {
+    return 'Конфликт: «$first» и «$second» используют $chord. Своё сочетание остаётся по умолчанию, пока вы не измените одно из них.';
+  }
+
+  @override
+  String shortcuts_editor_title(String action) {
+    return 'Сочетание: $action';
+  }
+
+  @override
+  String get shortcuts_editor_help =>
+      'Нажмите сочетание клавиш или выберите ниже модификаторы и клавишу:';
+
+  @override
+  String get shortcuts_editor_needs_modifier =>
+      'Выберите хотя бы Cmd/Meta, Ctrl или Alt, чтобы не мешать вводу в поле сообщения.';
+
+  @override
+  String shortcuts_text_editing_warning(String chord) {
+    return '$chord — сочетание для редактирования текста (копировать, вставить, вырезать, отменить, повторить или выделить всё). Если назначить его здесь, текстовые поля его потеряют.';
+  }
+
+  @override
+  String shortcuts_text_editing_in_use(String action, String chord) {
+    return '«$action» использует $chord — сочетание для редактирования текста. Пока оно назначено здесь, текстовые поля его теряют.';
+  }
+
+  @override
+  String custom_headers_problem_format(int line) {
+    return 'Строка $line: ожидается «Имя: Значение»';
+  }
+
+  @override
+  String custom_headers_problem_missing_name(int line) {
+    return 'Строка $line: нет имени заголовка';
+  }
+
+  @override
+  String custom_headers_problem_invalid_name(int line, String name) {
+    return 'Строка $line: недопустимое имя заголовка «$name»';
+  }
+
+  @override
+  String custom_headers_problem_reserved(int line, String name) {
+    return 'Строка $line: «$name» зарезервирован и не может передаваться';
+  }
+
+  @override
+  String custom_headers_problem_empty_value(int line) {
+    return 'Строка $line: пустое значение заголовка';
+  }
+
+  @override
+  String get ng_enter_a_deployment_token =>
+      'Введите токен сеанса развёртывания.';
+
+  @override
+  String get ng_custom_headers => 'Свои заголовки';
+
+  @override
+  String get ng_custom_headers_help =>
+      'Дополнительные HTTP-заголовки для этого шлюза (Имя: Значение, по одному в строке), отправляются в его вызовах REST и WebSocket. Хранятся в защищённом хранилище учётных данных. Заголовки аутентификации и hop-by-hop отклоняются.';
+
+  @override
+  String get ng_use_a_deployment_token =>
+      'Использовать токен сеанса развёртывания';
+
+  @override
+  String get ng_sign_in_with_deployment_token =>
+      'Войти с токеном развёртывания';
+
+  @override
+  String get ng_signed_in_with_deployment_token =>
+      'Вход выполнен с токеном развёртывания.';
 }
