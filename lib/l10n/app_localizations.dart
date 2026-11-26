@@ -19675,6 +19675,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hidden files can\'t be saved by the gateway.'**
   String get release_core_file_save_hidden;
+
+  /// Preview annotation chip: pin number followed by the user's note. Preserve the note verbatim.
+  ///
+  /// In en, this message translates to:
+  /// **'#{number} {note}'**
+  String rel_chat_preview_pin_label(int number, String note);
+
+  /// Number badge over a pinned preview region; corresponds to the numbered annotation chip and crop.
+  ///
+  /// In en, this message translates to:
+  /// **'#{number}'**
+  String rel_chat_preview_pin_number(int number);
+
+  /// NextGen chat toast combining the already localised wake-word status with an additional gateway notice. Preserve the supplied text verbatim.
+  ///
+  /// In en, this message translates to:
+  /// **'{status} — {notice}'**
+  String ng_rel_chat_wake_status_notice(String status, String notice);
+
+  /// NextGen chat usage sheet cost value. Amount is preformatted to four decimal places; the dollar sign is the existing currency convention, not a request for currency conversion.
+  ///
+  /// In en, this message translates to:
+  /// **'\${amount}'**
+  String ng_rel_chat_cost_amount(String amount);
+
+  /// NextGen chat usage sheet context usage ratio. Used and maximum are preformatted compact token counts.
+  ///
+  /// In en, this message translates to:
+  /// **'{used} / {maximum}'**
+  String ng_rel_chat_context_ratio(String used, String maximum);
+
+  /// NextGen chat connection banner combining an already localised connection status with its supplied reason. Preserve both supplied messages.
+  ///
+  /// In en, this message translates to:
+  /// **'{status} {reason}'**
+  String ng_rel_chat_connection_reason(String status, String reason);
+
+  /// NextGen transcript notice followed by its preformatted timestamp. Message is incoming notice text and must remain verbatim.
+  ///
+  /// In en, this message translates to:
+  /// **'{message} · {time}'**
+  String ng_rel_chat_notice_time(String message, String time);
+
+  /// NextGen user-message attachment pill combining the original filename with an already localised upload-progress label.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} · {progress}'**
+  String ng_rel_chat_attachment_progress(String name, String progress);
+
+  /// NextGen assistant tool disclosure label while a tool is running and has a non-null detail. Tool name is a protocol identifier; preserve it and the supplied detail verbatim.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} · {detail}'**
+  String ng_rel_chat_tool_detail(String name, String detail);
 }
 
 class _AppLocalizationsDelegate
