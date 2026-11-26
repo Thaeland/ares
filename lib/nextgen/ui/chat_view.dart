@@ -581,12 +581,15 @@ class _NgChatViewState extends State<NgChatView>
 
   Future<void> _startVoiceConversation() async {
     final mode = _voiceMode;
-    final engine = _liveEngine;
     if (!mode.hasStatus) {
       await mode.refresh();
     }
     if (!mounted) return;
     if (mode.selectedMode == 'gpt-live') {
+      // A background teardown nulls the engine; rebind on demand so the
+      // start button still opens a live conversation after app resume.
+      if (_liveEngine == null) _bindLiveEngine();
+      final engine = _liveEngine;
       if (mode.liveAvailable && engine != null) {
         await _wake.pauseForVoice();
         if (!mounted) return;
@@ -832,6 +835,9 @@ class _NgChatViewState extends State<NgChatView>
     if (state != AppLifecycleState.resumed) {
       _checkpoint?.cancel();
       unawaited(_draftWriter.flush());
+      // The live session is tied to the foreground screen: close the peer
+      // and stop the tracks on background, not just on user-driven stop.
+      _disposeLiveEngine();
     }
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.hidden ||

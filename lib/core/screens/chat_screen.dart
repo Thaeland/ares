@@ -2059,12 +2059,15 @@ class _ChatScreenState extends State<ChatScreen>
 
   Future<void> _startVoiceConversation() async {
     final mode = _voiceLiveMode;
-    final engine = _liveEngine;
     if (mode != null && !mode.hasStatus) {
       await mode.refresh();
     }
     if (!mounted) return;
     if (mode != null && mode.selectedMode == 'gpt-live') {
+      // A background teardown nulls the engine; rebind on demand so the
+      // start button still opens a live conversation after app resume.
+      if (_liveEngine == null) _bindLiveVoice();
+      final engine = _liveEngine;
       if (mode.liveAvailable && engine != null) {
         if (_wake case final wake?) {
           await wake.pauseForVoice();
@@ -2290,6 +2293,9 @@ class _ChatScreenState extends State<ChatScreen>
         oldWidget.session.id != widget.session.id) {
       _preview.close();
       _bindWake();
+      // The live session belongs to the chat we left; close it and rebind
+      // for the new chat, mirroring the NextGen composer teardown.
+      if (_liveEngine != null) _bindLiveVoice();
     }
     if (_slashGateway case final gateway?) {
       _slashController.useRefusals(gateway.slashRefusals);
@@ -2474,7 +2480,12 @@ class _ChatScreenState extends State<ChatScreen>
     _wake?.setAppForeground(foreground);
     if (_voiceForeground != foreground) _voiceForegroundEpoch++;
     _voiceForeground = foreground;
-    if (!_voiceForeground) _revokeVoice(HandsFreeStopReason.background);
+    if (!_voiceForeground) {
+      _revokeVoice(HandsFreeStopReason.background);
+      // The live session is tied to the foreground screen: close the peer and
+      // stop the tracks on background, not just on user-driven stop.
+      _disposeLiveVoice();
+    }
     if ((defaultTargetPlatform == TargetPlatform.windows &&
             state == AppLifecycleState.inactive) ||
         state == AppLifecycleState.paused ||

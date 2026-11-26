@@ -83,6 +83,7 @@ class _FakeConversation implements LiveConversation {
   @override
   void dispose() {
     _active = false;
+    closed = true;
   }
 
   @override
@@ -385,6 +386,24 @@ void main() {
 
       expect(conversation.closed, isTrue);
     });
+
+    testWidgets('background closes the live session', (tester) async {
+      final conversation = _FakeConversation();
+      final transport = _LiveTransport(seededStatus: _liveStatus());
+      await pumpChat(tester, conversation: conversation, transport: transport);
+
+      await tester.tap(find.byKey(const ValueKey('voice-live-start')));
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(conversation.active, isTrue);
+
+      WidgetsBinding.instance.handleAppLifecycleStateChanged(
+        AppLifecycleState.paused,
+      );
+      await tester.pump(const Duration(milliseconds: 200));
+
+      expect(conversation.closed, isTrue);
+    });
   });
 
   group('Engine selector panel', () {
@@ -621,6 +640,24 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
       expect(chatA.items.whereType<NgUserItem>(), isEmpty);
       expect(chatB.items.whereType<NgUserItem>(), isEmpty);
+    });
+
+    testWidgets('background closes the live session', (tester) async {
+      final conversation = _FakeConversation();
+      final transport = _LiveTransport(seededStatus: _liveStatus());
+      await pumpChat(tester, conversation: conversation, transport: transport);
+
+      await tester.tap(find.byKey(const ValueKey('voice-live-start')));
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(conversation.active, isTrue);
+
+      WidgetsBinding.instance.handleAppLifecycleStateChanged(
+        AppLifecycleState.paused,
+      );
+      await tester.pump(const Duration(milliseconds: 200));
+
+      expect(conversation.closed, isTrue);
     });
   });
 }
