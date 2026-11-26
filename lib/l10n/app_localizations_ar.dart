@@ -180,6 +180,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get background_report_collapse => 'طيّ التقرير';
 
   @override
+  String get ng_brand_open_chat => 'فتح محادثة';
+
+  @override
+  String get ng_brand_recent => 'الأخيرة';
+
+  @override
+  String get ng_brand_sidebar_hint => 'أو اختر محادثة من الشريط الجانبي';
+
+  @override
   String get copy_session_id => 'نسخ معرّف الجلسة';
 
   @override

@@ -413,6 +413,24 @@ abstract class AppLocalizations {
   /// **'Collapse report'**
   String get background_report_collapse;
 
+  /// No description provided for @ng_brand_open_chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Open a chat'**
+  String get ng_brand_open_chat;
+
+  /// No description provided for @ng_brand_recent.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent'**
+  String get ng_brand_recent;
+
+  /// No description provided for @ng_brand_sidebar_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'or pick a chat from the sidebar'**
+  String get ng_brand_sidebar_hint;
+
   /// No description provided for @copy_session_id.
   ///
   /// In en, this message translates to:

@@ -18,6 +18,15 @@ void main() {
     // Data colours with a documented reason, by exact file and line. Stale
     // entries fail below, so an exception cannot outlive its code.
     const dataExceptions = {
+      'lib/nextgen/ui/brand.dart': {
+        // Approved logo artwork and silver/graphite ink are invariant brand
+        // data, not application surfaces. The surround uses active tokens.
+        'const ngBrandSilver = [Color(0xFFFFFFFF), Color(0xFFC3C7CE)];',
+        'const ngBrandGraphite = [Color(0xFF3A3D44), Color(0xFF7D828C)];',
+        'color: Colors.white,',
+        ': Border.all(color: const Color(0x2E0A0A1E), width: 1),',
+        'color: Colors.black.withValues(alpha: 0.07),',
+      },
       'lib/core/presentation/imported_theme.dart': {
         // The one constructor for an imported VS Code theme's own colours.
         'Color _imported(int argb) => Color(argb);',

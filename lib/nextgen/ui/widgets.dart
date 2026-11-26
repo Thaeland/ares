@@ -283,9 +283,11 @@ class NgPrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = NgColors.of(context);
-    return SizedBox(
-      width: double.infinity,
-      height: 50,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        minWidth: double.infinity,
+        minHeight: 50,
+      ),
       child: FilledButton(
         style: FilledButton.styleFrom(
           backgroundColor: c.accent,
@@ -310,7 +312,7 @@ class NgPrimaryButton extends StatelessWidget {
                     Icon(icon, size: 18),
                     const SizedBox(width: 8),
                   ],
-                  Text(label),
+                  Flexible(child: Text(label, textAlign: TextAlign.center)),
                 ],
               ),
       ),
@@ -334,9 +336,11 @@ class NgSecondaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = NgColors.of(context);
-    return SizedBox(
-      width: double.infinity,
-      height: 50,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        minWidth: double.infinity,
+        minHeight: 50,
+      ),
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
           foregroundColor: c.text,
@@ -351,7 +355,7 @@ class NgSecondaryButton extends StatelessWidget {
               Icon(icon, size: 18),
               const SizedBox(width: 8),
             ],
-            Text(label),
+            Flexible(child: Text(label, textAlign: TextAlign.center)),
           ],
         ),
       ),
@@ -508,13 +512,13 @@ class NgEmpty extends StatelessWidget {
 
   final Widget? titleWidget;
 
-  /// No icon when null (PROTOTYPE: the brand can stand in for it).
+  /// No icon when null.
   final IconData? icon;
   final String title;
   final String? body;
   final Widget? action;
 
-  /// PROTOTYPE (mock/nextgen-brand): drawn above everything else.
+  /// Optional decorative header above the greeting.
   final Widget? header;
 
   @override

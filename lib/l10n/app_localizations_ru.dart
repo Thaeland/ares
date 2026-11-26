@@ -179,6 +179,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get background_report_collapse => 'Свернуть отчёт';
 
   @override
+  String get ng_brand_open_chat => 'Открыть чат';
+
+  @override
+  String get ng_brand_recent => 'Недавние';
+
+  @override
+  String get ng_brand_sidebar_hint => 'или выберите чат на боковой панели';
+
+  @override
   String get copy_session_id => 'Скопировать ID сеанса';
 
   @override

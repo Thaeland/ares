@@ -175,6 +175,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get background_report_collapse => '보고서 접기';
 
   @override
+  String get ng_brand_open_chat => '채팅 열기';
+
+  @override
+  String get ng_brand_recent => '최근 채팅';
+
+  @override
+  String get ng_brand_sidebar_hint => '또는 사이드바에서 채팅을 선택하세요';
+
+  @override
   String get copy_session_id => '세션 ID 복사';
 
   @override

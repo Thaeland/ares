@@ -1,7 +1,4 @@
-// PROTOTYPE (mock/nextgen-brand, never merged): the Ares brand in NextGen.
-// A launch landing (big logo above a big silver ARES wordmark, then New
-// chat / Open a chat) and a smaller copy of the brand on the empty new-chat
-// screen. Built for mockups; the real change starts from Sam's choice.
+// Ares branding for NextGen's launch and empty new-chat screens.
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -11,11 +8,6 @@ import '../nextgen_l10n.dart';
 import '../theme/nextgen_theme.dart';
 import 'sessions_sidebar.dart';
 import 'widgets.dart';
-
-/// Prototype switches, set by the mockup harness.
-bool ngBrandLanding = true;
-bool ngBrandOnNewChat = true;
-bool ngBrandKeepSparkle = true;
 
 /// The black-on-white Ares mark (transparent background, black art).
 const ngBrandMarkAsset = 'assets/icon/ares_mark_black.png';
@@ -115,17 +107,19 @@ class NgBrandWordmark extends StatelessWidget {
           stops: const [0.16, 0.74],
           colors: colors,
         ).createShader(rect),
-        child: Text(
-          'ARES',
-          semanticsLabel: 'Ares',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontFamily: 'Cinzel',
-            fontWeight: FontWeight.w700,
-            letterSpacing: tracking,
-            fontSize: size,
-            height: 1.15,
-            color: Colors.white,
+        child: ExcludeSemantics(
+          child: Text(
+            'ARES',
+            textScaler: TextScaler.noScaling,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'Cinzel',
+              fontWeight: FontWeight.w700,
+              letterSpacing: tracking,
+              fontSize: size,
+              height: 1.15,
+              color: Colors.white,
+            ),
           ),
         ),
       ),
@@ -177,9 +171,9 @@ class NgBrandMark extends StatelessWidget {
 /// stacked brand (logo 72, ARES 28) when there is space, a one-line lockup
 /// when the keyboard is up, nothing when even that would push the greeting
 /// out of view. Never taller than the pane, so the composer stays put.
-Widget? ngNewChatBrand(double height, {required bool sparkle}) {
-  // The greeting under it: padding, sparkle, title and a two-line body.
-  final greeting = sparkle ? 180.0 : 130.0;
+Widget? ngNewChatBrand(double height, {double textScale = 1}) {
+  // Reserve room for the sparkle, wrapping project greeting and body first.
+  final greeting = 220.0 * textScale;
   if (height >= greeting + 165) {
     return const NgBrandMark(logoSize: 72, wordSize: 28, gap: 12);
   }
@@ -237,10 +231,13 @@ class NgBrandLanding extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        NgBrandMark(
-                          logoSize: big ? 240 : 200,
-                          wordSize: big ? 80 : 56,
-                          gap: big ? 30 : 24,
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: NgBrandMark(
+                            logoSize: big ? 240 : 200,
+                            wordSize: big ? 80 : 56,
+                            gap: big ? 30 : 24,
+                          ),
                         ),
                         SizedBox(height: big ? 44 : 34),
                         NgPrimaryButton(
@@ -252,7 +249,7 @@ class NgBrandLanding extends StatelessWidget {
                         if (docked) ...[
                           const SizedBox(height: 14),
                           Text(
-                            'or pick a chat from the sidebar',
+                            ngL.ng_brand_sidebar_hint,
                             textAlign: TextAlign.center,
                             style: NgType.bodySmall.copyWith(
                               color: c.textMuted,
@@ -262,7 +259,7 @@ class NgBrandLanding extends StatelessWidget {
                           const SizedBox(height: 10),
                           NgSecondaryButton(
                             key: const ValueKey('ng-brand-open-chat'),
-                            label: 'Open a chat',
+                            label: ngL.ng_brand_open_chat,
                             icon: Icons.view_sidebar_outlined,
                             onPressed: onOpenChats,
                           ),
@@ -278,9 +275,9 @@ class NgBrandLanding extends StatelessWidget {
                 ),
               ),
               if (!docked)
-                Positioned(
+                PositionedDirectional(
                   top: 4,
-                  left: 4,
+                  start: 4,
                   child: IconButton(
                     key: const ValueKey('ng-sidebar-button'),
                     tooltip: ngL.ng_chats,
@@ -324,7 +321,7 @@ class _Recent extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 10),
-            NgSectionLabel('Recent'),
+            NgSectionLabel(ngL.ng_brand_recent),
             NgCard(
               padding: EdgeInsets.zero,
               child: Column(
