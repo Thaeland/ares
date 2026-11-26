@@ -53,6 +53,7 @@ class VoiceLiveEngine extends ChangeNotifier {
   bool _disposing = false;
   bool _stopped = false;
   int _startEpoch = 0;
+  Future<bool>? _startFlight;
 
   String? _delegationId;
   String _spokenRaw = '';
@@ -82,6 +83,10 @@ class VoiceLiveEngine extends ChangeNotifier {
         ? conversation.holdsMicrophone
         : _conversation.active;
   }
+
+  /// Something to tear down: a session that is live, starting, or closing.
+  bool get engaged =>
+      _conversation.active || holdsMicrophone || _startFlight != null;
 
   String? get delegationId => _delegationId;
   int get startEpoch => _startEpoch;
@@ -160,8 +165,20 @@ class VoiceLiveEngine extends ChangeNotifier {
   /// Start the live conversation. Returns false — without throwing — when
   /// the host refuses (chained mode, unavailable, no mic). The caller
   /// decides whether to fall through to the chained composer.
-  Future<bool> start({List<Map<String, dynamic>>? history}) async {
-    if (_disposing) return false;
+  Future<bool> start({List<Map<String, dynamic>>? history}) {
+    if (_disposing) return Future<bool>.value(false);
+    // One start at a time: a second tap on Start joins the one in flight
+    // instead of cancelling it (or opening a second peer and microphone).
+    final flight = _startFlight;
+    if (flight != null) return flight;
+    late final Future<bool> run;
+    run = _start(history: history).whenComplete(() {
+      if (identical(_startFlight, run)) _startFlight = null;
+    });
+    return _startFlight = run;
+  }
+
+  Future<bool> _start({List<Map<String, dynamic>>? history}) async {
     final epoch = ++_startEpoch;
     await refresh();
     if (_disposing || epoch != _startEpoch) return false;
@@ -174,7 +191,10 @@ class VoiceLiveEngine extends ChangeNotifier {
     _clearUtteranceTimer();
     final started = await _conversation.start(history: history);
     if (_disposing || _stopped || epoch != _startEpoch) {
-      await _conversation.forceClose('cancelled');
+      // Torn down while starting. The conversation cancels its own start;
+      // only a session that still came up is closed here, so a newer start
+      // already in flight is left alone.
+      if (started) await _conversation.forceClose('cancelled');
       return false;
     }
     if (started) {
@@ -195,6 +215,9 @@ class VoiceLiveEngine extends ChangeNotifier {
 
   void _beginStop() {
     _startEpoch++;
+    // The start in flight (if any) is cancelled; a start after this stop is
+    // a new one, not a join of the cancelled one.
+    _startFlight = null;
     _stopped = true;
     _clearUtteranceTimer();
     _delegationId = null;

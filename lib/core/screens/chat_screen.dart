@@ -975,6 +975,10 @@ class _ChatScreenState extends State<ChatScreen>
   String? _liveDelegationId;
   String? _liveDelegatedTurnId;
   bool _liveTurnObserved = false;
+
+  /// Counts live-voice teardowns, so a start that was cancelled by one is
+  /// told apart from a start the host refused.
+  int _liveTeardowns = 0;
   GatewayTurnApplicationController? _localTurnController;
   NormalGatewayApplicationSession? _normalSession;
   bool _normalSessionReady = false;
@@ -2206,6 +2210,19 @@ class _ChatScreenState extends State<ChatScreen>
     _liveTransport = null;
   }
 
+  /// Ends the live session at once, with no wait for the vendor: this chat is
+  /// in the background, hidden or covered, so it may not keep a microphone.
+  /// The engine stays bound; Start opens a new session when the chat is back.
+  void _teardownLiveVoice(String reason) {
+    _liveTeardowns++;
+    _liveDelegationId = null;
+    _liveDelegatedTurnId = null;
+    _liveTurnObserved = false;
+    final engine = _liveEngine;
+    if (engine == null || !engine.engaged) return;
+    unawaited(engine.stopNow(reason));
+  }
+
   void _onLiveVoiceChanged() {
     if (!mounted) return;
     _syncClassicWakeForLive();
@@ -2256,6 +2273,7 @@ class _ChatScreenState extends State<ChatScreen>
           await wake.pauseForVoice();
         }
         if (!mounted) return;
+        final teardowns = _liveTeardowns;
         final started = await engine.start(history: _seedClassicLiveHistory());
         if (started && mounted) {
           _syncClassicWakeForLive();
@@ -2263,6 +2281,12 @@ class _ChatScreenState extends State<ChatScreen>
           return;
         }
         if (!mounted) return;
+        // Cancelled by a teardown (background, hidden or covered chat), not
+        // refused by the host: no fallback, and no other microphone path.
+        if (teardowns != _liveTeardowns || !identical(engine, _liveEngine)) {
+          _syncClassicWakeForLive();
+          return;
+        }
       }
       final reason =
           mode.unavailableReason ??
@@ -2675,9 +2699,15 @@ class _ChatScreenState extends State<ChatScreen>
     _voiceForeground = foreground;
     if (!_voiceForeground) {
       _revokeVoice(HandsFreeStopReason.background);
-      // The live session is tied to the foreground screen: close the peer and
-      // stop the tracks on background, not just on user-driven stop.
-      _disposeLiveVoice();
+    }
+    // The live session is tied to the foreground screen: close the peer and
+    // stop the tracks on a real background. `inactive` alone is not one: the
+    // OS microphone prompt on first use puts the app there while the session
+    // it is granting is still starting.
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden ||
+        state == AppLifecycleState.detached) {
+      _teardownLiveVoice('background');
     }
     if ((defaultTargetPlatform == TargetPlatform.windows &&
             state == AppLifecycleState.inactive) ||

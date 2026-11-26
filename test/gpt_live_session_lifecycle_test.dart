@@ -2,6 +2,8 @@
 // connection loss and teardown racing start (review probes G5, G6, G8), with
 // Hermes Desktop b7ee21c14e lib/voice-live.ts as the reference. The real
 // VoiceLiveEngine and GptLiveConversation run; nothing leaves the test.
+import 'dart:async';
+
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -248,6 +250,179 @@ void main() {
       live.conversation.speak('A reply.');
 
       expect(channel.sent, isEmpty);
+    });
+  });
+
+  group('teardown racing start', () {
+    // native: a real flutter_webrtc peer answers calls after close with an
+    // error ("peerConnection is null"), which used to skip the track stop.
+    for (final native in const [false, true]) {
+      test('native=$native: dispose while the microphone prompt is pending '
+          'never POSTs the session and stops the late track '
+          '(review probe G8)', () async {
+        final transport = FakeLiveTransport();
+        final peer = FakeLivePeer()..throwWhenClosed = native;
+        final track = FakeLiveTrack();
+        final microphone = Completer<MediaStream>();
+        final conversation = GptLiveConversation(
+          transport: transport,
+          peerConnectionFactory: () async => peer,
+          microphoneFactory: () => microphone.future,
+        );
+        final engine = VoiceLiveEngine(
+          transport: transport,
+          session: conversation,
+        );
+        final started = engine.start();
+        await pumpEventQueue();
+
+        // Chat switch, route cover or background while the prompt is up.
+        engine.dispose();
+        microphone.complete(FakeLiveStream(track));
+
+        expect(await started, isFalse);
+        await pumpEventQueue();
+        expect(track.stopped, isTrue);
+        expect(peer.closed, isTrue);
+        expect(transport.sessionCalls, 0);
+        expect(conversation.active, isFalse);
+      });
+    }
+
+    test('teardown while the peer is still being created closes the late '
+        'peer and never asks for the microphone', () async {
+      final transport = FakeLiveTransport();
+      final peer = FakeLivePeer();
+      final peerReady = Completer<RTCPeerConnection>();
+      var microphoneRequests = 0;
+      final conversation = GptLiveConversation(
+        transport: transport,
+        peerConnectionFactory: () => peerReady.future,
+        microphoneFactory: () async {
+          microphoneRequests++;
+          return FakeLiveStream(FakeLiveTrack());
+        },
+      );
+      final engine = VoiceLiveEngine(
+        transport: transport,
+        session: conversation,
+      );
+      addTearDown(engine.dispose);
+      final started = engine.start();
+      await pumpEventQueue();
+
+      await engine.stopNow('hidden');
+      peerReady.complete(peer);
+
+      expect(await started, isFalse);
+      await pumpEventQueue();
+      expect(peer.closed, isTrue);
+      expect(microphoneRequests, 0);
+      expect(transport.sessionCalls, 0);
+      expect(engine.active, isFalse);
+    });
+
+    test('teardown while POST /voice-live/session is in flight: the answer '
+        'is not applied and the microphone and peer are released', () async {
+      final live = newFakeLive();
+      live.transport.sessionGate = Completer<void>();
+      final engine = _engine(live);
+      addTearDown(engine.dispose);
+      final started = engine.start();
+      await pumpEventQueue();
+      expect(live.transport.sessionCalls, 1);
+
+      await engine.stopNow('hidden');
+      live.transport.sessionGate!.complete();
+
+      expect(await started, isFalse);
+      await pumpEventQueue();
+      expect(live.peer.remote, isNull);
+      expect(live.track.stopped, isTrue);
+      expect(live.peer.closed, isTrue);
+      expect(engine.active, isFalse);
+      expect(_holdsMicrophone(engine), isFalse);
+    });
+
+    test('a start cancelled by teardown reports nothing as an error, and '
+        'the next start opens a fresh session', () async {
+      final transport = FakeLiveTransport();
+      final peers = <FakeLivePeer>[];
+      final tracks = <FakeLiveTrack>[];
+      final gates = <Completer<MediaStream>>[];
+      final conversation = GptLiveConversation(
+        transport: transport,
+        peerConnectionFactory: () async {
+          final peer = FakeLivePeer();
+          peers.add(peer);
+          return peer;
+        },
+        microphoneFactory: () {
+          final gate = Completer<MediaStream>();
+          gates.add(gate);
+          return gate.future;
+        },
+      );
+      final engine = VoiceLiveEngine(
+        transport: transport,
+        session: conversation,
+      );
+      addTearDown(engine.dispose);
+      final errors = <String>[];
+      engine.onError = errors.add;
+
+      final first = engine.start();
+      await pumpEventQueue();
+      await engine.stopNow('hidden');
+      // The person comes back and starts again before the first prompt
+      // answered.
+      final second = engine.start();
+      await pumpEventQueue();
+      for (final gate in gates) {
+        final track = FakeLiveTrack();
+        tracks.add(track);
+        gate.complete(FakeLiveStream(track));
+      }
+
+      expect(await first, isFalse);
+      expect(await second, isTrue);
+      await pumpEventQueue();
+      expect(errors, isEmpty);
+      expect(peers, hasLength(2));
+      expect(peers.first.closed, isTrue);
+      expect(tracks.first.stopped, isTrue);
+      expect(peers.last.closed, isFalse);
+      expect(tracks.last.stopped, isFalse);
+      expect(transport.sessionCalls, 1);
+      expect(engine.active, isTrue);
+    });
+
+    test('a double tap on Start joins the start in flight: one peer, one '
+        'microphone, one session', () async {
+      final transport = FakeLiveTransport();
+      final peers = <FakeLivePeer>[];
+      final conversation = GptLiveConversation(
+        transport: transport,
+        peerConnectionFactory: () async {
+          final peer = FakeLivePeer();
+          peers.add(peer);
+          return peer;
+        },
+        microphoneFactory: () async => FakeLiveStream(FakeLiveTrack()),
+      );
+      final engine = VoiceLiveEngine(
+        transport: transport,
+        session: conversation,
+      );
+      addTearDown(engine.dispose);
+
+      final results = await Future.wait([engine.start(), engine.start()]);
+
+      expect(results, [true, true]);
+      expect(peers, hasLength(1));
+      expect(peers.single.closed, isFalse);
+      expect(transport.sessionCalls, 1);
+      expect(engine.active, isTrue);
     });
   });
 }

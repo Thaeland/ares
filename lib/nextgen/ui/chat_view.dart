@@ -368,6 +368,10 @@ class _NgChatViewState extends State<NgChatView>
   bool _liveTurnObserved = false;
   DateTime? _liveSubmittedAt;
 
+  /// Counts live-voice teardowns, so a start that was cancelled by one is
+  /// told apart from a start the host refused.
+  int _liveTeardowns = 0;
+
   /// One read-aloud engine for this transcript: the reading reply's action
   /// row shows Stop, and starting another reply stops the current one.
   late final NgReadAloud _readAloud;
@@ -644,6 +648,17 @@ class _NgChatViewState extends State<NgChatView>
     }
   }
 
+  /// Ends the live session at once, with no wait for the vendor: this chat is
+  /// in the background, hidden or covered, so it may not keep a microphone.
+  /// The engine stays bound; Start opens a new session when the chat is back.
+  void _teardownLiveVoice(String reason) {
+    _liveTeardowns++;
+    _stopLiveReplyFeed();
+    final engine = _liveEngine;
+    if (engine == null || !engine.engaged) return;
+    unawaited(engine.stopNow(reason));
+  }
+
   void _onLiveEngineChanged() {
     if (!mounted) return;
     _syncWakeVoicePause();
@@ -678,6 +693,7 @@ class _NgChatViewState extends State<NgChatView>
       if (mode.liveAvailable && engine != null) {
         await _wake.pauseForVoice();
         if (!mounted) return;
+        final teardowns = _liveTeardowns;
         final started = await engine.start(history: _seedLiveHistory());
         if (started && mounted) {
           _syncWakeVoicePause();
@@ -685,6 +701,12 @@ class _NgChatViewState extends State<NgChatView>
           return;
         }
         if (!mounted) return;
+        // Cancelled by a teardown (background, hidden or covered chat), not
+        // refused by the host: no fallback, and no other microphone path.
+        if (teardowns != _liveTeardowns || !identical(engine, _liveEngine)) {
+          _syncWakeVoicePause();
+          return;
+        }
       }
       final reason =
           mode.unavailableReason ??
@@ -961,13 +983,15 @@ class _NgChatViewState extends State<NgChatView>
     if (state != AppLifecycleState.resumed) {
       _checkpoint?.cancel();
       unawaited(_draftWriter.flush());
-      // The live session is tied to the foreground screen: close the peer
-      // and stop the tracks on background, not just on user-driven stop.
-      _disposeLiveEngine();
     }
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.hidden ||
         state == AppLifecycleState.detached) {
+      // The live session is tied to the foreground screen: close the peer
+      // and stop the tracks on a real background. `inactive` alone is not
+      // one: the OS microphone prompt on first use puts the app there while
+      // the session it is granting is still starting.
+      _teardownLiveVoice('background');
       if (chat.running) _companionLeftDuringTurn = true;
     } else if (state == AppLifecycleState.resumed &&
         _companionLeftDuringTurn &&

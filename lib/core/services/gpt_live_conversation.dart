@@ -372,6 +372,13 @@ class GptLiveConversation extends ChangeNotifier
   Timer? _closeTimer;
   Future<void>? _finishing;
 
+  /// Moved on by every start and every teardown. A start that finds it
+  /// changed after an await was torn down and must stop there.
+  int _run = 0;
+
+  /// The run of the start in flight, if any.
+  int? _startingRun;
+
   /// The data channel reported closing or closed: nothing more can be sent.
   bool _eventsDead = false;
 
@@ -401,22 +408,40 @@ class GptLiveConversation extends ChangeNotifier
     List<Map<String, dynamic>>? history,
     Duration iceTimeout = const Duration(seconds: 10),
   }) async {
-    if (_disposed || _active) return false;
-    // A previous session still waiting for the vendor's `session.closed` is
-    // finished first: one peer and one microphone at a time.
-    if (_peer != null ||
-        _microphone != null ||
-        _events != null ||
-        _finishing != null) {
-      await _finish('close_requested');
-      if (_disposed || _active) return false;
+    if (_disposed || _active || _startingRun != null) return false;
+    final run = ++_run;
+    _startingRun = run;
+    // Teardown (dispose, stop, a hidden chat, sign-out, background) can land
+    // during any await below. It releases what the fields hold and moves
+    // [_run] on; this run then releases whatever it acquired afterwards and
+    // sends nothing more.
+    bool cancelled() => _disposed || run != _run;
+    RTCPeerConnection? peer;
+    MediaStream? microphone;
+    RTCDataChannel? events;
+    Future<bool> abandon() async {
+      await _release(events, peer, microphone);
+      if (identical(_microphone, microphone)) _microphone = null;
+      return false;
     }
-    _closed = false;
-    _eventsDead = false;
-    final status = await refreshStatus();
-    if (status == null || !status.isLive || !status.available) return false;
+
     try {
-      final peer = await (peerConnectionFactory ?? _createPeer)();
+      // A previous session still waiting for the vendor's `session.closed`
+      // is finished first: one peer and one microphone at a time.
+      if (_peer != null ||
+          _microphone != null ||
+          _events != null ||
+          _finishing != null) {
+        await _finish('close_requested', null, false);
+        if (cancelled()) return false;
+      }
+      _closed = false;
+      _eventsDead = false;
+      final status = await refreshStatus();
+      if (cancelled()) return false;
+      if (status == null || !status.isLive || !status.available) return false;
+      peer = await (peerConnectionFactory ?? _createPeer)();
+      if (cancelled()) return abandon();
       _peer = peer;
       // A dropped transport ends the session (Desktop: `connection_lost`).
       peer.onConnectionState = (state) {
@@ -427,15 +452,18 @@ class GptLiveConversation extends ChangeNotifier
           unawaited(_finish('connection_lost'));
         }
       };
-      final microphone = await (microphoneFactory ?? _defaultGetUserMedia)();
+      // The OS permission prompt lives in this await on first use.
+      microphone = await (microphoneFactory ?? _defaultGetUserMedia)();
+      if (cancelled()) return abandon();
       _microphone = microphone;
       for (final track in microphone.getAudioTracks()) {
         await peer.addTrack(track, microphone);
+        if (cancelled()) return abandon();
       }
-      final events = await peer.createDataChannel(
-        'oai-events',
-        RTCDataChannelInit(),
-      );
+      // Register the data channel before the offer so its m-line is
+      // negotiated.
+      events = await peer.createDataChannel('oai-events', RTCDataChannelInit());
+      if (cancelled()) return abandon();
       _events = events;
       events.onMessage = (message) {
         if (identical(_events, events)) handleEvent(message.text);
@@ -453,27 +481,42 @@ class GptLiveConversation extends ChangeNotifier
         }
       };
       final offer = await peer.createOffer();
+      if (cancelled()) return abandon();
       await peer.setLocalDescription(offer);
-      await _waitForIce(peer, iceTimeout);
+      if (cancelled()) return abandon();
+      await _waitForIce(peer, iceTimeout, cancelled);
+      if (cancelled()) return abandon();
       final sdp = (await peer.getLocalDescription())?.sdp ?? '';
+      if (cancelled()) return abandon();
       if (sdp.trim().isEmpty) {
         throw StateError('Missing local SDP offer');
       }
+      // Never reached after teardown: no vendor session is created for a
+      // chat that is gone.
       final result = parseGptLiveSession(
         await transport.createSession(sdp: sdp, history: history),
       );
+      // Torn down while the POST was in flight: the answer is not applied
+      // and the vendor session ends with the peer released here.
+      if (cancelled()) return abandon();
       if (result == null) throw StateError('GPT-Live session creation failed');
       _sessionId = result.id;
       await peer.setRemoteDescription(
         RTCSessionDescription(result.sdp, 'answer'),
       );
+      if (cancelled()) return abandon();
       _active = true;
       _safeNotify();
       return true;
     } catch (error) {
+      // A call on a peer that teardown already closed fails; that is the
+      // teardown, not a start error.
+      if (cancelled()) return abandon();
       onError?.call('GPT-Live could not start: $error', true);
       await _finish('start_failed');
       return false;
+    } finally {
+      if (_startingRun == run) _startingRun = null;
     }
   }
 
@@ -489,9 +532,14 @@ class GptLiveConversation extends ChangeNotifier
         },
       });
 
-  Future<void> _waitForIce(RTCPeerConnection peer, Duration timeout) async {
+  Future<void> _waitForIce(
+    RTCPeerConnection peer,
+    Duration timeout,
+    bool Function() cancelled,
+  ) async {
     final deadline = DateTime.now().add(timeout);
-    while (peer.iceGatheringState !=
+    while (!cancelled() &&
+        peer.iceGatheringState !=
             RTCIceGatheringState.RTCIceGatheringStateComplete &&
         DateTime.now().isBefore(deadline)) {
       await Future<void>.delayed(const Duration(milliseconds: 100));
@@ -648,9 +696,13 @@ class GptLiveConversation extends ChangeNotifier
   /// leaves the device while the vendor answers.
   @override
   Future<void> close() async {
+    // A start in flight is cancelled, whatever it has acquired so far.
+    if (_startingRun != null) {
+      await _finish('close_requested');
+      return;
+    }
     if (_closed || _closeTimer != null) return;
-    // Not connected yet (start in flight) or no channel to say goodbye on:
-    // tear down now.
+    // No channel to say goodbye on: tear down now.
     if (!_active || !_send({'type': 'session.close'})) {
       await _finish('close_requested');
       return;
@@ -681,8 +733,18 @@ class GptLiveConversation extends ChangeNotifier
 
   /// Finalizes the session exactly once (Desktop's `finish`): stops the
   /// microphone tracks, closes the data channel and the peer, then reports
-  /// [reason].
-  Future<void> _finish(String reason, [int? usageSeconds]) {
+  /// [reason]. Every teardown also cancels a start in flight, even when
+  /// there is nothing left to release; only a start finishing its own
+  /// predecessor passes [cancelStart] false.
+  Future<void> _finish(
+    String reason, [
+    int? usageSeconds,
+    bool cancelStart = true,
+  ]) {
+    if (cancelStart) {
+      _run++;
+      _startingRun = null;
+    }
     if (_closed) return _finishing ?? Future<void>.value();
     _closed = true;
     _active = false;

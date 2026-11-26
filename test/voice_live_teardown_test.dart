@@ -2,6 +2,8 @@
 // when the session is lost, and that a chat which is hidden, covered or in
 // the background never keeps a live microphone (review probes G6, G8, U1,
 // U2, U3). The real VoiceLiveEngine runs over a fake LiveConversation.
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/services/auto_speak_replies.dart';
@@ -100,6 +102,81 @@ void main() {
       await settleLive(tester);
       expect(fixture.conversation.gracefulCloses, 1);
       expect(find.byType(SnackBar), findsNothing);
+      await unmountLive(tester);
+    });
+  });
+
+  group('app lifecycle', () {
+    // The OS microphone prompt on first use takes the app to `inactive`
+    // while getUserMedia is still pending. That must not end the session it
+    // is granting; only a real background (paused / hidden) does.
+    Future<void> lifecycle(WidgetTester tester, AppLifecycleState state) async {
+      tester.binding.handleAppLifecycleStateChanged(state);
+      await settleLive(tester);
+    }
+
+    Future<void> exercise(
+      WidgetTester tester,
+      HarnessConversation conversation,
+    ) async {
+      addTearDown(
+        () => tester.binding.handleAppLifecycleStateChanged(
+          AppLifecycleState.resumed,
+        ),
+      );
+      final prompt = Completer<void>();
+      conversation.startGate = prompt.future;
+      await startLiveFromComposer(tester);
+      expect(conversation.starts, 1);
+      expect(conversation.active, isFalse);
+
+      await lifecycle(tester, AppLifecycleState.inactive);
+      prompt.complete();
+      await settleLive(tester);
+      await lifecycle(tester, AppLifecycleState.resumed);
+
+      expect(conversation.ended, isFalse);
+      expect(conversation.active, isTrue);
+      expect(
+        find.byKey(const ValueKey('voice-live-inline-controls')),
+        findsOneWidget,
+      );
+
+      // A later `inactive` (notification shade, app switcher peek) keeps
+      // the conversation too.
+      await lifecycle(tester, AppLifecycleState.inactive);
+      await lifecycle(tester, AppLifecycleState.resumed);
+      expect(conversation.active, isTrue);
+
+      await lifecycle(tester, AppLifecycleState.inactive);
+      await lifecycle(tester, AppLifecycleState.hidden);
+      expect(conversation.active, isFalse);
+      expect(conversation.ended, isTrue);
+
+      await lifecycle(tester, AppLifecycleState.inactive);
+      await lifecycle(tester, AppLifecycleState.resumed);
+      expect(
+        find.byKey(const ValueKey('voice-live-inline-controls')),
+        findsNothing,
+      );
+      expect(find.byKey(const ValueKey('voice-live-start')), findsOneWidget);
+    }
+
+    testWidgets('Classic: inactive keeps a starting and a live session; '
+        'background ends it', (tester) async {
+      final fixture = ClassicLiveFixture();
+      await tester.pumpWidget(fixture.app());
+      await settleLive(tester);
+      await exercise(tester, fixture.conversation);
+      await unmountLive(tester);
+    });
+
+    testWidgets('NextGen: inactive keeps a starting and a live session; '
+        'background ends it', (tester) async {
+      final fixture = NextGenLiveFixture();
+      await tester.pumpWidget(await fixture.app());
+      await settleLive(tester);
+      await exercise(tester, fixture.conversation);
       await unmountLive(tester);
     });
   });
