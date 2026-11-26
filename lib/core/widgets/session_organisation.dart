@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
+
+import '../l10n/l10n.dart';
 import '../models/session.dart';
+import '../l10n/service_strings.dart';
 
 enum SessionSort {
-  recent('Recent activity'),
-  created('Newest created'),
-  status('Running first'),
-  tokens('Most tokens'),
-  cost('Highest cost');
+  recent,
+  created,
+  status,
+  tokens,
+  cost;
 
-  const SessionSort(this.label);
-  final String label;
+  String label(AppLocalizations l10n) => switch (this) {
+    recent => l10n.release_core_session_sort_recent,
+    created => l10n.release_core_session_sort_created,
+    status => l10n.release_core_session_sort_status,
+    tokens => l10n.release_core_session_sort_tokens,
+    cost => l10n.release_core_session_sort_cost,
+  };
   List<Session> apply(List<Session> rows) {
     if (this == recent) {
       return rows; // Keep the browser's native recent/rank order.
@@ -34,12 +42,15 @@ enum SessionSort {
 }
 
 enum SessionGroup {
-  standard('Default grouping'),
-  status('Group by status'),
-  project('Group by project');
+  standard,
+  status,
+  project;
 
-  const SessionGroup(this.label);
-  final String label;
+  String label(AppLocalizations l10n) => switch (this) {
+    standard => l10n.release_core_session_group_standard,
+    status => l10n.release_core_session_group_status,
+    project => l10n.release_core_session_group_project,
+  };
 }
 
 class SessionOrganisationMenu extends StatelessWidget {
@@ -63,7 +74,8 @@ class SessionOrganisationMenu extends StatelessWidget {
   final VoidCallback onDetails;
   @override
   Widget build(BuildContext context) => PopupMenuButton<Object>(
-    tooltip: 'Organise chats',
+    tooltip:
+        context.sharedL10n.release_core_session_organisation_organise_chats,
     icon: const Icon(Icons.tune),
     onSelected: (choice) {
       switch (choice) {
@@ -87,7 +99,7 @@ class SessionOrganisationMenu extends StatelessWidget {
                 SessionSort.cost => rows.any((r) => r.costUsd != null),
                 _ => true,
               },
-          child: Text(s.label),
+          child: Text(s.label(context.sharedL10n)),
         ),
       const PopupMenuDivider(),
       for (final g in SessionGroup.values)
@@ -95,21 +107,26 @@ class SessionOrganisationMenu extends StatelessWidget {
           CheckedPopupMenuItem(
             value: g,
             checked: group == g,
-            child: Text(g.label),
+            child: Text(g.label(context.sharedL10n)),
           ),
       const PopupMenuDivider(),
       CheckedPopupMenuItem(
         value: 'details',
         checked: details,
-        child: const Text('Show model and usage'),
+        child: Text(
+          context
+              .sharedL10n
+              .release_core_session_organisation_show_model_and_usage,
+        ),
       ),
     ],
   );
 }
 
-String sessionDetails(Session row) => [
+String sessionDetails(Session row, [AppLocalizations? strings]) => [
   if (row.model.isNotEmpty) row.model,
-  if (row.totalTokens case final n?) '$n tokens',
+  if (row.totalTokens case final n?)
+    (strings ?? serviceStrings).release_core_session_tokens(n),
   if (row.costUsd case final c?) '\$${c.toStringAsFixed(4)}',
 ].join(' · ');
 Map<String, List<Session>> labelledGroups(
