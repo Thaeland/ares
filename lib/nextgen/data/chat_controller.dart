@@ -3498,6 +3498,15 @@ class NgChatController extends ChangeNotifier {
         await Future<void>.delayed(const Duration(milliseconds: 100));
       }
       if (_disposed || running) return false;
+    } else {
+      // Best-effort interrupt before the rewind, matching Classic and Desktop's
+      // runRewindSubmit when a detached/remote turn may still be running.
+      try {
+        await gateway.call('session.interrupt', {'session_id': runtime});
+      } catch (_) {
+        // The submit path still gates on the gateway's own busy state.
+      }
+      if (_disposed) return false;
     }
     return send(
       text,

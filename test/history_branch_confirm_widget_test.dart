@@ -15,6 +15,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hermes_android/core/models/projects_tree_overview.dart';
 import 'package:hermes_android/core/screens/chat_screen.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
 import 'package:hermes_android/core/services/desktop_gateway_client.dart';
@@ -46,40 +47,35 @@ const _runtimeId = 'rt-confirm';
 
 /// Two user turns + two replies so editing the first archives the second.
 List<Map<String, dynamic>> _historyRows() => [
-      {'id': 7, 'role': 'user', 'content': 'Keep this'},
-      {'id': 8, 'role': 'assistant', 'content': 'Noted'},
-      {'id': 9, 'role': 'user', 'content': 'Another question'},
-      {'id': 10, 'role': 'assistant', 'content': 'Another answer'},
-    ];
+  {'id': 7, 'role': 'user', 'content': 'Keep this'},
+  {'id': 8, 'role': 'assistant', 'content': 'Noted', 'finish_reason': 'stop'},
+  {'id': 9, 'role': 'user', 'content': 'Another question'},
+  {
+    'id': 10,
+    'role': 'assistant',
+    'content': 'Another answer',
+    'finish_reason': 'stop',
+  },
+];
 
 List<Map<String, dynamic>> _historyRowsNextGen() => [
-      {
-        'id': 7,
-        'role': 'user',
-        'content': 'Keep this',
-        'timestamp': 1000.0,
-      },
-      {'id': 8, 'role': 'assistant', 'content': 'Noted', 'timestamp': 1001.0},
-      {
-        'id': 9,
-        'role': 'user',
-        'content': 'Another question',
-        'timestamp': 1002.0,
-      },
-      {
-        'id': 10,
-        'role': 'assistant',
-        'content': 'Another answer',
-        'timestamp': 1003.0,
-      },
-    ];
+  {'id': 7, 'role': 'user', 'content': 'Keep this', 'timestamp': 1000.0},
+  {'id': 8, 'role': 'assistant', 'content': 'Noted', 'timestamp': 1001.0},
+  {'id': 9, 'role': 'user', 'content': 'Another question', 'timestamp': 1002.0},
+  {
+    'id': 10,
+    'role': 'assistant',
+    'content': 'Another answer',
+    'timestamp': 1003.0,
+  },
+];
 
 List<Map<String, dynamic>> _historyRpcRows() => [
-      {'row_id': 7, 'role': 'user', 'text': 'Keep this'},
-      {'row_id': 8, 'role': 'assistant', 'text': 'Noted'},
-      {'row_id': 9, 'role': 'user', 'text': 'Another question'},
-      {'row_id': 10, 'role': 'assistant', 'text': 'Another answer'},
-    ];
+  {'row_id': 7, 'role': 'user', 'text': 'Keep this'},
+  {'row_id': 8, 'role': 'assistant', 'text': 'Noted'},
+  {'row_id': 9, 'role': 'user', 'text': 'Another question'},
+  {'row_id': 10, 'role': 'assistant', 'text': 'Another answer'},
+];
 
 /// Mirrors DesktopGatewayClient for the Classic path: records every wire
 /// call so the probe can assert the exact submit payload and the interrupt.
@@ -92,6 +88,7 @@ class _RecordingDesktopClient implements DesktopGatewayClient {
   final List<Map<String, dynamic>> submits = [];
   final List<Map<String, dynamic>> interrupts = [];
   final List<({String method, Map<String, dynamic> params})> rpcCalls = [];
+  DesktopAsyncEventCallback? _sessionEvents;
 
   @override
   bool get sessionAuthority => true;
@@ -106,7 +103,9 @@ class _RecordingDesktopClient implements DesktopGatewayClient {
   }) {}
 
   @override
-  void setSessionEventListener(DesktopAsyncEventCallback? listener) {}
+  void setSessionEventListener(DesktopAsyncEventCallback? listener) {
+    _sessionEvents = listener;
+  }
 
   @override
   void setAsyncEventListener(
@@ -172,7 +171,20 @@ class _RecordingDesktopClient implements DesktopGatewayClient {
       'text': text,
       'extraParams': Map<String, Object?>.of(extraParams),
     });
-    onEvent(StreamEvent(type: 'prompt.submit', data: const {}));
+    onSent();
+    onAccepted?.call();
+    _sessionEvents?.call(
+      sessionId,
+      StreamEvent(type: 'message.start', data: const {}),
+    );
+    _sessionEvents?.call(
+      sessionId,
+      StreamEvent(type: 'message.delta', data: const {'text': 'Edited reply'}),
+    );
+    _sessionEvents?.call(
+      sessionId,
+      StreamEvent(type: 'turn.end', data: const {}),
+    );
   }
 
   @override
@@ -186,8 +198,8 @@ class _RecordingDesktopClient implements DesktopGatewayClient {
 
   @override
   dynamic noSuchMethod(Invocation invocation) => throw UnsupportedError(
-        'Unexpected DesktopGatewayClient.${invocation.memberName}',
-      );
+    'Unexpected DesktopGatewayClient.${invocation.memberName}',
+  );
 }
 
 class _OwnerController extends GatewayTurnApplicationController {
@@ -203,8 +215,7 @@ class _OwnerController extends GatewayTurnApplicationController {
     NormalGatewayResume? resume,
     NormalGatewayHistory? history,
     TurnNotificationService? notifications,
-  }) =>
-      normal;
+  }) => normal;
 
   @override
   Future<void> close() async {
@@ -219,8 +230,8 @@ class _NextGenBranchGateway extends NextGenGateway {
     RemoteWorkspaceOwner owner,
     SavedConnection connection,
     DashboardClient dashboard,
-  )   : _owner = owner,
-        super(connection, dashboard: dashboard) {
+  ) : _owner = owner,
+      super(connection, dashboard: dashboard) {
     _socket = WsClient(connection.desktopGatewayUrl!);
   }
 
@@ -242,8 +253,7 @@ class _NextGenBranchGateway extends NextGenGateway {
   @override
   Future<WsClient> connected({
     Duration timeout = const Duration(seconds: 20),
-  }) async =>
-      _socket;
+  }) async => _socket;
 
   @override
   Future<Map<String, dynamic>> call(
@@ -274,7 +284,10 @@ Future<void> _settle(WidgetTester tester, [int rounds = 30]) async {
 }
 
 Future<void> _typeEditedProbe(WidgetTester tester) async {
-  await tester.enterText(find.byKey(const Key('edit-turn-field')), 'Edited probe');
+  await tester.enterText(
+    find.byKey(const Key('edit-turn-field')),
+    'Edited probe',
+  );
   await _settle(tester);
 }
 
@@ -282,71 +295,72 @@ Widget _classicApp({
   required FakeHistoryBackend backend,
   required _RecordingDesktopClient client,
   required _OwnerController controller,
-}) =>
-    MaterialApp(
-      theme: hermesTheme(Brightness.light),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: ChatScreen(
-        connection: backend.connection,
-        session: Session(
-          id: _classicId,
-          title: 'Branch probe',
-          model: 'fixture',
-          source: 'desktop',
-          messageCount: 2,
-          isActive: true,
-          preview: '',
-          startedAt: 1,
-          isLocalDraft: false,
-        ),
-        turnApplicationController: controller,
-        testApiClient: ApiClient(
-          baseUrl: backend.dashboard.baseUrl,
-          apiKey: '',
-          httpClient: MockClient((req) async {
-            if (req.url.path.contains('/messages')) {
-              return http.Response(
-                jsonEncode({'data': _historyRows()}),
-                200,
-                headers: {'content-type': 'application/json'},
-              );
-            }
-            return http.Response('{}', 200);
+}) => MaterialApp(
+  theme: hermesTheme(Brightness.light),
+  localizationsDelegates: AppLocalizations.localizationsDelegates,
+  supportedLocales: AppLocalizations.supportedLocales,
+  home: ChatScreen(
+    connection: backend.connection,
+    session: Session(
+      id: _classicId,
+      title: 'Branch probe',
+      model: 'fixture',
+      source: 'desktop',
+      messageCount: 2,
+      isActive: true,
+      preview: '',
+      startedAt: 1,
+      isLocalDraft: false,
+    ),
+    turnApplicationController: controller,
+    testProjectOverviewLoader: () async => ProjectsTreeOverview.empty,
+    testApiClient: ApiClient(
+      baseUrl: backend.dashboard.baseUrl,
+      apiKey: '',
+      httpClient: MockClient((req) async {
+        if (req.url.path.contains('/messages')) {
+          return http.Response(
+            jsonEncode({'data': _historyRows()}),
+            200,
+            headers: {'content-type': 'application/json'},
+          );
+        }
+        return http.Response(
+          jsonEncode({
+            'session': {'id': _classicId, 'archived': false},
           }),
-        ),
-        testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
-      ),
-    );
+          200,
+          headers: {'content-type': 'application/json'},
+        );
+      }),
+    ),
+    testVoiceComposerAdapter: FakeVoiceComposerAdapter(),
+  ),
+);
 
 Widget _nextGenApp({
   required _NextGenBranchGateway gateway,
   required NgChatController chat,
   required ConnectionManager connManager,
-}) =>
-    MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      theme: nextGenTheme(Brightness.dark, NextGenLook.instance),
-      home: NgScope(
-        connManager: connManager,
-        gateway: gateway,
-        connections: [gateway.connection],
-        switchTo: (_) async {},
-        addGateway: () async {},
-        signOut: (_) async {},
-        reload: () async {},
-        signInAgain: () async {},
-        child: NgChatView(
-          chat: chat,
-          onOpenSidebar: () {},
-          onNewChat: () {},
-        ),
-      ),
-    );
+}) => MaterialApp(
+  localizationsDelegates: AppLocalizations.localizationsDelegates,
+  supportedLocales: AppLocalizations.supportedLocales,
+  theme: nextGenTheme(Brightness.dark, NextGenLook.instance),
+  home: NgScope(
+    connManager: connManager,
+    gateway: gateway,
+    connections: [gateway.connection],
+    switchTo: (_) async {},
+    addGateway: () async {},
+    signOut: (_) async {},
+    reload: () async {},
+    signInAgain: () async {},
+    child: NgChatView(chat: chat, onOpenSidebar: () {}, onNewChat: () {}),
+  ),
+);
 
 Future<void> _openClassicEditFlow(WidgetTester tester) async {
-  await tester.longPress(find.text('Keep this'));
+  await tester.longPress(find.text('Keep this', findRichText: true));
   await _settle(tester);
   await tester.tap(find.text('Edit and resend'));
   await _settle(tester);
@@ -356,7 +370,9 @@ Future<void> _openClassicEditFlow(WidgetTester tester) async {
 }
 
 Future<void> _openNextGenEditFlow(WidgetTester tester) async {
-  await tester.tap(find.byKey(const Key('ng-user-edit')).first);
+  // NextGen's chat ListView uses reverse: true, so the earliest stored user
+  // turn ('Keep this') is the last 'ng-user-edit' button in widget order.
+  await tester.tap(find.byKey(const Key('ng-user-edit')).last);
   await _settle(tester);
   await _typeEditedProbe(tester);
   await tester.tap(find.byKey(const Key('edit-turn-send')));
@@ -389,21 +405,20 @@ void main() {
       client: client,
       resume: ({required localSessionId, required storedSessionId}) async =>
           const ResumedGatewaySession(runtimeSessionId: _runtimeId),
-      history: (_) async => _historyRpcRows(),
+      history: (_) async => _historyRows(),
     );
     final controller = _OwnerController(normal);
     addTearDown(controller.close);
+    await normal.ready;
 
-    await tester.pumpWidget(_classicApp(
-      backend: backend,
-      client: client,
-      controller: controller,
-    ));
+    await tester.pumpWidget(
+      _classicApp(backend: backend, client: client, controller: controller),
+    );
     await _settle(tester);
 
     // Rows render.
-    expect(find.text('Noted'), findsOneWidget);
-    expect(find.text('Another question'), findsOneWidget);
+    expect(find.text('Noted', findRichText: true), findsOneWidget);
+    expect(find.text('Another question', findRichText: true), findsOneWidget);
 
     // Edit the FIRST user turn: later user turns would be archived.
     await _openClassicEditFlow(tester);
@@ -445,6 +460,8 @@ void main() {
     expect(params['confirm_deep_truncate'], isTrue);
 
     await tester.pumpWidget(const SizedBox.shrink());
+    await controller.close();
+    await tester.pump();
   });
 
   testWidgets('NextGen: edit confirm appears on later turns; cancel sends '
@@ -470,7 +487,9 @@ void main() {
     );
     final chat = NgChatController(gateway, sessionId: _storedId)
       ..runtimeId = _runtimeId;
-    final connManager = ConnectionManager((await SharedPreferences.getInstance()));
+    final connManager = ConnectionManager(
+      (await SharedPreferences.getInstance()),
+    );
     addTearDown(() {
       chat.dispose();
       gateway.dispose();
@@ -502,6 +521,10 @@ void main() {
       isEmpty,
       reason: 'cancel must send nothing',
     );
+    expect(
+      gateway.calls.where((c) => c.method == 'session.interrupt'),
+      isEmpty,
+    );
 
     // Edit again and confirm this time.
     await _openNextGenEditFlow(tester);
@@ -509,8 +532,14 @@ void main() {
     await _settle(tester);
 
     expect(find.byKey(const Key('restore-turn-confirm')), findsNothing);
-    final submits =
-        gateway.calls.where((c) => c.method == 'prompt.submit').toList();
+    expect(
+      gateway.calls.where((c) => c.method == 'session.interrupt'),
+      hasLength(1),
+      reason: 'the live turn must be interrupted before the truncation',
+    );
+    final submits = gateway.calls
+        .where((c) => c.method == 'prompt.submit')
+        .toList();
     expect(
       submits,
       hasLength(1),
@@ -540,18 +569,17 @@ void main() {
       client: client,
       resume: ({required localSessionId, required storedSessionId}) async =>
           const ResumedGatewaySession(runtimeSessionId: _runtimeId),
-      history: (_) async => _historyRpcRows(),
+      history: (_) async => _historyRows(),
     );
     final controller = _OwnerController(normal);
     addTearDown(controller.close);
 
-    await tester.pumpWidget(_classicApp(
-      backend: backend,
-      client: client,
-      controller: controller,
-    ));
+    await tester.pumpWidget(
+      _classicApp(backend: backend, client: client, controller: controller),
+    );
     await _settle(tester);
 
+    expect(find.byKey(const ValueKey('session-history')), findsNothing);
     expect(find.byKey(const ValueKey('chat-tools-menu')), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('chat-tools-menu')));
     await _settle(tester);
@@ -564,7 +592,30 @@ void main() {
       reason: 'the history page must open from the narrow-pane menu',
     );
 
+    // Select saved row 7: Cancel sends no branch mutation; Continue sends one.
+    await tester.tap(find.byKey(const ValueKey('history-message-7')));
+    await _settle(tester);
+    await tester.tap(find.byKey(const ValueKey('history-branch')));
+    await _settle(tester);
+    expect(find.byKey(const ValueKey('history-confirm')), findsOneWidget);
+    await tester.tap(find.text('Cancel'));
+    await _settle(tester);
+    expect(backend.mutations, isEmpty);
+
+    await tester.tap(find.byKey(const ValueKey('history-branch')));
+    await _settle(tester);
+    await tester.tap(find.byKey(const ValueKey('history-confirm')));
+    await _settle(tester);
+    expect(backend.mutations, hasLength(1));
+    expect(backend.mutations.single['operation'], 'branch');
+    expect(
+      (backend.mutations.single['payload'] as Map)['through_message_id'],
+      7,
+    );
+
     await tester.pumpWidget(const SizedBox.shrink());
+    await controller.close();
+    await tester.pump();
   });
 
   testWidgets('NextGen: narrow pane (<480 px) keeps history in More chat '
@@ -594,8 +645,9 @@ void main() {
     );
     final chat = NgChatController(gateway, sessionId: _storedId)
       ..runtimeId = _runtimeId;
-    final connManager =
-        ConnectionManager(await SharedPreferences.getInstance());
+    final connManager = ConnectionManager(
+      await SharedPreferences.getInstance(),
+    );
     addTearDown(() {
       chat.dispose();
       gateway.dispose();
@@ -607,6 +659,7 @@ void main() {
     await chat.open();
     await _settle(tester);
 
+    expect(find.byKey(const ValueKey('session-history')), findsNothing);
     expect(find.byKey(const ValueKey('chat-tools-menu')), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('chat-tools-menu')));
     await _settle(tester);
@@ -617,6 +670,27 @@ void main() {
       find.byKey(const ValueKey('history-refresh')),
       findsOneWidget,
       reason: 'the history page must open from the narrow-pane menu',
+    );
+
+    // Select saved row 7: Cancel sends no branch mutation; Continue sends one.
+    await tester.tap(find.byKey(const ValueKey('history-message-7')));
+    await _settle(tester);
+    await tester.tap(find.byKey(const ValueKey('history-branch')));
+    await _settle(tester);
+    expect(find.byKey(const ValueKey('history-confirm')), findsOneWidget);
+    await tester.tap(find.text('Cancel'));
+    await _settle(tester);
+    expect(backend.mutations, isEmpty);
+
+    await tester.tap(find.byKey(const ValueKey('history-branch')));
+    await _settle(tester);
+    await tester.tap(find.byKey(const ValueKey('history-confirm')));
+    await _settle(tester);
+    expect(backend.mutations, hasLength(1));
+    expect(backend.mutations.single['operation'], 'branch');
+    expect(
+      (backend.mutations.single['payload'] as Map)['through_message_id'],
+      7,
     );
 
     await tester.pumpWidget(const SizedBox.shrink());

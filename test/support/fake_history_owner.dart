@@ -98,11 +98,13 @@ class FakeHistoryBackend {
         200,
       );
     }
-    if (path == '/api/sessions/$session/mutation-snapshot' &&
+    if (path.startsWith('/api/sessions/') &&
+        path.endsWith('/mutation-snapshot') &&
         query['profile'] == profile) {
+      final seg = path.split('/')[3];
       return http.Response(
         jsonEncode({
-          'session_id': session,
+          'session_id': seg,
           'exists': true,
           'runtime_revision': revision,
           'runtime_generation': generation,

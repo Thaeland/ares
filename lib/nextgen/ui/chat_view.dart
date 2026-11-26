@@ -1867,7 +1867,6 @@ class _NgChatViewState extends State<NgChatView>
   }
 
   Future<void> _editTurn(NgUserItem item) async {
-    if (chat.running) return;
     final edited = await showDialog<String>(
       context: context,
       builder: (_) => EditTurnDialog(initialText: item.text),
@@ -1887,7 +1886,6 @@ class _NgChatViewState extends State<NgChatView>
   }
 
   Future<void> _restoreTurn(NgUserItem item) async {
-    if (chat.running) return;
     if (!await showRestoreTurnConfirm(context)) return;
     if (!mounted) return;
     final position = _turnPosition(item);
@@ -2850,23 +2848,27 @@ class _UserBubble extends StatelessWidget {
               ),
             MessageReaction(messageId: item.key),
             if (onEdit != null || onRestore != null)
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (onEdit != null)
-                    TextButton(
-                      key: const Key('ng-user-edit'),
-                      onPressed: onEdit,
-                      child: Text(context.l10n.edit_and_resend),
-                    ),
-                  if (onRestore != null)
-                    TextButton(
-                      key: const Key('ng-user-restore'),
-                      onPressed: onRestore,
-                      child: Text(context.l10n.restore_turn_confirm),
-                    ),
-                  const SizedBox(width: 12),
-                ],
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: Wrap(
+                  alignment: WrapAlignment.end,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 4,
+                  children: [
+                    if (onEdit != null)
+                      TextButton(
+                        key: const Key('ng-user-edit'),
+                        onPressed: onEdit,
+                        child: Text(context.l10n.edit_and_resend),
+                      ),
+                    if (onRestore != null)
+                      TextButton(
+                        key: const Key('ng-user-restore'),
+                        onPressed: onRestore,
+                        child: Text(context.l10n.restore_turn_confirm),
+                      ),
+                  ],
+                ),
               ),
             if (item.failure != null)
               Padding(
