@@ -2825,12 +2825,30 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
   Future<void> _decomposeTask() async {
     try {
       final target = await widget.boundTarget();
-      final count = await target.kanbanDecomposeTask(
+      final outcome = await target.kanbanDecomposeTask(
         taskId: widget.taskId,
         board: widget.board,
       );
       if (!mounted || !target.isCurrent) return;
-      _msg('Decomposed task ($count child task(s))');
+      if (!outcome.ok) {
+        // A refusal is a 200 with ok:false: show its reason, change nothing.
+        final text = outcome.reason == null
+            ? 'Decompose failed.'
+            : 'Decompose failed: ${outcome.reason}';
+        setState(() => _error = text);
+        _msg(text);
+        return;
+      }
+      final count = outcome.childIds.length;
+      _msg(
+        outcome.fanout && count > 0
+            ? (count == 1
+                  ? 'Decomposed into 1 child task'
+                  : 'Decomposed into $count child tasks')
+            : (outcome.reason == null
+                  ? 'No child tasks were created.'
+                  : 'No child tasks were created: ${outcome.reason}'),
+      );
       await widget.onChanged();
       await _loadAll(silent: true);
     } catch (e) {
@@ -2949,6 +2967,7 @@ class _KanbanTaskDetailSheetState extends State<_KanbanTaskDetailSheet> {
                       ),
                       child: Text(
                         _error!,
+                        key: const Key('kanban-detail-error'),
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.error,
                         ),

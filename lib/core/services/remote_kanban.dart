@@ -689,6 +689,42 @@ class KanbanDispatchReceipt {
   );
 }
 
+/// The reply of `POST /tasks/{id}/decompose` (plugins/kanban/dashboard/
+/// plugin_api.py): a refusal is `ok: false` with a [reason], never an HTTP
+/// error, and a task the decomposer keeps whole is `ok` without [fanout].
+class KanbanDecomposeOutcome {
+  const KanbanDecomposeOutcome({
+    required this.ok,
+    required this.fanout,
+    required this.childIds,
+    this.reason,
+    this.newTitle,
+  });
+
+  final bool ok;
+  final bool fanout;
+  final List<String> childIds;
+  final String? reason;
+  final String? newTitle;
+
+  factory KanbanDecomposeOutcome.fromJson(Map<String, dynamic> raw) {
+    final ids = raw['child_ids'];
+    String? text(Object? value) =>
+        value is String && value.trim().isNotEmpty ? value.trim() : null;
+    return KanbanDecomposeOutcome(
+      ok: raw['ok'] == true,
+      fanout: raw['fanout'] == true,
+      childIds: List.unmodifiable([
+        if (ids is List)
+          for (final id in ids)
+            if (id is String && id.isNotEmpty) id,
+      ]),
+      reason: text(raw['reason']),
+      newTitle: text(raw['new_title']),
+    );
+  }
+}
+
 class KanbanBulkResult {
   const KanbanBulkResult({required this.id, required this.ok, this.error});
   final String id;
@@ -1192,18 +1228,17 @@ extension WorkspaceKanban on WorkspaceTarget {
     return KanbanTaskEstimate.fromJson(raw);
   }
 
-  Future<int> kanbanDecomposeTask({
+  Future<KanbanDecomposeOutcome> kanbanDecomposeTask({
     required String taskId,
     String? board,
   }) async {
     final raw = await _kanbanMap(
       KanbanTaskDecompose(taskId: taskId, board: board),
     );
-    _scheduleKanbanDispatchNudge(board);
-    final created = raw['children'] ?? raw['created'] ?? raw['tasks'];
-    return created is List
-        ? created.length
-        : (raw['count'] as num?)?.toInt() ?? 0;
+    final outcome = KanbanDecomposeOutcome.fromJson(raw);
+    // Nothing changed on a refusal, so there is nothing to dispatch.
+    if (outcome.ok) _scheduleKanbanDispatchNudge(board);
+    return outcome;
   }
 
   Future<bool> kanbanAddLink({
