@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:hermes_android/core/services/gpt_live_conversation.dart';
@@ -91,7 +89,12 @@ class _FakeTransport implements GptLiveTransport {
   final GptLiveStatus? seededStatus;
 
   @override
-  Future<Object?> status() async => {'ok': true, 'mode': seededStatus?.isLive == true ? 'gpt-live' : 'chained', 'available': seededStatus?.available ?? false, 'reason': seededStatus?.reason};
+  Future<Object?> status() async => {
+    'ok': true,
+    'mode': seededStatus?.isLive == true ? 'gpt-live' : 'chained',
+    'available': seededStatus?.available ?? false,
+    'reason': seededStatus?.reason,
+  };
 
   @override
   Future<Object?> createSession({
@@ -102,43 +105,76 @@ class _FakeTransport implements GptLiveTransport {
     'session': {'id': 'test-session', 'sdp': 'answer'},
     'transport': {'sdp': 'answer'},
   };
+
+  @override
+  void dispose() {}
 }
 
 void main() {
-  test('status comes from the gateway and reasons through the engine', () async {
-    final transport = _FakeTransport(
-      seededStatus: const GptLiveStatus(mode: 'gpt-live', available: true, reason: null, model: 'gpt-live-1', voice: 'marin'),
-    );
-    final engine = VoiceLiveEngine(transport: transport, session: _FakeConversation());
-    addTearDown(engine.dispose);
+  test(
+    'status comes from the gateway and reasons through the engine',
+    () async {
+      final transport = _FakeTransport(
+        seededStatus: const GptLiveStatus(
+          mode: 'gpt-live',
+          available: true,
+          reason: null,
+          model: 'gpt-live-1',
+          voice: 'marin',
+        ),
+      );
+      final engine = VoiceLiveEngine(
+        transport: transport,
+        session: _FakeConversation(),
+      );
+      addTearDown(engine.dispose);
 
-    final status = await engine.refresh();
-    expect(status, isNotNull);
-    expect(engine.startable, isTrue);
-    expect(engine.isLive, isTrue);
-  });
+      final status = await engine.refresh();
+      expect(status, isNotNull);
+      expect(engine.startable, isTrue);
+      expect(engine.isLive, isTrue);
+    },
+  );
 
-  test('start refuses when the host is chained or unavailable and never starts the conversation', () async {
-    final transport = _FakeTransport(
-      seededStatus: const GptLiveStatus(mode: 'chained', available: false, reason: 'Live is not configured for this profile.', model: 'chained', voice: 'default'),
-    );
-    final conversation = _FakeConversation();
-    final engine = VoiceLiveEngine(transport: transport, session: conversation);
-    addTearDown(engine.dispose);
+  test(
+    'start refuses when the host is chained or unavailable and never starts the conversation',
+    () async {
+      final transport = _FakeTransport(
+        seededStatus: const GptLiveStatus(
+          mode: 'chained',
+          available: false,
+          reason: 'Live is not configured for this profile.',
+          model: 'chained',
+          voice: 'default',
+        ),
+      );
+      final conversation = _FakeConversation();
+      final engine = VoiceLiveEngine(
+        transport: transport,
+        session: conversation,
+      );
+      addTearDown(engine.dispose);
 
-    String? errorMessage;
-    engine.onError = (message) => errorMessage = message;
+      String? errorMessage;
+      engine.onError = (message) => errorMessage = message;
 
-    expect(await engine.start(), isFalse);
-    expect(conversation.startCalls, 0);
-    expect(engine.state, VoiceLiveState.idle);
-    expect(errorMessage, isNotNull);
-    expect(engine.reason, contains('not configured'));
-  });
+      expect(await engine.start(), isFalse);
+      expect(conversation.startCalls, 0);
+      expect(engine.state, VoiceLiveState.idle);
+      expect(errorMessage, isNotNull);
+      expect(engine.reason, contains('not configured'));
+    },
+  );
 
   test('start runs the live conversation and reports listening', () async {
     final transport = _FakeTransport(
-      seededStatus: const GptLiveStatus(mode: 'gpt-live', available: true, reason: null, model: 'gpt-live-1', voice: 'marin'),
+      seededStatus: const GptLiveStatus(
+        mode: 'gpt-live',
+        available: true,
+        reason: null,
+        model: 'gpt-live-1',
+        voice: 'marin',
+      ),
     );
     final conversation = _FakeConversation();
     final engine = VoiceLiveEngine(transport: transport, session: conversation);
@@ -150,36 +186,55 @@ void main() {
     expect(engine.active, isTrue);
   });
 
-  test('delegation routes prompt to the composer exactly once and drops late events', () async {
-    final transport = _FakeTransport(
-      seededStatus: const GptLiveStatus(mode: 'gpt-live', available: true, reason: null, model: 'gpt-live-1', voice: 'marin'),
-    );
-    final conversation = _FakeConversation();
-    final engine = VoiceLiveEngine(transport: transport, session: conversation);
-    addTearDown(engine.dispose);
+  test(
+    'delegation routes prompt to the composer exactly once and drops late events',
+    () async {
+      final transport = _FakeTransport(
+        seededStatus: const GptLiveStatus(
+          mode: 'gpt-live',
+          available: true,
+          reason: null,
+          model: 'gpt-live-1',
+          voice: 'marin',
+        ),
+      );
+      final conversation = _FakeConversation();
+      final engine = VoiceLiveEngine(
+        transport: transport,
+        session: conversation,
+      );
+      addTearDown(engine.dispose);
 
-    expect(await engine.start(), isTrue);
+      expect(await engine.start(), isTrue);
 
-    final delivered = <Map<String, String>>[];
-    engine.onDelegation = (id, prompt) => delivered.add({'prompt': prompt['prompt']!});
+      final delivered = <Map<String, String>>[];
+      engine.onDelegation = (id, prompt) =>
+          delivered.add({'prompt': prompt['prompt']!});
 
-    conversation.fireDelegation('d-1', 'What is on the agenda?');
-    expect(delivered.single['prompt'], 'What is on the agenda?');
-    expect(engine.state, VoiceLiveState.thinking);
+      conversation.fireDelegation('d-1', 'What is on the agenda?');
+      expect(delivered.single['prompt'], 'What is on the agenda?');
+      expect(engine.state, VoiceLiveState.thinking);
 
-    await engine.stop();
-    expect(conversation.closed, isTrue);
-    expect(engine.state, VoiceLiveState.idle);
-    expect(engine.active, isFalse);
+      await engine.stop();
+      expect(conversation.closed, isTrue);
+      expect(engine.state, VoiceLiveState.idle);
+      expect(engine.active, isFalse);
 
-    // A late vendor event after teardown must not land in the composer.
-    conversation.fireDelegation('d-2', 'late');
-    expect(delivered.length, 1);
-  });
+      // A late vendor event after teardown must not land in the composer.
+      conversation.fireDelegation('d-2', 'late');
+      expect(delivered.length, 1);
+    },
+  );
 
   test('speaking runs the reply feed and the engine tracks state', () async {
     final transport = _FakeTransport(
-      seededStatus: const GptLiveStatus(mode: 'gpt-live', available: true, reason: null, model: 'gpt-live-1', voice: 'marin'),
+      seededStatus: const GptLiveStatus(
+        mode: 'gpt-live',
+        available: true,
+        reason: null,
+        model: 'gpt-live-1',
+        voice: 'marin',
+      ),
     );
     final conversation = _FakeConversation();
     final engine = VoiceLiveEngine(transport: transport, session: conversation);
@@ -189,12 +244,16 @@ void main() {
     engine.onDelegation = (id, prompt) {};
 
     conversation.fireDelegation('d-1', 'what do you think');
-    engine.speak('Here are the three things to do this week. Start with the groceries tomorrow.');
+    engine.speak(
+      'Here are the three things to do this week. Start with the groceries tomorrow.',
+    );
     expect(conversation.lastSpeakText, isNotNull);
     expect(engine.state, VoiceLiveState.speaking);
     // A second call with the same text sends nothing new.
     final first = conversation.lastSpeakText;
-    engine.speak('Here are the three things to do this week. Start with the groceries tomorrow.');
+    engine.speak(
+      'Here are the three things to do this week. Start with the groceries tomorrow.',
+    );
     expect(conversation.lastSpeakText, first);
 
     // Settling flushes the remainder.
@@ -217,7 +276,13 @@ void main() {
 
   test('mute round-trips through the engine', () async {
     final transport = _FakeTransport(
-      seededStatus: const GptLiveStatus(mode: 'gpt-live', available: true, reason: null, model: 'gpt-live-1', voice: 'marin'),
+      seededStatus: const GptLiveStatus(
+        mode: 'gpt-live',
+        available: true,
+        reason: null,
+        model: 'gpt-live-1',
+        voice: 'marin',
+      ),
     );
     final conversation = _FakeConversation();
     final engine = VoiceLiveEngine(transport: transport, session: conversation);
@@ -235,7 +300,13 @@ void main() {
 
   test('instruct forwards the text', () async {
     final transport = _FakeTransport(
-      seededStatus: const GptLiveStatus(mode: 'gpt-live', available: true, reason: null, model: 'gpt-live-1', voice: 'marin'),
+      seededStatus: const GptLiveStatus(
+        mode: 'gpt-live',
+        available: true,
+        reason: null,
+        model: 'gpt-live-1',
+        voice: 'marin',
+      ),
     );
     final conversation = _FakeConversation();
     final engine = VoiceLiveEngine(transport: transport, session: conversation);
@@ -244,13 +315,21 @@ void main() {
     expect(await engine.start(), isTrue);
     engine.instruct('Finish and respond now.');
     expect(conversation.sentInstructions, ['Finish and respond now.']);
-    engine.instruct('Finish and respond now.'); // no-op after active session ends
+    engine.instruct(
+      'Finish and respond now.',
+    ); // no-op after active session ends
     expect(conversation.sentInstructions.length, 2);
   });
 
   test('error callback refuses to fire after teardown', () async {
     final transport = _FakeTransport(
-      seededStatus: const GptLiveStatus(mode: 'gpt-live', available: true, reason: null, model: 'gpt-live-1', voice: 'marin'),
+      seededStatus: const GptLiveStatus(
+        mode: 'gpt-live',
+        available: true,
+        reason: null,
+        model: 'gpt-live-1',
+        voice: 'marin',
+      ),
     );
     final conversation = _FakeConversation();
     final engine = VoiceLiveEngine(transport: transport, session: conversation);

@@ -23,7 +23,9 @@ final RegExp _punctuatedParagraphBreakRe = RegExp(
   '([.!?])([*_~`>"\'’”)}\\]]*)[ \\t]*\\n{2,}[ \\t]*',
 );
 final RegExp _softBreakRe = RegExp(r'[ \t]*\n[ \t]*');
-final RegExp _mediaPathRe = RegExp(r'[ \t]*MEDIA:\S+?(?=[.,;:!?)\]]*(?:\s|\$))');
+final RegExp _mediaPathRe = RegExp(
+  r'[ \t]*MEDIA:\S+?(?=[.,;:!?)\]]*(?:\s|\$))',
+);
 final RegExp _lineFinalColonRe = RegExp(r':\s*$', multiLine: true);
 
 final RegExp _thinkingPrefixRe = RegExp(
@@ -85,8 +87,7 @@ String _pruneIdentifierTokens(String text) {
       );
 }
 
-final RegExp _markdownTableDelimiterCellRe =
-    RegExp(r'^:?-{3,}:?$');
+final RegExp _markdownTableDelimiterCellRe = RegExp(r'^:?-{3,}:?$');
 
 bool _isUnescapedPipe(String row, int index) {
   var backslashes = 0;
@@ -150,7 +151,8 @@ _MarkdownTableRow? _parseMarkdownTableRow(String line) {
   if (hasTrailingPipe) row = row.substring(0, row.length - 1);
 
   final cells = _splitMarkdownTableCells(row);
-  if (cells.length < 2 && !(hasLeadingPipe && hasTrailingPipe && cells.length == 1)) {
+  if (cells.length < 2 &&
+      !(hasLeadingPipe && hasTrailingPipe && cells.length == 1)) {
     return null;
   }
   return _MarkdownTableRow(blockquoteDepth, cells);
@@ -161,7 +163,9 @@ String _speakableTableHeader(List<String> cells) {
       .map((cell) => cell.replaceAll(RegExp(r'\\\|'), ' ').trim())
       .where((cell) => cell.isNotEmpty)
       .join(', ');
-  return header.isEmpty || RegExp(r'[.!?:]$').hasMatch(header) ? header : '$header.';
+  return header.isEmpty || RegExp(r'[.!?:]$').hasMatch(header)
+      ? header
+      : '$header.';
 }
 
 String _summarizeMarkdownTables(String text) {
@@ -175,7 +179,9 @@ String _summarizeMarkdownTables(String text) {
     final headerRow = _parseMarkdownTableRow(lines[index - 1]);
     if (delimiterRow == null ||
         headerRow == null ||
-        !delimiterRow.cells.every((cell) => _markdownTableDelimiterCellRe.hasMatch(cell)) ||
+        !delimiterRow.cells.every(
+          (cell) => _markdownTableDelimiterCellRe.hasMatch(cell),
+        ) ||
         headerRow.cells.length != delimiterRow.cells.length ||
         headerRow.blockquoteDepth != delimiterRow.blockquoteDepth) {
       index++;
@@ -212,11 +218,11 @@ String _summarizeMarkdownTables(String text) {
 String _normalizeLineBreaks(String text) {
   return text
       .replaceAll(RegExp(r'\r\n?'), '\n')
-      .replaceAllMapped(RegExp(r'(\p{L})-\n(\p{L})', unicode: true), (m) => '${m[1]}${m[2]}')
       .replaceAllMapped(
-        _punctuatedParagraphBreakRe,
-        (m) => '${m[1]}${m[2]} ',
+        RegExp(r'(\p{L})-\n(\p{L})', unicode: true),
+        (m) => '${m[1]}${m[2]}',
       )
+      .replaceAllMapped(_punctuatedParagraphBreakRe, (m) => '${m[1]}${m[2]} ')
       .replaceAll(_paragraphBreakRe, '. ')
       .replaceAll(_softBreakRe, ' ');
 }

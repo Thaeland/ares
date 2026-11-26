@@ -1283,8 +1283,7 @@ class WsClient {
     Future<void> Function()? beforeLegacy,
     Future<void> Function(Object?, String)? onReceipt,
     Duration timeout = const Duration(minutes: 10),
-    String? surface,
-    String? voiceContext,
+    Map<String, Object?> extraParams = const {},
   }) async {
     final source = _channel;
     final promptText = await _androidPromptText(message);
@@ -1358,14 +1357,12 @@ class WsClient {
     try {
       final effectiveSubmissionId = submissionId ?? const Uuid().v4();
       final baseParams = <String, dynamic>{
+        ...extraParams,
         'session_id': sessionId,
         'text': promptText,
         // Stock gateways use this only for title generation. The app's note
         // must not become the subject of an otherwise short user prompt.
         if (promptText != message) 'title_preview': message,
-        if (surface?.isNotEmpty ?? false) 'surface': surface,
-        if (voiceContext?.isNotEmpty ?? false)
-          'voice_context': voiceContext,
       };
       var response = await send('prompt.submit', {
         ...baseParams,

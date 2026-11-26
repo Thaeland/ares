@@ -201,6 +201,10 @@ class NgUserItem extends NgItem {
   /// submits this. Null when [text] is what was sent.
   final String? sentText;
 
+  /// Extra `prompt.submit` params, sent again unchanged with the same
+  /// submission id when the send is retried.
+  final Map<String, Object> promptParams;
+
   NgUserItem(
     super.key,
     this.text, {
@@ -212,6 +216,7 @@ class NgUserItem extends NgItem {
     this.submissionId,
     this.composerImageText,
     this.sentText,
+    this.promptParams = const {},
   });
 }
 
@@ -2612,10 +2617,10 @@ class NgChatController extends ChangeNotifier {
     String? display,
     bool hidden = false,
     WorkspaceTarget? fleetTarget,
-    String? surface,
-    String? voiceContext,
+    Map<String, Object> promptParams = const {},
   }) async {
     final trimmed = text.trim();
+    if (fleetTarget != null && promptParams.isNotEmpty) return false;
     // A fleet send is text only, on the exact bound route and runtime.
     if (fleetTarget != null &&
         (attachments.isNotEmpty ||
@@ -2654,6 +2659,7 @@ class NgChatController extends ChangeNotifier {
             submissionId: effectiveSubmissionId,
             composerImageText: composerImageText,
             sentText: shown.isEmpty ? null : trimmed,
+            promptParams: promptParams,
           );
     if (item != null) items.add(item);
     error = null;
@@ -2750,11 +2756,10 @@ class NgChatController extends ChangeNotifier {
           ? await fleetTarget.submitFleetText(prompt, wireSubmissionId)
           : await _submitPromptWithCompatibility(
               {
+                ...promptParams,
                 'session_id': runtimeId,
                 'text': prompt,
                 if (explicitImages.isNotEmpty) 'attachments': explicitImages,
-                if (surface?.isNotEmpty ?? false) 'surface': surface,
-                if (voiceContext?.isNotEmpty ?? false) 'voice_context': voiceContext,
               },
               submissionId: wireSubmissionId,
               attempt: attempt,
@@ -3197,6 +3202,7 @@ class NgChatController extends ChangeNotifier {
       composerImageText: last.failure != null ? last.composerImageText : null,
       submissionId: last.failure != null ? last.submissionId : null,
       display: last.sentText == null ? null : last.text,
+      promptParams: last.failure != null ? last.promptParams : const {},
     );
   }
 

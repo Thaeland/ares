@@ -6,10 +6,31 @@ library;
 
 /// Canonical phrases that count as a stop instruction.
 const _stopPhrases = <String>{
-  'stop', 'stop it', 'stop that', 'stop now', 'stop me', 'stop please',
-  'shut up', 'quiet down', 'keep quiet', 'be quiet', 'be silent',
-  'enough', 'done', 'cancel', 'quit', 'halt', 'pause', 'end', 'finish',
-  'over', 'close it', 'cut it', 'hold it', 'quietly stop', 'stop quietly',
+  'stop',
+  'stop it',
+  'stop that',
+  'stop now',
+  'stop me',
+  'stop please',
+  'shut up',
+  'quiet down',
+  'keep quiet',
+  'be quiet',
+  'be silent',
+  'enough',
+  'done',
+  'cancel',
+  'quit',
+  'halt',
+  'pause',
+  'end',
+  'finish',
+  'over',
+  'close it',
+  'cut it',
+  'hold it',
+  'quietly stop',
+  'stop quietly',
   'be quiet please',
 };
 
@@ -39,9 +60,27 @@ const _leadingGrammar = <String>[
 /// Deliberately short; anything else falls back to handing the utterance to
 /// the model as a request.
 const _trailingFillers = <String>[
-  'please', 'thanks', 'thank you', 'thank', 'ok', 'okay', 'alright', 'hey',
-  'now', 'then', 'there', 'so', 'slowly', 'quietly', 'gentle', 'just',
-  'quiet', 'silent', 'silently', 'hold on', 'hold it',
+  'please',
+  'thanks',
+  'thank you',
+  'thank',
+  'ok',
+  'okay',
+  'alright',
+  'hey',
+  'now',
+  'then',
+  'there',
+  'so',
+  'slowly',
+  'quietly',
+  'gentle',
+  'just',
+  'quiet',
+  'silent',
+  'silently',
+  'hold on',
+  'hold it',
 ];
 
 /// Normalize an utterance for matching: lowercase, trim, strip trailing
@@ -75,3 +114,6 @@ bool isStopWordTurn(String text) {
   }
   return false;
 }
+
+/// Alias matching Hermes Desktop's `isVoiceStopCommand`.
+bool isVoiceStopCommand(String text) => isStopWordTurn(text);

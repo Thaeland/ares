@@ -4,25 +4,30 @@ import 'package:hermes_android/core/utils/speech_text.dart';
 import 'package:hermes_android/core/utils/voice_stop_word.dart';
 
 void main() {
-  test('sanitizer strips markdown chrome, code, links and thinking prefixes', () {
-    const input = '''
+  test(
+    'sanitizer strips markdown chrome, code, links and thinking prefixes',
+    () {
+      const input = '''
 processing... kicking things off.
 ```dart
 void main() {}
 ```
 [Docs](https://example.com/docs) — see `parseCmd` and `lib/services/voice.dart`.
 ''';
-    final out = sanitizeTextForSpeech(input);
-    expect(out, isNot(contains('```')));
-    expect(out, isNot(contains('https://')));
-    expect(out, isNot(contains('processing...')));
-    expect(out, contains('Docs'));
-    // dense model IDs and paths are silence
-    expect(out, isNot(contains('lib/services/voice.dart')));
-  });
+      final out = sanitizeTextForSpeech(input);
+      expect(out, isNot(contains('```')));
+      expect(out, isNot(contains('https://')));
+      expect(out, isNot(contains('processing...')));
+      expect(out, contains('Docs'));
+      // dense model IDs and paths are silence
+      expect(out, isNot(contains('lib/services/voice.dart')));
+    },
+  );
 
   test('sanitizer flattens line breaks and punctuation-noise', () {
-    final out = sanitizeTextForSpeech('First line\n\nSecond line.\nThird line.');
+    final out = sanitizeTextForSpeech(
+      'First line\n\nSecond line.\nThird line.',
+    );
     expect(out, contains('First line'));
     expect(out, contains('Second line'));
     expect(out, contains('Third line'));

@@ -4802,9 +4802,9 @@ class _ChatScreenState extends State<ChatScreen>
       if (direct != null) return direct;
     } on ClientDirectVoiceException catch (error) {
       if (mounted) {
-        ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-          SnackBar(content: Text(error.message)),
-        );
+        ScaffoldMessenger.maybeOf(
+          context,
+        )?.showSnackBar(SnackBar(content: Text(error.message)));
       }
       throw const VoiceTranscriptionException();
     }
@@ -4820,6 +4820,7 @@ class _ChatScreenState extends State<ChatScreen>
     VoidCallback? onAccepted,
     HandsFreePrompt? handsFreePrompt,
     _HandsFreeTurnBinding? voiceBinding,
+    Map<String, Object?> promptParams = const {},
     bool hiddenIntent = false,
   }) async {
     final keepComposer = textOverride != null || voiceBinding != null;
@@ -5001,6 +5002,7 @@ class _ChatScreenState extends State<ChatScreen>
       voiceBinding: voiceBinding,
       preserveComposer: keepComposer,
       onAccepted: onAccepted,
+      promptParams: promptParams,
       hiddenIntent: hiddenIntent,
     );
   }
@@ -5391,6 +5393,7 @@ class _ChatScreenState extends State<ChatScreen>
     VoidCallback? onAccepted,
     bool hiddenIntent = false,
     bool heldUntilAccepted = false,
+    Map<String, Object?> promptParams = const {},
   }) async {
     final keepComposer = preserveComposer || voiceBinding != null;
     // A remote-gateway profile uses one transport for every prompt. Images and
@@ -5417,6 +5420,7 @@ class _ChatScreenState extends State<ChatScreen>
         preserveComposer: keepComposer,
         onAccepted: onAccepted,
         heldUntilAccepted: heldUntilAccepted,
+        promptParams: promptParams,
       );
       return;
     }
@@ -5789,6 +5793,7 @@ class _ChatScreenState extends State<ChatScreen>
     bool preserveComposer = false,
     VoidCallback? onAccepted,
     bool heldUntilAccepted = false,
+    Map<String, Object?> promptParams = const {},
   }) async {
     final keepComposer = preserveComposer || voiceBinding != null;
     final chat = _normalChat;
@@ -5953,6 +5958,7 @@ class _ChatScreenState extends State<ChatScreen>
             maySubmit: voiceBinding == null
                 ? null
                 : () => _handsFree.isCurrent(voiceBinding.prompt.authority),
+            promptParams: promptParams,
           );
           final submittedTurn = chat.snapshot.turnId;
           await submitted;

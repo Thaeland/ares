@@ -17,6 +17,9 @@ class _FakeTransport implements GptLiveTransport {
     return sessionBody;
   }
 
+  @override
+  void dispose() {}
+
   String? lastSdp;
   List<Map<String, dynamic>>? lastHistory;
 }

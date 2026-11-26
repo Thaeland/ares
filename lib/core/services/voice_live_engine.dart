@@ -16,10 +16,8 @@ enum VoiceLiveState { idle, listening, thinking, speaking }
 /// [dispose]. All callbacks and events refuse to fire after teardown so a
 /// late session event can never land in a stale composer.
 class VoiceLiveEngine extends ChangeNotifier {
-  VoiceLiveEngine({
-    required this.transport,
-    LiveConversation? session,
-  }) : super() {
+  VoiceLiveEngine({required this.transport, LiveConversation? session})
+    : super() {
     _conversation = session ?? GptLiveConversation(transport: transport);
     _wireCallbacks();
   }

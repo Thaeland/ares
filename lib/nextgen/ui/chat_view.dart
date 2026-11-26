@@ -51,10 +51,6 @@ import '../../core/services/auto_speak_replies.dart';
 import '../../core/services/client_direct_voice.dart';
 import '../../core/services/client_direct_voice_speaker.dart';
 import '../../core/services/gateway_wake_word.dart';
-import '../../core/services/gpt_live_conversation.dart';
-import '../../core/services/voice_live_engine.dart';
-import '../../core/utils/speech_text.dart';
-import '../../core/utils/voice_stop_word.dart';
 import '../../core/widgets/gateway_wake_controls.dart';
 import '../../core/services/attachment_controller.dart' show attachmentMimeType;
 import '../../core/services/attachment_draft_service.dart';
@@ -283,15 +279,6 @@ class _NgChatViewState extends State<NgChatView>
   bool _listening = false;
   String _beforeDictation = '';
 
-  /// GPT-Live runtime, owned per chat. Created lazily by [_bindLiveEngine]
-  /// and torn down on chat switch, dispose and app background.
-  VoiceLiveEngine? _liveEngine;
-  GptLiveTransport? _liveTransport;
-  Timer? _liveReplyTimer;
-  String _lastSpokenLiveText = '';
-  String _lastLiveToolLabel = '';
-  bool _liveBusy = false;
-
   /// One read-aloud engine for this transcript: the reading reply's action
   /// row shows Stop, and starting another reply stops the current one.
   late final NgReadAloud _readAloud;
@@ -367,7 +354,6 @@ class _NgChatViewState extends State<NgChatView>
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
       if (chat.running && mounted) setState(() {});
     });
-    _bindLiveEngine();
   }
 
   @override
@@ -395,10 +381,6 @@ class _NgChatViewState extends State<NgChatView>
       // A reply being read belongs to the chat we left.
       unawaited(_readAloud.stop());
       _bindWake();
-      // A live session belongs to the chat we left: tear it down and start
-      // a fresh one for the new chat.
-      _disposeLiveEngine();
-      _bindLiveEngine();
     } else if (old.wakeController != widget.wakeController) {
       _bindWake();
     }
@@ -433,201 +415,6 @@ class _NgChatViewState extends State<NgChatView>
     _maybeAutoReadReply();
     setState(() {});
   }
-
-
-  // --- GPT-Live realtime conversation ---
-  // Per-chat engine (created/torn down with the view). Refreshes the host
-  // status and only starts when the host says it is available: otherwise the
-  // control stays chained and the host's reason is shown on the chip.
-
-  void _bindLiveEngine() {
-    _stopLiveReplyFeed();
-    _liveEngine?.dispose();
-    _liveTransport?.dispose();
-    _liveEngine = null;
-    _liveTransport = null;
-    _lastSpokenLiveText = '';
-    _lastLiveToolLabel = '';
-    _liveBusy = false;
-    final gateway = chat.gateway;
-    final transport = GptLiveGatewayTransport(gateway.connection, profile: gateway.profile);
-    _liveTransport = transport;
-    final engine = VoiceLiveEngine(transport: transport);
-    engine.onDelegation = _onLiveDelegation;
-    engine.onError = _onLiveError;
-    engine.onClosed = _onLiveClosed;
-    engine.addListener(_onLiveEngineChanged);
-    _liveEngine = engine;
-    unawaited(engine.refresh());
-  }
-
-  void _disposeLiveEngine() {
-    _stopLiveReplyFeed();
-    final engine = _liveEngine;
-    if (engine != null) {
-      engine.removeListener(_onLiveEngineChanged);
-      engine.dispose();
-    }
-    _liveEngine = null;
-    _liveTransport?.dispose();
-    _liveTransport = null;
-    _lastSpokenLiveText = '';
-    _lastLiveToolLabel = '';
-    _liveBusy = false;
-  }
-
-  void _onLiveEngineChanged() {
-    if (mounted && _liveEngine != null) setState(() {});
-  }
-
-  void _startLiveReplyFeed() {
-    _stopLiveReplyFeed();
-    _liveReplyTimer = Timer.periodic(const Duration(milliseconds: 200), (_) {
-      if (!mounted) return;
-      final engine = _liveEngine;
-      if (engine == null || !engine.active) return;
-      _feedLiveReply();
-    });
-  }
-
-  void _stopLiveReplyFeed() {
-    _liveReplyTimer?.cancel();
-    _liveReplyTimer = null;
-  }
-
-  String _pendingLiveReply() {
-    final items = chat.items;
-    for (var i = items.length - 1; i >= 0; i--) {
-      final item = items[i];
-      if (item is NgAssistantItem && !item.isEmpty) {
-        return sanitizeTextForSpeech(item.text).trim();
-      }
-    }
-    return '';
-  }
-
-  String _liveToolLabel() {
-    if (!chat.running) return '';
-    final items = chat.items;
-    for (var i = items.length - 1; i >= 0; i--) {
-      final item = items[i];
-      if (item is! NgAssistantItem) continue;
-      for (final tool in item.tools.reversed) {
-        if (tool.running) {
-          final label = tool.name.trim();
-          if (label.isNotEmpty) return label;
-        }
-      }
-    }
-    return '';
-  }
-
-  void _feedLiveReply() {
-    final engine = _liveEngine;
-    if (engine == null || !engine.active) return;
-    final reply = _pendingLiveReply();
-    if (reply.isNotEmpty && reply != _lastSpokenLiveText) {
-      _lastSpokenLiveText = reply;
-      if (chat.running) {
-        engine.speak(reply);
-      } else {
-        engine.settle();
-      }
-    }
-    final tool = _liveToolLabel();
-    if (tool.isNotEmpty && tool != _lastLiveToolLabel) {
-      _lastLiveToolLabel = tool;
-      engine.think('Hermes is working: $tool. Not done yet.');
-    }
-    if (!chat.running && _liveBusy) {
-      _liveBusy = false;
-      engine.settle();
-    }
-  }
-
-  Future<void> _startLive() async {
-    final engine = _liveEngine;
-    if (engine == null) return;
-    await engine.start();
-    if (!engine.active) {
-      final reason = engine.status?.reason;
-      if (context.mounted && reason != null && reason.isNotEmpty) {
-        ngToast(context, reason);
-      }
-      return;
-    }
-    _startLiveReplyFeed();
-  }
-
-  Future<void> _stopLive() async {
-    _stopLiveReplyFeed();
-    final engine = _liveEngine;
-    if (engine == null) return;
-    await engine.stop();
-    _lastSpokenLiveText = '';
-    _lastLiveToolLabel = '';
-  }
-
-  void _onLiveClosed(String? reason, String? delegationId) {
-    _stopLiveReplyFeed();
-    if (!mounted) return;
-    if (reason != null && reason.isNotEmpty && reason != 'close_requested') {
-      setState(() {});
-    }
-  }
-
-  void _onLiveError(String message) {
-    _stopLiveReplyFeed();
-    if (!mounted) return;
-    ngToast(context, message);
-  }
-
-  void _onLiveDelegation(String id, Map<String, String> prompt) {
-    final engine = _liveEngine;
-    if (engine == null) return;
-    final utterance = (prompt['prompt'] ?? '').trim();
-    final voiceContext = prompt['context'] ?? '';
-    if (utterance.isEmpty) return;
-    // The stop phrase ends the conversation, not the turn.
-    if (isVoiceStopCommand(utterance)) {
-      unawaited(_stopLive());
-      return;
-    }
-    final ownerChat = chat;
-    final strengthOwner = ownerChat.running;
-    _liveBusy = true;
-    // Interrupt the current turn and send the prompt on THIS chat's own
-    // session, with the Desktop's surface and voice context.
-    if (strengthOwner) {
-      unawaited(ownerChat.stop());
-    }
-    unawaited(_submitLivePrompt(ownerChat, utterance, voiceContext));
-  }
-
-  Future<void> _submitLivePrompt(
-    NgChatController ownerChat,
-    String utterance,
-    String voiceContext,
-  ) async {
-    if (!mounted) return;
-    if (!identical(ownerChat, chat)) return;
-    try {
-      await chat.send(
-        utterance,
-        surface: 'voice-live',
-        voiceContext: voiceContext,
-      );
-    } catch (_) {
-      // A failed submission is surfaced by the controller; the engine keeps
-      // its own place rather than retrying blindly.
-    }
-  }
-
-  // --- Voice engine rows (the Desktop's chained | gpt-live selector) ---
-
-  bool get _liveAvailable => _liveEngine?.status?.available == true;
-  GptLiveStatus? get _liveStatus => _liveEngine?.status;
-
 
   /// Auto-reads the newest unspoken assistant reply when the turn finishes.
   /// A reply is only read once per mount; reopening the chat resets the
@@ -684,7 +471,6 @@ class _NgChatViewState extends State<NgChatView>
     _focus.dispose();
     _scroll.dispose();
     _voice?.dispose();
-    _disposeLiveEngine();
     // Unsent picks only live in the app cache.
     if (_drafts.isNotEmpty) {
       unawaited(chat.attachmentService.removeAll(List.of(_drafts)));
@@ -703,9 +489,6 @@ class _NgChatViewState extends State<NgChatView>
     if (state != AppLifecycleState.resumed) {
       _checkpoint?.cancel();
       unawaited(_draftWriter.flush());
-      // The live session is a live audio path: close it when the app leaves
-      // the foreground rather than leaving a peer and tracks hanging.
-      _disposeLiveEngine();
     }
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.hidden ||

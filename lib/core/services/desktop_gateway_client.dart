@@ -943,8 +943,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
     String? submissionId,
     Future<void> Function()? beforeLegacy,
     Future<void> Function(Object?, String)? onReceipt,
-    String? surface,
-    String? voiceContext,
+    Map<String, Object?> extraParams = const {},
   }) async {
     var emitted = false;
     if (beforeSend != null && !await beforeSend()) {
@@ -968,8 +967,7 @@ class DesktopGatewayClient implements SlashCommandGateway {
           submissionId: submissionId,
           beforeLegacy: beforeLegacy,
           onReceipt: onReceipt,
-          surface: surface,
-          voiceContext: voiceContext,
+          extraParams: extraParams,
           onEvent: (event) {
             if (!_closed) onEvent(event);
           },

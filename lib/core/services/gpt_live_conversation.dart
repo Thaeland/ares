@@ -188,6 +188,7 @@ abstract interface class GptLiveTransport {
     required String sdp,
     List<Map<String, dynamic>>? history,
   });
+  void dispose();
 }
 
 class GptLiveGatewayTransport implements GptLiveTransport {
@@ -229,6 +230,7 @@ class GptLiveGatewayTransport implements GptLiveTransport {
     return response.statusCode == 200 ? jsonDecode(response.body) : null;
   }
 
+  @override
   void dispose() => _dashboard.close();
 }
 
@@ -248,7 +250,9 @@ abstract class LiveConversation {
   Future<void> forceClose(String reason, [int? usageSeconds]);
   void dispose();
 
-  set onDelegation(void Function(String id, Map<String, String> prompt)? callback);
+  set onDelegation(
+    void Function(String id, Map<String, String> prompt)? callback,
+  );
   set onError(void Function(String message, bool fatal)? callback);
   set onClosed(void Function(String reason, int? usageSeconds)? callback);
 }
