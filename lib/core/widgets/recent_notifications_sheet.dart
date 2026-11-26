@@ -95,7 +95,11 @@ class RecentNotificationsSheet extends StatelessWidget {
                   subtitle: switch ([
                     if (a.title.isNotEmpty) a.title,
                     if (a.reference.isNotEmpty) a.reference,
-                    ?a.detail,
+                    if (a.detail != null)
+                      TurnNotificationService.localizedAttemptDetail(
+                        context.sharedL10n,
+                        a.detail!,
+                      ),
                   ]) {
                     final lines when lines.isNotEmpty => Text(
                       lines.join('\n'),
