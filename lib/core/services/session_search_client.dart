@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import '../l10n/service_strings.dart';
 import '../models/client_certificate.dart';
 import '../models/session_search_hit.dart';
 import 'connection_manager.dart';
@@ -91,7 +92,9 @@ class SessionSearchClient {
     try {
       response = await _http.get(uri, headers: await _authHeaders());
     } catch (error) {
-      throw SessionSearchException('Could not reach the dashboard: $error');
+      throw SessionSearchException(
+        serviceStrings.rel_svc_backup_search_dashboard_unreachable('$error'),
+      );
     }
 
     return _readResponse(response, trimmed, profile, safeLimit);
@@ -128,29 +131,25 @@ class SessionSearchClient {
     int limit,
   ) {
     if (response.statusCode == 401 || response.statusCode == 403) {
-      throw const SessionSearchException(
-        'The dashboard rejected the saved credentials. Check the dashboard '
-        'username and password for this connection.',
+      throw SessionSearchException(
+        serviceStrings.rel_svc_backup_search_credentials_rejected,
       );
     }
     if (response.statusCode == 404 ||
         response.statusCode == 405 ||
         response.statusCode == 501) {
-      throw const SessionSearchException(
-        'This dashboard does not expose session search. Update Hermes on the '
-        'host, or switch back to on-device search.',
+      throw SessionSearchException(
+        serviceStrings.rel_svc_backup_search_not_supported,
       );
     }
     if (response.statusCode >= 300 && response.statusCode < 400) {
       throw SessionSearchException(
-        'The dashboard redirected session search (HTTP '
-        '${response.statusCode}). Ares does not follow redirects with saved '
-        'credentials; check the connection address.',
+        serviceStrings.rel_svc_backup_search_redirected(response.statusCode),
       );
     }
     if (response.statusCode != 200) {
       throw SessionSearchException(
-        'Session search failed with HTTP ${response.statusCode}.',
+        serviceStrings.rel_svc_backup_search_http_failed(response.statusCode),
       );
     }
 
@@ -167,14 +166,14 @@ class SessionSearchClient {
     try {
       decoded = jsonDecode(body);
     } catch (_) {
-      throw const SessionSearchException(
-        'The dashboard returned a malformed search response.',
+      throw SessionSearchException(
+        serviceStrings.rel_svc_backup_search_malformed_response,
       );
     }
 
     if (decoded is! Map<String, dynamic>) {
-      throw const SessionSearchException(
-        'The dashboard returned an unexpected search response.',
+      throw SessionSearchException(
+        serviceStrings.rel_svc_backup_search_unexpected_response,
       );
     }
 
@@ -182,8 +181,8 @@ class SessionSearchClient {
     bool wrongProfile(Map<String, dynamic> data) =>
         data['profile'] != null && data['profile'] != (profile ?? 'default');
     if (results is List && results.length > limit) {
-      throw const SessionSearchException(
-        'The dashboard returned more search results than requested.',
+      throw SessionSearchException(
+        serviceStrings.rel_svc_backup_search_too_many_results,
       );
     }
     if (results is! List ||
@@ -192,7 +191,9 @@ class SessionSearchClient {
           decoded['q'],
           decoded['query'],
         ].any((echo) => echo != null && echo != query)) {
-      throw const SessionSearchException('Unexpected message search response.');
+      throw SessionSearchException(
+        serviceStrings.rel_svc_backup_message_search_unexpected_response,
+      );
     }
     for (final row in results) {
       if (row is! Map<String, dynamic> ||
@@ -202,7 +203,9 @@ class SessionSearchClient {
           (row['id'] is String &&
               row['session_id'] != null &&
               row['id'] != row['session_id'])) {
-        throw const SessionSearchException('Unexpected message search result.');
+        throw SessionSearchException(
+          serviceStrings.rel_svc_backup_message_search_unexpected_result,
+        );
       }
     }
 
