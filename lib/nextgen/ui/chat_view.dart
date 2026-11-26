@@ -521,6 +521,10 @@ class _NgChatViewState extends State<NgChatView>
     if (initial != null) unawaited(_applyLinkPrefill(initial));
     chat.addListener(_onChat);
     _wasRunning = chat.running;
+    // Opening a chat never reads the reply already at its bottom; one that
+    // completes while the chat is open (even a turn running now) is read.
+    _autoReadTurnSeen = chat.running;
+    _markBottomReplySpoken();
     unawaited(
       loadStatusLayout().then((layout) {
         if (!mounted) return;
@@ -608,6 +612,10 @@ class _NgChatViewState extends State<NgChatView>
       chat.addListener(_onChat);
       // A reply being read belongs to the chat we left.
       unawaited(_readAloud.stop());
+      // Switching to a chat never reads the reply already at its bottom.
+      _autoReadServed.clear();
+      _autoReadTurnSeen = chat.running;
+      _markBottomReplySpoken();
       _bindWake();
       _disposeLiveEngine();
       _bindLiveEngine();
@@ -992,19 +1000,41 @@ class _NgChatViewState extends State<NgChatView>
     setState(() {});
   }
 
-  /// Auto-reads the newest unspoken assistant reply when the turn finishes.
-  /// A reply is only read once per mount; reopening the chat resets the
-  /// served set so a fresh visit can read the latest reply once.
+  /// Replies auto-read has dealt with: read once, or already at the bottom
+  /// when the chat was opened or switched to. Item keys restart in every
+  /// chat controller, so a switch starts a fresh set.
   final Set<String> _autoReadServed = <String>{};
 
+  /// A turn of this chat was seen running while it was open. Only the reply
+  /// that ends such a turn is read: as Desktop (use-auto-speak-replies), a
+  /// reply that was already there (opening the chat, switching to it, a
+  /// history reload) is marked spoken, never read.
+  bool _autoReadTurnSeen = false;
+
+  /// Marks the reply now at the bottom as spoken, without reading it.
+  void _markBottomReplySpoken() {
+    final last = chat.items.isEmpty ? null : chat.items.last;
+    if (last is NgAssistantItem) _autoReadServed.add(last.key);
+  }
+
+  /// Auto-reads the reply that completes a turn while this chat is open,
+  /// once.
   void _maybeAutoReadReply() {
-    if (_liveEngine?.active == true) return;
-    if (!autoSpeakRepliesEnabled.value) return;
-    if (chat.running) return;
+    if (chat.running) {
+      _autoReadTurnSeen = true;
+      return;
+    }
     if (chat.items.isEmpty) return;
     final last = chat.items.last;
-    if (last is! NgAssistantItem) return;
-    if (last.isEmpty) return;
+    if (last is! NgAssistantItem || last.isEmpty) return;
+    final completedHere = _autoReadTurnSeen;
+    _autoReadTurnSeen = false;
+    if (!completedHere) {
+      _autoReadServed.add(last.key);
+      return;
+    }
+    if (_liveEngine?.active == true) return;
+    if (!autoSpeakRepliesEnabled.value) return;
     if (_autoReadServed.contains(last.key)) return;
     _autoReadServed.add(last.key);
     final text = last.text.trim();
