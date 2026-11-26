@@ -6,8 +6,10 @@ import 'package:flutter/services.dart';
 import '../l10n/l10n.dart';
 import '../services/connection_manager.dart';
 import '../services/connection_mutation_barrier.dart';
+import '../services/bot_desktop_session.dart';
 import '../services/remote_workspace.dart';
 import '../theme/hermes_theme.dart';
+import '../widgets/bot_desktop_viewer.dart';
 import '../../nextgen/data/chat_controller.dart';
 import '../../nextgen/data/nextgen_gateway.dart';
 import '../../nextgen/ui/chat_view.dart';
@@ -23,11 +25,17 @@ class BotsScreen extends StatefulWidget {
     required this.owner,
     required this.route,
     required this.connection,
+    this.displayConnector,
   });
 
   final RemoteWorkspaceOwner owner;
   final WorkspaceRoute route;
   final SavedConnection connection;
+
+  /// Opens the live screen for a `display.observe` ticket. Production dials
+  /// the gateway's `/api/display/ws`; tests supply an in-memory screen.
+  @visibleForTesting
+  final BotDisplayConnector? displayConnector;
 
   @override
   State<BotsScreen> createState() => _BotsScreenState();
@@ -35,7 +43,7 @@ class BotsScreen extends StatefulWidget {
 
 enum _BotsTab { roster, rooms, screen, routines }
 
-class _BotsScreenState extends State<BotsScreen> {
+class _BotsScreenState extends State<BotsScreen> with WidgetsBindingObserver {
   WorkspacePane? _pane;
   WorkspaceTarget? _target;
   Object? _account;
@@ -67,7 +75,9 @@ class _BotsScreenState extends State<BotsScreen> {
   // Screen
   String? _screenProfile; // null = current row in roster
   DisplayStatus? _display;
-  String? _watchViewerId;
+
+  /// The take-over in progress: the live viewer and the lease it holds.
+  BotDesktopSession? _session;
   DisplayThumbnail? _thumbnail;
   ImageProvider? _thumbnailImage;
   bool _thumbnailSuppressed = false;
@@ -85,6 +95,7 @@ class _BotsScreenState extends State<BotsScreen> {
     super.initState();
     _account = ConnectionMutationBarrier.capture(widget.route.connectionId);
     ConnectionMutationBarrier.addListener(_onAccountChanged);
+    WidgetsBinding.instance.addObserver(this);
     _searchController.addListener(() {
       final next = _searchController.text.trim();
       if (next != _search && mounted) setState(() => _search = next);
@@ -96,7 +107,7 @@ class _BotsScreenState extends State<BotsScreen> {
   void didUpdateWidget(covariant BotsScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.owner != widget.owner || oldWidget.route != widget.route) {
-      _pane?.close();
+      _closePaneAfterHandBack();
       _pane = null;
       _target = null;
       _account = ConnectionMutationBarrier.capture(widget.route.connectionId);
@@ -111,8 +122,52 @@ class _BotsScreenState extends State<BotsScreen> {
     _cancelThumbnail();
     _thumbnailImage?.evict();
     _searchController.dispose();
-    _pane?.close();
+    WidgetsBinding.instance.removeObserver(this);
+    _closePaneAfterHandBack();
     super.dispose();
+  }
+
+  /// Leaving never keeps the bot locked out: the lease is released on the
+  /// pane it was taken on, and only then is that pane closed.
+  void _closePaneAfterHandBack() {
+    final pane = _pane;
+    final session = _session;
+    _session = null;
+    if (session == null) {
+      pane?.close();
+      return;
+    }
+    session.removeListener(_onSessionChanged);
+    unawaited(session.close().whenComplete(() => pane?.close()));
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // In the background the user can neither see nor drive the screen.
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden ||
+        state == AppLifecycleState.detached) {
+      unawaited(_endSession(BotDesktopClose.background));
+    }
+  }
+
+  void _onSessionChanged() {
+    // The viewer dropped or was evicted: the session has released the lease.
+    if (_session?.isClosed == true) {
+      unawaited(_endSession(_session!.closedBecause!));
+    }
+  }
+
+  /// Ends the take-over (if any) and repaints the lease the gateway reports.
+  Future<void> _endSession(BotDesktopClose because) async {
+    final session = _session;
+    if (session == null) return;
+    _session = null;
+    session.removeListener(_onSessionChanged);
+    await session.close(because: because);
+    if (!_ownsScreen(session.target, session.profile)) return;
+    setState(() => _display = _display?.copyWith(lease: session.lease));
+    unawaited(_loadScreen(session.target));
   }
 
   void _onAccountChanged() {
@@ -401,62 +456,74 @@ class _BotsScreenState extends State<BotsScreen> {
     );
   }
 
+  /// Take over = open the live viewer, then take the lease. Without a live
+  /// viewer nothing is acquired; when the viewer closes, for any reason, the
+  /// lease goes back.
   Future<void> _takeOverScreen() async {
     final target = _target;
     final profile = _screenProfile;
-    if (target == null || profile == null) return;
+    if (target == null || profile == null || _session != null) return;
     setState(() => _screenBusy = true);
+    BotDesktopSession? session;
     try {
-      String? viewerId = _watchViewerId;
-      DisplayObserveResult? observe;
-      if (viewerId == null) {
-        try {
-          observe = await target.displayObserve(profile);
-          if (!_ownsScreen(target, profile)) return;
-          viewerId = observe.viewerId;
-          _watchViewerId = viewerId;
-        } catch (_) {
-          // Not running yet or lease operation refused; fall back to a
-          // lease-only acquire with an observe once started.
-        }
-      }
-      if (viewerId == null) {
-        if (!_ownsScreen(target, profile)) return;
-        _toast('Screen is not up yet. Start it, then take over.');
+      session = await BotDesktopSession.open(
+        target,
+        profile,
+        connect: widget.displayConnector,
+        reason: 'Take over from Ares',
+      );
+      final foreground =
+          WidgetsBinding.instance.lifecycleState == null ||
+          WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed;
+      if (!mounted || !_ownsScreen(target, profile) || !foreground) {
+        await session.close();
         return;
       }
-      final lease = await target.displayLeaseAcquire(
-        profile,
-        viewerId,
-        reason: 'Take over from the bots workspace',
-      );
-      if (!_ownsScreen(target, profile)) return;
+      _session = session;
+      session.addListener(_onSessionChanged);
       setState(() {
-        if (_display != null) {
-          _display = _display!.copyWith(lease: lease);
-        }
+        _screenBusy = false;
+        _display = _display?.copyWith(lease: session!.lease);
       });
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) =>
+              BotDesktopViewerPage(session: session!, botName: profile),
+        ),
+      );
+      // The viewer was closed: hand back.
+      await _endSession(BotDesktopClose.handedBack);
     } catch (e) {
-      if (_ownsScreen(target, profile)) _toast('Take over failed: $e');
+      await session?.close();
+      if (_ownsScreen(target, profile)) {
+        _toast('Take over failed: $e');
+        unawaited(_loadScreen(target));
+      }
     } finally {
-      if (mounted) setState(() => _screenBusy = false);
+      if (mounted && _screenBusy) setState(() => _screenBusy = false);
     }
   }
 
-  Future<void> _handBackScreen() => _screenAction(
-    send: (target, bot) => target.displayLeaseRelease(
-      bot,
-      viewerId: _watchViewerId,
-      force: _watchViewerId == null,
-    ),
-    apply: (target, bot, lease) => setState(() {
-      if (_display != null) {
-        _display = _display!.copyWith(lease: lease);
-      }
-      _watchViewerId = null;
-    }),
-    failure: 'Hand back failed',
-  );
+  /// The way out when a lease outlived its viewer (a crash, a dropped link,
+  /// another device): give the screen back to the bot.
+  Future<void> _forceHandBack() async {
+    final profile = _screenProfile;
+    if (_target == null || profile == null) return;
+    final confirmed = await _confirm(
+      title: 'Give $profile’s screen back to the bot?',
+      message:
+          'A person is holding this screen. If they are still using it, '
+          'they lose control.',
+      confirmLabel: 'Hand back',
+    );
+    if (!confirmed || !mounted || _screenProfile != profile) return;
+    await _screenAction(
+      send: (target, bot) => target.displayLeaseRelease(bot, force: true),
+      apply: (target, bot, lease) =>
+          setState(() => _display = _display?.copyWith(lease: lease)),
+      failure: 'Hand back failed',
+    );
+  }
 
   Future<void> _switchSandboxImage() async {
     final profile = _screenProfile;
@@ -965,7 +1032,6 @@ class _BotsScreenState extends State<BotsScreen> {
               _display = null;
               _thumbnail = null;
               _showThumbnail(null);
-              _watchViewerId = null;
               _thumbnailSuppressed = false;
             });
             final target = _target;
@@ -978,7 +1044,7 @@ class _BotsScreenState extends State<BotsScreen> {
             child: const ListTile(
               title: Text('Screen status unavailable'),
               subtitle: Text(
-                'Start the bot screen, then take over for input. Watch thumbnails while it runs.',
+                'Start the bot’s screen to watch its thumbnail, or take over to use it yourself.',
               ),
             ),
           ),
@@ -987,9 +1053,9 @@ class _BotsScreenState extends State<BotsScreen> {
         if (status?.running == true) _thumbnailCard(),
         const SizedBox(height: 12),
         Text(
-          'No live RFB viewer is wired here: the Desktop uses the noVNC browser client for /api/display/ws, '
-          'which is not available in this app. Use the real thumbnail, then Take over / Hand back to control the screen with the gateway’s lease. '
-          'Status/install/switch-image are gateway-backed and are shown above.',
+          'Take over opens the live screen and gives you control of it. '
+          'Control goes back to the bot when you close the live screen, '
+          'leave this page or put the app in the background.',
           style: TextStyle(fontSize: 12, color: HermesTokens.of(context).muted),
         ),
       ],
@@ -1050,7 +1116,7 @@ class _BotsScreenState extends State<BotsScreen> {
     final unsupported = !status.supported;
     final installed = status.installed;
     final running = status.running;
-    final holdsLease = _watchViewerId != null;
+    final humanHeld = !status.lease.isAgent;
     final imageSwitchPending = status.imageSwitch != null;
     return Card(
       child: Padding(
@@ -1079,13 +1145,17 @@ class _BotsScreenState extends State<BotsScreen> {
               ),
             if (!unsupported && installed && running)
               OutlinedButton.icon(
-                onPressed: _screenBusy || holdsLease ? null : _takeOverScreen,
+                key: const Key('bots-take-over'),
+                onPressed: _screenBusy || _session != null
+                    ? null
+                    : _takeOverScreen,
                 icon: const Icon(Icons.visibility_outlined),
                 label: const Text('Take over'),
               ),
-            if (!unsupported && installed && running && holdsLease)
+            if (!unsupported && running && humanHeld && _session == null)
               OutlinedButton.icon(
-                onPressed: _screenBusy ? null : _handBackScreen,
+                key: const Key('bots-force-hand-back'),
+                onPressed: _screenBusy ? null : _forceHandBack,
                 icon: const Icon(Icons.visibility_off_outlined),
                 label: const Text('Hand back'),
               ),

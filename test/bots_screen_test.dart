@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'support/bots_review_fixture.dart';
+import 'support/fake_rfb_screen.dart';
 
 void main() {
   testWidgets(
@@ -37,7 +38,7 @@ void main() {
   );
 
   testWidgets(
-    'screen tab starts the display, takes over via an observe lease, then hands back',
+    'screen tab takes over through the live viewer, then hands back',
     (tester) async {
       tester.view.physicalSize = const Size(900, 900);
       tester.view.devicePixelRatio = 1.0;
@@ -48,7 +49,9 @@ void main() {
       final owner = botsReviewOwner(api);
       addTearDown(owner.close);
 
-      await tester.pumpWidget(botsReviewApp(owner));
+      await tester.pumpWidget(
+        botsReviewApp(owner, displayConnector: (_, _) async => FakeRfbScreen()),
+      );
       await botsShown(tester, find.text('WorkBot'));
 
       // Switch to Screen.
@@ -56,24 +59,27 @@ void main() {
       await botsShown(tester, find.text('Running'));
       await botsStep(tester);
 
-      // Take over: observe mints viewer id, then the lease acquire.
+      // Take over: the live screen opens on an observe ticket, then the
+      // lease is acquired for the viewer id that ticket minted.
       await tester.tap(find.text('Take over'));
       await botsStep(tester);
+      expect(find.byKey(const Key('bots-viewer')), findsOneWidget);
       expect(api.calls.any((c) => c.method == 'display.observe'), isTrue);
       expect(api.calls.any((c) => c.method == 'display.lease.acquire'), isTrue);
 
-      // Hand back: viewerId is carried, so the release carries it.
-      await botsShown(tester, find.text('Hand back'));
+      // Hand back from the live screen: the release carries that viewer id.
       await tester.tap(find.text('Hand back'));
       await botsStep(tester);
+      expect(find.byKey(const Key('bots-viewer')), findsNothing);
       expect(
         api.calls.any(
           (c) =>
               c.method == 'display.lease.release' &&
-              c.params.containsKey('viewer_id'),
+              c.params['viewer_id'] == 'viewer-1',
         ),
         isTrue,
       );
+      expect(api.leaseOf('workbot')['holder'], 'agent');
     },
   );
 

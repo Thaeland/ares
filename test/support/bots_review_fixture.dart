@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/screens/bots_screen.dart';
+import 'package:hermes_android/core/services/bot_desktop_session.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
 import 'package:hermes_android/core/services/remote_workspace.dart';
 import 'package:hermes_android/core/services/ws_client.dart';
@@ -123,7 +124,7 @@ class BotsReviewGateway {
     final epoch = (leaseOf(profile)['epoch'] as int) + 1;
     _leases[profile] = {
       'holder': holder,
-      'viewer_hash': viewer == null ? null : 'hash-$viewer',
+      'viewer_hash': viewer == null ? null : botDisplayViewerHash(viewer),
       '_viewer_id': viewer,
       'since': epoch,
       'epoch': epoch,
@@ -570,6 +571,7 @@ Widget botsReviewApp(
   RemoteWorkspaceOwner owner, {
   double textScale = 1.0,
   Locale? locale,
+  BotDisplayConnector? displayConnector,
 }) => MaterialApp(
   locale: locale,
   localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -584,6 +586,7 @@ Widget botsReviewApp(
     owner: owner,
     route: owner.route(),
     connection: botsReviewConnection,
+    displayConnector: displayConnector,
   ),
 );
 

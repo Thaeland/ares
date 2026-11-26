@@ -11,6 +11,12 @@ final class WorkspaceBotsUnsupported extends WorkspaceException {
 
 String botHandleFor(String name) => name == 'default' ? 'hermes' : name;
 
+/// How a lease names its holder: the first 12 hex of sha256(viewer id)
+/// (`tools/bot_desktop/lease.py` public view). The id itself never leaves the
+/// connection that minted it.
+String botDisplayViewerHash(String viewerId) =>
+    sha256.convert(utf8.encode(viewerId)).toString().substring(0, 12);
+
 final class BotRosterProfile {
   const BotRosterProfile({
     required this.name,
@@ -1077,6 +1083,17 @@ extension WorkspaceBots on WorkspaceTarget {
     });
     return DisplayObserveResult.fromJson(raw);
   }
+
+  /// The live screen for one `display.observe` ticket (single use, 30 s):
+  /// raw RFB over `/api/display/ws`, same origin, no redirects.
+  Future<BotDisplayChannel> openDisplayChannel(DisplayObserveResult observe) =>
+      _guard(checkCurrent, () async {
+        final socket = await _owner._dashboard.openBotDisplaySocket(
+          displayTicket: observe.ticket,
+          check: checkCurrent,
+        );
+        return WebSocketDisplayChannel(socket);
+      });
 
   Future<DisplayThumbnail> displayThumbnail(String? profile) async {
     final raw = await _rpcBot(profile, 'display.thumbnail', {});

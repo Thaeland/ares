@@ -3,17 +3,44 @@
 // reviewed code and names the probe it replaces.
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/services/remote_workspace.dart';
 
 import 'support/bots_review_fixture.dart';
+import 'support/fake_rfb_screen.dart';
 
 void wide(WidgetTester tester, [Size size = const Size(900, 1200)]) {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1.0;
   addTearDown(tester.view.reset);
+}
+
+/// The app going to the background, through the states the platform sends.
+void background(WidgetTester tester) {
+  for (final state in const [
+    AppLifecycleState.inactive,
+    AppLifecycleState.hidden,
+    AppLifecycleState.paused,
+  ]) {
+    tester.binding.handleAppLifecycleStateChanged(state);
+  }
+}
+
+void foreground(WidgetTester tester) {
+  if (tester.binding.lifecycleState == AppLifecycleState.resumed ||
+      tester.binding.lifecycleState == null) {
+    return;
+  }
+  for (final state in const [
+    AppLifecycleState.hidden,
+    AppLifecycleState.inactive,
+    AppLifecycleState.resumed,
+  ]) {
+    tester.binding.handleAppLifecycleStateChanged(state);
+  }
 }
 
 void main() {
@@ -405,6 +432,189 @@ void main() {
       expect(bytesOf('data:image/png;base64,@@not-base64@@'), isNull);
       final huge = 'data:image/jpeg;base64,${'A' * (6 * 1024 * 1024)}';
       expect(bytesOf(huge), isNull);
+    });
+  });
+
+  group('B1 Bot Desktop lease', () {
+    late List<FakeRfbScreen> screens;
+    late int acquiresWhenLive;
+
+    Future<BotsReviewGateway> open(
+      WidgetTester tester, {
+      Future<FakeRfbScreen> Function()? connect,
+    }) async {
+      wide(tester, const Size(900, 900));
+      addTearDown(() => foreground(tester));
+      final gateway = BotsReviewGateway();
+      screens = [];
+      acquiresWhenLive = -1;
+      final owner = botsReviewOwner(gateway);
+      addTearDown(owner.close);
+      await tester.pumpWidget(
+        botsReviewApp(
+          owner,
+          displayConnector: (target, observe) async {
+            expect(observe.ticket, 'ticket-${observe.viewerId}');
+            final screen = connect != null
+                ? await connect()
+                : FakeRfbScreen(
+                    onLive: () => acquiresWhenLive = gateway
+                        .named('display.lease.acquire')
+                        .length,
+                  );
+            screens.add(screen);
+            return screen;
+          },
+        ),
+      );
+      await openBotsScreenTab(tester);
+      await tester.tap(find.byKey(const Key('bots-take-over')));
+      await botsStep(tester);
+      return gateway;
+    }
+
+    final viewer = find.byKey(const Key('bots-viewer'));
+    String status(WidgetTester tester) =>
+        tester.widget<Text>(find.byKey(const Key('bots-viewer-status'))).data!;
+    Iterable<BotsReviewCall> releases(BotsReviewGateway gateway) =>
+        gateway.named('display.lease.release');
+
+    testWidgets('take over opens the live screen first and only then takes '
+        'the lease; the background hands it back', (tester) async {
+      final gateway = await open(tester);
+      expect(viewer, findsOneWidget);
+      expect(acquiresWhenLive, 0, reason: 'the screen was live first');
+      expect(gateway.leaseOf('workbot')['holder'], 'human');
+      expect(gateway.leaseViewer('workbot'), 'viewer-1');
+      expect(status(tester), contains('You control this screen'));
+
+      background(tester);
+      await botsStep(tester);
+      expect(releases(gateway).single.params, {
+        'viewer_id': 'viewer-1',
+        'profile': 'workbot',
+      });
+      expect(gateway.leaseOf('workbot')['holder'], 'agent');
+      expect(screens.single.closeCode, 1000);
+      // Frames resume with the app; the live screen then says what happened.
+      foreground(tester);
+      await botsStep(tester);
+      expect(status(tester), contains('left the foreground'));
+      expect(gateway.refusals, isEmpty);
+    });
+
+    testWidgets('leaving the bots screen hands the lease back', (tester) async {
+      final gateway = await open(tester);
+      expect(gateway.leaseOf('workbot')['holder'], 'human');
+      await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+      await botsStep(tester);
+      expect(releases(gateway), hasLength(1));
+      expect(gateway.leaseOf('workbot')['holder'], 'agent');
+      expect(screens.single.isClosed, isTrue);
+      expect(gateway.refusals, isEmpty);
+    });
+
+    testWidgets('Hand back closes the live screen and releases', (
+      tester,
+    ) async {
+      final gateway = await open(tester);
+      await tester.tap(find.byKey(const Key('bots-viewer-hand-back')));
+      await botsStep(tester);
+      expect(viewer, findsNothing);
+      expect(gateway.leaseOf('workbot')['holder'], 'agent');
+      expect(screens.single.closeCode, 1000);
+      // Nothing is held, so there is nothing to force back.
+      expect(find.byKey(const Key('bots-force-hand-back')), findsNothing);
+      expect(
+        tester
+            .widget<OutlinedButton>(find.byKey(const Key('bots-take-over')))
+            .onPressed,
+        isNotNull,
+      );
+    });
+
+    testWidgets('a dropped live screen hands the lease back', (tester) async {
+      final gateway = await open(tester);
+      screens.single.drop(1006);
+      await botsStep(tester);
+      expect(gateway.leaseOf('workbot')['holder'], 'agent');
+      expect(status(tester), contains('live view was lost'));
+    });
+
+    testWidgets('no live screen, no lease', (tester) async {
+      final gateway = await open(
+        tester,
+        connect: () async => throw const SocketException('refused'),
+      );
+      expect(viewer, findsNothing);
+      expect(gateway.named('display.observe'), hasLength(1));
+      expect(gateway.named('display.lease.acquire'), isEmpty);
+      expect(gateway.leaseOf('workbot')['holder'], 'agent');
+      expect(find.textContaining('Take over failed'), findsOneWidget);
+    });
+
+    testWidgets('a screen that refuses the viewer leaves the bot in control', (
+      tester,
+    ) async {
+      final gateway = await open(
+        tester,
+        connect: () async => FakeRfbScreen(refuse: 'Too many viewers'),
+      );
+      expect(viewer, findsNothing);
+      expect(gateway.named('display.lease.acquire'), isEmpty);
+      expect(find.textContaining('Too many viewers'), findsOneWidget);
+    });
+
+    testWidgets('after a reconnect the plain release is refused; the lease '
+        'is forced back only because it is still this viewer’s', (
+      tester,
+    ) async {
+      final gateway = await open(tester);
+      // A new socket: the gateway no longer knows the ids the old one minted.
+      gateway.minted.clear();
+      await tester.tap(find.byKey(const Key('bots-viewer-hand-back')));
+      await botsStep(tester);
+      expect(gateway.refusals, hasLength(1));
+      expect(releases(gateway).last.params, {
+        'force': true,
+        'profile': 'workbot',
+      });
+      expect(gateway.leaseOf('workbot')['holder'], 'agent');
+    });
+
+    testWidgets('control taken by someone else is not forced back; the '
+        'screen tab offers a confirmed Hand back', (tester) async {
+      final gateway = await open(tester);
+      final other = await gateway.handle('display.observe', {
+        'profile': 'workbot',
+      });
+      final otherViewer = (other['result'] as Map)['viewer_id'] as String;
+      await gateway.handle('display.lease.acquire', {
+        'profile': 'workbot',
+        'viewer_id': otherViewer,
+      });
+      screens.single.drop(4000);
+      await botsStep(tester);
+      expect(status(tester), contains('Someone else took control'));
+      expect(gateway.leaseViewer('workbot'), otherViewer);
+      expect(
+        releases(gateway).where((c) => c.params['force'] == true),
+        isEmpty,
+      );
+
+      await tester.tap(find.byKey(const Key('bots-viewer-hand-back')));
+      await botsStep(tester);
+      await tester.tap(find.byKey(const Key('bots-force-hand-back')));
+      await botsStep(tester, 3);
+      expect(find.byKey(const Key('bots-confirm-dialog')), findsOneWidget);
+      await tester.tap(find.byKey(const Key('bots-confirm-cancel')));
+      await botsStep(tester);
+      expect(gateway.leaseViewer('workbot'), otherViewer);
+      await tester.tap(find.byKey(const Key('bots-force-hand-back')));
+      await botsStep(tester, 3);
+      await tester.tap(find.byKey(const Key('bots-confirm-ok')));
+      await botsStep(tester);
+      expect(gateway.leaseOf('workbot')['holder'], 'agent');
     });
   });
 }

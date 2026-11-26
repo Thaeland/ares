@@ -10,6 +10,7 @@ import 'package:crypto/crypto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
+import 'bot_display_rfb.dart';
 import 'connection_manager.dart';
 import 'connection_mutation_barrier.dart';
 import 'portable_profile_bundle.dart';
