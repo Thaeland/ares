@@ -4272,5 +4272,15 @@
   "release_misc_gateway_unreachable": "無法連線至閘道端點 {endpoint}。",
   "release_core_schedule_invalid_delivery_target": "無效的傳送目標",
   "release_core_file_save_direct_only": "只能儲存工作目錄直屬的檔案。",
-  "release_core_file_save_hidden": "閘道無法儲存隱藏檔案。"
+  "release_core_file_save_hidden": "閘道無法儲存隱藏檔案。",
+  "fleet_managed_ssh_title": "閘道管理的 SSH",
+  "fleet_managed_ssh_intro": "從任何裝置管理已儲存在此閘道上的 SSH 主機。遠端主機上必須已安裝 Hermes。此操作會啟動或連接至此閘道所擁有的遠端服務，而非建立 Ares 聊天連線。受管理的更新與復原僅適用於原生桌面應用程式。",
+  "fleet_managed_ssh_read": "讀取已儲存的 SSH 主機",
+  "fleet_managed_ssh_trust": "首次連線時，閘道會信任並記住此主機的 SSH 金鑰。之後若金鑰發生變更，將會被標記並封鎖連線。閘道不提供金鑰指紋，因此 Ares 無法顯示或儲存指紋。只有在信任此次首次連線時才繼續。",
+  "fleet_managed_ssh_changed": "此主機的 SSH 金鑰已變更。連線已遭封鎖。有權存取閘道主機的人必須獨立驗證新金鑰的指紋，並在閘道主機上移除舊的受信任金鑰。只有在完成驗證與修復後才重試。Ares 不會取代受信任的金鑰。",
+  "fleet_managed_ssh_disconnect_warning": "中斷 SSH 通道並停止此閘道所擁有的遠端服務？這可能會中斷其他正在使用該服務的用戶端。",
+  "fleet_managed_ssh_verify": "改為自行驗證金鑰",
+  "fleet_managed_ssh_pending": "正在等待閘道：{seconds} 秒。離開此頁面不會取消初始化。如果請求失敗，請先檢查狀態再重試。",
+  "fleet_managed_ssh_status": "主機：{host}\n閘道回環連接埠：{localPort}\n遠端回環連接埠：{remotePort}\nHermes：{version}\n已重用：{reused}",
+  "fleet_managed_ssh_disconnect": "中斷連線"
 }

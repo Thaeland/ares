@@ -19675,6 +19675,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hidden files can\'t be saved by the gateway.'**
   String get release_core_file_save_hidden;
+
+  /// No description provided for @fleet_managed_ssh_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway-managed SSH'**
+  String get fleet_managed_ssh_title;
+
+  /// No description provided for @fleet_managed_ssh_intro.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage SSH hosts already saved on this gateway, from any device. Hermes must already be installed on the remote host. This starts or attaches an owned remote service, not an Ares chat connection. Managed updates and recovery are available only in native Desktop.'**
+  String get fleet_managed_ssh_intro;
+
+  /// No description provided for @fleet_managed_ssh_read.
+  ///
+  /// In en, this message translates to:
+  /// **'Read saved SSH hosts'**
+  String get fleet_managed_ssh_read;
+
+  /// No description provided for @fleet_managed_ssh_trust.
+  ///
+  /// In en, this message translates to:
+  /// **'On this first connection, the gateway will trust and remember this host’s SSH key. A later key change will be flagged and blocked. The gateway does not report the key fingerprint, so Ares cannot display or store it. Only continue if you trust this first connection.'**
+  String get fleet_managed_ssh_trust;
+
+  /// No description provided for @fleet_managed_ssh_changed.
+  ///
+  /// In en, this message translates to:
+  /// **'This host’s SSH key changed. Connection blocked. Someone with access to the gateway host must independently verify the new key fingerprint and remove the old trusted key there. Retry only after that verification and repair. Ares does not replace the trusted key.'**
+  String get fleet_managed_ssh_changed;
+
+  /// No description provided for @fleet_managed_ssh_disconnect_warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect the SSH tunnel and stop the remote service owned by this gateway? This can interrupt other clients using that service.'**
+  String get fleet_managed_ssh_disconnect_warning;
+
+  /// No description provided for @fleet_managed_ssh_verify.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify the key yourself instead'**
+  String get fleet_managed_ssh_verify;
+
+  /// No description provided for @fleet_managed_ssh_pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the gateway: {seconds} s. Leaving this page does not cancel bootstrap. If the request fails, check status before retrying.'**
+  String fleet_managed_ssh_pending(int seconds);
+
+  /// No description provided for @fleet_managed_ssh_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Host: {host}\nGateway loopback port: {localPort}\nRemote loopback port: {remotePort}\nHermes: {version}\nReused: {reused}'**
+  String fleet_managed_ssh_status(
+    String host,
+    int localPort,
+    int remotePort,
+    String version,
+    String reused,
+  );
+
+  /// No description provided for @fleet_managed_ssh_disconnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect'**
+  String get fleet_managed_ssh_disconnect;
 }
 
 class _AppLocalizationsDelegate

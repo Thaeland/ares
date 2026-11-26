@@ -11712,4 +11712,48 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get release_core_file_save_hidden => 'ゲートウェイでは隠しファイルを保存できません。';
+
+  @override
+  String get fleet_managed_ssh_title => 'ゲートウェイ管理のSSH';
+
+  @override
+  String get fleet_managed_ssh_intro =>
+      'このゲートウェイに保存済みのSSHホストを、どのデバイスからでも管理できます。リモートホストにはHermesがインストール済みである必要があります。この操作は、ゲートウェイが所有するリモートサービスを起動するか、そのサービスに接続するもので、Aresのチャット接続ではありません。管理された更新と復旧は、ネイティブのデスクトップアプリでのみ利用できます。';
+
+  @override
+  String get fleet_managed_ssh_read => '保存済みSSHホストを読み込む';
+
+  @override
+  String get fleet_managed_ssh_trust =>
+      'この初回接続で、ゲートウェイはこのホストのSSH鍵を信頼して記憶します。その後の鍵の変更は検出され、接続がブロックされます。ゲートウェイは鍵のフィンガープリントを通知しないため、Aresでは表示も保存もできません。この初回接続を信頼できる場合のみ続行してください。';
+
+  @override
+  String get fleet_managed_ssh_changed =>
+      'このホストのSSH鍵が変更されました。接続はブロックされています。ゲートウェイホストにアクセスできる人が、新しい鍵のフィンガープリントを独立した方法で確認し、そのホストで古い信頼済みの鍵を削除する必要があります。この確認と修復が完了してから再試行してください。Aresは信頼済みの鍵を置き換えません。';
+
+  @override
+  String get fleet_managed_ssh_disconnect_warning =>
+      'SSHトンネルを切断し、このゲートウェイが所有するリモートサービスを停止しますか？そのサービスを利用する他のクライアントに影響する可能性があります。';
+
+  @override
+  String get fleet_managed_ssh_verify => '代わりに自分で鍵を確認する';
+
+  @override
+  String fleet_managed_ssh_pending(int seconds) {
+    return 'ゲートウェイを待機中：$seconds秒。このページを離れても初期設定はキャンセルされません。リクエストが失敗した場合は、再試行する前に状態を確認してください。';
+  }
+
+  @override
+  String fleet_managed_ssh_status(
+    String host,
+    int localPort,
+    int remotePort,
+    String version,
+    String reused,
+  ) {
+    return 'ホスト：$host\nゲートウェイのループバックポート：$localPort\nリモートのループバックポート：$remotePort\nHermes：$version\n再利用：$reused';
+  }
+
+  @override
+  String get fleet_managed_ssh_disconnect => '切断';
 }

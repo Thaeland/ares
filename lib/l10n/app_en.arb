@@ -8102,5 +8102,41 @@
   "release_core_file_save_hidden": "Hidden files can't be saved by the gateway.",
   "@release_core_file_save_hidden": {
     "description": "Shared validation refusal; preserve the specific delivery target or file-saving reason."
-  }
+  },
+  "fleet_managed_ssh_title": "Gateway-managed SSH",
+  "fleet_managed_ssh_intro": "Manage SSH hosts already saved on this gateway, from any device. Hermes must already be installed on the remote host. This starts or attaches an owned remote service, not an Ares chat connection. Managed updates and recovery are available only in native Desktop.",
+  "fleet_managed_ssh_read": "Read saved SSH hosts",
+  "fleet_managed_ssh_trust": "On this first connection, the gateway will trust and remember this host’s SSH key. A later key change will be flagged and blocked. The gateway does not report the key fingerprint, so Ares cannot display or store it. Only continue if you trust this first connection.",
+  "fleet_managed_ssh_changed": "This host’s SSH key changed. Connection blocked. Someone with access to the gateway host must independently verify the new key fingerprint and remove the old trusted key there. Retry only after that verification and repair. Ares does not replace the trusted key.",
+  "fleet_managed_ssh_disconnect_warning": "Disconnect the SSH tunnel and stop the remote service owned by this gateway? This can interrupt other clients using that service.",
+  "fleet_managed_ssh_verify": "Verify the key yourself instead",
+  "fleet_managed_ssh_pending": "Waiting for the gateway: {seconds} s. Leaving this page does not cancel bootstrap. If the request fails, check status before retrying.",
+  "@fleet_managed_ssh_pending": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "fleet_managed_ssh_status": "Host: {host}\nGateway loopback port: {localPort}\nRemote loopback port: {remotePort}\nHermes: {version}\nReused: {reused}",
+  "@fleet_managed_ssh_status": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "localPort": {
+        "type": "int"
+      },
+      "remotePort": {
+        "type": "int"
+      },
+      "version": {
+        "type": "String"
+      },
+      "reused": {
+        "type": "String"
+      }
+    }
+  },
+  "fleet_managed_ssh_disconnect": "Disconnect"
 }

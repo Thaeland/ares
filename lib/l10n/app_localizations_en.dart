@@ -12025,4 +12025,48 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'Hidden files can\'t be saved by the gateway.';
+
+  @override
+  String get fleet_managed_ssh_title => 'Gateway-managed SSH';
+
+  @override
+  String get fleet_managed_ssh_intro =>
+      'Manage SSH hosts already saved on this gateway, from any device. Hermes must already be installed on the remote host. This starts or attaches an owned remote service, not an Ares chat connection. Managed updates and recovery are available only in native Desktop.';
+
+  @override
+  String get fleet_managed_ssh_read => 'Read saved SSH hosts';
+
+  @override
+  String get fleet_managed_ssh_trust =>
+      'On this first connection, the gateway will trust and remember this host’s SSH key. A later key change will be flagged and blocked. The gateway does not report the key fingerprint, so Ares cannot display or store it. Only continue if you trust this first connection.';
+
+  @override
+  String get fleet_managed_ssh_changed =>
+      'This host’s SSH key changed. Connection blocked. Someone with access to the gateway host must independently verify the new key fingerprint and remove the old trusted key there. Retry only after that verification and repair. Ares does not replace the trusted key.';
+
+  @override
+  String get fleet_managed_ssh_disconnect_warning =>
+      'Disconnect the SSH tunnel and stop the remote service owned by this gateway? This can interrupt other clients using that service.';
+
+  @override
+  String get fleet_managed_ssh_verify => 'Verify the key yourself instead';
+
+  @override
+  String fleet_managed_ssh_pending(int seconds) {
+    return 'Waiting for the gateway: $seconds s. Leaving this page does not cancel bootstrap. If the request fails, check status before retrying.';
+  }
+
+  @override
+  String fleet_managed_ssh_status(
+    String host,
+    int localPort,
+    int remotePort,
+    String version,
+    String reused,
+  ) {
+    return 'Host: $host\nGateway loopback port: $localPort\nRemote loopback port: $remotePort\nHermes: $version\nReused: $reused';
+  }
+
+  @override
+  String get fleet_managed_ssh_disconnect => 'Disconnect';
 }

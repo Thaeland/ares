@@ -12169,6 +12169,51 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'O gateway não pode guardar ficheiros ocultos.';
+
+  @override
+  String get fleet_managed_ssh_title => 'SSH gerido pelo gateway';
+
+  @override
+  String get fleet_managed_ssh_intro =>
+      'Gira os anfitriões SSH já guardados neste gateway a partir de qualquer dispositivo. O Hermes tem de estar instalado no anfitrião remoto. Esta operação inicia um serviço remoto pertencente ao gateway ou liga-se a esse serviço, não estabelece uma ligação de conversa do Ares. As atualizações geridas e a recuperação só estão disponíveis na aplicação nativa de computador.';
+
+  @override
+  String get fleet_managed_ssh_read => 'Ler anfitriões SSH guardados';
+
+  @override
+  String get fleet_managed_ssh_trust =>
+      'Nesta primeira ligação, o gateway irá confiar na chave SSH deste anfitrião e memorizá-la. Uma alteração posterior da chave será assinalada e bloqueada. O gateway não comunica a impressão digital da chave, pelo que o Ares não a pode apresentar nem guardar. Continue apenas se confiar nesta primeira ligação.';
+
+  @override
+  String get fleet_managed_ssh_changed =>
+      'A chave SSH deste anfitrião foi alterada. Ligação bloqueada. Alguém com acesso ao anfitrião do gateway tem de verificar de forma independente a impressão digital da nova chave e remover aí a antiga chave de confiança. Tente novamente apenas após essa verificação e reparação. O Ares não substitui a chave de confiança.';
+
+  @override
+  String get fleet_managed_ssh_disconnect_warning =>
+      'Desligar o túnel SSH e parar o serviço remoto pertencente a este gateway? Isto pode interromper outros clientes que utilizem esse serviço.';
+
+  @override
+  String get fleet_managed_ssh_verify =>
+      'Verificar a chave pessoalmente em alternativa';
+
+  @override
+  String fleet_managed_ssh_pending(int seconds) {
+    return 'A aguardar o gateway: $seconds s. Sair desta página não cancela a inicialização. Se o pedido falhar, verifique o estado antes de tentar novamente.';
+  }
+
+  @override
+  String fleet_managed_ssh_status(
+    String host,
+    int localPort,
+    int remotePort,
+    String version,
+    String reused,
+  ) {
+    return 'Anfitrião: $host\nPorta de loopback do gateway: $localPort\nPorta de loopback remota: $remotePort\nHermes: $version\nReutilizado: $reused';
+  }
+
+  @override
+  String get fleet_managed_ssh_disconnect => 'Desligar';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -24319,4 +24364,49 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get release_core_file_save_hidden =>
       'O gateway não pode salvar arquivos ocultos.';
+
+  @override
+  String get fleet_managed_ssh_title => 'SSH gerenciado pelo gateway';
+
+  @override
+  String get fleet_managed_ssh_intro =>
+      'Gerencie os hosts SSH já salvos neste gateway a partir de qualquer dispositivo. O Hermes já deve estar instalado no host remoto. Esta operação inicia um serviço remoto pertencente ao gateway ou se conecta a esse serviço, não estabelece uma conexão de chat do Ares. Atualizações gerenciadas e recuperação estão disponíveis apenas no aplicativo nativo para desktop.';
+
+  @override
+  String get fleet_managed_ssh_read => 'Ler hosts SSH salvos';
+
+  @override
+  String get fleet_managed_ssh_trust =>
+      'Nesta primeira conexão, o gateway confiará na chave SSH deste host e a memorizará. Qualquer alteração posterior da chave será sinalizada e bloqueada. O gateway não informa a impressão digital da chave, então o Ares não pode exibi-la nem armazená-la. Continue apenas se confiar nesta primeira conexão.';
+
+  @override
+  String get fleet_managed_ssh_changed =>
+      'A chave SSH deste host mudou. Conexão bloqueada. Alguém com acesso ao host do gateway deve verificar de forma independente a impressão digital da nova chave e remover a antiga chave confiável nesse host. Tente novamente apenas após essa verificação e correção. O Ares não substitui a chave confiável.';
+
+  @override
+  String get fleet_managed_ssh_disconnect_warning =>
+      'Desconectar o túnel SSH e parar o serviço remoto pertencente a este gateway? Isso pode interromper outros clientes que usam esse serviço.';
+
+  @override
+  String get fleet_managed_ssh_verify =>
+      'Verificar a chave pessoalmente em vez disso';
+
+  @override
+  String fleet_managed_ssh_pending(int seconds) {
+    return 'Aguardando o gateway: $seconds s. Sair desta página não cancela a inicialização. Se a solicitação falhar, verifique o status antes de tentar novamente.';
+  }
+
+  @override
+  String fleet_managed_ssh_status(
+    String host,
+    int localPort,
+    int remotePort,
+    String version,
+    String reused,
+  ) {
+    return 'Host: $host\nPorta de loopback do gateway: $localPort\nPorta de loopback remota: $remotePort\nHermes: $version\nReutilizado: $reused';
+  }
+
+  @override
+  String get fleet_managed_ssh_disconnect => 'Desconectar';
 }

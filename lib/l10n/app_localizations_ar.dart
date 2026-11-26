@@ -12025,4 +12025,48 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'لا يمكن للبوابة حفظ الملفات المخفية.';
+
+  @override
+  String get fleet_managed_ssh_title => 'SSH بإدارة البوابة';
+
+  @override
+  String get fleet_managed_ssh_intro =>
+      'أدِر مضيفي SSH المحفوظين بالفعل على هذه البوابة من أي جهاز. يجب أن يكون Hermes مثبتًا مسبقًا على المضيف البعيد. يؤدي هذا إلى بدء خدمة بعيدة مملوكة للبوابة أو الاتصال بها، وليس إلى إنشاء اتصال دردشة Ares. لا تتوفر التحديثات المُدارة والاسترداد إلا في تطبيق سطح المكتب الأصلي.';
+
+  @override
+  String get fleet_managed_ssh_read => 'قراءة مضيفي SSH المحفوظين';
+
+  @override
+  String get fleet_managed_ssh_trust =>
+      'عند هذا الاتصال الأول، ستثق البوابة بمفتاح SSH لهذا المضيف وتتذكره. سيُكتشف أي تغيير لاحق في المفتاح ويُحظر الاتصال. لا تُبلغ البوابة عن بصمة المفتاح، لذا لا يستطيع Ares عرضها أو تخزينها. لا تتابع إلا إذا كنت تثق بهذا الاتصال الأول.';
+
+  @override
+  String get fleet_managed_ssh_changed =>
+      'تغيّر مفتاح SSH لهذا المضيف. تم حظر الاتصال. يجب على شخص لديه صلاحية الوصول إلى مضيف البوابة التحقق بشكل مستقل من بصمة المفتاح الجديد وإزالة المفتاح القديم الموثوق به هناك. لا تُعِد المحاولة إلا بعد هذا التحقق والإصلاح. لا يستبدل Ares المفتاح الموثوق به.';
+
+  @override
+  String get fleet_managed_ssh_disconnect_warning =>
+      'هل تريد قطع نفق SSH وإيقاف الخدمة البعيدة المملوكة لهذه البوابة؟ قد يؤدي ذلك إلى مقاطعة عملاء آخرين يستخدمون هذه الخدمة.';
+
+  @override
+  String get fleet_managed_ssh_verify => 'التحقق من المفتاح بنفسك بدلًا من ذلك';
+
+  @override
+  String fleet_managed_ssh_pending(int seconds) {
+    return 'في انتظار البوابة: $seconds ث. مغادرة هذه الصفحة لا تلغي التهيئة. إذا فشل الطلب، فتحقق من الحالة قبل إعادة المحاولة.';
+  }
+
+  @override
+  String fleet_managed_ssh_status(
+    String host,
+    int localPort,
+    int remotePort,
+    String version,
+    String reused,
+  ) {
+    return 'المضيف: $host\nمنفذ الاسترجاع المحلي للبوابة: $localPort\nمنفذ الاسترجاع المحلي البعيد: $remotePort\nHermes: $version\nأُعيد استخدامه: $reused';
+  }
+
+  @override
+  String get fleet_managed_ssh_disconnect => 'قطع الاتصال';
 }

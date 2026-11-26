@@ -3314,5 +3314,15 @@
   "release_misc_gateway_unreachable": "Impossible de joindre le point de terminaison de la passerelle {endpoint}.",
   "release_core_schedule_invalid_delivery_target": "Destination de livraison non valide",
   "release_core_file_save_direct_only": "Seul un fichier situé directement dans le répertoire de travail peut être enregistré.",
-  "release_core_file_save_hidden": "La passerelle ne peut pas enregistrer les fichiers masqués."
+  "release_core_file_save_hidden": "La passerelle ne peut pas enregistrer les fichiers masqués.",
+  "fleet_managed_ssh_title": "SSH géré par la passerelle",
+  "fleet_managed_ssh_intro": "Gérez les hôtes SSH déjà enregistrés sur cette passerelle depuis n’importe quel appareil. Hermes doit déjà être installé sur l’hôte distant. Cette opération démarre un service distant appartenant à la passerelle ou s’y rattache, et non une connexion de discussion Ares. Les mises à jour gérées et la récupération ne sont disponibles que dans l’application de bureau native.",
+  "fleet_managed_ssh_read": "Lire les hôtes SSH enregistrés",
+  "fleet_managed_ssh_trust": "Lors de cette première connexion, la passerelle fera confiance à la clé SSH de cet hôte et la mémorisera. Toute modification ultérieure de la clé sera signalée et bloquée. La passerelle ne communique pas l’empreinte de la clé ; Ares ne peut donc ni l’afficher ni l’enregistrer. Ne continuez que si vous faites confiance à cette première connexion.",
+  "fleet_managed_ssh_changed": "La clé SSH de cet hôte a changé. Connexion bloquée. Une personne ayant accès à l’hôte de la passerelle doit vérifier indépendamment l’empreinte de la nouvelle clé et y supprimer l’ancienne clé de confiance. Ne réessayez qu’après cette vérification et cette réparation. Ares ne remplace pas la clé de confiance.",
+  "fleet_managed_ssh_disconnect_warning": "Déconnecter le tunnel SSH et arrêter le service distant appartenant à cette passerelle ? Cela peut interrompre d’autres clients utilisant ce service.",
+  "fleet_managed_ssh_verify": "Vérifier plutôt la clé vous-même",
+  "fleet_managed_ssh_pending": "En attente de la passerelle : {seconds} s. Quitter cette page n’annule pas l’initialisation. Si la requête échoue, vérifiez l’état avant de réessayer.",
+  "fleet_managed_ssh_status": "Hôte : {host}\nPort de bouclage de la passerelle : {localPort}\nPort de bouclage distant : {remotePort}\nHermes : {version}\nRéutilisé : {reused}",
+  "fleet_managed_ssh_disconnect": "Déconnecter"
 }

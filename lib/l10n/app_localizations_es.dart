@@ -12164,4 +12164,49 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'La puerta de enlace no puede guardar archivos ocultos.';
+
+  @override
+  String get fleet_managed_ssh_title => 'SSH gestionado por la pasarela';
+
+  @override
+  String get fleet_managed_ssh_intro =>
+      'Gestiona desde cualquier dispositivo los hosts SSH ya guardados en esta pasarela. Hermes debe estar instalado en el host remoto. Esto inicia un servicio remoto propiedad de la pasarela o se conecta a él, no establece una conexión de chat de Ares. Las actualizaciones gestionadas y la recuperación solo están disponibles en la aplicación nativa de escritorio.';
+
+  @override
+  String get fleet_managed_ssh_read => 'Leer hosts SSH guardados';
+
+  @override
+  String get fleet_managed_ssh_trust =>
+      'En esta primera conexión, la pasarela confiará en la clave SSH de este host y la recordará. Cualquier cambio posterior de la clave se detectará y bloqueará. La pasarela no comunica la huella digital de la clave, por lo que Ares no puede mostrarla ni guardarla. Continúa solo si confías en esta primera conexión.';
+
+  @override
+  String get fleet_managed_ssh_changed =>
+      'La clave SSH de este host ha cambiado. Conexión bloqueada. Alguien con acceso al host de la pasarela debe verificar de forma independiente la huella digital de la nueva clave y eliminar allí la antigua clave de confianza. Vuelve a intentarlo solo después de esa verificación y reparación. Ares no sustituye la clave de confianza.';
+
+  @override
+  String get fleet_managed_ssh_disconnect_warning =>
+      '¿Desconectar el túnel SSH y detener el servicio remoto propiedad de esta pasarela? Esto puede interrumpir a otros clientes que utilicen ese servicio.';
+
+  @override
+  String get fleet_managed_ssh_verify =>
+      'Verificar la clave personalmente en su lugar';
+
+  @override
+  String fleet_managed_ssh_pending(int seconds) {
+    return 'Esperando a la pasarela: $seconds s. Salir de esta página no cancela la puesta en marcha. Si la solicitud falla, comprueba el estado antes de volver a intentarlo.';
+  }
+
+  @override
+  String fleet_managed_ssh_status(
+    String host,
+    int localPort,
+    int remotePort,
+    String version,
+    String reused,
+  ) {
+    return 'Host: $host\nPuerto de bucle local de la pasarela: $localPort\nPuerto de bucle local remoto: $remotePort\nHermes: $version\nReutilizado: $reused';
+  }
+
+  @override
+  String get fleet_managed_ssh_disconnect => 'Desconectar';
 }

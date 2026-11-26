@@ -12171,4 +12171,49 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get release_core_file_save_hidden =>
       'Versteckte Dateien können vom Gateway nicht gespeichert werden.';
+
+  @override
+  String get fleet_managed_ssh_title => 'Vom Gateway verwaltetes SSH';
+
+  @override
+  String get fleet_managed_ssh_intro =>
+      'Verwalte SSH-Hosts, die bereits auf diesem Gateway gespeichert sind, von jedem Gerät aus. Hermes muss bereits auf dem Remote-Host installiert sein. Dabei wird ein eigener Remote-Dienst gestartet oder eine Verbindung zu ihm hergestellt, keine Ares-Chatverbindung. Verwaltete Updates und Wiederherstellung sind nur in der nativen Desktop-App verfügbar.';
+
+  @override
+  String get fleet_managed_ssh_read => 'Gespeicherte SSH-Hosts lesen';
+
+  @override
+  String get fleet_managed_ssh_trust =>
+      'Bei dieser ersten Verbindung vertraut das Gateway dem SSH-Schlüssel dieses Hosts und speichert ihn. Eine spätere Schlüsseländerung wird erkannt und blockiert. Das Gateway meldet den Schlüsselfingerabdruck nicht, daher kann Ares ihn weder anzeigen noch speichern. Fahre nur fort, wenn du dieser ersten Verbindung vertraust.';
+
+  @override
+  String get fleet_managed_ssh_changed =>
+      'Der SSH-Schlüssel dieses Hosts hat sich geändert. Verbindung blockiert. Jemand mit Zugriff auf den Gateway-Host muss den neuen Schlüsselfingerabdruck unabhängig überprüfen und dort den alten vertrauenswürdigen Schlüssel entfernen. Versuche es erst nach dieser Überprüfung und Reparatur erneut. Ares ersetzt den vertrauenswürdigen Schlüssel nicht.';
+
+  @override
+  String get fleet_managed_ssh_disconnect_warning =>
+      'SSH-Tunnel trennen und den Remote-Dienst stoppen, der diesem Gateway gehört? Dadurch können andere Clients unterbrochen werden, die diesen Dienst verwenden.';
+
+  @override
+  String get fleet_managed_ssh_verify =>
+      'Den Schlüssel stattdessen selbst überprüfen';
+
+  @override
+  String fleet_managed_ssh_pending(int seconds) {
+    return 'Warten auf das Gateway: $seconds s. Das Verlassen dieser Seite bricht die Einrichtung nicht ab. Falls die Anfrage fehlschlägt, prüfe vor einem erneuten Versuch den Status.';
+  }
+
+  @override
+  String fleet_managed_ssh_status(
+    String host,
+    int localPort,
+    int remotePort,
+    String version,
+    String reused,
+  ) {
+    return 'Host: $host\nLokaler Loopback-Port: $localPort\nRemote-Loopback-Port: $remotePort\nHermes: $version\nWiederverwendet: $reused';
+  }
+
+  @override
+  String get fleet_managed_ssh_disconnect => 'Trennen';
 }

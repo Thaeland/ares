@@ -3314,5 +3314,15 @@
   "release_misc_gateway_unreachable": "无法连接到网关端点 {endpoint}。",
   "release_core_schedule_invalid_delivery_target": "无效的投递目标",
   "release_core_file_save_direct_only": "只能保存工作目录直属的文件。",
-  "release_core_file_save_hidden": "网关无法保存隐藏文件。"
+  "release_core_file_save_hidden": "网关无法保存隐藏文件。",
+  "fleet_managed_ssh_title": "网关管理的 SSH",
+  "fleet_managed_ssh_intro": "从任意设备管理已保存在此网关上的 SSH 主机。远程主机上必须已安装 Hermes。此操作会启动或连接到归此网关所有的远程服务，而不是建立 Ares 聊天连接。托管更新和恢复仅在原生桌面应用中可用。",
+  "fleet_managed_ssh_read": "读取已保存的 SSH 主机",
+  "fleet_managed_ssh_trust": "首次连接时，网关会信任并记住此主机的 SSH 密钥。之后若密钥发生变化，将会被标记并阻止连接。网关不提供密钥指纹，因此 Ares 无法显示或存储指纹。仅在信任此次首次连接时才继续。",
+  "fleet_managed_ssh_changed": "此主机的 SSH 密钥已更改。连接已被阻止。有权访问网关主机的人必须独立核实新密钥的指纹，并在网关主机上移除旧的受信任密钥。仅在完成核实和修复后才重试。Ares 不会替换受信任的密钥。",
+  "fleet_managed_ssh_disconnect_warning": "断开 SSH 隧道并停止归此网关所有的远程服务？这可能会中断其他正在使用该服务的客户端。",
+  "fleet_managed_ssh_verify": "改为自行验证密钥",
+  "fleet_managed_ssh_pending": "正在等待网关：{seconds} 秒。离开此页面不会取消初始化。如果请求失败，请先检查状态再重试。",
+  "fleet_managed_ssh_status": "主机：{host}\n网关回环端口：{localPort}\n远程回环端口：{remotePort}\nHermes：{version}\n已复用：{reused}",
+  "fleet_managed_ssh_disconnect": "断开连接"
 }
