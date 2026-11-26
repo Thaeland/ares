@@ -42,12 +42,14 @@ class _PreparedImageRecoveryState extends State<PreparedImageRecovery> {
   @override
   void didUpdateWidget(PreparedImageRecovery oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.target.key != widget.target.key ||
-        oldWidget.store != widget.store ||
-        _checkedRevision != widget.revision()) {
-      _recoverable = false;
-      _check();
-    }
+    final retarget =
+        oldWidget.target.key != widget.target.key ||
+        oldWidget.store != widget.store;
+    // Only a different chat or store hides the button before the re-read; a
+    // revision change keeps the current answer until the re-read lands, so a
+    // shown button does not blink.
+    if (retarget) _recoverable = false;
+    if (retarget || _checkedRevision != widget.revision()) _check();
   }
 
   void _check() async {
