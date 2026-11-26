@@ -275,13 +275,20 @@ class _CronScreenState extends State<CronScreen> {
   /// Opens one cron run's transcript. A run is an ordinary session row
   /// (`cron_{job_id}_{timestamp}`), so the regular ChatScreen resume path
   /// shows the full transcript — same as the desktop's run-pill click.
+  ///
+  /// `/resume` there opens the pick in place of that chat; this screen
+  /// under it stays.
   void _openRun(Session run) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => ChatScreen(
-          connection: widget.connection,
-          session: run,
-          turnApplicationController: widget.turnApplicationController,
+    unawaited(
+      Navigator.of(context).push(
+        resumableChatRoute(
+          run,
+          (session, onOpenSession) => ChatScreen(
+            connection: widget.connection,
+            session: session,
+            turnApplicationController: widget.turnApplicationController,
+            onOpenSession: onOpenSession,
+          ),
         ),
       ),
     );

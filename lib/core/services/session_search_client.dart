@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import '../models/client_certificate.dart';
 import '../models/session_search_hit.dart';
 import 'connection_manager.dart';
+import 'hermes_sign_in.dart' show NoGatewayRedirects;
 import 'tls_client_factory.dart';
 
 /// Raised when a server-side session search cannot be completed.
@@ -56,8 +57,15 @@ class SessionSearchClient {
        // auth headers would send a cookie over a transport that cannot present
        // the client certificate, so a proxy enforcing mTLS would reject search
        // even though the session list loaded.
-       _http =
-           httpClient ?? tlsClientFactory.createRestClient(clientCertificate);
+       //
+       // The headers carry the deployment token (X-Hermes-Session-Token) and
+       // the connection's custom headers. dart:io strips only Authorization
+       // and Cookie when it follows a redirect, so a 3xx to another origin
+       // would hand those to a third party. Refuse every redirect, as the
+       // gateway's own clients do, and report the 3xx as a failure.
+       _http = NoGatewayRedirects(
+         httpClient ?? tlsClientFactory.createRestClient(clientCertificate),
+       );
 
   /// Runs a full-text search and returns the matching sessions.
   ///
@@ -131,6 +139,13 @@ class SessionSearchClient {
       throw const SessionSearchException(
         'This dashboard does not expose session search. Update Hermes on the '
         'host, or switch back to on-device search.',
+      );
+    }
+    if (response.statusCode >= 300 && response.statusCode < 400) {
+      throw SessionSearchException(
+        'The dashboard redirected session search (HTTP '
+        '${response.statusCode}). Ares does not follow redirects with saved '
+        'credentials; check the connection address.',
       );
     }
     if (response.statusCode != 200) {

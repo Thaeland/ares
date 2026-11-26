@@ -162,6 +162,76 @@ void main() {
     );
   });
 
+  test('a missing method is Desktop\'s isMissingRpcMethod (gateway-rpc.ts:'
+      '7-17), plus an older gateway\'s 4004 "unknown method"', () async {
+    // The JSON-RPC code decides when there is one.
+    expect(
+      missingRpcMethod(
+        JsonRpcError('prompt.background', 'unknown method', code: -32601),
+      ),
+      isTrue,
+    );
+    expect(
+      missingRpcMethod(
+        JsonRpcError(
+          'prompt.background',
+          'unknown method: prompt.background',
+          code: 4004,
+        ),
+      ),
+      isTrue,
+    );
+    // A coded error that merely mentions the words, or a 4004 for bad
+    // input, is a real failure.
+    expect(
+      missingRpcMethod(
+        JsonRpcError('x', 'unknown method in user script', code: -32000),
+      ),
+      isFalse,
+    );
+    expect(
+      missingRpcMethod(JsonRpcError('x', 'text is required', code: 4004)),
+      isFalse,
+    );
+    // A codeless (flattened) error decides by its message.
+    for (final message in [
+      'unknown method: prompt.background',
+      'Method not found',
+      'RPC failed: -32601',
+      'no such method',
+    ]) {
+      expect(missingRpcMethod(JsonRpcError('x', message)), isTrue);
+      expect(missingRpcMethod(StateError(message)), isTrue);
+    }
+    expect(
+      missingRpcMethod(JsonRpcError('x', 'Hermes gateway is not connected')),
+      isFalse,
+    );
+    // So /bg on such a gateway takes the slash.exec route; a real failure
+    // is reported instead.
+    for (final error in [
+      JsonRpcError('prompt.background', 'unknown method', code: 4004),
+      JsonRpcError('prompt.background', 'unknown method: prompt.background'),
+    ]) {
+      final run = await runDedicatedCommand(
+        name: 'bg',
+        arg: 'look',
+        sessionId: 's',
+        rpc: (_, _) async => throw error,
+      );
+      expect(run!.answer!.fallbackToExec, isTrue, reason: '$error');
+    }
+    final refused = await runDedicatedCommand(
+      name: 'bg',
+      arg: 'look',
+      sessionId: 's',
+      rpc: (_, _) async =>
+          throw JsonRpcError('prompt.background', 'busy', code: 4009),
+    );
+    expect(refused!.answer!.fallbackToExec, isFalse);
+    expect(refused.answer!.failed, isTrue);
+  });
+
   test('a handoff that handoff.fail reports completed is completed', () async {
     final calls = <String>[];
     var clock = 0;
@@ -217,9 +287,45 @@ void main() {
       ),
       isNull,
     );
+    expect(
+      await resolveRegenerateTarget(rpc: history, sessionId: 's', text: 'same'),
+      (rowId: 5, ordinal: 1),
+    );
+    // Retry/regenerate is Desktop's runReload -> runRewindSubmit: with the
+    // row resolved the ordinal is dropped and every submit carries
+    // confirm_empty_truncate (rewind.ts:361-369), first turn or later.
     expect(regenerateSubmitParams(5), {
       'confirm_truncate': true,
       'truncate_before_row_id': 5,
+      'confirm_empty_truncate': true,
+    });
+    expect(regenerateSubmitParams(1), {
+      'confirm_truncate': true,
+      'truncate_before_row_id': 1,
+      'confirm_empty_truncate': true,
+    });
+  });
+
+  test('truncateSubmitParams is Desktop\'s (rewind.ts:174-197): the empty '
+      'confirmation only for an ordinal-0 cut', () {
+    expect(truncateSubmitParams(), isEmpty);
+    expect(truncateSubmitParams(ordinal: 0), {
+      'confirm_truncate': true,
+      'truncate_before_user_ordinal': 0,
+      'confirm_empty_truncate': true,
+    });
+    expect(truncateSubmitParams(ordinal: 2), {
+      'confirm_truncate': true,
+      'truncate_before_user_ordinal': 2,
+    });
+    expect(truncateSubmitParams(rowId: 9), {
+      'confirm_truncate': true,
+      'truncate_before_row_id': 9,
+    });
+    expect(truncateSubmitParams(ordinal: 0, rowId: 9), {
+      'confirm_truncate': true,
+      'truncate_before_user_ordinal': 0,
+      'truncate_before_row_id': 9,
       'confirm_empty_truncate': true,
     });
   });

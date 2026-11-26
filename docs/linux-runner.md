@@ -18,6 +18,29 @@ tar -C "$bundle" -czf ares-linux-arm64.tar.gz .
 
 `flutter pub get`, not just `dart pub get`, generates Flutter's native plugin registrations. No Linux-only pub dependency or custom engine is needed. The host must provide a GTK3 graphical session/GL driver and the runtime libraries used by the build, including GStreamer and libsecret. Saved credentials need an unlocked Secret Service on the session D-Bus. Audio recording has separate PulseAudio-compatible utilities and encoder requirements; it was not tested by this launch smoke.
 
+## Desktop integration (tray, quick entry, hotkey, power, capture)
+
+The runner's `desktop_os.cc` implements the primary window's channels described in [desktop-os-native.md](desktop-os-native.md); child windows (pop-out chat, companion, quick entry) never attach it. Everything is opt-in in **Settings → Desktop integration** except the sleep/lock socket pause and the capture action, which need no setup.
+
+| Feature | Linux mechanism | Needs at runtime |
+| --- | --- | --- |
+| Tray icon, close to tray | StatusNotifierItem + dbusmenu over GDBus (`status_notifier.cc`) with the bundle's `data/flutter_assets/assets/icon/icon.png`; on X11 without a StatusNotifierWatcher, `GtkStatusIcon` (XEmbed). `setTray` answers `true` only once the icon is shown | A shell that hosts StatusNotifierItems (KDE, GNOME + AppIndicator extension, Xfce, MATE, Cinnamon, LXQt, waybar; X11 or Wayland), or an X11 XEmbed tray host. Neither: Settings shows one disabled row instead of the switches. |
+| Quick-entry window | Same executable with `--ares-quick-entry-v1`: keep-above, centred, no taskbar entry | — |
+| Global hotkey | `XGrabKey` on the root window, with Caps Lock / Num Lock variants | X11. Wayland: `isSupported` is false and Settings shows one disabled row instead of the switch. |
+| Sleep / lock pause | logind `PrepareForSleep`; lock state from the session's `LockedHint` and `ScreenSaver.ActiveChanged` (logind `Lock`/`Unlock` requests only trigger a re-read); `isLocked` for Dart's re-check after resume | System and session D-Bus (missing buses: no events, sockets simply stay up). A locker that sets neither `LockedHint` nor a screensaver state (plain swaylock/i3lock) does not pause; focus or input in Ares always lifts a pause |
+| Keep awake | xdg-desktop-portal `Inhibit` (suspend flag), else `org.freedesktop.ScreenSaver.Inhibit`; asynchronous calls | A portal with an Inhibit backend (GNOME, KDE, wlroots portals) or a running screensaver service; Settings hides the card when neither answers (an activatable name alone does not count) |
+| Screen capture | xdg-desktop-portal `Screenshot` (interactive) | A portal implementation with the Screenshot interface |
+
+### hermes:// links
+
+`linux/packaging/com.hermesagent.ares.desktop` (installed into the bundle's `share/applications/`) declares `MimeType=x-scheme-handler/hermes;` and `Exec=ares %u`. A relocatable bundle cannot register itself; to use links, copy the file to `~/.local/share/applications/`, set `Exec=` to the bundle's absolute `ares` path, then run `update-desktop-database ~/.local/share/applications` and `xdg-mime default com.hermesagent.ares.desktop x-scheme-handler/hermes`. A distribution package installs it into `/usr/share/applications`.
+
+The primary window is a unique `GApplication` (`G_APPLICATION_HANDLES_OPEN`); child windows keep `G_APPLICATION_NON_UNIQUE`. Launching `ares hermes://…` while Ares runs sends the link to the running primary over the session D-Bus (`GApplication.open`); with no running primary that launch becomes it and Dart reads the link with `getInitialLink`. A second plain launch brings the existing window forward instead of opening a second primary. The runner only checks the scheme, length (16 KiB) and control characters (`IsDeepLink` in `desktop_os_logic.h`); Dart's router validates the route and never sends, approves or installs anything.
+
+Build: the runner now links **libX11** directly (`pkg_check_modules(X11 … x11)`); `libx11-dev` is already a dependency of `libgtk-3-dev`, so the Debian package list above is unchanged. GIO (D-Bus, portals) comes with GTK. The runner is compiled as C++17. Licences: libX11 is MIT (X11); it is linked dynamically and not copied into the bundle, like GTK.
+
+Checks without a full app build: `tool/native_tests/run.sh` (platform-free logic) and `tool/native_tests/linux_compile_check.sh <flutter-gtk-dir>` (compiles `desktop_os.cc` with `-Wall -Wextra -Werror` and `my_application.cc` with the project flags against Debian 12 GTK 3 and the engine's `flutter_linux` headers, in a network-less container). Neither replaces the fixture smoke below or a run on a real X11/Wayland desktop.
+
 ## Native fixture smoke
 
 Run as an unprivileged user **inside a disposable Linux container**. Stage the source, SDK, build packages and the fixture's Python dependencies first, then disconnect the container from all networks before launching Ares. Do not mount a home, D-Bus socket, display, Docker socket, configuration or credential store. The script rejects a network namespace with any interface except `lo`; it creates and removes a new HOME, session bus, keyring and Xvfb display for each layout. There is no listener on the host.

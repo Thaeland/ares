@@ -22,6 +22,7 @@ import '../presentation/transcript_reading.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:uuid/uuid.dart';
 import '../controllers/hands_free_conversation_controller.dart';
+import '../services/hermes_deeplink.dart' show appendComposerPrefill;
 import '../services/hands_free_preference.dart';
 import '../services/hands_free_voice_platform.dart';
 import '../services/android_voice_composer_adapter.dart';
@@ -57,6 +58,7 @@ import '../services/chat_model_override_store.dart';
 import '../services/chat_density_preference.dart';
 import '../services/chat_history_window.dart';
 import '../services/desktop_gateway_client.dart';
+import '../services/composer_session_rpc.dart';
 import '../services/remote_workspace.dart';
 import '../services/gateway_turn_application_controller.dart';
 import '../services/normal_gateway_application_session.dart';
@@ -119,6 +121,7 @@ import '../models/turn_changed_files.dart';
 import '../widgets/background_report_card.dart';
 import '../widgets/gateway_activity_card.dart';
 import '../widgets/chat_context_header.dart';
+import '../widgets/keyboard_room.dart';
 import '../widgets/chat_activity_bar.dart';
 import '../widgets/markdown_code_block.dart';
 import '../widgets/markdown_link_handler.dart';
@@ -142,6 +145,10 @@ import '../widgets/composer_prompt_recall.dart';
 import '../composer/composer_commands.dart';
 import '../composer/failure_recovery.dart';
 import '../composer/regenerate.dart';
+import '../composer/composer_drag.dart';
+import '../composer/composer_intake.dart';
+import '../composer/os_intake.dart';
+import '../widgets/composer_drop_surface.dart';
 import '../composer/context_status.dart';
 import '../composer/reference_completion.dart';
 import '../widgets/composer_context_status.dart';
@@ -150,6 +157,7 @@ import '../widgets/failure_recovery_card.dart';
 import '../widgets/prompt_snippet_sheet.dart';
 import '../widgets/resume_session_picker.dart';
 import '../widgets/orphan_draft_recovery.dart';
+import '../desktop/screen_capture.dart';
 
 /// Recovery v2 opens a new server session and cannot yet target an existing
 /// Gateway session. Keep it confined to locally-created drafts; a session from
@@ -435,7 +443,10 @@ class _ChatModelPickerSheetState extends State<_ChatModelPickerSheet> {
 
 class _ModelSelection {
   final _ModelChoice choice;
-  final String reasoningEffort;
+
+  /// Null keeps the chat's current reasoning effort (a suggested model
+  /// from the failure card switches the model only).
+  final String? reasoningEffort;
 
   const _ModelSelection({required this.choice, required this.reasoningEffort});
 }
@@ -572,6 +583,46 @@ class _PendingClarifyPrompt {
   const _PendingClarifyPrompt(this.request, this.responseGeneration);
 }
 
+/// A pushed chat route whose `/resume` opens the pick in this route's place,
+/// for a host with no session list of its own (a cron run, a notification,
+/// a pop-out window). The routes under it, the host shell among them, stay.
+/// [build] makes the chat for a session and must pass it [onOpenSession];
+/// [onReplaced] sees each route that takes a previous one's place, with the
+/// future that completes when it closes (a host tracking its routes keeps
+/// it).
+MaterialPageRoute<void> resumableChatRoute(
+  Session session,
+  Widget Function(
+    Session session,
+    Future<void> Function(Session picked) onOpenSession,
+  )
+  build, {
+  void Function(
+    MaterialPageRoute<void> route,
+    Session session,
+    Future<void> closed,
+  )?
+  onReplaced,
+}) {
+  late final MaterialPageRoute<void> route;
+  route = MaterialPageRoute<void>(
+    builder: (_) => build(session, (picked) async {
+      final navigator = route.navigator;
+      if (navigator == null || !route.isActive) return;
+      final next = resumableChatRoute(picked, build, onReplaced: onReplaced);
+      final Future<void> closed;
+      if (route.isCurrent) {
+        closed = navigator.pushReplacement<void, void>(next);
+      } else {
+        navigator.removeRoute(route);
+        closed = navigator.push<void>(next);
+      }
+      onReplaced?.call(next, picked, closed);
+    }),
+  );
+  return route;
+}
+
 class ChatScreen extends StatefulWidget {
   final SavedConnection connection;
   final Session session;
@@ -598,6 +649,33 @@ class ChatScreen extends StatefulWidget {
   /// composer; sending remains an explicit user action.
   final String? initialComposerText;
 
+  /// When true, [initialComposerText] (a `hermes://` link's prefill) is
+  /// appended to the chat's unsent draft instead of replacing it.
+  final bool initialComposerAppends;
+
+  /// Mounted chats by connection and session (the latest mount wins), so a
+  /// deep-link prefill for a chat that is already open goes into its live
+  /// composer rather than a second copy of the chat.
+  static final Map<String, _ChatScreenState> _mounted = {};
+
+  static String _mountKey(String connectionId, String sessionId) =>
+      '$connectionId\u0000$sessionId';
+
+  /// Appends [text] to the composer of the open chat [sessionId] on
+  /// [connectionId], after its unsent draft, and returns that chat's route
+  /// so the caller can bring it forward. Null when the chat is not open.
+  /// Nothing is sent.
+  static ModalRoute<Object?>? appendToOpenChat({
+    required String connectionId,
+    required String sessionId,
+    required String text,
+  }) {
+    final state = _mounted[_mountKey(connectionId, sessionId)];
+    if (state == null || !state.mounted) return null;
+    unawaited(state._appendLinkPrefill(text));
+    return ModalRoute.of(state.context);
+  }
+
   /// Validated app-private files supplied by Android's share sheet.
   final List<AttachmentDraft> initialAttachmentDrafts;
 
@@ -611,6 +689,9 @@ class ChatScreen extends StatefulWidget {
 
   @visibleForTesting
   final AttachmentDraftService? testAttachmentDraftService;
+
+  /// Desktop screen capture; tests pass a fake-channel controller.
+  final ScreenCaptureController? screenCapture;
 
   @visibleForTesting
   final TestRemotePromptSubmit? testRemotePromptSubmit;
@@ -657,6 +738,9 @@ class ChatScreen extends StatefulWidget {
   /// instead of popping the enclosing route. Null keeps the normal pushed
   /// full-screen behaviour (back button pops the route).
   final VoidCallback? onClose;
+
+  /// Opens the app-wide command palette owned by the enclosing workspace.
+  final VoidCallback? onOpenAppCommandPalette;
 
   /// Lets a test observe what the chat posts to Android when a turn settles,
   /// without touching the notification platform channel.
@@ -712,12 +796,17 @@ class ChatScreen extends StatefulWidget {
   @visibleForTesting
   final SlashCommandGateway? testSlashGateway;
 
+  /// The composer's gateway calls (completion, context breakdown, compress)
+  /// without a socket. Production uses the Desktop gateway client.
+  final ComposerSessionRpc? testComposerRpc;
+
   const ChatScreen({
     required this.connection,
     required this.session,
     this.projectName,
     this.projectWorkingDirectory,
     this.initialComposerText,
+    this.initialComposerAppends = false,
     this.initialAttachmentDrafts = const [],
     this.turnApplicationController,
     this.testTurnApplicationSession,
@@ -726,6 +815,7 @@ class ChatScreen extends StatefulWidget {
     this.testRemotePromptSubmit,
     this.testNormalResume,
     this.testServerFilePicker,
+    this.screenCapture,
     this.testRemoteAttachmentUpload,
     this.testInitialAttachmentDrafts = const [],
     this.testComposerDraftReader,
@@ -738,6 +828,7 @@ class ChatScreen extends StatefulWidget {
     this.singleSession = false,
     this.notifications,
     this.onClose,
+    this.onOpenAppCommandPalette,
     this.testTurnNotifications,
     this.testDesktopConnectionHook,
     this.testDesktopGateway,
@@ -749,6 +840,7 @@ class ChatScreen extends StatefulWidget {
     this.testMediaFilesClient,
     this.testTaskHistorySource,
     this.testSlashGateway,
+    this.testComposerRpc,
     this.onArchiveChanged,
     this.sessionArchiver,
     this.onOpenSession,
@@ -757,9 +849,11 @@ class ChatScreen extends StatefulWidget {
 
   /// The host's own way of opening a chat (the one its session list uses),
   /// for `/resume`: it keeps the host, its turn controller, project context,
-  /// archive callbacks and notifications. Null where the host has none (a
-  /// parallel pane, a pop-out, a notification route): `/resume` then says
-  /// so and keeps the line, and never replaces the route itself.
+  /// archive callbacks and notifications. A parallel pane opens the pick as
+  /// another pane; a cron run, a notification or a pop-out opens it in the
+  /// chat route's place ([resumableChatRoute]). Null only where a host has
+  /// no path at all: `/resume` then says so and keeps the line, and never
+  /// replaces the route itself.
   final Future<void> Function(Session session)? onOpenSession;
 
   @override
@@ -894,6 +988,11 @@ class _ChatScreenState extends State<ChatScreen>
 
   final _imagePicker = ImagePicker();
   final List<AttachmentDraft> _attachmentDrafts = [];
+
+  /// Every draft intake (drops, pastes, keyboard images, the pickers and
+  /// files-panel drags) checks the free slots and prepares inside this
+  /// queue, so two that overlap never pass the limits together.
+  final _intake = ComposerIntakeQueue();
   final _preview = PreviewSlot();
   String? _sessionModel;
   String? _sessionProvider;
@@ -938,7 +1037,16 @@ class _ChatScreenState extends State<ChatScreen>
   bool _loadingModelOptions = false;
   bool _changingModel = false;
   bool _sending = false;
-  bool _streaming = false;
+  bool _streamingNow = false;
+  bool get _streaming => _streamingNow;
+
+  /// Every end of a turn passes here, however the turn ended, even when it
+  /// starts and ends between two frames.
+  set _streaming(bool value) {
+    if (_streamingNow && !value) _statusAfterTurn();
+    _streamingNow = value;
+  }
+
   bool _companionLeftDuringTurn = false;
   bool _companionUnread = false;
   final _held = ClientHeldQueue();
@@ -1068,6 +1176,11 @@ class _ChatScreenState extends State<ChatScreen>
   @override
   void initState() {
     super.initState();
+    ChatScreen._mounted[ChatScreen._mountKey(
+          widget.connection.id,
+          widget.session.id,
+        )] =
+        this;
     CompanionDraft.pending.addListener(_applyCompanionDraft);
     _composerFocus.addListener(_syncComposerKeyboardEndScroll);
     _notificationApprovalOrigin = NotificationApprovalAuthority.origin(
@@ -1116,10 +1229,15 @@ class _ChatScreenState extends State<ChatScreen>
     }
     _textController.addListener(_onComposerChanged);
     if (widget.initialComposerText case final shared?) {
-      _textController.text = shared;
-      _textController.selection = TextSelection.collapsed(
-        offset: shared.length,
-      );
+      if (widget.initialComposerAppends) {
+        // A link's prefill goes after the unsent draft, never over it.
+        unawaited(_appendLinkPrefill(shared));
+      } else {
+        _textController.text = shared;
+        _textController.selection = TextSelection.collapsed(
+          offset: shared.length,
+        );
+      }
     }
     _turnNotifications =
         widget.testTurnNotifications ??
@@ -1348,6 +1466,7 @@ class _ChatScreenState extends State<ChatScreen>
     }
     _normalSnapshot =
         snapshot; // read-only owner projection, not a route buffer
+    _cardNormalFailure(snapshot);
     _retainedRecoveryOutcomeIds.retainAll(
       snapshot.receivedOutcomes.map((outcome) => outcome.id),
     );
@@ -1688,6 +1807,14 @@ class _ChatScreenState extends State<ChatScreen>
     _composerRevision += 1;
     _normalChat?.invalidateDraftRecovery();
     final text = _textController.text;
+    final pathPaste = _pendingPathPaste;
+    _pendingPathPaste = null;
+    if (pathPaste != null &&
+        !_restoringComposer &&
+        text.contains(pathPaste.text)) {
+      // The pasted path is committed now; intake may remove it safely.
+      unawaited(_consumePathPaste(pathPaste));
+    }
     if (!_restoringComposer && text != _lastComposerText) {
       _draftWriter.edit(_composerTextWithPastes(text));
     }
@@ -1741,6 +1868,29 @@ class _ChatScreenState extends State<ChatScreen>
   /// Sets the composer from app chrome (a picked command, a prefill directive)
   /// and lets [_onComposerChanged] persist it exactly as typed input would.
   void _editComposerAsUser(String text) {
+    _textController.value = TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
+  }
+
+  /// Puts a `hermes://` link's prefill into the composer after whatever is
+  /// there or saved (an unsent draft is never replaced). Reads the draft
+  /// first so a restore that has not landed yet is not lost.
+  Future<void> _appendLinkPrefill(String prefill) async {
+    String? draft;
+    try {
+      draft = await _draftWriter
+          .read(reader: widget.testComposerDraftReader)
+          .timeout(const Duration(seconds: 5));
+    } catch (_) {
+      draft = null;
+    }
+    if (!mounted) return;
+    final current = _textController.text;
+    final base = current.trim().isNotEmpty ? current : (draft ?? '');
+    final text = appendComposerPrefill(base, prefill);
+    if (text == current) return;
     _textController.value = TextEditingValue(
       text: text,
       selection: TextSelection.collapsed(offset: text.length),
@@ -1962,6 +2112,13 @@ class _ChatScreenState extends State<ChatScreen>
 
   @override
   void dispose() {
+    final mountKey = ChatScreen._mountKey(
+      widget.connection.id,
+      widget.session.id,
+    );
+    if (identical(ChatScreen._mounted[mountKey], this)) {
+      ChatScreen._mounted.remove(mountKey);
+    }
     final pendingSubmission = _recoverableSubmissionState;
     if (pendingSubmission != null && !pendingSubmission.isCompleted) {
       pendingSubmission.complete();
@@ -2171,22 +2328,29 @@ class _ChatScreenState extends State<ChatScreen>
     unawaited(_refreshProjectName());
   }
 
-  /// Whether Retry can regenerate here: only the Desktop gateway's stock
-  /// owner path truncates (Desktop's `runReload`).
-  bool get _canRegenerate =>
-      _desktopGateway != null &&
-      _normalChat != null &&
-      (_turnApplicationSession == null || _legacyTransportFallback);
+  void _editAndResend(String text) {
+    _textController
+      ..text = text
+      ..selection = TextSelection.collapsed(offset: text.length);
+    FocusScope.of(context).nextFocus();
+  }
 
-  /// Retry of a turn the gateway accepted, as Desktop's regenerate: the same
-  /// prompt with `confirm_truncate` and the turn's durable row, so it
-  /// replaces the failed turn instead of appending a duplicate. Never
-  /// touches the composer (a newer draft stays), and never falls back to a
-  /// plain resend: without a durable row it says so and sends nothing.
+  /// Whether Retry can regenerate here: the Desktop gateway's stock owner
+  /// truncates (Desktop's `runReload`). A recovery-v2 chat regenerates
+  /// through it too: the v2 submit carries no truncation, and the stock
+  /// owner shares this chat's Desktop socket and live session (the one its
+  /// model switch and commands already use). REST cannot truncate.
+  bool get _canRegenerate => _desktopGateway != null && _normalChat != null;
+
+  /// Retry of a turn the gateway accepted, as Desktop's regenerate
+  /// (`runReload` → `runRewindSubmit`): a live turn is interrupted first,
+  /// then the same prompt goes again with `confirm_truncate` and the turn's
+  /// durable row, so it replaces the failed turn instead of appending a
+  /// duplicate. Never touches the composer (a newer draft stays), and never
+  /// falls back to a plain resend: without a durable row it says so and
+  /// sends nothing. Owner-scoped: a screen that has gone sends nothing.
   Future<void> _retryPrompt(String text) async {
     if (_archiving ||
-        _sending ||
-        _streaming ||
         _preparingSend ||
         _pendingReattachResync ||
         text.trim().isEmpty) {
@@ -2199,21 +2363,52 @@ class _ChatScreenState extends State<ChatScreen>
       _showRetryNotice(l10n.composer_retry_unavailable);
       return;
     }
-    final row = await resolveRegenerateRow(
+    if (_streaming) {
+      // runRewindSubmit's interruptFirst (NextGen's retryLast too): stop the
+      // live turn, then wait for it to settle before replacing it.
+      await _stopResponse();
+      for (var i = 0; i < 50 && mounted && _hasLiveTurn; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+      }
+      if (!mounted) return;
+    }
+    if (_sending || _streaming || _hasLiveTurn) return;
+    final target = await resolveRegenerateTarget(
       rpc: gateway.requestSessionRpc,
       sessionId: session,
       text: text,
     );
     if (!mounted) return;
-    if (row == null) {
+    if (target == null) {
       _showRetryNotice(l10n.composer_retry_not_found);
       return;
     }
     if (_sending || _streaming || _preparingSend) return;
     await _sendMessage(
       textOverride: text.trim(),
-      promptParams: regenerateSubmitParams(row),
+      // runRewindSubmit's params for the resolved row (Desktop's runReload).
+      promptParams: regenerateSubmitParams(target.rowId),
     );
+  }
+
+  /// The bubble's Regenerate (message sheet and quick action), offered on
+  /// every assistant reply as it always was. Where the transport truncates
+  /// ([_canRegenerate]) it replaces the turn ([_retryPrompt]). Elsewhere
+  /// (REST, an owner with no Desktop client) there is nothing to replace
+  /// it with, so it asks again as it always has there: the reply's prompt
+  /// goes out as a new turn. The composer is not touched either way (a
+  /// newer draft stays, staged attachments stay staged).
+  Future<void> _regenerateResponse(String text) async {
+    if (_canRegenerate) return _retryPrompt(text);
+    if (_archiving ||
+        _sending ||
+        _streaming ||
+        _preparingSend ||
+        _pendingReattachResync ||
+        text.trim().isEmpty) {
+      return;
+    }
+    await _sendMessage(textOverride: text.trim());
   }
 
   void _showRetryNotice(String text) {
@@ -3418,7 +3613,8 @@ class _ChatScreenState extends State<ChatScreen>
   /// focus listener (focus changes while the keyboard is already up).
   void _syncComposerKeyboardEndScroll() {
     if (!mounted) return;
-    final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
+    // A pane's host Scaffold may already have resized for the keyboard.
+    final keyboardOpen = keyboardHeightOf(context) > 0;
     if (!keyboardOpen) {
       _keyboardEndScrollDone = false;
     } else if (_composerFocus.hasFocus && !_keyboardEndScrollDone) {
@@ -4042,6 +4238,17 @@ class _ChatScreenState extends State<ChatScreen>
             : null;
       }
     });
+    if (!projection.isActive) {
+      // A failure frame that arrived while this turn was live: now that the
+      // turn has settled as failed, it goes to the card.
+      final frame = _liveFailureFrame;
+      _liveFailureFrame = null;
+      if (frame != null &&
+          !projection.isFailClosed &&
+          projection.status == GatewayRecoveryTurnStatus.failed) {
+        _noteRecovery(frame);
+      }
+    }
     final pendingSubmission = _recoverableSubmissionState;
     if (pendingSubmission != null && !pendingSubmission.isCompleted) {
       pendingSubmission.complete();
@@ -4220,7 +4427,16 @@ class _ChatScreenState extends State<ChatScreen>
     unawaited(_prepareLargePaste(edit, revision));
   }
 
-  Future<void> _prepareLargePaste(LargePasteEdit edit, int revision) async {
+  Future<void> _prepareLargePaste(LargePasteEdit edit, int revision) {
+    final owner = _intakeOwner;
+    return _intake.run(() => _prepareLargePasteNow(edit, revision, owner));
+  }
+
+  Future<void> _prepareLargePasteNow(
+    LargePasteEdit edit,
+    int revision,
+    Object owner,
+  ) async {
     AttachmentDraft? prepared;
     try {
       prepared = await _attachmentDraftService.preparePastedText(
@@ -4228,6 +4444,7 @@ class _ChatScreenState extends State<ChatScreen>
         existingDrafts: List<AttachmentDraft>.of(_attachmentDrafts),
       );
       if (!mounted ||
+          owner != _intakeOwner ||
           _startingVoiceInput ||
           _voiceComposer.listening ||
           !_draftWriter.isCurrent ||
@@ -4269,6 +4486,8 @@ class _ChatScreenState extends State<ChatScreen>
         _pendingReattachResync) {
       return;
     }
+    final offerCapture = await screenCaptureOffered(widget.screenCapture);
+    if (!mounted) return;
 
     await showModalBottomSheet<void>(
       context: context,
@@ -4315,6 +4534,17 @@ class _ChatScreenState extends State<ChatScreen>
                 );
               },
             ),
+            if (offerCapture)
+              ListTile(
+                key: const Key('classic-attach-capture-screen'),
+                leading: const Icon(Icons.screenshot_monitor_outlined),
+                title: Text(context.l10n.capture_screen_action),
+                subtitle: Text(context.l10n.capture_screen_help),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  unawaited(_captureScreen());
+                },
+              ),
             if (_desktopGateway != null)
               ListTile(
                 leading: const Icon(Icons.description_outlined),
@@ -4330,6 +4560,17 @@ class _ChatScreenState extends State<ChatScreen>
           ],
         ),
       ),
+    );
+  }
+
+  /// Adds a screen capture as an image draft through the picked-image
+  /// path. Never sends.
+  Future<void> _captureScreen() async {
+    await captureScreenIntoDraft(
+      context,
+      controller: widget.screenCapture,
+      attach: (png, name) =>
+          _preparePickedImages([XFile(png.path, name: name)]),
     );
   }
 
@@ -4370,6 +4611,7 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   Future<void> _pickGalleryImages() async {
+    final owner = _intakeOwner;
     try {
       final mode = _desktopGateway == null
           ? AttachmentDraftMode.rest
@@ -4381,7 +4623,7 @@ class _ChatScreenState extends State<ChatScreen>
           maxWidth: 1600,
           maxHeight: 1600,
         );
-        if (image != null) await _preparePickedImages([image]);
+        if (image != null) await _preparePickedImages([image], owner: owner);
         return;
       }
       final images = await _imagePicker.pickMultiImage(
@@ -4389,7 +4631,7 @@ class _ChatScreenState extends State<ChatScreen>
         maxWidth: 1600,
         maxHeight: 1600,
       );
-      if (images.isNotEmpty) await _preparePickedImages(images);
+      if (images.isNotEmpty) await _preparePickedImages(images, owner: owner);
     } catch (_) {
       if (!mounted) return;
       _showAttachmentError(
@@ -4399,6 +4641,7 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   Future<void> _pickCameraImage() async {
+    final owner = _intakeOwner;
     try {
       final image = await _imagePicker.pickImage(
         source: ImageSource.camera,
@@ -4406,7 +4649,7 @@ class _ChatScreenState extends State<ChatScreen>
         maxWidth: 1600,
         maxHeight: 1600,
       );
-      if (image != null) await _preparePickedImages([image]);
+      if (image != null) await _preparePickedImages([image], owner: owner);
     } catch (_) {
       if (!mounted) return;
       _showAttachmentError(
@@ -4431,9 +4674,37 @@ class _ChatScreenState extends State<ChatScreen>
     await _preparePickedImages(_desktopGateway == null ? [files.first] : files);
   }
 
-  Future<void> _preparePickedImages(List<XFile> images) async {
+  /// The chat an intake belongs to: captured when it starts, checked before
+  /// its draft is staged. A host that swaps this screen's chat without a
+  /// remount must not get the earlier chat's drops, pastes or picks.
+  Object get _intakeOwner => (widget.connection.id, widget.session.id);
+
+  /// Returns how many images became drafts. [remote] says whether the
+  /// gateway takes several drafts (by default, a Desktop gateway does).
+  Future<int> _preparePickedImages(
+    List<XFile> images, {
+    bool? remote,
+    Object? owner,
+  }) {
+    final intakeOwner = owner ?? _intakeOwner;
+    return _intake.run(() async {
+      if (!mounted || intakeOwner != _intakeOwner) return 0;
+      return _preparePickedImagesNow(
+        images,
+        remote: remote,
+        owner: intakeOwner,
+      );
+    });
+  }
+
+  /// [_preparePickedImages] inside the intake queue.
+  Future<int> _preparePickedImagesNow(
+    List<XFile> images, {
+    bool? remote,
+    required Object owner,
+  }) async {
     final l10n = context.l10n;
-    final isRemote = _desktopGateway != null;
+    final isRemote = remote ?? _desktopGateway != null;
     final prepared = <AttachmentDraft>[];
     final errors = <String>[];
     for (final image in images) {
@@ -4456,9 +4727,10 @@ class _ChatScreenState extends State<ChatScreen>
         errors.add(l10n.unable_to_prepare(image.name));
       }
     }
-    if (!mounted) {
+    if (!mounted || owner != _intakeOwner) {
+      // Left, or this composer now belongs to another chat: drop them.
       await _attachmentDraftService.removeAll(prepared);
-      return;
+      return 0;
     }
     if (prepared.isNotEmpty) {
       if (isRemote) {
@@ -4476,9 +4748,11 @@ class _ChatScreenState extends State<ChatScreen>
     if (errors.isNotEmpty) {
       _showAttachmentError(errors.first);
     }
+    return prepared.length;
   }
 
   Future<void> _pickFiles() async {
+    final owner = _intakeOwner;
     if (_desktopGateway == null) {
       _showAttachmentError(
         context
@@ -4495,49 +4769,272 @@ class _ChatScreenState extends State<ChatScreen>
       );
       final files = result?.files ?? const [];
       if (files.isEmpty) return;
-      final available = maxRemoteAttachmentDrafts - _attachmentDrafts.length;
-      if (available <= 0) {
-        if (!mounted) return;
-        _showAttachmentError(
-          context.l10n.you_can_attach_up_to_items(maxRemoteAttachmentDrafts),
-        );
-        return;
-      }
-      final prepared = <AttachmentDraft>[];
-      var rejected = 0;
-      for (final file in files.take(available)) {
-        final path = file.path;
-        if (path == null) {
-          rejected++;
-          continue;
-        }
-        try {
-          prepared.add(
-            await _attachmentDraftService.prepareGenericFile(
-              sourcePath: path,
-              displayName: file.name,
-              existingDrafts: [..._attachmentDrafts, ...prepared],
-            ),
+      await _intake.run(() async {
+        if (!mounted || owner != _intakeOwner) return;
+        final available = maxRemoteAttachmentDrafts - _attachmentDrafts.length;
+        if (available <= 0) {
+          _showAttachmentError(
+            context.l10n.you_can_attach_up_to_items(maxRemoteAttachmentDrafts),
           );
-        } catch (_) {
-          rejected++;
+          return;
         }
-      }
-      if (!mounted) {
-        await _attachmentDraftService.removeAll(prepared);
-        return;
-      }
-      setState(() => _attachmentDrafts.addAll(prepared));
-      if (files.length > available || rejected > 0) {
-        _showAttachmentError(
-          context.l10n.files_skipped(files.length - prepared.length),
-        );
-      }
+        final prepared = <AttachmentDraft>[];
+        var rejected = 0;
+        for (final file in files.take(available)) {
+          final path = file.path;
+          if (path == null) {
+            rejected++;
+            continue;
+          }
+          try {
+            prepared.add(
+              await _attachmentDraftService.prepareGenericFile(
+                sourcePath: path,
+                displayName: file.name,
+                existingDrafts: [..._attachmentDrafts, ...prepared],
+              ),
+            );
+          } catch (_) {
+            rejected++;
+          }
+        }
+        if (!mounted || owner != _intakeOwner) {
+          await _attachmentDraftService.removeAll(prepared);
+          return;
+        }
+        setState(() => _attachmentDrafts.addAll(prepared));
+        if (files.length > available || rejected > 0) {
+          _showAttachmentError(
+            context.l10n.files_skipped(files.length - prepared.length),
+          );
+        }
+      });
     } catch (_) {
+      if (!mounted) return;
       _showAttachmentError(
         context.l10n.unable_to_prepare_this_file_try_another_one,
       );
     }
+  }
+
+  /// Attach, and the OS intake that feeds it, is open whenever the Attach
+  /// button is.
+  bool get _attachIntakeOpen =>
+      !_transcriptLoadBlocksComposer &&
+      !_preparingPaste &&
+      !_streaming &&
+      !_sending &&
+      !_pendingReattachResync;
+
+  /// Drafts beyond one REST image need a gateway that uploads them.
+  bool get _remoteDraftsAllowed =>
+      _desktopGateway != null ||
+      widget.testRemotePromptSubmit != null ||
+      (_turnApplicationSession != null && !_legacyTransportFallback);
+
+  /// Files from the OS (dropped, pasted as files or as a path, or dragged
+  /// from the session files panel). Images take the photo path, other files
+  /// the Choose files path, with the same draft count and size limits. Each
+  /// becomes a draft; nothing is sent. Returns how many were staged.
+  Future<int> _intakeLocalFiles(
+    List<OsIntakeFile> files, {
+    Object? owner,
+  }) async {
+    final intakeOwner = owner ?? _intakeOwner;
+    var staged = 0;
+    var folders = false;
+    for (final file in files) {
+      if (!mounted || intakeOwner != _intakeOwner) break;
+      if (!_attachIntakeOpen) {
+        _showAttachmentError(context.sharedL10n.composer_attach_busy);
+        break;
+      }
+      if (file.directory) {
+        folders = true;
+        continue;
+      }
+      final image = looksLikeImagePath(file.path);
+      if (!image && !_remoteDraftsAllowed) {
+        _showAttachmentError(
+          context
+              .l10n
+              .configure_a_valid_desktop_gateway_url_before_attaching_files,
+        );
+        continue;
+      }
+      // REST takes one image, replacing the last; the gateway counts drafts.
+      final restImage = image && !_remoteDraftsAllowed;
+      // The slot check runs in the intake queue, after every earlier drop,
+      // paste or pick has staged: two at once never both take the last slot.
+      var full = false;
+      staged += await withDroppedFileAccess(
+        file,
+        () => _intake.run(() async {
+          if (!mounted || intakeOwner != _intakeOwner) return 0;
+          if (!restImage &&
+              _attachmentDrafts.length >= maxRemoteAttachmentDrafts) {
+            full = true;
+            return 0;
+          }
+          return image
+              ? _preparePickedImagesNow(
+                  [XFile(file.path, name: file.name)],
+                  remote: _remoteDraftsAllowed,
+                  owner: intakeOwner,
+                )
+              : _prepareLocalFile(file.path, file.name, owner: intakeOwner);
+        }),
+      );
+      if (!mounted) break;
+      if (full) {
+        _showAttachmentError(
+          context.l10n.you_can_attach_up_to_items(maxRemoteAttachmentDrafts),
+        );
+        break;
+      }
+      if (restImage) break;
+    }
+    if (folders && mounted) {
+      _showAttachmentError(context.sharedL10n.composer_drop_folder_unsupported);
+    }
+    return staged;
+  }
+
+  /// One local non-image file as a draft, as Choose files prepares it. Runs
+  /// inside the intake queue.
+  Future<int> _prepareLocalFile(
+    String path,
+    String name, {
+    required Object owner,
+  }) async {
+    try {
+      final draft = await _attachmentDraftService.prepareGenericFile(
+        sourcePath: path,
+        displayName: name,
+        existingDrafts: List<AttachmentDraft>.of(_attachmentDrafts),
+      );
+      if (!mounted || owner != _intakeOwner) {
+        await _attachmentDraftService.removeAll([draft]);
+        return 0;
+      }
+      setState(() => _attachmentDrafts.add(draft));
+      return 1;
+    } on AttachmentDraftException catch (error) {
+      _showAttachmentError(error.message);
+    } catch (_) {
+      if (mounted) _showAttachmentError(context.l10n.unable_to_prepare(name));
+    }
+    return 0;
+  }
+
+  /// Cmd/Ctrl+V with files or an image on the clipboard.
+  Future<void> _intakeClipboard(ClipboardAttachment found) async {
+    final owner = _intakeOwner;
+    final image = found.image;
+    if (image != null) {
+      await _intakeImageBytes(image, 'image/png', owner: owner);
+      return;
+    }
+    await _intakeLocalFiles(await osIntakeFilesFor(found.files), owner: owner);
+  }
+
+  /// A pasted or keyboard-inserted image (Android keyboards insert images
+  /// through contentInsertionConfiguration).
+  Future<void> _intakeImageBytes(
+    Uint8List bytes,
+    String mimeType, {
+    Object? owner,
+  }) async {
+    final intakeOwner = owner ?? _intakeOwner;
+    if (!mounted) return;
+    if (!_attachIntakeOpen) {
+      _showAttachmentError(context.sharedL10n.composer_attach_busy);
+      return;
+    }
+    final String path;
+    try {
+      path = await stageComposerImageBytes(bytes, mimeType: mimeType);
+    } catch (_) {
+      if (mounted) {
+        _showAttachmentError(
+          context.l10n.unable_to_prepare_this_image_try_another_one,
+        );
+      }
+      return;
+    }
+    try {
+      if (mounted) {
+        await _intakeLocalFiles([OsIntakeFile(path)], owner: intakeOwner);
+      }
+    } finally {
+      // The draft holds its own sanitised copy (or there is no draft).
+      await discardStagedComposerImage(path);
+    }
+  }
+
+  /// A file or folder dragged from the session files panel: gateway paths
+  /// and folders become references, a file on this device a draft.
+  Future<void> _intakeComposerDrag(ComposerDrag drag) async {
+    final owner = _intakeOwner;
+    final plan = classifyDrag(drag);
+    final path = plan.path ?? '';
+    if (plan.kind == LocalIntake.reference) {
+      appendWorkspaceReference(
+        _textController,
+        gatewayContextReference(folder: plan.directory, path: path),
+      );
+      return;
+    }
+    final local = await localFileForPastedPath(path);
+    if (!mounted) return;
+    if (local == null) {
+      _showAttachmentError(context.sharedL10n.composer_file_missing);
+      return;
+    }
+    await _intakeLocalFiles([local], owner: owner);
+  }
+
+  /// A short paste the editor's formatter saw, handled once the text is in
+  /// the controller ([_onComposerChanged]): a formatter must not edit the
+  /// field. Large pastes have their own path ([_onLargePaste]).
+  PastedChunk? _pendingPathPaste;
+
+  late final TextInputFormatter _pathPasteFormatter =
+      TextInputFormatter.withFunction((oldValue, newValue) {
+        final selection = oldValue.selection;
+        if (!selection.isValid || !oldValue.composing.isCollapsed) {
+          return newValue;
+        }
+        final chunk = PastedChunk.detect(
+          oldValue.text,
+          selection.start,
+          selection.end,
+          newValue.text,
+        );
+        _pendingPathPaste =
+            chunk != null &&
+                chunk.text.length <= largePasteAttachmentThreshold &&
+                clipboardPath(chunk.text) != null
+            ? chunk
+            : null;
+        return newValue;
+      });
+
+  /// A pasted path to a file on this device becomes a draft and leaves the
+  /// draft text. Folders, missing paths and gateway paths stay text.
+  Future<void> _consumePathPaste(PastedChunk chunk) async {
+    final owner = _intakeOwner;
+    final path = clipboardPath(chunk.text);
+    if (path == null || !_attachIntakeOpen) return;
+    final file = await localFileForPastedPath(path);
+    if (file == null || !mounted) return;
+    if (!looksLikeImagePath(path) && !_remoteDraftsAllowed) return;
+    final staged = await _intakeLocalFiles([file], owner: owner);
+    if (staged == 0 || !mounted || owner != _intakeOwner) return;
+    // Edits since the paste stay; only the pasted path leaves, where it was
+    // pasted rather than at an earlier copy of the same text.
+    final next = chunk.removeFrom(_textController.text);
+    if (next != null) _textController.value = next;
   }
 
   void _showAttachmentError(String message) {
@@ -4819,10 +5316,12 @@ class _ChatScreenState extends State<ChatScreen>
     return choices.isEmpty ? null : choices.first;
   }
 
-  Future<void> _setSessionModel(_ModelSelection selection) async {
+  /// Applies [selection] to this chat. True once the gateway took it.
+  Future<bool> _setSessionModel(_ModelSelection selection) async {
     final desktopGateway = _desktopGateway;
-    if (_changingModel || _pendingReattachResync) return;
+    if (_changingModel || _pendingReattachResync) return false;
     final choice = selection.choice;
+    final effort = selection.reasoningEffort;
     setState(() => _changingModel = true);
     try {
       if (desktopGateway != null) {
@@ -4831,11 +5330,13 @@ class _ChatScreenState extends State<ChatScreen>
           provider: choice.provider,
           model: choice.model,
         );
-        if (!mounted || _pendingReattachResync) return;
-        await desktopGateway.setSessionReasoning(
-          sessionId: _normalLocalSessionKey,
-          effort: selection.reasoningEffort,
-        );
+        if (!mounted || _pendingReattachResync) return false;
+        if (effort != null) {
+          await desktopGateway.setSessionReasoning(
+            sessionId: _normalLocalSessionKey,
+            effort: effort,
+          );
+        }
       } else {
         // The API Server owns this session, so persist the same per-session
         // lock over :8642 instead of activating the Dashboard transport.
@@ -4853,35 +5354,89 @@ class _ChatScreenState extends State<ChatScreen>
         sessionId: widget.session.id,
         provider: choice.provider,
         model: choice.model,
-        reasoningEffort: selection.reasoningEffort,
+        reasoningEffort: effort ?? _sessionReasoningEffort,
       );
-      if (!mounted) return;
+      if (!mounted) return false;
       setState(() {
         _sessionModel = choice.model;
         _sessionProvider = choice.provider;
-        _sessionReasoningEffort = selection.reasoningEffort;
-        _sessionReasoningWire = '';
+        if (effort != null) {
+          _sessionReasoningEffort = effort;
+          _sessionReasoningWire = '';
+        }
         _sessionModelOverride = true;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            context.l10n.model_scope_applied(
-              _reasoningEffortLabel(context, selection.reasoningEffort),
-              choice.model,
+      // With no effort chosen or known, the model row shows the switch.
+      final shownEffort = effort ?? _sessionReasoningEffort;
+      if (shownEffort != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              context.l10n.model_scope_applied(
+                _reasoningEffortLabel(context, shownEffort),
+                choice.model,
+              ),
             ),
           ),
-        ),
-      );
+        );
+      }
+      return true;
     } catch (error) {
-      if (!mounted) return;
+      if (!mounted) return false;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(context.l10n.model_was_not_changed(error))),
       );
+      return false;
     } finally {
       if (mounted) setState(() => _changingModel = false);
     }
   }
+
+  /// The failure card's Switch to (model): Desktop's switchAndRetry and
+  /// NextGen's. The suggested model becomes this chat's model, then the
+  /// failed turn runs again on it, exactly once, through Retry's regenerate
+  /// (a newer draft stays). With no provider to pair the model with, the
+  /// picker opens. Where no regenerate is possible (REST) the card already
+  /// said the switch will not re-run the turn, so it only switches. A
+  /// screen left mid-switch sends nothing.
+  Future<void> _switchToSuggested(ModelSuggestion suggestion) async {
+    if (_switchingToSuggested) return;
+    final provider = suggestion.provider?.trim().isNotEmpty == true
+        ? suggestion.provider!.trim()
+        : _sessionProvider?.trim() ?? '';
+    if (provider.isEmpty) {
+      await _showModelSelector();
+      return;
+    }
+    final prompt = _lastPromptText;
+    _switchingToSuggested = true;
+    try {
+      final switched = await _setSessionModel(
+        _ModelSelection(
+          choice: _ModelChoice(provider: provider, model: suggestion.model),
+          reasoningEffort: null,
+        ),
+      );
+      if (!switched || !mounted) return;
+      setState(() {
+        _recoveryMessage = null;
+        _recoverySurface = null;
+      });
+      if (prompt != null && _canRegenerate) {
+        _modelOverrideFresh = true;
+        await _retryPrompt(prompt);
+      }
+    } finally {
+      _switchingToSuggested = false;
+      _modelOverrideFresh = false;
+    }
+  }
+
+  bool _switchingToSuggested = false;
+
+  /// Set by Switch to for the retry right behind it; see
+  /// [_applySessionModelOverride].
+  bool _modelOverrideFresh = false;
 
   /// Send message via SSE streaming (Gateway API Server).
   Future<void> _startRecordedVoice() async {
@@ -5080,7 +5635,9 @@ class _ChatScreenState extends State<ChatScreen>
     // Own this submission before the first await. Only the captured prompt is
     // consumed; setup, uploads and stream callbacks must not clear newer text.
     if (_normalChat != null &&
-        (_turnApplicationSession == null || _legacyTransportFallback)) {
+        (_turnApplicationSession == null ||
+            _legacyTransportFallback ||
+            promptParams.isNotEmpty)) {
       final reservation = _normalChat!.reserve();
       if (reservation == null) return;
       _normalReservation = reservation;
@@ -5457,9 +6014,29 @@ class _ChatScreenState extends State<ChatScreen>
     if (layout.visible('context-usage')) unawaited(_loadStatusBreakdown());
   }
 
+  /// Where the composer's gateway calls go: the Desktop gateway client.
+  ComposerSessionRpc? get _composerGateway =>
+      widget.testComposerRpc ?? _desktopGateway;
+
+  bool _statusRefreshQueued = false;
+
+  /// Reads the breakdown again once each turn ends, as NextGen does. Turns
+  /// end inside setState, so the read waits for the frame.
+  void _statusAfterTurn() {
+    if (_statusRefreshQueued || !_statusLayout.visible('context-usage')) {
+      return;
+    }
+    _statusRefreshQueued = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _statusRefreshQueued = false;
+      if (mounted) unawaited(_loadStatusBreakdown());
+    });
+    WidgetsBinding.instance.scheduleFrame();
+  }
+
   Future<void> _loadStatusBreakdown() async {
     if (!_statusLayout.visible('context-usage')) return;
-    final gateway = _desktopGateway;
+    final gateway = _composerGateway;
     if (gateway == null || !gateway.hasLiveSession(widget.session.id)) {
       setState(() => _statusBreakdown = ContextReading.empty);
       return;
@@ -5490,7 +6067,7 @@ class _ChatScreenState extends State<ChatScreen>
     String method,
     Map<String, dynamic> params,
   ) {
-    final gateway = _desktopGateway;
+    final gateway = _composerGateway;
     if (gateway == null) throw StateError('No Desktop gateway');
     if (gateway.hasLiveSession(widget.session.id)) {
       return gateway.requestSessionRpc(method, {
@@ -5504,7 +6081,7 @@ class _ChatScreenState extends State<ChatScreen>
   /// The failure card's Compress: the gateway's session.compress, then the
   /// transcript again. A failure is shown, never swallowed.
   Future<void> _compressClassicChat() async {
-    final gateway = _desktopGateway;
+    final gateway = _composerGateway;
     final shared = context.sharedL10n;
     if (gateway == null || !gateway.hasLiveSession(widget.session.id)) {
       _showRetryNotice(shared.composer_command_needs_gateway_session);
@@ -5590,6 +6167,36 @@ class _ChatScreenState extends State<ChatScreen>
       _pendingReattachResync ||
       _normalChat?.snapshot.hasActiveTurn == true;
 
+  /// The stock owner's failure frame raises the failure card once its turn
+  /// has settled as failed, or at once for a detached turn that failed on
+  /// the server. Each frame is shown once per screen.
+  void _cardNormalFailure(NormalGatewayChatSnapshot snapshot) {
+    final failure = snapshot.failureFrame;
+    if (failure == null ||
+        failure.serial == _cardedFailureSerial ||
+        snapshot.hasActiveTurn ||
+        !(failure.detached ||
+            snapshot.responseFailure != null ||
+            snapshot.phase == NormalGatewayTurnPhase.failed)) {
+      return;
+    }
+    _cardedFailureSerial = failure.serial;
+    // Snapshots also arrive while this screen is being set up.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // A newer turn may have cleared it in the meantime.
+      if (mounted && _normalSnapshot?.failureFrame?.serial == failure.serial) {
+        _noteRecovery(failure.data);
+      }
+    });
+    WidgetsBinding.instance.ensureVisualUpdate();
+  }
+
+  int? _cardedFailureSerial;
+
+  /// A recovery-v2 turn's failure frame that arrived while the turn was
+  /// still live here: the card shows it once that turn settles as failed.
+  Map<String, dynamic>? _liveFailureFrame;
+
   void _noteRecovery(Map<String, dynamic> data) {
     final message = data['message']?.toString().trim();
     final surface = FailureSurface.parse(
@@ -5632,10 +6239,21 @@ class _ChatScreenState extends State<ChatScreen>
       startedAt: now.millisecondsSinceEpoch / 1000.0,
       isLocalDraft: true,
     );
+    // /resume in the new chat opens the pick the way this chat's host opens
+    // one: the new chat's route leaves first, so the pick takes the place
+    // the host gives a pick from this chat (a pane, this route, the window).
+    final hostOpen = widget.onOpenSession;
+    late final MaterialPageRoute<void> route;
+    Future<void> openFromDraft(Session picked) async {
+      final navigator = route.navigator;
+      if (navigator != null && route.isActive) navigator.removeRoute(route);
+      await hostOpen!(picked);
+    }
+
     // Pushed, not awaited: the returned Future completes when the new chat
     // is popped, and the command is already handled.
     Navigator.of(context).push<void>(
-      MaterialPageRoute<void>(
+      route = MaterialPageRoute<void>(
         // The draft is the same product surface, so it inherits the parent's
         // archive ownership and the test seams that are safe to share. The
         // desktop connection/async-event hooks are deliberately NOT
@@ -5650,6 +6268,7 @@ class _ChatScreenState extends State<ChatScreen>
           projectName: widget.projectName,
           projectWorkingDirectory: widget.projectWorkingDirectory,
           turnApplicationController: widget.turnApplicationController,
+          onOpenSession: hostOpen == null ? null : openFromDraft,
           onArchiveChanged: widget.onArchiveChanged,
           sessionArchiver: widget.sessionArchiver,
           testTurnApplicationSession: widget.testTurnApplicationSession,
@@ -5834,7 +6453,11 @@ class _ChatScreenState extends State<ChatScreen>
     final keepComposer = preserveComposer || voiceBinding != null;
     // A remote-gateway profile uses one transport for every prompt. Images and
     // arbitrary files are both attached with the official `file.attach` RPC.
-    if (_turnApplicationSession != null && !_legacyTransportFallback) {
+    // A regenerate (truncation params) always goes through the stock owner:
+    // the recovery-v2 submit has no truncation.
+    if (_turnApplicationSession != null &&
+        !_legacyTransportFallback &&
+        promptParams.isEmpty) {
       await _sendRecoverableGatewayMessage(
         text: text,
         attachments: attachments,
@@ -6929,10 +7552,15 @@ class _ChatScreenState extends State<ChatScreen>
     }
     if (event.type == 'error' || event.type == 'turn.error') {
       // The client hands every terminal frame to this async path BEFORE the
-      // live turn's own stream, which reports and settles it: while a turn
-      // is live here the frame is that duplicate. Only a frame with no live
-      // turn (a detached turn settling later) is news for the failure card.
-      if (!_hasLiveTurn) _noteRecovery(event.data);
+      // live turn's own stream, which reports and settles it. A frame with
+      // no live turn (a detached turn settling later) goes to the card now;
+      // a live turn's frame carries its failure surface, so the card shows
+      // it once that turn settles as failed (_applyGatewayTurnState).
+      if (_hasLiveTurn) {
+        _liveFailureFrame = event.data;
+      } else {
+        _noteRecovery(event.data);
+      }
       return;
     }
     if (const {'message.complete', 'turn.end'}.contains(event.type)) {
@@ -8407,6 +9035,11 @@ class _ChatScreenState extends State<ChatScreen>
             'Wait for the composer to become available.',
           );
         }
+        // A drop or paste may have staged drafts while the crops prepared.
+        _attachmentDraftService.validateRemoteDrafts([
+          ..._attachmentDrafts,
+          ...crops,
+        ]);
         setState(() {
           _attachmentDrafts.addAll(crops);
           appendPreviewText(_textController, text);
@@ -8436,7 +9069,8 @@ class _ChatScreenState extends State<ChatScreen>
       builder: (context, _) => LayoutBuilder(
         // Measure the pane, not the window: a phone, split view or parallel
         // workspace pane gets compact chrome so the app bar never overflows.
-        builder: (context, box) => _buildChatScaffold(context, box.maxWidth),
+        builder: (context, box) =>
+            _buildChatScaffold(context, box.maxWidth, box.maxHeight),
       ),
     ),
   );
@@ -8450,8 +9084,21 @@ class _ChatScreenState extends State<ChatScreen>
     _storedSessionId ?? _storedSessionKey,
   ].join('\u0000');
 
-  Widget _buildChatScaffold(BuildContext context, double paneWidth) {
+  Widget _buildChatScaffold(
+    BuildContext context,
+    double paneWidth,
+    double paneHeight,
+  ) {
     final compactTools = paneWidth < 480;
+    // With the keyboard up and little room above it (a landscape phone, a
+    // small phone, a Parallel workspace pane), the context header folds so
+    // the composer is never pushed under the keyboard. The pane may sit in
+    // a Scaffold that has already resized for it: then the local inset is 0
+    // and the pane height is what is left.
+    final foldHeader =
+        keyboardHeightOf(context) > 0 &&
+        paneHeight - MediaQuery.viewInsetsOf(context).bottom <
+            foldChatChromeBelow;
     final fileOwner = _desktopGateway?.workspace;
     final fileId = _fileSessionId;
     final gateway = _desktopGateway;
@@ -8521,17 +9168,19 @@ class _ChatScreenState extends State<ChatScreen>
           overflow: TextOverflow.ellipsis,
           style: Theme.of(context).textTheme.titleMedium,
         ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(48),
-          child: ChatContextHeader(
-            projectName: _projectName,
-            model: _sessionModel ?? widget.session.model,
-            reasoningEffort: _sessionReasoningEffort ?? 'default',
-            reasoningEffortWire: _sessionReasoningWire,
-            connectionLabel: widget.connection.label,
-            connectionStatus: _chatConnectionStatus,
-          ),
-        ),
+        bottom: foldHeader
+            ? null
+            : PreferredSize(
+                preferredSize: const Size.fromHeight(48),
+                child: ChatContextHeader(
+                  projectName: _projectName,
+                  model: _sessionModel ?? widget.session.model,
+                  reasoningEffort: _sessionReasoningEffort ?? 'default',
+                  reasoningEffortWire: _sessionReasoningWire,
+                  connectionLabel: widget.connection.label,
+                  connectionStatus: _chatConnectionStatus,
+                ),
+              ),
         actions: [
           PresentationChrome(
             compact: compactTools,
@@ -8569,6 +9218,13 @@ class _ChatScreenState extends State<ChatScreen>
               ),
             ),
           if (!compactTools) ...[
+            if (widget.onOpenAppCommandPalette != null)
+              IconButton(
+                key: const ValueKey('app-command-palette-button'),
+                tooltip: context.l10n.palette_open,
+                icon: const Icon(Icons.keyboard_command_key),
+                onPressed: widget.onOpenAppCommandPalette,
+              ),
             if (_desktopGateway != null)
               IconButton(
                 tooltip: 'Open browser preview',
@@ -8589,7 +9245,8 @@ class _ChatScreenState extends State<ChatScreen>
               ),
           ] else if (_desktopGateway != null ||
               workers != null ||
-              radio != null)
+              radio != null ||
+              widget.onOpenAppCommandPalette != null)
             // One always-visible menu on narrow panes, also while a reply
             // streams (the gateway queue matters most then). The radio's
             // controls move here from the app bar.
@@ -8598,6 +9255,10 @@ class _ChatScreenState extends State<ChatScreen>
               tooltip: 'More chat tools',
               icon: const Icon(Icons.widgets_outlined),
               onSelected: (tool) {
+                if (tool == 'app-command-palette') {
+                  widget.onOpenAppCommandPalette?.call();
+                  return;
+                }
                 if (tool == radioToolValue) {
                   final current = compactRadioTool(context);
                   if (current != null) {
@@ -8620,6 +9281,14 @@ class _ChatScreenState extends State<ChatScreen>
                 if (tool == 'history') _openHistory();
               },
               itemBuilder: (_) => [
+                if (widget.onOpenAppCommandPalette != null)
+                  PopupMenuItem(
+                    value: 'app-command-palette',
+                    child: ListTile(
+                      leading: const Icon(Icons.keyboard_command_key),
+                      title: Text(context.l10n.palette_open),
+                    ),
+                  ),
                 if (_desktopGateway != null)
                   const PopupMenuItem(
                     value: 'browser',
@@ -8694,6 +9363,9 @@ class _ChatScreenState extends State<ChatScreen>
               icon: const Icon(Icons.terminal_outlined),
             ),
             PopupMenuButton<String>(
+              // Named: the pane holds other menus of this type (the narrow
+              // pane's chat tools, the composer's Status).
+              key: const ValueKey('chat-actions-menu'),
               tooltip: context.l10n.chat_actions,
               onOpened: () => unawaited(_refreshArchiveState()),
               onSelected: (action) {
@@ -8981,7 +9653,14 @@ class _ChatScreenState extends State<ChatScreen>
   Widget _buildInputBar({required double availableHeight}) {
     final handsFreeAction = _buildHandsFreeComposerAction();
     final separateVoiceAction = MediaQuery.sizeOf(context).width < 400;
-    final keyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+    // Also true in a pane whose host Scaffold already resized for the
+    // keyboard (its MediaQuery then shows no inset).
+    final keyboardOpen = keyboardHeightOf(context) > 0;
+    // The model/status row is chrome: with the keyboard up and under
+    // [foldComposerStatusBelow] for transcript and composer, it folds away
+    // (and comes back when the keyboard closes).
+    final foldStatus =
+        keyboardOpen && availableHeight < foldComposerStatusBelow;
     final sendEnabled =
         !_voiceRecording.recording &&
         !_voiceRecording.busy &&
@@ -9104,6 +9783,10 @@ class _ChatScreenState extends State<ChatScreen>
                               ? null
                               : _compressClassicChat,
                           onChooseModel: () => _showModelSelector(),
+                          onSwitchTo: _switchToSuggested,
+                          // REST cannot regenerate: the card says so
+                          // before the switch, not after it.
+                          switchRetries: _canRegenerate,
                           onNewSession: widget.singleSession
                               ? null
                               : () => unawaited(_openFreshDraftChat('')),
@@ -9149,36 +9832,39 @@ class _ChatScreenState extends State<ChatScreen>
                       ChatActivityBar(text: activity)
                     else if (_terminalNoticeText case final notice?)
                       ChatActivityBar(text: notice, isTerminalNotice: true),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(4, 2, 4, 4),
-                      child: Row(
-                        children: [
-                          Flexible(
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: _modelRowButton(context),
+                    if (!foldStatus)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(4, 2, 4, 4),
+                        child: Row(
+                          children: [
+                            Flexible(
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: _modelRowButton(context),
+                              ),
                             ),
-                          ),
-                          // Status shares the model row: no extra height.
-                          ComposerStatusMenu(
-                            layout: _statusLayout,
-                            usage: const UsageReading(),
-                            breakdown: _statusBreakdown,
-                            onLayout: _setStatusLayout,
-                          ),
-                        ],
+                            // Status shares the model row: no extra height.
+                            ComposerStatusMenu(
+                              layout: _statusLayout,
+                              usage: const UsageReading(),
+                              breakdown: _statusBreakdown,
+                              onLayout: _setStatusLayout,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    ComposerContextStatus(
-                      layout: _statusLayout,
-                      usage: const UsageReading(),
-                      breakdown: _statusBreakdown,
-                      breakdownLoading: _statusBreakdownLoading,
-                      showMenu: false,
-                      compact: MediaQuery.sizeOf(context).width < 480,
-                      maxHeight: availableHeight * (keyboardOpen ? 0.15 : 0.25),
-                      onLayout: _setStatusLayout,
-                    ),
+                    if (!foldStatus)
+                      ComposerContextStatus(
+                        layout: _statusLayout,
+                        usage: const UsageReading(),
+                        breakdown: _statusBreakdown,
+                        breakdownLoading: _statusBreakdownLoading,
+                        showMenu: false,
+                        compact: MediaQuery.sizeOf(context).width < 480,
+                        maxHeight:
+                            availableHeight * (keyboardOpen ? 0.15 : 0.25),
+                        onLayout: _setStatusLayout,
+                      ),
                     ConstrainedBox(
                       constraints: BoxConstraints(
                         maxHeight: availableHeight * (keyboardOpen ? 0.2 : 0.3),
@@ -9186,8 +9872,8 @@ class _ChatScreenState extends State<ChatScreen>
                       child: SingleChildScrollView(
                         child: ComposerReferenceAssist(
                           controller: _textController,
-                          cacheScope: (_desktopGateway, widget.session.id),
-                          completePath: _desktopGateway == null
+                          cacheScope: (_composerGateway, widget.session.id),
+                          completePath: _composerGateway == null
                               ? null
                               : (query) async {
                                   final result = await _composerRpc(
@@ -9201,7 +9887,7 @@ class _ChatScreenState extends State<ChatScreen>
                                       ? starterSuggestions(query)
                                       : rows;
                                 },
-                          completeSlash: _desktopGateway == null
+                          completeSlash: _composerGateway == null
                               ? null
                               : (text) async => parseArgumentCompletion(
                                   await _composerRpc('complete.slash', {
@@ -9375,54 +10061,80 @@ class _ChatScreenState extends State<ChatScreen>
                                       : _composerFormatRow(context),
                                 ),
                               if (!keyboardOpen) const SizedBox(height: 4),
-                              ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  maxHeight: (availableHeight * 0.30).clamp(
-                                    48.0,
-                                    160.0,
-                                  ),
-                                ),
-                                child: SendOnEnter(
-                                  enabled: sendEnabled,
-                                  onNavigate: (event) =>
-                                      _composerOwnerCurrent &&
-                                          _attachmentDrafts.isEmpty &&
-                                          !_slashDropdownVisible
-                                      ? _promptRecall.handle(
-                                          event,
-                                          _textController,
-                                          _sentPrompts,
-                                        )
-                                      : KeyEventResult.ignored,
-                                  onSend: () => unawaited(_sendMessage()),
-                                  child: ChatPresenceComposer(
-                                    builder: (_, input) => TextField(
-                                      key: const Key('chat-message-composer'),
-                                      onChanged: (_) => input(),
-                                      focusNode: _composerFocus,
-                                      controller: _textController,
-                                      inputFormatters: [_largePasteFormatter],
-                                      decoration: InputDecoration(
-                                        hintText: context.l10n.message_hermes,
-                                        filled: true,
-                                        fillColor: Colors.transparent,
-                                        border: InputBorder.none,
-                                        enabledBorder: InputBorder.none,
-                                        focusedBorder: InputBorder.none,
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                              horizontal: 12,
-                                              vertical: 8,
-                                            ),
-                                        isDense: true,
+                              // Files from the OS, the clipboard, a keyboard
+                              // or the files panel become drafts, never sends.
+                              OsFileDropTarget(
+                                enabled: _attachIntakeOpen,
+                                onFiles: (files) =>
+                                    unawaited(_intakeLocalFiles(files)),
+                                child: ClipboardAttachmentPaste(
+                                  enabled: _attachIntakeOpen,
+                                  onAttachment: _intakeClipboard,
+                                  child: ComposerDropSurface(
+                                    onDrop: (drag) =>
+                                        unawaited(_intakeComposerDrag(drag)),
+                                    child: ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                        maxHeight: (availableHeight * 0.30)
+                                            .clamp(48.0, 160.0),
                                       ),
-                                      minLines: 1,
-                                      maxLines: 5,
-                                      textCapitalization:
-                                          TextCapitalization.sentences,
-                                      keyboardType: TextInputType.multiline,
-                                      textInputAction: TextInputAction.newline,
-                                      enabled: !_transcriptLoadBlocksComposer,
+                                      child: SendOnEnter(
+                                        enabled: sendEnabled,
+                                        onNavigate: (event) =>
+                                            _composerOwnerCurrent &&
+                                                _attachmentDrafts.isEmpty &&
+                                                !_slashDropdownVisible
+                                            ? _promptRecall.handle(
+                                                event,
+                                                _textController,
+                                                _sentPrompts,
+                                              )
+                                            : KeyEventResult.ignored,
+                                        onSend: () => unawaited(_sendMessage()),
+                                        child: ChatPresenceComposer(
+                                          builder: (_, input) => TextField(
+                                            key: const Key(
+                                              'chat-message-composer',
+                                            ),
+                                            onChanged: (_) => input(),
+                                            focusNode: _composerFocus,
+                                            controller: _textController,
+                                            inputFormatters: [
+                                              _largePasteFormatter,
+                                              _pathPasteFormatter,
+                                            ],
+                                            contentInsertionConfiguration:
+                                                composerImageInsertion(
+                                                  _intakeImageBytes,
+                                                ),
+                                            decoration: InputDecoration(
+                                              hintText:
+                                                  context.l10n.message_hermes,
+                                              filled: true,
+                                              fillColor: Colors.transparent,
+                                              border: InputBorder.none,
+                                              enabledBorder: InputBorder.none,
+                                              focusedBorder: InputBorder.none,
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 12,
+                                                    vertical: 8,
+                                                  ),
+                                              isDense: true,
+                                            ),
+                                            minLines: 1,
+                                            maxLines: 5,
+                                            textCapitalization:
+                                                TextCapitalization.sentences,
+                                            keyboardType:
+                                                TextInputType.multiline,
+                                            textInputAction:
+                                                TextInputAction.newline,
+                                            enabled:
+                                                !_transcriptLoadBlocksComposer,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -10076,17 +10788,22 @@ class _ChatScreenState extends State<ChatScreen>
       onReadAloud: isUser
           ? null
           : () => _readAssistantText(content, announce: true),
-      onEdit: isUser && _canRegenerate
+      // Where the transport truncates, Edit rewinds to this turn (Desktop's
+      // edit-and-resend); elsewhere it loads the text back into the composer,
+      // as it always has there.
+      onEdit: !isUser
+          ? null
+          : _canRegenerate
           ? () => unawaited(_editAndResendTurn(content))
-          : null,
+          : () => _editAndResend(content),
       onRestore: isUser && _canRegenerate
           ? () => unawaited(_restoreUserTurn(content))
           : null,
-      // Regenerate needs a transport that truncates; elsewhere Retry would
-      // only append the same turn again.
-      onRetry: isUser || !_canRegenerate
+      // Every assistant reply offers Regenerate; whether it replaces the
+      // turn or asks again is decided when it is chosen.
+      onRetry: isUser
           ? null
-          : () => _retryPrompt(msg['_retry_prompt']?.toString() ?? ''),
+          : () => _regenerateResponse(msg['_retry_prompt']?.toString() ?? ''),
       showQuickActions:
           !isUser &&
           isLast &&
@@ -10346,6 +11063,12 @@ class _ChatScreenState extends State<ChatScreen>
   Future<void> _applySessionModelOverride(
     DesktopGatewayClient desktopGateway,
   ) async {
+    if (_modelOverrideFresh) {
+      // Switch to has just set it on this live session (one config.set, as
+      // Desktop's switchAndRetry): its retry does not send it again.
+      _modelOverrideFresh = false;
+      return;
+    }
     final provider = _sessionProvider;
     final model = _sessionModel;
     if (!_sessionModelOverride || provider == null || model == null) return;

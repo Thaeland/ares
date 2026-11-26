@@ -20,6 +20,12 @@ the [Library notice](third_party/embedded-push-notice.md),
 and [source/relink instructions](third_party/embedded-push-relink.md).
 Other dependencies retain their own licences and notices.
 
+Files dropped on the composer from the desktop, and files or images pasted
+from the clipboard, are read with the `desktop_drop` and `pasteboard` Flutter
+plugins from [MixinNetwork/flutter-plugins](https://github.com/MixinNetwork/flutter-plugins)
+(Apache License 2.0; neither ships a NOTICE file). Their licence text is
+bundled with the app's package licences.
+
 Telegram onboarding draws its QR code on the device with the Dart `qr` library
 ([BSD-3-Clause licence](third_party/licenses/qr-BSD-3-Clause.txt)); no QR
 payload is sent to an image-generation service.

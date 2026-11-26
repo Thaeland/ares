@@ -28,6 +28,7 @@ import 'completion_cue_player.dart';
 import 'notification_approval_authority.dart';
 import 'connection_mutation_barrier.dart';
 import 'ws_client.dart';
+import 'system_sleep_gate.dart';
 
 typedef NormalGatewayPromptSubmit =
     Future<void> Function({
@@ -87,6 +88,13 @@ class NormalGatewayTurnTerminal {
   final String? publicFinalText;
 }
 
+/// A gateway failure frame kept for the chat's failure card.
+typedef NormalGatewayFailureFrame = ({
+  int serial,
+  bool detached,
+  Map<String, dynamic> data,
+});
+
 /// Durable history and transient presentation are deliberately separate. Never
 /// write displayRows into the history window: they have no durable row identity.
 class NormalGatewayChatSnapshot {
@@ -118,6 +126,13 @@ class NormalGatewayChatSnapshot {
   final DesktopConnectionState connectionState;
   final ChatTimeline timeline;
   final List<ReceivedScopeOutcome> receivedOutcomes;
+
+  /// The gateway's last `error`/`turn.error` frame for this chat (message and
+  /// failure surface), for the failure card. [serial] tells frames apart;
+  /// [detached] is a frame that arrived with no turn active here (a turn
+  /// that settled on the server after this client let go of it). Cleared
+  /// when the next turn starts.
+  final NormalGatewayFailureFrame? failureFrame;
   const NormalGatewayChatSnapshot({
     required this.turnId,
     this.terminal,
@@ -141,6 +156,7 @@ class NormalGatewayChatSnapshot {
     required this.connectionState,
     this.timeline = const ChatTimeline(),
     this.receivedOutcomes = const [],
+    this.failureFrame,
   });
   bool get hasActiveTurn => const {
     NormalGatewayTurnPhase.preparing,
@@ -245,6 +261,7 @@ class NormalGatewayApplicationSession {
       }
     }, acceptsSession: _aliases.containsKey);
     client?.setConnectionListener(connectionChanged);
+    SystemSleepGate.instance.addListener(_onSystemSleep);
     ready = _restore();
     ready.ignore();
     unawaited(this.notifications.ensureInitialized());
@@ -440,6 +457,10 @@ class NormalGatewayApplicationSession {
     winner._listeners.addAll(loser._listeners);
     loser._listeners.clear();
     loser._redirect = winner;
+    if (SystemSleepGate.instance.reconcilePendingFor(loser)) {
+      SystemSleepGate.instance.releaseReconcile(loser);
+      winner._holdReconcileForPause();
+    }
     for (final alias in _aliases.keys.toList()) {
       if (identical(_aliases[alias], loser)) _aliases[alias] = winner;
     }
@@ -535,11 +556,32 @@ class NormalGatewayApplicationSession {
     if (backgroundWorkEnabled != null) {
       _backgroundWorkEnabled = backgroundWorkEnabled;
     }
-    if (returning) {
+    if (returning && !SystemSleepGate.instance.value) {
       // A legacy gateway never says a request was answered on another
       // device; ask which are still open (no answer is sent).
       unawaited(client?.revalidateServerRequests());
     }
+    _applyRecoveryPolicy();
+  }
+
+  /// The computer slept or the session locked (the client closes its
+  /// socket), or it is back: recovery resumes from history and the stored
+  /// session ids, never by sending a prompt again.
+  void _onSystemSleep() {
+    if (_closed) return;
+    if (SystemSleepGate.instance.value) {
+      // The paused socket cannot see these turns end: keep-awake waits
+      // until each has recovered its state after the pause.
+      for (final chat in chats) {
+        chat._holdReconcileForPause();
+      }
+    } else {
+      unawaited(client?.revalidateServerRequests());
+    }
+    _applyRecoveryPolicy();
+  }
+
+  void _applyRecoveryPolicy() {
     client?.setReconnectAllowed(_canRecover);
     if (_canRecover) {
       _retryRetirements();
@@ -557,7 +599,10 @@ class NormalGatewayApplicationSession {
     }
   }
 
-  bool get _canRecover => !_closed && (!_background || _backgroundWorkEnabled);
+  bool get _canRecover =>
+      !_closed &&
+      !SystemSleepGate.instance.value &&
+      (!_background || _backgroundWorkEnabled);
 
   void _retirePreWireMarker(NormalGatewayPendingMarker marker) {
     _retiringMarkers[marker.key] = marker;
@@ -763,6 +808,7 @@ class NormalGatewayApplicationSession {
   Future<void> close() async {
     if (_closed) return;
     _closed = true; // synchronous fence before any resource cleanup
+    SystemSleepGate.instance.removeListener(_onSystemSleep);
     prunePendingNotificationApprovals();
     _retirementTimer?.cancel();
     _retirementTimer = null;
@@ -966,7 +1012,21 @@ class NormalGatewayChatOwner {
             for (final settled in _settledPresentation) ...settled.outcomes,
             ..._receivedOutcomes,
           ]),
+          failureFrame: _failureFrame,
         );
+
+  /// Every failure frame gets its own serial, across chats, so a screen never
+  /// takes one for another it already showed.
+  static int _failureSerials = 0;
+  NormalGatewayFailureFrame? _failureFrame;
+
+  void _keepFailureFrame(StreamEvent event, {required bool detached}) {
+    _failureFrame = (
+      serial: ++_failureSerials,
+      detached: detached,
+      data: Map<String, dynamic>.unmodifiable(event.data),
+    );
+  }
 
   void bindStoredSession(String storedSessionId) {
     if (this.storedSessionId != storedSessionId) {
@@ -1576,6 +1636,8 @@ class NormalGatewayChatOwner {
     _activityChildren.clear();
     _error = null;
     _status = null;
+    // A new turn supersedes the last one's failure.
+    _failureFrame = null;
     _notify();
     return _reservation;
   }
@@ -2087,6 +2149,15 @@ class NormalGatewayChatOwner {
       _notify(meaningfulActivity: update != null);
       return;
     }
+    final failureFrame = const {'error', 'turn.error'}.contains(event.type);
+    if (failureFrame && !snapshot.hasActiveTurn) {
+      // No turn is live here: a turn that settled on the server after this
+      // client let go of it (detached) failed. The chat's failure card
+      // still has to say so (and offer Retry / Switch to).
+      _keepFailureFrame(event, detached: true);
+      _notify();
+      return;
+    }
     if (!snapshot.hasActiveTurn ||
         phase == NormalGatewayTurnPhase.preparing ||
         !wireEmitted ||
@@ -2110,6 +2181,9 @@ class NormalGatewayChatOwner {
       // arriving after B's onSent, before B has emitted any activity.
       if (!terminal) _wireTurnId ??= wireTurn;
     }
+    // The live turn's failure, for the card once the turn has settled as
+    // failed (a later success never shows it).
+    if (failureFrame) _keepFailureFrame(event, detached: false);
     final ownsResponse = wireTurn != null
         ? wireTurn == _wireTurnId
         : _sawResponseActivity;
@@ -2480,14 +2554,27 @@ class NormalGatewayChatOwner {
     return pending;
   }
 
-  void requestRecovery() {
-    if (_redirect != null) return _root.requestRecovery();
-    if (!snapshot.hasActiveTurn ||
+  /// The pause started with this turn running: hold keep-awake's reconcile
+  /// until recovery has read the turn's state again (or it settles).
+  void _holdReconcileForPause() {
+    if (_redirect != null ||
+        !snapshot.hasActiveTurn ||
         (!wireEmitted && _terminalReceipt == null) ||
-        _settling ||
-        !_session._canRecover) {
+        _settling) {
       return;
     }
+    SystemSleepGate.instance.holdReconcile(this);
+  }
+
+  void requestRecovery() {
+    if (_redirect != null) return _root.requestRecovery();
+    if (!snapshot.hasActiveTurn || (!wireEmitted && _terminalReceipt == null)) {
+      // Nothing left to recover: the turn is over (or never reached the
+      // wire), so it holds no reconcile either.
+      SystemSleepGate.instance.releaseReconcile(this);
+      return;
+    }
+    if (_settling || !_session._canRecover) return;
     _retryTimer?.cancel();
     _retryTimer = null;
     _recoveryQueued = true;
@@ -2499,6 +2586,9 @@ class NormalGatewayChatOwner {
     _recovering = true;
     _recoveryQueued = false;
     final generation = _generation;
+    // Set once this attempt has read the turn's state from the gateway (or
+    // settled it): after a pause, that is the reconcile keep-awake waits for.
+    var observed = false;
 
     try {
       final terminal = _terminalReceipt;
@@ -2508,10 +2598,14 @@ class NormalGatewayChatOwner {
           terminal.error,
           generation: generation,
         );
+        observed = true;
         return;
       }
       final stored = storedSessionId;
-      if (stored == null) return; // no safe recovery without a durable identity
+      if (stored == null) {
+        observed = true; // nothing more will be learned about this turn
+        return; // no safe recovery without a durable identity
+      }
       // Recovery may attach while the submit wait is pending, but that read
       // cannot become settlement authority merely by arriving after the ACK.
       // Generation plus this immutable observation boundary identify its epoch.
@@ -2533,6 +2627,7 @@ class NormalGatewayChatOwner {
                   !_submissionPending,
             ));
       _reconcileParkedAttention(parkedAttention, resumed.openRequests);
+      observed = true;
       if (!_current(generation) || !snapshot.hasActiveTurn || _settling) return;
       if (_terminalReceipt != null) {
         // An owned terminal received during this read outranks the older
@@ -2615,6 +2710,9 @@ class NormalGatewayChatOwner {
       // A failed resume/history read is unknown, never an empty completion.
     } finally {
       _recovering = false;
+      if (observed && !SystemSleepGate.instance.value) {
+        SystemSleepGate.instance.releaseReconcile(this);
+      }
 
       // Old flight A must hand off to a queued generation B, even when A was
       // invalidated by terminal settlement while its read was held.
@@ -2852,6 +2950,11 @@ class NormalGatewayChatOwner {
         // The recovery flight owns its retry/backoff. Requeueing from inside
         // it would spin on a permanently rejected tombstone write.
         if (snapshot.hasActiveTurn && !_recovering) requestRecovery();
+      }
+      // Settled, and its end already published: nothing about this turn is
+      // left for keep-awake to wait on.
+      if (!snapshot.hasActiveTurn) {
+        SystemSleepGate.instance.releaseReconcile(this);
       }
     }
   }
@@ -3112,6 +3215,7 @@ class NormalGatewayChatOwner {
   }
 
   void _close() {
+    SystemSleepGate.instance.releaseReconcile(this);
     _generation++;
     _retryTimer?.cancel();
     _baselineTimer?.cancel();

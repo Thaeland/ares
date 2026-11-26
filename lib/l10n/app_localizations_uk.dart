@@ -7104,4 +7104,328 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get ng_restore_turn_confirm => 'Відновити й запустити знову';
+
+  @override
+  String get composer_failure_switch_no_retry =>
+      'Перемикання змінює лише модель: це з’єднання не може повторити невдалий хід. Надішліть його знову після перемикання.';
+
+  @override
+  String get composer_attach_busy =>
+      'Attachments can be added when this reply finishes.';
+
+  @override
+  String get deployment_token_label => 'Токен розгортання (необов’язково)';
+
+  @override
+  String get deployment_token_helper =>
+      'Для токенів сеансу Hermes Dashboard, що надсилаються як X-Hermes-Session-Token. Не зберігається відкритим текстом у налаштуваннях.';
+
+  @override
+  String get deployment_token_hint => 'Токен сеансу панелі';
+
+  @override
+  String get custom_headers_label => 'Власні заголовки (необов’язково)';
+
+  @override
+  String get custom_headers_helper =>
+      'По одному в рядку, напр. X-Custom: значення. Заборонені заголовки відхиляються.';
+
+  @override
+  String get custom_headers_hint => 'напр. X-Custom-Header: значення';
+
+  @override
+  String get desktop_tray_open => 'Відкрити Ares';
+
+  @override
+  String get desktop_tray_new_chat => 'Новий чат';
+
+  @override
+  String get desktop_tray_quick_entry => 'Швидке введення…';
+
+  @override
+  String get desktop_tray_pause_notifications => 'Призупинити сповіщення';
+
+  @override
+  String get desktop_tray_quit => 'Вийти з Ares';
+
+  @override
+  String get desktop_integration_title => 'Інтеграція з робочим столом';
+
+  @override
+  String get desktop_tray_setting =>
+      'Показувати Ares у системному треї або рядку меню';
+
+  @override
+  String get desktop_tray_setting_help =>
+      'Через значок можна відкрити Ares, почати чат, відкрити швидке введення, призупинити сповіщення або вийти.';
+
+  @override
+  String get desktop_close_to_tray_setting =>
+      'Продовжувати роботу в треї після закриття вікна';
+
+  @override
+  String get desktop_tray_unsupported =>
+      'У цьому середовищі немає системного трею, доступного для Ares.';
+
+  @override
+  String get quick_entry_title => 'Швидке введення';
+
+  @override
+  String get quick_entry_hint => 'Введіть запит для Ares…';
+
+  @override
+  String get quick_entry_submit => 'Вставити в поле введення';
+
+  @override
+  String get quick_entry_never_sends =>
+      'Enter вставляє текст у поле введення чату. Нічого не надсилається, доки ви не натиснете «Надіслати».';
+
+  @override
+  String get quick_entry_unavailable =>
+      'Не вдалося відкрити швидке введення. Спробуйте ще раз.';
+
+  @override
+  String get desktop_hotkey_setting =>
+      'Комбінація клавіш для швидкого введення';
+
+  @override
+  String desktop_hotkey_help(String shortcut) {
+    return 'Натисніть $shortcut будь-де, щоб відкрити швидке введення.';
+  }
+
+  @override
+  String desktop_hotkey_conflict(String shortcut) {
+    return '$shortcut уже використовує інший застосунок. Виберіть іншу комбінацію.';
+  }
+
+  @override
+  String get desktop_hotkey_unsupported =>
+      'Це середовище не дозволяє застосункам реєструвати глобальні комбінації клавіш (наприклад, Wayland).';
+
+  @override
+  String get desktop_hotkey_no_modifier => 'Додайте Cmd, Ctrl або Alt.';
+
+  @override
+  String get desktop_hotkey_super_key =>
+      'Клавіша Windows або Super зарезервована системою.';
+
+  @override
+  String get desktop_hotkey_reserved =>
+      'Цю комбінацію вже використовує система.';
+
+  @override
+  String desktop_hotkey_in_app(String action) {
+    return 'Ares уже використовує цю комбінацію для дії «$action».';
+  }
+
+  @override
+  String get desktop_hotkey_change => 'Змінити';
+
+  @override
+  String get desktop_hotkey_reset => 'За замовчуванням';
+
+  @override
+  String get capture_screen_action => 'Знімок екрана';
+
+  @override
+  String get capture_screen_help =>
+      'Додає знімок екрана до повідомлення як чернетку. Нічого не надсилається, доки ви не натиснете «Надіслати».';
+
+  @override
+  String get capture_screen_unavailable =>
+      'Знімок екрана недоступний у цьому середовищі.';
+
+  @override
+  String get capture_screen_failed =>
+      'Не вдалося зробити знімок екрана. Спробуйте ще раз.';
+
+  @override
+  String get capture_permission_title => 'Дозвольте запис екрана';
+
+  @override
+  String get capture_permission_body =>
+      'Щоб зробити знімок вікна, Ares потрібен дозвіл на запис екрана. Увімкніть Ares у «Системні параметри» > «Приватність і безпека» > «Запис екрана», а потім спробуйте ще раз.';
+
+  @override
+  String get capture_open_settings => 'Відкрити Системні параметри';
+
+  @override
+  String get keep_awake_title => 'Не давати комп’ютеру засинати';
+
+  @override
+  String get keep_awake_title_mobile => 'Не вимикати екран';
+
+  @override
+  String get keep_awake_mode_off => 'Вимк.';
+
+  @override
+  String get keep_awake_mode_while_working => 'Під час роботи';
+
+  @override
+  String get keep_awake_mode_always => 'Завжди';
+
+  @override
+  String get keep_awake_off_help =>
+      'Ніколи не заважати переходу в сон (типово).';
+
+  @override
+  String get keep_awake_while_working_help =>
+      'Не давати засинати від бездіяльності, лише поки триває хід агента.';
+
+  @override
+  String get keep_awake_always_help =>
+      'Не давати засинати від бездіяльності, поки Ares відкрито на цьому пристрої.';
+
+  @override
+  String get keep_awake_off_help_mobile =>
+      'Екран вимикається як зазвичай (типово).';
+
+  @override
+  String get keep_awake_while_working_help_mobile =>
+      'Не вимикати екран, поки триває хід агента й Ares відкрито.';
+
+  @override
+  String get keep_awake_always_help_mobile =>
+      'Не вимикати екран, поки Ares відкрито.';
+
+  @override
+  String get ng_token_gateway_has_no_sign_in =>
+      'Цей шлюз не має входу, тому не може перевірити токен розгортання. Увімкніть автентифікацію панелі на хості (або оновіть Hermes) і спробуйте ще раз.';
+
+  @override
+  String get palette_open => 'Палітра команд застосунку';
+
+  @override
+  String get palette_no_matches => 'Немає відповідних дій';
+
+  @override
+  String get palette_filter_hint => 'Введіть текст, щоб відфільтрувати дії…';
+
+  @override
+  String get palette_keys_move => '↑↓ — переміщення';
+
+  @override
+  String get palette_keys_run => 'Enter — виконати';
+
+  @override
+  String get palette_keys_close => 'Esc — закрити';
+
+  @override
+  String get palette_search_sessions => 'Пошук сеансів';
+
+  @override
+  String get palette_scheduled_crons => 'Заплановані / Cron';
+
+  @override
+  String get palette_capabilities_skills => 'Можливості та навички';
+
+  @override
+  String get palette_insights_usage => 'Аналітика та використання';
+
+  @override
+  String get palette_more_projects => 'Більше та проєкти';
+
+  @override
+  String get deeplink_chat_not_found =>
+      'Чат не знайдено у списку. Можливо, він ще не завантажився.';
+
+  @override
+  String get keyboard_shortcuts_title => 'Сполучення клавіш';
+
+  @override
+  String get shortcuts_reset_all => 'Скинути все';
+
+  @override
+  String get shortcuts_reset_to_default => 'Повернути типове';
+
+  @override
+  String get shortcut_action_command_palette => 'Палітра команд';
+
+  @override
+  String get shortcut_action_new_chat => 'Новий чат';
+
+  @override
+  String get shortcut_action_search => 'Пошук';
+
+  @override
+  String get shortcut_action_settings => 'Налаштування';
+
+  @override
+  String shortcut_action_go_to_tab(int number) {
+    return 'Перейти на вкладку $number';
+  }
+
+  @override
+  String shortcuts_conflict(String first, String second, String chord) {
+    return 'Конфлікт: «$first» і «$second» використовують $chord. Власне сполучення лишається типовим, доки ви не зміните одне з них.';
+  }
+
+  @override
+  String shortcuts_editor_title(String action) {
+    return 'Сполучення: $action';
+  }
+
+  @override
+  String get shortcuts_editor_help =>
+      'Натисніть сполучення клавіш або виберіть нижче модифікатори та клавішу:';
+
+  @override
+  String get shortcuts_editor_needs_modifier =>
+      'Виберіть принаймні Cmd/Meta, Ctrl або Alt, щоб не заважати введенню в полі повідомлення.';
+
+  @override
+  String shortcuts_text_editing_warning(String chord) {
+    return '$chord — сполучення для редагування тексту (копіювати, вставити, вирізати, скасувати, повторити або виділити все). Якщо призначити його тут, текстові поля його втратять.';
+  }
+
+  @override
+  String shortcuts_text_editing_in_use(String action, String chord) {
+    return '«$action» використовує $chord — сполучення для редагування тексту. Поки воно призначене тут, текстові поля його втрачають.';
+  }
+
+  @override
+  String custom_headers_problem_format(int line) {
+    return 'Рядок $line: очікується «Назва: Значення»';
+  }
+
+  @override
+  String custom_headers_problem_missing_name(int line) {
+    return 'Рядок $line: немає назви заголовка';
+  }
+
+  @override
+  String custom_headers_problem_invalid_name(int line, String name) {
+    return 'Рядок $line: неприпустима назва заголовка «$name»';
+  }
+
+  @override
+  String custom_headers_problem_reserved(int line, String name) {
+    return 'Рядок $line: «$name» зарезервовано, його не можна передавати';
+  }
+
+  @override
+  String custom_headers_problem_empty_value(int line) {
+    return 'Рядок $line: порожнє значення заголовка';
+  }
+
+  @override
+  String get ng_enter_a_deployment_token => 'Введіть токен сеансу розгортання.';
+
+  @override
+  String get ng_custom_headers => 'Власні заголовки';
+
+  @override
+  String get ng_custom_headers_help =>
+      'Додаткові HTTP-заголовки для цього шлюзу (Назва: Значення, по одному в рядку), надсилаються в його викликах REST і WebSocket. Зберігаються в захищеному сховищі облікових даних. Заголовки автентифікації та hop-by-hop відхиляються.';
+
+  @override
+  String get ng_use_a_deployment_token =>
+      'Використати токен сеансу розгортання';
+
+  @override
+  String get ng_sign_in_with_deployment_token => 'Увійти з токеном розгортання';
+
+  @override
+  String get ng_signed_in_with_deployment_token =>
+      'Вхід виконано з токеном розгортання.';
 }

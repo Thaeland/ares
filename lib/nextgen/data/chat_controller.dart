@@ -19,6 +19,7 @@ import '../../core/render/setup_beat.dart';
 import '../../core/services/attachment_draft_service.dart';
 import '../../core/services/completion_cue_player.dart';
 import '../../core/services/remote_workspace.dart';
+import '../../core/services/system_sleep_gate.dart';
 import '../../core/services/composer_draft_store.dart';
 import '../../core/services/connection_mutation_barrier.dart';
 import '../../core/services/prepared_image_store.dart';
@@ -692,6 +693,7 @@ class NgChatController extends ChangeNotifier {
     this.onCreated,
     this.onTurnFinished,
     AttachmentDraftService? attachmentService,
+    String? initialText,
     // Keep the public named argument while the mutable field stays private.
     // ignore: prefer_initializing_formals
   }) : _workingDirectory = workingDirectory,
@@ -699,15 +701,47 @@ class NgChatController extends ChangeNotifier {
        storedId = sessionId,
        draftKey = sessionId ?? ComposerDraftStore.newLocalKey(),
        attachmentService = attachmentService ?? AttachmentDraftService() {
+    _initialText = initialText;
     _subs.add(gateway.events.listen(_onEvent));
     _subs.add(gateway.serverRequests.listen(_onServerRequest));
     _subs.add(gateway.reconnected.listen((_) => unawaited(_reattach())));
     // Answered on another device, withdrawn, or no longer open per the server.
     _subs.add(gateway.withdrawnRequests.listen(forgetRequest));
+    SystemSleepGate.instance.addListener(_onSleepGate);
+  }
+
+  /// The computer slept or the session locked with this turn running: the
+  /// paused socket cannot see it end, so keep-awake waits until this chat
+  /// has re-attached and caught up after the pause ([_reattach]).
+  void _onSleepGate() {
+    if (_disposed) return;
+    if (SystemSleepGate.instance.value && running) {
+      SystemSleepGate.instance.holdReconcile(this);
+    }
   }
 
   final NextGenGateway gateway;
   final String draftKey;
+
+  /// One-shot composer prefill (used by validated `hermes://` deep links).
+  /// Consumed exactly once by the chat view on mount; never re-applied.
+  String? _initialText;
+  String? consumeInitialText() {
+    final value = _initialText;
+    _initialText = null;
+    if (value == null || value.trim().isEmpty) return null;
+    return value;
+  }
+
+  /// Offers a deep-link prefill to this chat's view (a mounted view picks it
+  /// up on its next change notification, a new one when it mounts). The view
+  /// appends it after any unsent draft; nothing is sent.
+  void offerInitialText(String text) {
+    if (_disposed || text.trim().isEmpty) return;
+    _initialText = text;
+    notifyListeners();
+  }
+
   bool get draftOwnerCurrent => !_disposed && gateway.draftAccountCurrent;
   final Object? _imageEpoch;
   PreparedImageTarget? get imageTarget {
@@ -1647,21 +1681,28 @@ class NgChatController extends ChangeNotifier {
 
   /// Re-attaches after the socket came back, then fills what was missed.
   Future<void> _reattach() async {
-    if (_disposed) return;
-    // The first connect is the chat opening, which reads everything anyway.
-    if (!_attachedOnce) {
+    try {
+      if (_disposed) return;
+      // The first connect is the chat opening, which reads everything anyway.
+      if (!_attachedOnce) {
+        await _attach();
+        return;
+      }
+      _held ??= [];
+      if (gateway.sessionAuthority && _cursor != null) {
+        // Replay first, then attach: the owner bridges whatever it publishes
+        // between the two onto this socket.
+        await _catchUp(resubscribe: true);
+        return;
+      }
       await _attach();
-      return;
+      await _catchUp();
+    } finally {
+      // Caught up after a pause: [running] is current again.
+      if (!SystemSleepGate.instance.value) {
+        SystemSleepGate.instance.releaseReconcile(this);
+      }
     }
-    _held ??= [];
-    if (gateway.sessionAuthority && _cursor != null) {
-      // Replay first, then attach: the owner bridges whatever it publishes
-      // between the two onto this socket.
-      await _catchUp(resubscribe: true);
-      return;
-    }
-    await _attach();
-    await _catchUp();
   }
 
   bool _attachedOnce = false;
@@ -3441,13 +3482,13 @@ class NgChatController extends ChangeNotifier {
       }
       if (_disposed || running) return NgRetryResult.failed;
     }
-    final row = await resolveRegenerateRow(
+    final target = await resolveRegenerateTarget(
       rpc: (method, params) => gateway.call(method, params),
       sessionId: runtime,
       text: text,
     );
     if (_disposed) return NgRetryResult.nothing;
-    if (row == null) return NgRetryResult.notFound;
+    if (target == null) return NgRetryResult.notFound;
     final index = items.indexOf(last);
     if (index < 0) return NgRetryResult.nothing;
     // As Desktop's applyReloadOptimistic: the replaced turn leaves the view.
@@ -3456,7 +3497,8 @@ class NgChatController extends ChangeNotifier {
     final sent = await send(
       text,
       display: last.sentText == null ? null : last.text,
-      promptParams: regenerateSubmitParams(row),
+      // runRewindSubmit's params for the resolved row (Desktop's runReload).
+      promptParams: regenerateSubmitParams(target.rowId),
     );
     if (!sent && !_disposed) {
       // Desktop's rollback: the transcript as it was, and why.
@@ -3918,6 +3960,8 @@ class NgChatController extends ChangeNotifier {
   @override
   void dispose() {
     _disposed = true;
+    SystemSleepGate.instance.removeListener(_onSleepGate);
+    SystemSleepGate.instance.releaseReconcile(this);
     for (final sub in _subs) {
       unawaited(sub.cancel());
     }

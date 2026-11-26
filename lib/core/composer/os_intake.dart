@@ -80,8 +80,8 @@ Future<ClipboardAttachment?> readClipboardAttachment() async {
   return null;
 }
 
-/// Writes pasted image bytes into the app's cache, where the draft pipeline
-/// reads (and later removes) attachment sources.
+/// Writes pasted image bytes into the app's cache for the draft pipeline to
+/// read; the caller discards it ([discardStagedComposerImage]) afterwards.
 Future<String> stageComposerImageBytes(
   Uint8List bytes, {
   String? mimeType,
@@ -100,6 +100,36 @@ Future<String> stageComposerImageBytes(
   );
   await file.writeAsBytes(bytes, flush: true);
   return file.path;
+}
+
+/// Removes a staged paste image once the draft pipeline has made its own
+/// sanitised copy (or refused it).
+Future<void> discardStagedComposerImage(String path) async {
+  try {
+    await File(path).delete();
+  } catch (_) {}
+}
+
+/// Clipboard file paths as intake files, folders marked.
+Future<List<OsIntakeFile>> osIntakeFilesFor(Iterable<String> paths) async => [
+  for (final path in paths)
+    OsIntakeFile(
+      path,
+      directory:
+          await FileSystemEntity.type(path) == FileSystemEntityType.directory,
+    ),
+];
+
+/// A pasted local path that names a file on this device (not a folder, not
+/// a missing path), as an intake file; otherwise null.
+Future<OsIntakeFile?> localFileForPastedPath(String path) async {
+  try {
+    return await FileSystemEntity.type(path) == FileSystemEntityType.file
+        ? OsIntakeFile(path)
+        : null;
+  } catch (_) {
+    return null;
+  }
 }
 
 /// Runs [body] with read access to a dropped file that lives outside the
@@ -209,10 +239,16 @@ class ClipboardAttachmentPaste extends StatelessWidget {
     super.key,
     required this.child,
     required this.onAttachment,
+    this.enabled = true,
   });
 
   final Widget child;
   final Future<void> Function(ClipboardAttachment found) onAttachment;
+
+  /// When false (the composer takes no attachments right now), paste is
+  /// the editor's plain text paste. The tree keeps its shape either way, so
+  /// the editor below keeps its state (and the keyboard) when this flips.
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -220,22 +256,26 @@ class ClipboardAttachmentPaste extends StatelessWidget {
       return child;
     }
     return Actions(
-      actions: {PasteTextIntent: _AttachmentPasteAction(onAttachment)},
+      actions: {
+        PasteTextIntent: _AttachmentPasteAction(onAttachment, enabled: enabled),
+      },
       child: child,
     );
   }
 }
 
 class _AttachmentPasteAction extends Action<PasteTextIntent> {
-  _AttachmentPasteAction(this.onAttachment);
+  _AttachmentPasteAction(this.onAttachment, {required this.enabled});
 
   final Future<void> Function(ClipboardAttachment found) onAttachment;
+  final bool enabled;
 
   @override
   Object? invoke(PasteTextIntent intent) {
     // The editor's own paste, captured now: it is only reachable while
     // this override runs.
     final fallback = callingAction;
+    if (!enabled) return fallback?.invoke(intent);
     unawaited(() async {
       final found = await readClipboardAttachment();
       if (found != null) {

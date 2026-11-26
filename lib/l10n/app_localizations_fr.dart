@@ -7119,4 +7119,329 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get ng_restore_turn_confirm => 'Restaurer et relancer';
+
+  @override
+  String get composer_failure_switch_no_retry =>
+      'Le changement ne modifie que le modèle : cette connexion ne peut pas relancer le tour en échec. Renvoyez-le après le changement.';
+
+  @override
+  String get composer_attach_busy =>
+      'Attachments can be added when this reply finishes.';
+
+  @override
+  String get deployment_token_label => 'Jeton de déploiement (facultatif)';
+
+  @override
+  String get deployment_token_helper =>
+      'Pour les jetons de session Hermes Dashboard envoyés comme X-Hermes-Session-Token. Non stocké en clair dans les préférences.';
+
+  @override
+  String get deployment_token_hint => 'Jeton de session du tableau de bord';
+
+  @override
+  String get custom_headers_label => 'En-têtes personnalisés (facultatif)';
+
+  @override
+  String get custom_headers_helper =>
+      'Un par ligne, p. ex. X-Custom: valeur. Les en-têtes interdits sont refusés.';
+
+  @override
+  String get custom_headers_hint => 'p. ex. X-Custom-Header: valeur';
+
+  @override
+  String get desktop_tray_open => 'Ouvrir Ares';
+
+  @override
+  String get desktop_tray_new_chat => 'Nouvelle discussion';
+
+  @override
+  String get desktop_tray_quick_entry => 'Saisie rapide…';
+
+  @override
+  String get desktop_tray_pause_notifications => 'Suspendre les notifications';
+
+  @override
+  String get desktop_tray_quit => 'Quitter Ares';
+
+  @override
+  String get desktop_integration_title => 'Intégration au bureau';
+
+  @override
+  String get desktop_tray_setting =>
+      'Afficher Ares dans la zone de notification ou la barre des menus';
+
+  @override
+  String get desktop_tray_setting_help =>
+      'Depuis l’icône : ouvrir Ares, démarrer une discussion, ouvrir la saisie rapide, suspendre les notifications ou quitter.';
+
+  @override
+  String get desktop_close_to_tray_setting =>
+      'Continuer dans la zone de notification à la fermeture de la fenêtre';
+
+  @override
+  String get desktop_tray_unsupported =>
+      'Ce bureau n’a pas de zone de notification utilisable par Ares.';
+
+  @override
+  String get quick_entry_title => 'Saisie rapide';
+
+  @override
+  String get quick_entry_hint => 'Saisissez une requête pour Ares…';
+
+  @override
+  String get quick_entry_submit => 'Placer dans la zone de saisie';
+
+  @override
+  String get quick_entry_never_sends =>
+      'Entrée place le texte dans la zone de saisie de la discussion. Rien n’est envoyé avant que vous appuyiez sur Envoyer.';
+
+  @override
+  String get quick_entry_unavailable =>
+      'Impossible d’ouvrir la saisie rapide. Réessayez.';
+
+  @override
+  String get desktop_hotkey_setting => 'Raccourci de saisie rapide';
+
+  @override
+  String desktop_hotkey_help(String shortcut) {
+    return 'Appuyez sur $shortcut n’importe où pour ouvrir la saisie rapide.';
+  }
+
+  @override
+  String desktop_hotkey_conflict(String shortcut) {
+    return 'Une autre app utilise déjà $shortcut. Choisissez un autre raccourci.';
+  }
+
+  @override
+  String get desktop_hotkey_unsupported =>
+      'Ce bureau ne permet pas aux apps d’enregistrer un raccourci global (par exemple sous Wayland).';
+
+  @override
+  String get desktop_hotkey_no_modifier => 'Incluez Cmd, Ctrl ou Alt.';
+
+  @override
+  String get desktop_hotkey_super_key =>
+      'La touche Windows ou Super est réservée au système.';
+
+  @override
+  String get desktop_hotkey_reserved => 'Le système utilise déjà ce raccourci.';
+
+  @override
+  String desktop_hotkey_in_app(String action) {
+    return 'Ares utilise déjà ce raccourci pour $action.';
+  }
+
+  @override
+  String get desktop_hotkey_change => 'Modifier';
+
+  @override
+  String get desktop_hotkey_reset => 'Utiliser la valeur par défaut';
+
+  @override
+  String get capture_screen_action => 'Capturer l’écran';
+
+  @override
+  String get capture_screen_help =>
+      'Ajoute une capture au message en brouillon. Rien n’est envoyé avant que vous appuyiez sur Envoyer.';
+
+  @override
+  String get capture_screen_unavailable =>
+      'La capture d’écran n’est pas disponible sur ce bureau.';
+
+  @override
+  String get capture_screen_failed =>
+      'Impossible de capturer l’écran. Réessayez.';
+
+  @override
+  String get capture_permission_title =>
+      'Autoriser l’enregistrement de l’écran';
+
+  @override
+  String get capture_permission_body =>
+      'Pour capturer une fenêtre, Ares a besoin de l’autorisation d’enregistrement de l’écran. Activez Ares dans Réglages Système > Confidentialité et sécurité > Enregistrement de l’écran, puis réessayez.';
+
+  @override
+  String get capture_open_settings => 'Ouvrir Réglages Système';
+
+  @override
+  String get keep_awake_title => 'Garder l’ordinateur éveillé';
+
+  @override
+  String get keep_awake_title_mobile => 'Garder l’écran allumé';
+
+  @override
+  String get keep_awake_mode_off => 'Désactivé';
+
+  @override
+  String get keep_awake_mode_while_working => 'Pendant le travail';
+
+  @override
+  String get keep_awake_mode_always => 'Toujours';
+
+  @override
+  String get keep_awake_off_help =>
+      'Ne jamais empêcher la mise en veille (par défaut).';
+
+  @override
+  String get keep_awake_while_working_help =>
+      'Empêcher la mise en veille d’inactivité uniquement pendant un tour de l’agent.';
+
+  @override
+  String get keep_awake_always_help =>
+      'Empêcher la mise en veille d’inactivité tant qu’Ares est ouvert sur cet appareil.';
+
+  @override
+  String get keep_awake_off_help_mobile =>
+      'Laisser l’écran s’éteindre normalement (par défaut).';
+
+  @override
+  String get keep_awake_while_working_help_mobile =>
+      'Garder l’écran allumé pendant un tour de l’agent, tant qu’Ares est ouvert.';
+
+  @override
+  String get keep_awake_always_help_mobile =>
+      'Garder l’écran allumé tant qu’Ares est ouvert.';
+
+  @override
+  String get ng_token_gateway_has_no_sign_in =>
+      'Cette passerelle n’a pas de connexion, elle ne peut donc pas vérifier un jeton de déploiement. Activez l’authentification du tableau de bord sur l’hôte (ou mettez Hermes à jour), puis réessayez.';
+
+  @override
+  String get palette_open => 'Palette de commandes de l’app';
+
+  @override
+  String get palette_no_matches => 'Aucune action correspondante';
+
+  @override
+  String get palette_filter_hint => 'Tapez pour filtrer les actions…';
+
+  @override
+  String get palette_keys_move => '↑↓ pour se déplacer';
+
+  @override
+  String get palette_keys_run => 'Entrée pour exécuter';
+
+  @override
+  String get palette_keys_close => 'Échap pour fermer';
+
+  @override
+  String get palette_search_sessions => 'Rechercher des sessions';
+
+  @override
+  String get palette_scheduled_crons => 'Planifiées / Crons';
+
+  @override
+  String get palette_capabilities_skills => 'Capacités et compétences';
+
+  @override
+  String get palette_insights_usage => 'Aperçus et utilisation';
+
+  @override
+  String get palette_more_projects => 'Plus et projets';
+
+  @override
+  String get deeplink_chat_not_found =>
+      'Discussion introuvable dans la liste. Elle n’est peut-être pas encore chargée.';
+
+  @override
+  String get keyboard_shortcuts_title => 'Raccourcis clavier';
+
+  @override
+  String get shortcuts_reset_all => 'Tout réinitialiser';
+
+  @override
+  String get shortcuts_reset_to_default => 'Rétablir la valeur par défaut';
+
+  @override
+  String get shortcut_action_command_palette => 'Palette de commandes';
+
+  @override
+  String get shortcut_action_new_chat => 'Nouvelle discussion';
+
+  @override
+  String get shortcut_action_search => 'Rechercher';
+
+  @override
+  String get shortcut_action_settings => 'Paramètres';
+
+  @override
+  String shortcut_action_go_to_tab(int number) {
+    return 'Aller à l’onglet $number';
+  }
+
+  @override
+  String shortcuts_conflict(String first, String second, String chord) {
+    return 'Conflit : « $first » et « $second » utilisent tous deux $chord. Le raccourci personnalisé garde sa valeur par défaut jusqu’à ce que vous en changiez un.';
+  }
+
+  @override
+  String shortcuts_editor_title(String action) {
+    return 'Raccourci : $action';
+  }
+
+  @override
+  String get shortcuts_editor_help =>
+      'Appuyez sur une combinaison de touches, ou choisissez des modificateurs et une touche ci-dessous :';
+
+  @override
+  String get shortcuts_editor_needs_modifier =>
+      'Choisissez au moins Cmd/Meta, Ctrl ou Alt pour que la saisie dans le champ de message ne soit pas affectée.';
+
+  @override
+  String shortcuts_text_editing_warning(String chord) {
+    return '$chord est un raccourci d’édition de texte (copier, coller, couper, annuler, rétablir ou tout sélectionner). L’attribuer ici le retire aux champs de texte.';
+  }
+
+  @override
+  String shortcuts_text_editing_in_use(String action, String chord) {
+    return '« $action » utilise $chord, un raccourci d’édition de texte. Les champs de texte le perdent tant qu’il est attribué ici.';
+  }
+
+  @override
+  String custom_headers_problem_format(int line) {
+    return 'Ligne $line : « Nom: Valeur » attendu';
+  }
+
+  @override
+  String custom_headers_problem_missing_name(int line) {
+    return 'Ligne $line : nom d’en-tête manquant';
+  }
+
+  @override
+  String custom_headers_problem_invalid_name(int line, String name) {
+    return 'Ligne $line : nom d’en-tête « $name » non valide';
+  }
+
+  @override
+  String custom_headers_problem_reserved(int line, String name) {
+    return 'Ligne $line : « $name » est réservé et ne peut pas être transmis';
+  }
+
+  @override
+  String custom_headers_problem_empty_value(int line) {
+    return 'Ligne $line : valeur d’en-tête vide';
+  }
+
+  @override
+  String get ng_enter_a_deployment_token =>
+      'Saisissez un jeton de session de déploiement.';
+
+  @override
+  String get ng_custom_headers => 'En-têtes personnalisés';
+
+  @override
+  String get ng_custom_headers_help =>
+      'En-têtes HTTP supplémentaires pour cette passerelle (Nom: Valeur, un par ligne), envoyés avec ses appels REST et WebSocket. Ils sont conservés dans le stockage sécurisé des identifiants. Les en-têtes d’authentification et hop-by-hop sont refusés.';
+
+  @override
+  String get ng_use_a_deployment_token =>
+      'Utiliser un jeton de session de déploiement';
+
+  @override
+  String get ng_sign_in_with_deployment_token =>
+      'Se connecter avec le jeton de déploiement';
+
+  @override
+  String get ng_signed_in_with_deployment_token =>
+      'Connecté avec le jeton de déploiement.';
 }

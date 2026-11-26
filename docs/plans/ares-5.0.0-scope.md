@@ -46,6 +46,7 @@ Source baseline: Ares 4.0.15 and Hermes Desktop 0.23.4. Entries describe the aud
 | F40 | OPEN | Client vs. agent backup | Full Hermes-home backup, plus transfer to a chosen Cloud agent with confirmation, progress and an undo point. This is separate both from portable single-profile export and from Ares backing up its own settings/connections/pins. |
 | WIN | OPEN | Native Windows notifications | Post an OS toast, inspect delivery on Windows, verify launch/focus and correct connection/session upon activation, preferences, duplicate/stale action handling. Packaged and unpackaged identity tested separately. |
 | LNX | OPEN | Linux client | Build and launch a Linux runner and test all applicable client workflows in both layouts. |
+| KDK | OPEN | Kanban cards in the chat dock *(Ares addition; requested by Sam)* | Any Kanban card a chat creates (its `kanban_create` tool calls, plus cards whose `session_id` provenance is that chat's session) appears as a live row in the dock above the composer (NextGen `NgSessionDock`, beside goal, subagents and tasks; Classic's equivalent status area), with title, status and assignee. Tapping it opens that card in Ares's native Kanban board (F12), on the right connection, profile and board. Both layouts, every platform. Hermes Desktop has no equivalent; this extends F12. |
 
 
 ### F23 notes (v5/render, Desktop b7ee21c14e)

@@ -6,6 +6,8 @@
 //   NG4 picking a complete.slash argument replaced the whole command
 //   NG6 the context breakdown pushed the composer under the keyboard
 // NG5 (a pasted device directory stays text) passed and stays as a guard.
+// Drop and paste intake (files from the OS, the clipboard or a keyboard)
+// is covered at the end.
 // Uses only public NextGen APIs and keys.
 import 'dart:async';
 import 'dart:convert';
@@ -14,6 +16,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hermes_android/core/composer/os_intake.dart';
 import 'package:hermes_android/core/services/connection_manager.dart';
 import 'package:hermes_android/core/services/ws_client.dart';
 import 'package:hermes_android/l10n/app_localizations.dart';
@@ -25,6 +28,9 @@ import 'package:hermes_android/nextgen/ui/chat_view.dart';
 import 'package:hermes_android/nextgen/ui/nextgen_scope.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:image/image.dart' as image_lib;
+// ignore: depend_on_referenced_packages
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const _fieldKey = ValueKey('ng-composer-field');
@@ -176,6 +182,33 @@ Future<void> _send(WidgetTester tester, String text) async {
 String _composer(WidgetTester tester) =>
     tester.widget<TextField>(find.byKey(_fieldKey)).controller!.text;
 
+class _Paths extends PathProviderPlatform {
+  _Paths(this.dir);
+  final Directory dir;
+  @override
+  Future<String?> getTemporaryPath() async => dir.path;
+}
+
+/// Lets real file I/O and image work (fake-async tests do not run it)
+/// finish and render without moving the clock. Stops a few quiet rounds
+/// after [done] holds.
+Future<void> _drain(WidgetTester tester, {bool Function()? done}) async {
+  var quiet = 0;
+  for (var i = 0; i < 400 && quiet < 4; i++) {
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 10)),
+    );
+    await tester.pump();
+    if (done == null ? i >= 12 : done()) quiet++;
+  }
+}
+
+List<String> _chips() => [
+  for (final chip in find.byType(InputChip).evaluate())
+    ((((chip.widget as InputChip).label as ConstrainedBox).child!) as Text)
+        .data!,
+];
+
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
@@ -303,6 +336,49 @@ void main() {
       findsOneWidget,
       reason: 'the notice promises "The result will appear here"',
     );
+  });
+
+  // An older gateway without prompt.background: Desktop's slash.ts falls
+  // back to slash.exec when the method is missing (isMissingRpcMethod).
+  for (final (label, error) in [
+    (
+      '-32601',
+      JsonRpcError('prompt.background', 'unknown method', code: -32601),
+    ),
+    (
+      '4004 unknown method',
+      JsonRpcError(
+        'prompt.background',
+        'unknown method: prompt.background',
+        code: 4004,
+      ),
+    ),
+  ]) {
+    testWidgets('/background on a gateway without prompt.background ($label) '
+        'runs through slash.exec', (tester) async {
+      final h = await pump(tester, storedId: 'stored-1', runtimeId: 'rt-1');
+      h.gateway.handlers['prompt.background'] = (p) => throw error;
+      h.gateway.handlers['slash.exec'] = (p) => {'output': 'BG-EXEC-OK'};
+      await _send(tester, '/background summarise the repo');
+      await _settle(tester);
+      expect(h.gateway.of('prompt.background'), hasLength(1));
+      final exec = h.gateway.of('slash.exec');
+      expect(exec, hasLength(1), reason: 'no slash.exec fallback');
+      expect(exec.single.params['command'], 'background summarise the repo');
+      expect(h.gateway.of('prompt.submit'), isEmpty);
+    });
+  }
+
+  testWidgets('/background whose prompt.background really fails (4004 bad '
+      'input) is reported, never re-run through slash.exec', (tester) async {
+    final h = await pump(tester, storedId: 'stored-1', runtimeId: 'rt-1');
+    h.gateway.handlers['prompt.background'] = (p) =>
+        throw JsonRpcError('prompt.background', 'text is required', code: 4004);
+    await _send(tester, '/background summarise the repo');
+    await _settle(tester);
+    expect(h.gateway.of('slash.exec'), isEmpty);
+    expect(h.gateway.of('prompt.submit'), isEmpty);
+    expect(find.textContaining('text is required'), findsWidgets);
   });
 
   testWidgets('PROBE NG3 Retry on the failure card after the gateway accepted '
@@ -567,5 +643,126 @@ void main() {
       h.gateway.of('session.context_breakdown').length,
       greaterThan(reads),
     );
+  });
+
+  group('drop and paste intake', () {
+    late Directory root;
+    late File notes, shot;
+    late Directory folder;
+    late Uint8List png;
+    late PathProviderPlatform previousPaths;
+
+    setUp(() {
+      root = Directory.systemTemp.createTempSync('ng-intake');
+      notes = File('${root.path}/notes.txt')..writeAsStringSync('hello notes');
+      png = image_lib.encodePng(image_lib.Image(width: 2, height: 2));
+      shot = File('${root.path}/shot.png')..writeAsBytesSync(png);
+      folder = Directory('${root.path}/folder')..createSync();
+      previousPaths = PathProviderPlatform.instance;
+      PathProviderPlatform.instance = _Paths(root);
+      String? clipboard;
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(SystemChannels.platform, (call) async {
+            if (call.method == 'Clipboard.setData') {
+              clipboard = (call.arguments as Map)['text'] as String;
+            }
+            if (call.method == 'Clipboard.getData') {
+              return {'text': clipboard};
+            }
+            if (call.method == 'Clipboard.hasStrings') {
+              return {'value': clipboard?.isNotEmpty == true};
+            }
+            return null;
+          });
+    });
+
+    tearDown(() {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(SystemChannels.platform, null);
+      PathProviderPlatform.instance = previousPaths;
+      debugClipboardAttachmentReader = null;
+      root.deleteSync(recursive: true);
+    });
+
+    List<FileSystemEntity> staged() {
+      final dir = Directory('${root.path}/composer-paste');
+      return dir.existsSync() ? dir.listSync() : const [];
+    }
+
+    testWidgets('files dropped from the OS become drafts and are never '
+        'sent; a folder is refused', (tester) async {
+      final h = await pump(tester, storedId: 'stored-1', runtimeId: 'rt-1');
+      await _type(tester, 'my words');
+      tester.widget<OsFileDropTarget>(find.byType(OsFileDropTarget)).onFiles([
+        OsIntakeFile(notes.path),
+        OsIntakeFile(shot.path),
+        OsIntakeFile(folder.path, directory: true),
+      ]);
+      await _drain(
+        tester,
+        done: () => find
+            .text("Folders can't be attached. Drop the files instead.")
+            .evaluate()
+            .isNotEmpty,
+      );
+      expect(_chips(), ['notes.txt', 'shot.png']);
+      expect(
+        find.text("Folders can't be attached. Drop the files instead."),
+        findsOneWidget,
+      );
+      expect(h.gateway.of('prompt.submit'), isEmpty);
+      expect(_composer(tester), 'my words');
+    });
+
+    testWidgets('Cmd/Ctrl+V with an image on the clipboard adds an image '
+        'draft; plain text still pastes as text', (tester) async {
+      debugClipboardAttachmentReader = () async =>
+          ClipboardAttachment(image: png);
+      final h = await pump(tester, storedId: 'stored-1', runtimeId: 'rt-1');
+      await tester.tap(find.byKey(_fieldKey));
+      await tester.pump();
+      Future<void> paste() async {
+        await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+        await tester.sendKeyEvent(LogicalKeyboardKey.keyV);
+        await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+        await tester.pump();
+      }
+
+      await paste();
+      await _drain(tester, done: () => _chips().isNotEmpty);
+      expect(_chips(), hasLength(1));
+      expect(_chips().single, endsWith('.png'));
+      expect(_composer(tester), isEmpty);
+      // The staged clipboard image is gone; the draft has its own copy.
+      expect(staged(), isEmpty);
+
+      debugClipboardAttachmentReader = () async => null;
+      await Clipboard.setData(const ClipboardData(text: 'plain words'));
+      await paste();
+      await _drain(tester, done: () => _composer(tester) == 'plain words');
+      expect(_composer(tester), 'plain words');
+      expect(_chips(), hasLength(1));
+      expect(h.gateway.of('prompt.submit'), isEmpty);
+    });
+
+    testWidgets('a keyboard-inserted image becomes a draft', (tester) async {
+      final h = await pump(tester, storedId: 'stored-1', runtimeId: 'rt-1');
+      final field = tester.widget<TextField>(find.byKey(_fieldKey));
+      expect(
+        field.contentInsertionConfiguration?.allowedMimeTypes,
+        contains('image/png'),
+      );
+      field.contentInsertionConfiguration!.onContentInserted(
+        KeyboardInsertedContent(
+          mimeType: 'image/png',
+          uri: 'content://keyboard/sticker.png',
+          data: png,
+        ),
+      );
+      await _drain(tester, done: () => _chips().isNotEmpty);
+      expect(_chips(), hasLength(1));
+      expect(staged(), isEmpty);
+      expect(h.gateway.of('prompt.submit'), isEmpty);
+    });
   });
 }
