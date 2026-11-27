@@ -37,6 +37,10 @@ The original five-width regression failed before implementation. Real-widget bef
 
 `test/table_preview_test.dart`: 40 cases using real `MessageBubble` and `NgChatView`, not a replacement UI. Both modes at the same five widths × light/dark × normal/RTL+2×. Checks viewport width/confinement, minimum column widths, formatted text and tappable link recognizers. Classic captures are production-component previews; NextGen captures mount its actual chat view. These are not native-device or store screenshots.
 
+`test/table_classic_screen_test.dart`: six additional real-route checks. Five mount the complete Classic `ChatScreen` in 320/390/640/768/1440 px panes inside a 1440 px screen and assert table viewport width/confinement, guarding against reintroducing the ancestor 800 px cap. One mounts a delegated transcript with an actual table and checks the shared grid and SelectionArea.
+
+The first complete sweep found one real regression: changing the selection wrapper for *all* delegated prose rows disturbed lazy report expansion restoration (`delegated_background_message_test.dart`, first case). Pristine release head passed; the initial table commit failed reproducibly in isolation. The bounded review fix preserves the exact original MarkdownBody for non-table delegated rows and introduces the table layout only for actual table-bearing prose (fences excluded). No report/pin behavior or existing test assertion was weakened. The original eviction regression and six route checks passed together after the fix; the complete gate was then restarted on the fixed tree.
+
 Optional capture command:
 
 ```sh
