@@ -159,6 +159,7 @@ class _SettingsBrowserState extends State<SettingsBrowser> {
       if (nested.isNotEmpty) controlKey = nested.first.key;
     }
     if (!mounted || matches.isEmpty) return;
+    FocusScope.of(context).unfocus();
     setState(() => _category = matches.first.category);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BuildContext? target = _targets[matches.first.id]?.currentContext;
@@ -223,6 +224,7 @@ class _SettingsBrowserState extends State<SettingsBrowser> {
       required String subtitle,
       required VoidCallback onTap,
     }) => Card(
+      margin: const EdgeInsets.only(bottom: 8),
       elevation: 0,
       child: ListTile(
         key: key,

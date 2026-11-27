@@ -3,10 +3,18 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:hermes_android/nextgen/theme/nextgen_theme.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes_android/core/services/notification_prefs.dart';
 import 'package:hermes_android/core/services/text_size_preference.dart';
 import 'package:hermes_android/core/settings/settings_browser.dart';
+import 'package:hermes_android/core/screens/workspace_screen.dart';
+import 'package:hermes_android/core/services/connection_manager.dart';
+import 'package:hermes_android/core/services/hermes_deeplink.dart';
+import 'package:hermes_android/core/utils/home_turn_signals.dart';
+import 'package:hermes_android/main.dart';
+import 'package:http/testing.dart';
 import 'package:hermes_android/nextgen/nextgen_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -52,6 +60,33 @@ void main() {
     }
   });
 
+  test(
+    'all 13 translated variants include new settings strings in source order',
+    () {
+      final en =
+          jsonDecode(File('lib/l10n/app_en.arb').readAsStringSync()) as Map;
+      final keys = en.keys
+          .where((key) => key.toString().startsWith('settings_'))
+          .toList();
+      final arbs = Directory('lib/l10n').listSync().whereType<File>().where(
+        (file) =>
+            file.path.endsWith('.arb') && !file.path.endsWith('app_en.arb'),
+      );
+      expect(arbs.length, 13);
+      for (final arb in arbs) {
+        final values = jsonDecode(arb.readAsStringSync()) as Map;
+        expect(
+          values.keys.where(keys.contains).toList(),
+          keys,
+          reason: arb.path,
+        );
+        for (final key in keys) {
+          expect(values[key], isNotEmpty, reason: '${arb.path}: $key');
+        }
+      }
+    },
+  );
+
   for (final mode in SettingsMode.values) {
     testWidgets(
       '${mode.name} search catalog has correct scope; browsing never switches mode',
@@ -79,6 +114,25 @@ void main() {
         expect(
           items.any((e) => e.id == 'ng.theme'),
           mode == SettingsMode.nextgen,
+        );
+        final baseline =
+            jsonDecode(
+                  File(
+                    'test/fixtures/settings_inventory.json',
+                  ).readAsStringSync(),
+                )
+                as List;
+        final expected =
+            baseline
+                .where((e) => e['scope'] == 'shared' || e['scope'] == mode.name)
+                .map((e) => e['target'])
+                .toSet()
+              ..removeAll({'desktop', 'shortcuts'});
+        expect(
+          items.map((e) => e.id).toSet(),
+          containsAll(expected),
+          reason:
+              'Every baseline control has a live category host in its intended experience',
         );
         await openSettingsCategory(tester, 'chat');
         if (mode == SettingsMode.nextgen) {
@@ -117,6 +171,60 @@ void main() {
       },
     );
   }
+
+  testWidgets(
+    'Classic settings deep link and nested tour retain mode and back path',
+    (tester) async {
+      final prefs = await SharedPreferences.getInstance();
+      final fixture = SettingsFixture(prefs);
+      addTearDown(fixture.dispose);
+      HermesDeepLinkService.shared.resetForTesting();
+      addTearDown(HermesDeepLinkService.shared.resetForTesting);
+      await tester.pumpWidget(HermesApp(connManager: ConnectionManager(prefs)));
+      await tester.pumpAndSettle();
+      unawaited(
+        Navigator.of(tester.element(find.byType(HomeScreen))).push(
+          MaterialPageRoute<void>(
+            builder: (_) => WorkspaceScreen(
+              connection: fixture.connection,
+              sessionsLoader: () async => [],
+              turnSignalsLoader: (_) async => HomeTurnSignals.empty,
+              testDashboardHttpClient: MockClient(
+                (_) async => http.Response('{"sessions":[]}', 200),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        HermesDeepLinkService.shared.handleRawLink(
+          'hermes://settings/appearance',
+        ),
+        isTrue,
+      );
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('settings-control-classic.theme')),
+        findsOneWidget,
+      );
+      final tour = find.byKey(const ValueKey('presentation-replay-tour'));
+      await tester.ensureVisible(tour);
+      await tester.pumpAndSettle();
+      await tester.tap(tour);
+      await tester.pumpAndSettle();
+      expect(find.text('Next'), findsWidgets);
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('settings-category-appearance')),
+        findsOneWidget,
+      );
+      expect(nextGenEnabled.value, isFalse);
+      expect(prefs.getBool(NextGenPreferences.enabledKey), isNull);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets(
     'shared nested text size and notification changes survive reopening other experience',
@@ -201,6 +309,45 @@ void main() {
     },
   );
 
+  testWidgets(
+    'NextGen theme supports keyboard activation with a 48dp themed target',
+    (tester) async {
+      final prefs = await SharedPreferences.getInstance();
+      final fixture = SettingsFixture(prefs);
+      addTearDown(fixture.dispose);
+      await tester.pumpWidget(
+        fixture.app(
+          SettingsMode.nextgen,
+          category: SettingsCategory.appearance,
+        ),
+      );
+      await tester.pumpAndSettle();
+      final dark = find.text('Dark');
+      final context = tester.element(dark);
+      final c = NgColors.of(context);
+      expect(
+        Theme.of(context).segmentedButtonTheme.style!.backgroundColor!.resolve({
+          WidgetState.selected,
+        }),
+        c.accentSoft,
+      );
+      expect(
+        Theme.of(context).radioTheme.fillColor!.resolve({WidgetState.selected}),
+        c.accent,
+      );
+      Focus.of(context).requestFocus();
+      await tester.pump();
+      await tester.sendKeyEvent(LogicalKeyboardKey.space);
+      await tester.pumpAndSettle();
+      expect(prefs.getString(NextGenPreferences.themeModeKey), 'dark');
+      expect(
+        tester.getSize(find.byKey(const ValueKey('ng-theme-mode'))).height,
+        greaterThanOrEqualTo(48),
+      );
+      expect(prefs.getString('theme_mode'), isNull);
+    },
+  );
+
   testWidgets('gateway owner change ignores delayed signed-in identity', (
     tester,
   ) async {
@@ -237,12 +384,7 @@ void main() {
   });
 
   for (final mode in SettingsMode.values) {
-    for (final category in [
-      SettingsCategory.general,
-      SettingsCategory.appearance,
-      SettingsCategory.notifications,
-      SettingsCategory.security,
-    ]) {
+    for (final category in SettingsCategory.values) {
       testWidgets('${mode.name} ${category.name} at 320px, large text, RTL', (
         tester,
       ) async {

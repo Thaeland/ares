@@ -209,6 +209,12 @@ void main() {
   group('NextGen Settings', () {
     setUp(() {
       SharedPreferences.setMockInitialValues(<String, Object>{});
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(const MethodChannel('flutter_tts'), (_) async => <Object>[]);
+    });
+    tearDown(() {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(const MethodChannel('flutter_tts'), null);
     });
 
     for (final authority in [true, false]) {

@@ -77,6 +77,7 @@ class SettingsFixture {
     Brightness brightness = Brightness.light,
     Locale locale = const Locale('en'),
     double scale = 1,
+    bool realFonts = false,
     SettingsCategory? category,
     String? target,
   }) {
@@ -86,6 +87,12 @@ class SettingsFixture {
       supportedLocales: AppLocalizations.supportedLocales,
       theme: mode == SettingsMode.nextgen
           ? nextGenTheme(brightness, NextGenLook.instance)
+          : realFonts
+          ? hermesTheme(brightness).copyWith(
+              textTheme: hermesTheme(
+                brightness,
+              ).textTheme.apply(fontFamily: 'Roboto'),
+            )
           : hermesTheme(brightness),
       builder: (context, child) => NgLocalizationScope(
         child: MediaQuery(

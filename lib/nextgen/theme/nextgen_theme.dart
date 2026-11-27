@@ -439,6 +439,10 @@ ThemeData nextGenTheme(
     inverseSurface: c.inverse,
     onInverseSurface: c.onInverse,
   );
+  // Shared settings controls (radio sheets, sliders, segmented selectors and
+  // legacy HermesTokens readers) must inherit this experience's scheme too.
+  // Rebuild the Material defaults after resolving NextGen/imported colours.
+  final material = hermesTheme(brightness, profileScheme: scheme);
   // Complete (inherit: false) styles, so Material's animated text styles can
   // lerp between theme values without an inherit mismatch.
   final fullBase = base.textTheme.bodyMedium!;
@@ -463,14 +467,14 @@ ThemeData nextGenTheme(
     borderRadius: BorderRadius.circular(NgRadii.full),
   );
   final List<ThemeExtension<dynamic>> extensions = [
-    ...base.extensions.values.where((e) => e is! NgColors),
+    ...material.extensions.values.where((e) => e is! NgColors),
     c,
   ];
-  return base.copyWith(
+  return material.copyWith(
     colorScheme: scheme,
     scaffoldBackgroundColor: c.background,
     canvasColor: c.background,
-    disabledColor: disabledInk ?? base.disabledColor,
+    disabledColor: disabledInk ?? material.disabledColor,
     cardColor: c.surface,
     dividerColor: c.stroke,
     textTheme: textTheme,

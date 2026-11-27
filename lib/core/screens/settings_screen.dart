@@ -72,7 +72,8 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  ConnectionManager get _manager => widget.connectionManager ??
+  ConnectionManager get _manager =>
+      widget.connectionManager ??
       context.findAncestorStateOfType<HermesAppState>()!.widget.connManager;
 
   @override
@@ -80,171 +81,422 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final prefs = _manager.prefs;
     final app = context.findAncestorStateOfType<HermesAppState>();
     return SettingsBrowser(
-      key: ValueKey('${widget.mode.name}-${widget.connection.id}-${widget.connection.gatewayProfile}'),
+      key: ValueKey((
+        widget.mode,
+        widget.connection.id,
+        widget.connection.gatewayProfile,
+        widget.connection.baseUrl,
+        widget.dashboardClient,
+      )),
       mode: widget.mode,
       initialCategory: widget.initialCategory,
       initialTarget: widget.initialTarget,
       items: [
-        ...widget.extraItems.where((item) => item.id != 'ng.connection.sign-out'),
-        SettingsItem(id: 'interface.mode', category: SettingsCategory.general,
+        ...widget.extraItems.where(
+          (item) => item.id != 'ng.connection.sign-out',
+        ),
+        SettingsItem(
+          id: 'interface.mode',
+          category: SettingsCategory.general,
           title: (l) => l.nextgen_toggle,
-          summary: (l) => nextGenEnabled.value ? l.setup_interface_nextgen : l.setup_interface_classic,
-          builder: (_) => Card(child: ValueListenableBuilder<bool>(
-            valueListenable: nextGenEnabled,
-            builder: (context, enabled, _) => SwitchListTile(
-              key: const ValueKey('nextgen-toggle'),
-              secondary: const Icon(Icons.auto_awesome),
-              title: Text(context.l10n.nextgen_toggle),
-              subtitle: Text(context.l10n.nextgen_toggle_subtitle),
-              value: enabled,
-              onChanged: (value) => NextGenPreferences.setEnabled(prefs, value),
+          summary: (l) => nextGenEnabled.value
+              ? l.setup_interface_nextgen
+              : l.setup_interface_classic,
+          builder: (_) => Card(
+            child: ValueListenableBuilder<bool>(
+              valueListenable: nextGenEnabled,
+              builder: (context, enabled, _) => SwitchListTile(
+                key: const ValueKey('nextgen-toggle'),
+                secondary: const Icon(Icons.auto_awesome),
+                title: Text(context.l10n.nextgen_toggle),
+                subtitle: Text(context.l10n.nextgen_toggle_subtitle),
+                value: enabled,
+                onChanged: (value) =>
+                    NextGenPreferences.setEnabled(prefs, value),
+              ),
             ),
-          ))),
-        SettingsItem(id: 'language', category: SettingsCategory.general,
+          ),
+        ),
+        SettingsItem(
+          id: 'language',
+          category: SettingsCategory.general,
           title: (l) => l.app_language,
-          summary: (l) => '${l.app_language}: ${LocalePreference.read(prefs) == null ? l.app_language_system : LocalePreference.name(LocalePreference.read(prefs)!)}',
-          builder: (context) => Card(child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: DropdownButtonFormField<String>(
-              key: ValueKey('app-language-${LocalePreference.read(prefs)?.toLanguageTag() ?? 'system'}'),
-              initialValue: LocalePreference.read(prefs)?.toLanguageTag() ?? 'system',
-              isExpanded: true,
-              decoration: InputDecoration(labelText: context.l10n.app_language,
-                prefixIcon: const Icon(Icons.language)),
-              items: [DropdownMenuItem(value: 'system', child: Text(context.l10n.app_language_system)),
-                for (final locale in preferredSupportedLocales())
-                  DropdownMenuItem(value: locale.toLanguageTag(), child: Text(LocalePreference.name(locale)))],
-              onChanged: (tag) async {
-                final locale = tag == 'system' ? null : preferredSupportedLocales().firstWhere((l) => l.toLanguageTag() == tag);
-                if (app != null) { await app.setLocale(locale); }
-                else { await LocalePreference.save(prefs, locale); }
-                if (mounted) setState(() {});
-              },
+          summary: (l) =>
+              '${l.app_language}: ${LocalePreference.read(prefs) == null ? l.app_language_system : LocalePreference.name(LocalePreference.read(prefs)!)}',
+          builder: (context) => Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: DropdownButtonFormField<String>(
+                key: ValueKey(
+                  'app-language-${LocalePreference.read(prefs)?.toLanguageTag() ?? 'system'}',
+                ),
+                initialValue:
+                    LocalePreference.read(prefs)?.toLanguageTag() ?? 'system',
+                isExpanded: true,
+                decoration: InputDecoration(
+                  labelText: context.l10n.app_language,
+                  prefixIcon: const Icon(Icons.language),
+                ),
+                items: [
+                  DropdownMenuItem(
+                    value: 'system',
+                    child: Text(context.l10n.app_language_system),
+                  ),
+                  for (final locale in preferredSupportedLocales())
+                    DropdownMenuItem(
+                      value: locale.toLanguageTag(),
+                      child: Text(LocalePreference.name(locale)),
+                    ),
+                ],
+                onChanged: (tag) async {
+                  final locale = tag == 'system'
+                      ? null
+                      : preferredSupportedLocales().firstWhere(
+                          (l) => l.toLanguageTag() == tag,
+                        );
+                  if (app != null) {
+                    await app.setLocale(locale);
+                  } else {
+                    await LocalePreference.save(prefs, locale);
+                  }
+                  if (mounted) setState(() {});
+                },
+              ),
             ),
-          ))),
-        SettingsItem(id: 'classic.theme', category: SettingsCategory.appearance,
-          scope: SettingsScope.classic, title: (l) => l.ng_theme,
-          summary: (l) => '${l.ng_theme}: ${switch (ThemePreferenceStore(prefs).readMode()) { ThemeMode.light => l.ng_light, ThemeMode.dark => l.ng_dark, ThemeMode.system => l.ng_system }}',
-          builder: (_) => ThemeAppearanceSettings(preferences: prefs,
-            onChanged: app?.refreshAppearancePreferences ?? () {})),
-        SettingsItem(id: 'text-size', category: SettingsCategory.appearance,
+          ),
+        ),
+        SettingsItem(
+          id: 'classic.theme',
+          category: SettingsCategory.appearance,
+          scope: SettingsScope.classic,
+          title: (l) => l.ng_theme,
+          summary: (l) =>
+              '${l.ng_theme}: ${switch (ThemePreferenceStore(prefs).readMode()) {
+                ThemeMode.light => l.ng_light,
+                ThemeMode.dark => l.ng_dark,
+                ThemeMode.system => l.ng_system,
+              }}',
+          builder: (_) => ThemeAppearanceSettings(
+            preferences: prefs,
+            onChanged: app?.refreshAppearancePreferences ?? () {},
+          ),
+        ),
+        SettingsItem(
+          id: 'text-size',
+          category: SettingsCategory.appearance,
           title: (l) => l.text_size,
-          builder: (_) => TextSizeSettingsCard(preferences: prefs,
-            onChanged: (preference) => app?.setTextSizePreference(preference))),
-        SettingsItem(id: 'presentation', category: SettingsCategory.appearance,
+          builder: (_) => TextSizeSettingsCard(
+            preferences: prefs,
+            onChanged: (preference) => app?.setTextSizePreference(preference),
+          ),
+        ),
+        SettingsItem(
+          id: 'presentation',
+          category: SettingsCategory.appearance,
           title: (l) => l.appearance_imported_themes,
           targets: [
-            SettingsTarget('presentation.font.chat', (l) => l.appearance_chat_font, const ValueKey('presentation-chat-font')),
-            SettingsTarget('presentation.font.terminal', (l) => l.appearance_terminal_font, const ValueKey('presentation-terminal-font')),
-            SettingsTarget('presentation.direction', (l) => l.appearance_tour_direction_title, const ValueKey('presentation-direction')),
-            SettingsTarget('presentation.bubble', (l) => l.appearance_user_bubble_opacity, const ValueKey('presentation-bubble-opacity')),
-            SettingsTarget('presentation.embeds', (l) => l.appearance_inline_embeds, const ValueKey('presentation-embeds')),
-            SettingsTarget('presentation.reactions', (l) => l.appearance_emoji_reactions, const ValueKey('presentation-reactions')),
-            SettingsTarget('presentation.hearts', (l) => l.appearance_celebration_hearts, const ValueKey('presentation-hearts')),
-            SettingsTarget('presentation.pet.enabled', (l) => l.appearance_pet_companion, const ValueKey('presentation-pet-enabled')),
-            SettingsTarget('presentation.radio.enabled', (l) => l.appearance_radio, const ValueKey('presentation-radio-enabled')),
-            SettingsTarget('presentation.tour', (l) => l.appearance_replay_tour, const ValueKey('presentation-replay-tour')),
+            SettingsTarget(
+              'presentation.font.chat',
+              (l) => l.appearance_chat_font,
+              const ValueKey('presentation-chat-font'),
+            ),
+            SettingsTarget(
+              'presentation.font.terminal',
+              (l) => l.appearance_terminal_font,
+              const ValueKey('presentation-terminal-font'),
+            ),
+            SettingsTarget(
+              'presentation.direction',
+              (l) => l.appearance_tour_direction_title,
+              const ValueKey('presentation-direction'),
+            ),
+            SettingsTarget(
+              'presentation.bubble',
+              (l) => l.appearance_user_bubble_opacity,
+              const ValueKey('presentation-bubble-opacity'),
+            ),
+            SettingsTarget(
+              'presentation.embeds',
+              (l) => l.appearance_inline_embeds,
+              const ValueKey('presentation-embeds'),
+            ),
+            SettingsTarget(
+              'presentation.reactions',
+              (l) => l.appearance_emoji_reactions,
+              const ValueKey('presentation-reactions'),
+            ),
+            SettingsTarget(
+              'presentation.hearts',
+              (l) => l.appearance_celebration_hearts,
+              const ValueKey('presentation-hearts'),
+            ),
+            SettingsTarget(
+              'presentation.pet.enabled',
+              (l) => l.appearance_pet_companion,
+              const ValueKey('presentation-pet-enabled'),
+            ),
+            SettingsTarget(
+              'presentation.radio.enabled',
+              (l) => l.appearance_radio,
+              const ValueKey('presentation-radio-enabled'),
+            ),
+            SettingsTarget(
+              'presentation.tour',
+              (l) => l.appearance_replay_tour,
+              const ValueKey('presentation-replay-tour'),
+            ),
           ],
-          terms: (l) => '${l.appearance_chat_font} ${l.appearance_terminal_font} ${l.appearance_tour_direction_title} ${l.appearance_inline_embeds} ${l.appearance_pet_companion} ${l.appearance_radio} ${l.appearance_replay_tour}',
-          builder: (_) => PresentationSettingsPanel(preferences: prefs)),
-        SettingsItem(id: 'classic.chat.density', category: SettingsCategory.chat,
-          scope: SettingsScope.classic, title: (l) => l.chat_density,
-          builder: (_) => ChatDensitySettingsCard(preferences: prefs)),
-        SettingsItem(id: 'classic.chat.verbose', category: SettingsCategory.chat,
-          scope: SettingsScope.classic, title: (l) => l.verbose_mode,
-          builder: (_) => _VerboseToggle()),
-        SettingsItem(id: 'classic.session.sources', category: SettingsCategory.chat,
-          scope: SettingsScope.classic, title: (l) => l.session_sources,
-          builder: (_) => Column(crossAxisAlignment: CrossAxisAlignment.start,
-            children: [_buildSectionHeader(context.l10n.session_sources),
-              _SessionSourcesFilter(connectionId: widget.connection.id)])),
+          terms: (l) =>
+              '${l.appearance_chat_font} ${l.appearance_terminal_font} ${l.appearance_tour_direction_title} ${l.appearance_inline_embeds} ${l.appearance_pet_companion} ${l.appearance_radio} ${l.appearance_replay_tour}',
+          builder: (_) => PresentationSettingsPanel(preferences: prefs),
+        ),
+        SettingsItem(
+          id: 'classic.chat.density',
+          category: SettingsCategory.chat,
+          scope: SettingsScope.classic,
+          title: (l) => l.chat_density,
+          builder: (_) => ChatDensitySettingsCard(preferences: prefs),
+        ),
+        SettingsItem(
+          id: 'classic.chat.verbose',
+          category: SettingsCategory.chat,
+          scope: SettingsScope.classic,
+          title: (l) => l.verbose_mode,
+          builder: (_) => _VerboseToggle(),
+        ),
+        SettingsItem(
+          id: 'classic.session.sources',
+          category: SettingsCategory.chat,
+          scope: SettingsScope.classic,
+          title: (l) => l.session_sources,
+          builder: (_) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildSectionHeader(context.l10n.session_sources),
+              _SessionSourcesFilter(connectionId: widget.connection.id),
+            ],
+          ),
+        ),
         if (!isParkedAutomotive) ...[
-          SettingsItem(id: 'voice.reply', category: SettingsCategory.voice,
-            title: (l) => l.voice, builder: (_) => _VoicePicker()),
-          SettingsItem(id: 'classic.voice.handsfree', category: SettingsCategory.voice,
-            scope: SettingsScope.classic, title: (l) => l.hands_free_settings_title,
-            builder: (_) => const _HandsFreeToggle()),
-          SettingsItem(id: 'voice.auto-read', category: SettingsCategory.voice,
-            title: (l) => l.auto_speak_replies_title, builder: (_) => const _AutoSpeakToggle()),
-          SettingsItem(id: 'voice.barge-in', category: SettingsCategory.voice,
-            title: (l) => l.barge_in_title, builder: (_) => const _BargeInToggle()),
+          SettingsItem(
+            id: 'voice.reply',
+            category: SettingsCategory.voice,
+            title: (l) => l.voice,
+            builder: (_) => _VoicePicker(),
+          ),
+          SettingsItem(
+            id: 'classic.voice.handsfree',
+            category: SettingsCategory.voice,
+            scope: SettingsScope.classic,
+            title: (l) => l.hands_free_settings_title,
+            builder: (_) => const _HandsFreeToggle(),
+          ),
+          SettingsItem(
+            id: 'voice.auto-read',
+            category: SettingsCategory.voice,
+            title: (l) => l.auto_speak_replies_title,
+            builder: (_) => const _AutoSpeakToggle(),
+          ),
+          SettingsItem(
+            id: 'voice.barge-in',
+            category: SettingsCategory.voice,
+            title: (l) => l.barge_in_title,
+            builder: (_) => const _BargeInToggle(),
+          ),
           if (widget.mode == SettingsMode.classic)
-            SettingsItem(id: 'voice.gateway', category: SettingsCategory.voice,
-              title: (l) => l.wake_word_title, builder: (_) => _ClassicWakeSettings(
-                key: ValueKey('${widget.connection.id}-${widget.connection.gatewayProfile}'),
-                connection: widget.connection, dashboardClient: widget.dashboardClient)),
+            SettingsItem(
+              id: 'voice.gateway',
+              category: SettingsCategory.voice,
+              title: (l) => l.wake_word_title,
+              builder: (_) => _ClassicWakeSettings(
+                key: ValueKey(
+                  '${widget.connection.id}-${widget.connection.gatewayProfile}',
+                ),
+                connection: widget.connection,
+                dashboardClient: widget.dashboardClient,
+              ),
+            ),
         ],
-        if (!isParkedAutomotive && (supportsLocalNotifications || isWindowsPlatform))
-          SettingsItem(id: 'notifications', category: SettingsCategory.notifications,
+        if (!isParkedAutomotive &&
+            (supportsLocalNotifications ||
+                (widget.mode == SettingsMode.nextgen && isWindowsPlatform)))
+          SettingsItem(
+            id: 'notifications',
+            category: SettingsCategory.notifications,
             title: (l) => l.enable_notifications,
             targets: [
-              SettingsTarget('notifications.sound', (l) => l.completion_sound, const ValueKey('completion-sound')),
-              SettingsTarget('notifications.activity', (l) => l.chat_activity_share, const ValueKey('share-chat-activity')),
-              SettingsTarget('notifications.mute', (l) => l.app_sounds_mute, const ValueKey('mute-app-sounds')),
-              SettingsTarget('notifications.test', (l) => l.send_test_notification, const ValueKey('notifications-test')),
-              SettingsTarget('notifications.recent', (l) => l.ng_recent_notifications, const ValueKey('classic-recent-notifications')),
+              SettingsTarget(
+                'notifications.sound',
+                (l) => l.completion_sound,
+                const ValueKey('completion-sound'),
+              ),
+              SettingsTarget(
+                'notifications.activity',
+                (l) => l.chat_activity_share,
+                const ValueKey('share-chat-activity'),
+              ),
+              SettingsTarget(
+                'notifications.mute',
+                (l) => l.app_sounds_mute,
+                const ValueKey('mute-app-sounds'),
+              ),
+              SettingsTarget(
+                'notifications.test',
+                (l) => l.send_test_notification,
+                const ValueKey('notifications-test'),
+              ),
+              SettingsTarget(
+                'notifications.recent',
+                (l) => l.ng_recent_notifications,
+                const ValueKey('classic-recent-notifications'),
+              ),
               for (final kind in HermesNotificationKind.values)
-                SettingsTarget('notifications.${kind.name}', (l) => _NotificationSettingsState.kindLabel(l, kind), ValueKey('notifications-${kind.name}')),
+                SettingsTarget(
+                  'notifications.${kind.name}',
+                  (l) => _NotificationSettingsState.kindLabel(l, kind),
+                  ValueKey('notifications-${kind.name}'),
+                ),
             ],
-            terms: (l) => '${l.completion_sound} ${l.app_sounds_mute} ${l.chat_activity_share} ${l.send_test_notification} ${l.ng_recent_notifications}',
-            builder: (_) => const _NotificationSettings()),
-        if (!isApplePlatform && !isWindowsPlatform) ...[
-          if (!isParkedAutomotive)
-            SettingsItem(id: 'notifications.push', category: SettingsCategory.notifications,
+            terms: (l) =>
+                '${l.completion_sound} ${l.app_sounds_mute} ${l.chat_activity_share} ${l.send_test_notification} ${l.ng_recent_notifications}',
+            builder: (_) => const _NotificationSettings(),
+          ),
+        if (supportsAndroidBackgroundWork) ...[
+          if (supportsEmbeddedMobilePush && !isParkedAutomotive)
+            SettingsItem(
+              id: 'notifications.push',
+              category: SettingsCategory.notifications,
               title: (l) => l.rel_svc_push_background_notifications,
-              builder: (_) => MobilePushSettings(connection: widget.connection, connectionManager: _manager)),
-          SettingsItem(id: 'background', category: SettingsCategory.device,
-            title: (l) => l.background_work, builder: (_) => const BackgroundWorkSettings()),
+              builder: (_) => MobilePushSettings(
+                connection: widget.connection,
+                connectionManager: _manager,
+              ),
+            ),
+          SettingsItem(
+            id: 'background',
+            category: SettingsCategory.device,
+            title: (l) => l.background_work,
+            builder: (_) => const BackgroundWorkSettings(),
+          ),
         ],
-        SettingsItem(id: 'device.keep-awake', category: SettingsCategory.device,
-          title: (l) => isDesktopOs ? l.keep_awake_title : l.keep_awake_title_mobile,
-          builder: (_) => KeepAwakeSettingsCard(preferences: prefs)),
+        SettingsItem(
+          id: 'device.keep-awake',
+          category: SettingsCategory.device,
+          title: (l) =>
+              isDesktopOs ? l.keep_awake_title : l.keep_awake_title_mobile,
+          builder: (_) => KeepAwakeSettingsCard(preferences: prefs),
+        ),
         if (isDesktopOs)
-          SettingsItem(id: 'desktop', category: SettingsCategory.device,
+          SettingsItem(
+            id: 'desktop',
+            category: SettingsCategory.device,
             title: (l) => l.desktop_integration_title,
-            builder: (_) => DesktopIntegrationCard(preferences: prefs)),
+            builder: (_) => DesktopIntegrationCard(preferences: prefs),
+          ),
         if (desktopShortcutsAvailable())
-          SettingsItem(id: 'shortcuts', category: SettingsCategory.device,
+          SettingsItem(
+            id: 'shortcuts',
+            category: SettingsCategory.device,
             title: (l) => l.keyboard_shortcuts_title,
-            builder: (_) => KeyboardShortcutsSettingsCard(preferences: prefs)),
-        SettingsItem(id: 'connection.info', category: SettingsCategory.connections,
-          title: (l) => l.connection_section, summary: (_) => widget.connection.label,
-          builder: (context) => Card(child: Padding(padding: const EdgeInsets.all(16),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              _infoRow(context.l10n.label, widget.connection.label),
-              _infoRow(context.l10n.host, widget.connection.host),
-              _infoRow(context.l10n.port, '${widget.connection.port}'),
-              _infoRow(context.l10n.base_url, widget.connection.baseUrl),
-            ])))),
+            builder: (_) => KeyboardShortcutsSettingsCard(preferences: prefs),
+          ),
+        SettingsItem(
+          id: 'connection.info',
+          category: SettingsCategory.connections,
+          title: (l) => l.connection_section,
+          summary: (_) => widget.connection.label,
+          builder: (context) => Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _infoRow(context.l10n.label, widget.connection.label),
+                  _infoRow(context.l10n.host, widget.connection.host),
+                  _infoRow(context.l10n.port, '${widget.connection.port}'),
+                  _infoRow(context.l10n.base_url, widget.connection.baseUrl),
+                ],
+              ),
+            ),
+          ),
+        ),
         if (widget.mode == SettingsMode.classic)
-          SettingsItem(id: 'models', category: SettingsCategory.connections,
+          SettingsItem(
+            id: 'models',
+            category: SettingsCategory.connections,
             title: (l) => l.ng_model_management,
-            builder: (context) => Card(child: ListTile(leading: const Icon(Icons.tune),
-              title: Text(context.l10n.ng_model_management),
-              subtitle: Text(context.l10n.ng_default_fallback_and_auxiliary_models),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) =>
-                ModelManagementScreen(connection: widget.connection, dashboardClient: widget.dashboardClient)))))),
-        SettingsItem(id: 'provider.oauth', category: SettingsCategory.connections,
+            builder: (context) => Card(
+              child: ListTile(
+                leading: const Icon(Icons.tune),
+                title: Text(context.l10n.ng_model_management),
+                subtitle: Text(
+                  context.l10n.ng_default_fallback_and_auxiliary_models,
+                ),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => ModelManagementScreen(
+                      connection: widget.connection,
+                      dashboardClient: widget.dashboardClient,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        SettingsItem(
+          id: 'provider.oauth',
+          category: SettingsCategory.connections,
           title: (l) => l.provider_oauth_title,
-          builder: (context) => Card(child: ListTile(leading: const Icon(Icons.login),
-            title: Text(context.l10n.provider_oauth_title),
-            subtitle: Text(context.l10n.provider_oauth_settings_subtitle),
-            onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) =>
-              ProviderOAuthScreen(connection: widget.connection)))))),
-        SettingsItem(id: 'about.privacy', category: SettingsCategory.security,
+          builder: (context) => Card(
+            child: ListTile(
+              leading: const Icon(Icons.login),
+              title: Text(context.l10n.provider_oauth_title),
+              subtitle: Text(context.l10n.provider_oauth_settings_subtitle),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) =>
+                      ProviderOAuthScreen(connection: widget.connection),
+                ),
+              ),
+            ),
+          ),
+        ),
+        SettingsItem(
+          id: 'about.privacy',
+          category: SettingsCategory.security,
           title: (l) => l.privacy_policy,
-          builder: (context) => Card(child: ListTile(key: const ValueKey('privacy-policy-link'),
-            leading: const Icon(Icons.privacy_tip_outlined), title: Text(context.l10n.privacy_policy),
-            trailing: const Icon(Icons.open_in_new), onTap: openAresPrivacyPolicy))),
-        SettingsItem(id: 'backup', category: SettingsCategory.security,
+          builder: (context) => Card(
+            child: ListTile(
+              key: const ValueKey('privacy-policy-link'),
+              leading: const Icon(Icons.privacy_tip_outlined),
+              title: Text(context.l10n.privacy_policy),
+              trailing: const Icon(Icons.open_in_new),
+              onTap: openAresPrivacyPolicy,
+            ),
+          ),
+        ),
+        SettingsItem(
+          id: 'backup',
+          category: SettingsCategory.security,
           title: (l) => l.backup_restore,
-          builder: (_) => ConfigBackupCard(onExport: _exportConfig,
-            onDeliverExport: _deliverExport, onPickBackupFile: _pickBackupFile, onImport: _importConfig)),
-        SettingsItem(id: 'about', category: SettingsCategory.about,
-          title: (l) => l.about, terms: (l) => l.ng_licences,
-          builder: (_) => _AboutCard()),
-        ...widget.extraItems.where((item) => item.id == 'ng.connection.sign-out'),
+          builder: (_) => ConfigBackupCard(
+            onExport: _exportConfig,
+            onDeliverExport: _deliverExport,
+            onPickBackupFile: _pickBackupFile,
+            onImport: _importConfig,
+          ),
+        ),
+        SettingsItem(
+          id: 'about',
+          category: SettingsCategory.about,
+          title: (l) => l.about,
+          terms: (l) => l.ng_licences,
+          builder: (_) => _AboutCard(),
+        ),
+        ...widget.extraItems.where(
+          (item) => item.id == 'ng.connection.sign-out',
+        ),
       ],
     );
   }

@@ -396,6 +396,7 @@ void main() {
       await tester.scrollUntilVisible(
         find.byKey(const Key('theme_palette_green')),
         -250,
+        scrollable: find.descendant(of: find.byType(SettingsScreen), matching: find.byType(Scrollable)).first,
       );
       await Scrollable.ensureVisible(
         tester.element(find.byKey(const Key('theme_palette_green'))),
