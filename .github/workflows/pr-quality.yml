@@ -16,6 +16,8 @@ jobs:
   quality:
     name: Analyze & Test
     runs-on: ubuntu-latest
+    env:
+      TMPDIR: ${{ runner.temp }}
 
     steps:
       - name: Checkout
@@ -95,8 +97,9 @@ jobs:
         id: test
         continue-on-error: true
         run: |
-          flutter test --no-pub --reporter=expanded 2>&1 | tee test_output.txt
-          exit ${PIPESTATUS[0]}
+          set -o pipefail
+          flutter test --no-pub -j2 --exclude-tags perf --reporter=expanded 2>&1 | tee test_output.txt
+          flutter test --no-pub -j1 --reporter=expanded test/delivered_files_perf_test.dart test/transcript_redaction_gateway_test.dart 2>&1 | tee -a test_output.txt
 
       - name: Run Play distribution tests
         id: play_test

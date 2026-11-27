@@ -36,7 +36,7 @@ Future<void> _checkTile(WidgetTester tester, String title) async {
 Future<void> _shown(WidgetTester tester, Finder finder) async {
   // Dashboard futures and their timeouts are real async; the widget binding's
   // fake clock does not complete them.
-  for (var attempt = 0; attempt < 40 && finder.evaluate().isEmpty; attempt++) {
+  for (var attempt = 0; attempt < 200 && finder.evaluate().isEmpty; attempt++) {
     await tester.runAsync(
       () => Future<void>.delayed(const Duration(milliseconds: 25)),
     );

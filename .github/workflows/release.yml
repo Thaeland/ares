@@ -20,6 +20,7 @@ jobs:
     name: Build and verify APK
     runs-on: ubuntu-latest
     env:
+      TMPDIR: ${{ runner.temp }}
       HAS_RELEASE_KEYSTORE: ${{ secrets.KEYSTORE_BASE64 != '' }}
       # Pin the production signer so a valid but wrong keystore cannot silently
       # break in-place upgrades. This is the certificate used for v2.1.0+.
@@ -150,7 +151,9 @@ jobs:
         run: flutter analyze --no-pub --fatal-infos
 
       - name: Run tests
-        run: flutter test --no-pub
+        run: |
+          flutter test --no-pub -j2 --exclude-tags perf
+          flutter test --no-pub -j1 test/delivered_files_perf_test.dart test/transcript_redaction_gateway_test.dart
 
       - name: Verify Play distribution behaviour
         run: flutter test --no-pub --dart-define=ARES_PLAY_BUILD=true test_play/play_distribution_test.dart
