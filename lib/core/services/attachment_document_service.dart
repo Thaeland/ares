@@ -909,6 +909,7 @@ class _OfficePackage {
       entityMapping: const _OfficeEntities(),
       validateNesting: true,
       validateDocument: true,
+      withNamespace: true,
       withParent: true,
     )) {
       if (++_events > limits.maxXmlEvents) {
