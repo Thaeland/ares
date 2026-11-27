@@ -157,8 +157,21 @@ bool _isValidInstallId(String? value) {
 
 /// Settings tabs this build understands. Any other tab is rejected.
 const _knownSettingsTabs = {
-  'general', 'language', 'chat', 'sessions', 'voice', 'device', 'desktop',
-  'connections', 'models', 'privacy', 'security', 'backup', 'about', 'help', 'advanced',
+  'general',
+  'language',
+  'chat',
+  'sessions',
+  'voice',
+  'device',
+  'desktop',
+  'connections',
+  'models',
+  'privacy',
+  'security',
+  'backup',
+  'about',
+  'help',
+  'advanced',
   'appearance',
   'gateway',
   'notifications',

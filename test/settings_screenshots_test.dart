@@ -15,6 +15,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'support/settings_fixture.dart';
 import 'support/settings_navigation.dart';
 
+const _captureFont = 'Roboto';
+
+// Flutter's test engine substitutes a block font for spans whose component
+// theme has no family, even when the surrounding text theme has a real font.
+// Resolve only that missing family at capture time; preserve icon/brand fonts,
+// sizes, weights, colours and the production widgets being exercised.
+InlineSpan _readableSpan(InlineSpan span) {
+  if (span is! TextSpan) return span;
+  return TextSpan(
+    text: span.text,
+    style: (span.style ?? const TextStyle()).copyWith(
+      fontFamily: span.style?.fontFamily ?? _captureFont,
+    ),
+    children: span.children?.map(_readableSpan).toList(),
+    recognizer: span.recognizer,
+    semanticsLabel: span.semanticsLabel,
+    locale: span.locale,
+    spellOut: span.spellOut,
+  );
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   for (final mode in SettingsMode.values) {
@@ -25,6 +46,8 @@ void main() {
         testWidgets(
           'real redesigned settings capture $name',
           (tester) async {
+            debugDisableShadows = false;
+            addTearDown(() => debugDisableShadows = true);
             tester.view.physicalSize = size;
             tester.view.devicePixelRatio = 1;
             addTearDown(tester.view.reset);
@@ -93,6 +116,12 @@ void main() {
               final directory =
                   Platform.environment['HERMES_WORKSPACE_PREVIEW_DIR'];
               if (directory == null) return;
+              for (final paragraph
+                  in tester.allRenderObjects.whereType<RenderParagraph>()) {
+                paragraph.text = _readableSpan(paragraph.text);
+              }
+              await tester.pump();
+              expect(tester.takeException(), isNull);
               final boundary = tester.renderObject<RenderRepaintBoundary>(
                 find.byKey(settingsCaptureKey),
               );
@@ -141,6 +170,7 @@ void main() {
             await capture('device');
             await tester.pumpWidget(const SizedBox.shrink());
             await tester.pumpAndSettle();
+            debugDisableShadows = true;
           },
           variant: TargetPlatformVariant.only(
             size.width < 600 ? TargetPlatform.android : TargetPlatform.linux,

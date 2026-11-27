@@ -910,7 +910,10 @@ class _NgMainPageState extends State<_NgMainContent>
       case HermesDeepLinkKind.launch:
         return; // focus-only; no route, no prefill
       case HermesDeepLinkKind.settings:
-        _go(NgDestination.settings, settingsCategory: SettingsCategory.fromPath(link.path));
+        _go(
+          NgDestination.settings,
+          settingsCategory: SettingsCategory.fromPath(link.path),
+        );
         return;
       case HermesDeepLinkKind.install:
         // Navigation-only: open Capabilities for explicit user review, never
@@ -920,7 +923,10 @@ class _NgMainPageState extends State<_NgMainContent>
       case HermesDeepLinkKind.open:
         final path = link.path ?? '';
         if (path.startsWith('/settings')) {
-          _go(NgDestination.settings, settingsCategory: SettingsCategory.fromPath(path));
+          _go(
+            NgDestination.settings,
+            settingsCategory: SettingsCategory.fromPath(path),
+          );
         } else if (path == '/scheduled' ||
             path == '/crons' ||
             path == '/cron') {
@@ -1024,7 +1030,9 @@ class _NgMainPageState extends State<_NgMainContent>
         onOpenSession: _open,
         onNewProjectChat: _newProjectChat,
       ),
-      NgDestination.settings => NgSettingsPage(initialCategory: settingsCategory),
+      NgDestination.settings => NgSettingsPage(
+        initialCategory: settingsCategory,
+      ),
     };
     Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
   }

@@ -650,28 +650,49 @@ void main() {
         await tester.pump(const Duration(seconds: 30));
       }
 
-      testWidgets('NextGen settings deep link opens exact category and backs to settings home', (tester) async {
-        final previous = HttpOverrides.current;
-        HttpOverrides.global = null;
-        addTearDown(() => HttpOverrides.global = previous);
-        final fixture = (await tester.runAsync(_ShellGatewayFixture.start))!;
-        addTearDown(fixture.close);
-        final prefs = await SharedPreferences.getInstance();
-        final gateway = await pumpNextGenShell(tester, fixture, const Size(390, 844));
-        final before = nextGenEnabled.value;
-        expect(HermesDeepLinkService.shared.handleRawLink('hermes://settings/appearance'), isTrue);
-        await tester.pumpAndSettle();
-        expect(find.byType(NgSettingsPage), findsOneWidget);
-        expect(find.byKey(const ValueKey('settings-control-ng.theme')), findsOneWidget);
-        expect(find.byKey(const ValueKey('settings-control-classic.theme')), findsNothing);
-        await tester.pageBack();
-        await tester.pumpAndSettle();
-        expect(find.byKey(const ValueKey('settings-category-appearance')), findsOneWidget);
-        expect(nextGenEnabled.value, before);
-        expect(prefs.getBool(NextGenPreferences.enabledKey), isNull);
-        expect(tester.takeException(), isNull);
-        await unmountNextGen(tester, gateway);
-      });
+      testWidgets(
+        'NextGen settings deep link opens exact category and backs to settings home',
+        (tester) async {
+          final previous = HttpOverrides.current;
+          HttpOverrides.global = null;
+          addTearDown(() => HttpOverrides.global = previous);
+          final fixture = (await tester.runAsync(_ShellGatewayFixture.start))!;
+          addTearDown(fixture.close);
+          final prefs = await SharedPreferences.getInstance();
+          final gateway = await pumpNextGenShell(
+            tester,
+            fixture,
+            const Size(390, 844),
+          );
+          final before = nextGenEnabled.value;
+          expect(
+            HermesDeepLinkService.shared.handleRawLink(
+              'hermes://settings/appearance',
+            ),
+            isTrue,
+          );
+          await tester.pumpAndSettle();
+          expect(find.byType(NgSettingsPage), findsOneWidget);
+          expect(
+            find.byKey(const ValueKey('settings-control-ng.theme')),
+            findsOneWidget,
+          );
+          expect(
+            find.byKey(const ValueKey('settings-control-classic.theme')),
+            findsNothing,
+          );
+          await tester.pageBack();
+          await tester.pumpAndSettle();
+          expect(
+            find.byKey(const ValueKey('settings-category-appearance')),
+            findsOneWidget,
+          );
+          expect(nextGenEnabled.value, before);
+          expect(prefs.getBool(NextGenPreferences.enabledKey), isNull);
+          expect(tester.takeException(), isNull);
+          await unmountNextGen(tester, gateway);
+        },
+      );
 
       testWidgets(
         'NextGen palette opens desktop quick entry; its hand-back prefills the chosen chat and never sends',
@@ -988,10 +1009,7 @@ void main() {
           await unmountNextGen(tester, gateway);
         },
       );
-    }
-
-
-,
+    },
   );
 
   group(

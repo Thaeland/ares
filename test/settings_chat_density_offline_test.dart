@@ -36,7 +36,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-      await openSettingsCategory(tester, 'chat');
+    await openSettingsCategory(tester, 'chat');
     expect(find.text('Failed to load settings'), findsNothing);
     await tester.scrollUntilVisible(
       find.text('Chat density'),

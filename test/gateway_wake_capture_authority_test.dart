@@ -210,7 +210,10 @@ void main() {
     setUp(() {
       SharedPreferences.setMockInitialValues(<String, Object>{});
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(const MethodChannel('flutter_tts'), (_) async => <Object>[]);
+          .setMockMethodCallHandler(
+            const MethodChannel('flutter_tts'),
+            (_) async => <Object>[],
+          );
     });
     tearDown(() {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger

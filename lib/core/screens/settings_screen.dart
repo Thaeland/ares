@@ -737,7 +737,11 @@ class _BargeInToggle extends StatelessWidget {
 /// so Settings never becomes a second owner of the microphone; otherwise a
 /// short-lived client connects on demand and is closed with the screen.
 class _ClassicWakeSettings extends StatefulWidget {
-  const _ClassicWakeSettings({required this.connection, this.dashboardClient, super.key});
+  const _ClassicWakeSettings({
+    required this.connection,
+    this.dashboardClient,
+    super.key,
+  });
 
   final SavedConnection connection;
   final DashboardClient? dashboardClient;
@@ -1117,8 +1121,7 @@ class _NotificationSettingsState extends State<_NotificationSettings>
         HermesNotificationKind.input => l10n.input_needed,
         HermesNotificationKind.turnDone => l10n.response_complete,
         HermesNotificationKind.turnError => l10n.turn_failed,
-        HermesNotificationKind.backgroundDone =>
-          l10n.background_task_completed,
+        HermesNotificationKind.backgroundDone => l10n.background_task_completed,
         HermesNotificationKind.credits => l10n.credit_notifications,
         HermesNotificationKind.plugin => l10n.plugin_notifications,
       };

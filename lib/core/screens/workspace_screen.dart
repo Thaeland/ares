@@ -1195,8 +1195,12 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
       case HermesDeepLinkKind.launch:
         return; // focus-only; no route, no prefill
       case HermesDeepLinkKind.settings:
-        _push(SettingsScreen(connection: widget.connection,
-          initialCategory: SettingsCategory.fromPath(link.path)));
+        _push(
+          SettingsScreen(
+            connection: widget.connection,
+            initialCategory: SettingsCategory.fromPath(link.path),
+          ),
+        );
         return;
       case HermesDeepLinkKind.install:
         // Navigation-only: open Capabilities for explicit user review, never
@@ -1207,8 +1211,12 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         // In-app route only; never following an external/raw URL.
         final path = link.path ?? '';
         if (path.startsWith('/settings')) {
-          _push(SettingsScreen(connection: widget.connection,
-            initialCategory: SettingsCategory.fromPath(path)));
+          _push(
+            SettingsScreen(
+              connection: widget.connection,
+              initialCategory: SettingsCategory.fromPath(path),
+            ),
+          );
         } else if (path == '/crons' ||
             path == '/scheduled' ||
             path == '/cron') {
