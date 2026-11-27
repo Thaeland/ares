@@ -96,6 +96,11 @@ jobs:
           exit ${PIPESTATUS[0]}
 
       # ── Step 2: Run tests ────────────────────────────────
+      - name: Linux profile save and Automotive settings regressions
+        run: |
+          flutter test --no-pub test/profile_admin_contract_test.dart
+          flutter test --no-pub --dart-define=ARES_PARKED_AUTOMOTIVE=true test_automotive/parked_ui_test.dart
+
       - name: Run tests
         id: test
         continue-on-error: true
