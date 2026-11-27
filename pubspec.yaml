@@ -25,7 +25,7 @@ dependencies:
   # Offline, bounded Office document previews (also used transitively by image).
   archive: 4.0.9
   qr: 3.0.3
-  xml: 6.6.1
+  xml: 7.1.0
 
   # Unicode NFC/NFKD for the New Bot profile id (Desktop's
   # slugifyProfileName). MIT, no dependencies; see NOTICE.md.
