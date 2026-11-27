@@ -100,6 +100,7 @@ jobs:
         run: |
           flutter test --no-pub test/profile_admin_contract_test.dart
           flutter test --no-pub --dart-define=ARES_PARKED_AUTOMOTIVE=true test_automotive/parked_ui_test.dart
+          flutter test --no-pub --dart-define=ARES_PLAY_BUILD=true test_play/play_distribution_test.dart
 
       - name: Run tests
         id: test

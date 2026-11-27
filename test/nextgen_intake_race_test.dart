@@ -359,7 +359,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 300));
       expect(find.text('Paste'), findsOneWidget);
       await tester.tap(find.text('Paste'));
-      await _drain(tester);
+      await _drain(tester, done: () => _chips().length == 6);
       expect(_chips().length, 6);
       clip = ClipboardAttachment(image: Uint8List.fromList([1, 2, 3]));
       await keyboardPaste();
