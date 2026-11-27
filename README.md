@@ -694,8 +694,21 @@ Android's restrictions; the app does not request an exemption on startup.
 
 While protection is active, Android requires a foreground-service disclosure.
 Hermes uses one service for active chats and separate quiet ongoing entries for
-their status. **Settings → Notifications** controls optional alerts. Returning
-to the app does not mean all chat notifications should disappear: ongoing work
+their status. **Settings → Notifications** controls optional alerts, including
+an opt-in report of activity in the open chat and a completion sound. The
+activity report is off until enabled, counts only input inside the chat
+(touches, clicks, keys, and typing or focus in the composer), and is sent on
+the chat's existing connection when the gateway accepts it. Panes that share a
+connection send one report for the pane used most recently, and leaving the
+chat withdraws it at once. Pop-out chat windows follow the same setting. The
+completion sound can be the system sound, Mail, Reminder or silent. Mail and
+Reminder are original short tones on Android and Apple, desktop sound-theme
+names on Linux, and Windows notification sounds on Windows. While Ares is open
+it also plays the chosen sound in the app when a reply finishes (System default
+plays a short chime); **Mute app sounds** turns that off. Approvals, other
+notification kinds, background notifications from the server and Android Auto
+messages keep the system sound. Returning to the app does not mean all chat
+notifications should disappear: ongoing work
 and other chats retain their own state. Grant or revoke OS notification permission
 in Android settings; the app refreshes that status on return without another
 startup prompt.
@@ -814,6 +827,191 @@ The Cron Jobs screen supports full CRUD:
 - **Trigger** — Manually run a job immediately.
 - **Pause/Resume** — Toggle job enabled state.
 - **Delete** — Remove a job (with confirmation).
+
+## iOS, iPadOS and macOS (Apple port)
+
+Ares ships the **same Dart chat client** on iOS/iPadOS and macOS (bundle id
+`com.hermesagent.ares`, display name **Ares**) alongside Android. The Apple
+bundle id deliberately differs from the Android application id
+`com.hermesagent.hermes_android`: App Store Connect's bundle-id form rejects
+underscores, so `com.hermesagent.ares` was registered for the iOS/macOS app
+container. This is a native Flutter port, not an APK wrapper or a web shell. Deployment
+floors are **iOS 15.0** and **macOS 13.0**; the Xcode 27 / Flutter 3.44 runner
+uses arm64-only `ARCHS` and a Podfile deployment-target clamp because Xcode 27
+rejects the older Flutter ancillary targets.
+
+### Adaptive layout (size-driven, never a device-name check)
+
+| Window width | Behaviour |
+| --- | --- |
+| `< 600 pt` | Normal phone navigation/stack: bottom `NavigationBar` (Classic), modal sessions drawer (NextGen). |
+| `600..<840 pt` | Navigation rail where appropriate; NextGen keeps the drawer with a sidebar toggle. |
+| `>= 840 pt` (and `>= 480 pt` tall) | Productive wide layout: **list + detail** in Classic (sessions list beside an inline conversation) and a **docked sessions sidebar** beside the chat in NextGen. |
+
+The same code serves an unfolded foldable, an iPad in Split View, and an
+arbitrarily resized Mac window. Selection, session-list filters, composer
+drafts and scroll state survive resize/fold: Classic keeps every visited pane
+mounted in its `IndexedStack`, and NextGen reuses one `NgChatController`
+(`ObjectKey(chat)`) plus one keyed `NgSessionsSidebar` state as it moves
+between the drawer and the docked pane. Folding a Classic wide window back to
+compact re-homes the inline chat as a full-screen route.
+
+### macOS desktop polish
+
+- Keyboard shortcuts: `Cmd+N` new chat, `Cmd+K`/`Cmd+F` search, `Cmd+,`
+  settings, `Cmd+1..4` switch destinations/pages. Plain `Enter` sends the
+  composer and `Shift+Enter` inserts a newline.
+- A purposeful commented sidebar/rail, readable content widths, full-width
+  transcript/code views, hover/pointer-aware controls, Dynamic Type, dark
+  mode, safe areas and accessible labels/targets.
+
+### Apple platform notes
+
+- Local notifications use `DarwinInitializationSettings`/`DarwinNotificationDetails`
+  with Approve/Deny categories and passive permission checks; the secure
+  credential stores use `MacOsOptions(usesDataProtectionKeychain: false)` so
+  ad-hoc local macOS builds do not fail with `errSecMissingEntitlement`.
+- Native Swift channels implement PDF preview, voice-fragment duration/join
+  (AAC M4A), and cached-file export via `UIDocumentPicker` / `NSSavePanel`.
+- Privacy usage strings are present only for features actually used:
+  microphone, speech recognition, camera and photo library (iOS/macOS), plus
+  local-network access for gateway connections.
+- **Android-only features are hidden, not broken:** the foreground/background
+  work service, battery-optimisation prompts, embedded FCM push bridge and the
+  Android hands-free wake-word service do not apply to Apple platforms and are
+  omitted there. The in-app GitHub updater is removed on every platform.
+- **Known limitations:** background execution follows iOS/macOS rules (no
+  Android-style foreground service), so a backgrounded turn is reported via
+  local notifications rather than a persistent socket. `image_picker` camera
+  capture is unavailable on macOS (gallery/file import works). Apple builds
+  must be code-signed/provisioned by the release owner; local ad-hoc builds
+  are unsigned.
+
+### Build & verify
+
+```bash
+flutter pub get
+flutter analyze                       # excludes build/** (SPM checkouts)
+flutter test                          # includes apple_adaptive_layout_test.dart
+flutter build ios --simulator         # unsigned simulator build
+flutter build macos --release         # unsigned/ad-hoc local build
+```
+
+Signed App Store archives, notarisation, upload and metadata are owned
+centrally and are **not** performed here.
+
+## Windows
+
+Ares runs on Windows 10 (1809 or later) and Windows 11, x64, from the same
+Dart sources as the Android, iOS and macOS apps. The app is `ares.exe`,
+version `4.0.15`, packaged as an MSIX.
+
+What is specific to Windows:
+
+- **Runner** (`windows/runner`): one Ares window per user. A second launch
+  brings the running window forward and exits.
+- **Saving large attachments**: a native save dialog copies the downloaded
+  file to the place you choose (`ares_platform.cpp`, channel
+  `com.hermesagent.hermes_android/attachment_save`). Only files Ares itself
+  downloaded to its temporary folder can be saved this way.
+- **PDF previews** are rendered in Dart with `pdfx` (PDFium), inside the same
+  size limits as the other platforms.
+- **Voice drafts**: recording uses the `record` plugin. Measuring a draft and
+  joining it after pause/resume uses the `ffmpeg.exe` and `ffprobe.exe` that
+  ship in an `ffmpeg` folder beside `ares.exe`. Ares only ever runs that
+  bundled copy.
+- **Notifications (5.0 development)**: Classic and NextGen use Windows toasts
+  for background replies and requests. Category controls, the test
+  notification, the completion sound and optional chat activity sharing are
+  the same controls as on the other platforms; Windows plays the chosen
+  completion sound as a Windows notification sound.
+  Turn notifications on or off in Windows **Settings → System → Notifications**.
+  Use an installed build: a loose copy does not own the installer's click handler.
+  [Native verification and remaining gates](docs/windows-notifications.md).
+- **Android-only settings** (mobile push and background work) are hidden.
+
+### Build
+
+On a Windows machine with Flutter and the Visual Studio C++ tools. `nuget.exe`
+must be on `PATH`: the `flutter_tts` plugin needs it and the build stops
+without it.
+
+```powershell
+flutter pub get --enforce-lockfile
+flutter build windows --release
+```
+
+The app is written to `build\windows\x64\runner\Release`.
+
+Windows builds do not check GitHub for updates. Update through the Microsoft
+Store for Store installs, or use the releases page for manually installed
+builds. No platform includes an in-app update check or APK installer.
+
+### Test
+
+```powershell
+flutter analyze
+flutter test
+```
+
+`test/windows_voice_tools_ffmpeg_test.dart` runs the voice-draft tools against
+real FFmpeg executables. It is skipped unless both are named:
+
+```powershell
+$env:ARES_TEST_FFMPEG = 'C:\path\to\ffmpeg.exe'
+$env:ARES_TEST_FFPROBE = 'C:\path\to\ffprobe.exe'
+flutter test test/windows_voice_tools_ffmpeg_test.dart
+```
+
+### Package
+
+1. Copy an **LGPL** FFmpeg build (`ffmpeg.exe`, `ffprobe.exe` and their DLLs)
+   into `build\windows\x64\runner\Release\ffmpeg`, and its licence text and a
+   link to its source into `Release\licenses`. Ares is MIT-licensed; do not
+   ship a GPL build of FFmpeg with it.
+2. Remove the `.lib`, `.exp` and `.pdb` files from `Release`.
+3. Build the package:
+
+```powershell
+dart run msix:build --build-windows false
+dart run msix:pack
+```
+
+`pubspec.yaml` holds the identity used for sideloading. A Microsoft Store
+package must instead carry the values Partner Center shows under
+**Product identity**, and its display name must be the reserved product name.
+Pass them on the command line to both commands:
+
+```powershell
+--store --identity-name <Package/Identity/Name> `
+  --publisher <Package/Identity/Publisher> `
+  --publisher-display-name <PublisherDisplayName> `
+  --display-name "<reserved product name>" --version 4.0.15.0
+```
+
+Between `msix:build` and `msix:pack`, edit `Release\AppxManifest.xml`:
+
+- `Application Id`: msix derives `hermesandroid` from the Dart package name.
+  Set it to `Ares`. Windows treats it as part of the app's identity, so it
+  must not change after the first release.
+- `uap:VisualElements DisplayName` and `uap:DefaultTile ShortName`: set to
+  `Ares` so the Start menu shows the short name.
+
+To upload, put the `.msix` at the root of a ZIP and name it `.msixupload`.
+Partner Center signs Store packages, so the package is left unsigned.
+
+### Test installer
+
+A Store package cannot be installed until Microsoft has signed it. To try the
+same files on a PC, build the Inno Setup installer from an unpacked copy of the
+package. It installs for the current user and needs no administrator rights:
+
+```powershell
+ISCC.exe /DSourceDir=C:\path\to\unpacked-msix windows\installer\ares.iss
+```
+
+The installer is unsigned, so Windows SmartScreen asks for confirmation before
+running it.
 
 ## Development
 

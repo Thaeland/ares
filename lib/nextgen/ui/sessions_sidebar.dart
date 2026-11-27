@@ -6,11 +6,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:hermes_android/core/l10n/l10n.dart';
-
 import '../../core/models/session.dart';
+import '../../core/models/session_search_hit.dart';
+import '../../core/services/session_search_projection.dart';
+import '../../core/services/session_search_preferences.dart';
+import '../../core/widgets/session_search_mode_menu.dart';
+import '../../core/services/session_search_client.dart';
 import '../../core/services/dashboard_api_client.dart';
 import '../../core/utils/session_sources.dart';
+import '../../core/widgets/copy_session_id.dart';
+import '../../core/widgets/session_organisation.dart';
 import '../data/seen_chats.dart';
 import '../theme/nextgen_theme.dart';
 import 'nextgen_scope.dart';
@@ -36,21 +41,46 @@ enum NgDestination {
 /// Holds the sidebar's session list so it survives the drawer closing.
 class NgSessionsModel extends ChangeNotifier {
   NgSessionsModel(NgScope scope) : _scope = scope {
+    _bindSearchAccess();
     _listen();
+  }
+
+  late SessionSearchAccess searchAccess;
+  void _bindSearchAccess() {
+    searchAccess = SessionSearchAccess(
+      SessionSearchPreferences(scope.prefs),
+      sessionSearchIdentity(scope.connection),
+    )..addListener(_modeChanged);
+  }
+
+  void _modeChanged() {
+    if (query.isNotEmpty) {
+      search(query);
+    } else {
+      notifyListeners();
+    }
   }
 
   NgScope _scope;
   NgScope get scope => _scope;
   set scope(NgScope value) {
     if (identical(value.gateway, _scope.gateway) &&
-        value.connection.id == _scope.connection.id) {
+        sessionSearchIdentity(value.connection) == searchAccess.identity) {
       _scope = value;
       return;
     }
     _generation++;
+    searchAccess.dispose();
     _scope = value;
+    _bindSearchAccess();
     _seen = null;
     _showSubagents = null;
+    _debounce?.cancel();
+    _changedDebounce?.cancel();
+    query = '';
+    error = null;
+    _browseRows = [];
+    excerpts = {};
     sessions = [];
     _serverOffset = 0;
     hasMore = false;
@@ -58,6 +88,25 @@ class NgSessionsModel extends ChangeNotifier {
   }
 
   List<Session> sessions = [];
+  List<Session> _browseRows = [];
+  Map<String, String> excerpts = {};
+
+  // Only older reads need this overlay. A later physical read can observe a
+  // legitimate unarchive, so start a fresh set with each request generation.
+  Set<String>? _removedDuringRead;
+  bool _removed(Session row) =>
+      _removedDuringRead?.contains(row.id) == true ||
+      _removedDuringRead?.contains(row.lineageRootId) == true;
+
+  void _projectSearch(Iterable<SessionSearchHit> hits) {
+    final matches = projectSessionSearch(
+      _browseRows,
+      hits,
+      query,
+    ).where((h) => !h.session.isUntitledCronShell && !h.session.archived);
+    sessions = [for (final h in matches) h.session];
+    excerpts = {for (final h in matches) h.session.id: h.snippet};
+  }
 
   bool _browsingCrons = false;
   bool? _showSubagents;
@@ -204,6 +253,9 @@ class NgSessionsModel extends ChangeNotifier {
 
   String? error;
   String query = '';
+  SessionSort sort = SessionSort.recent;
+  SessionGroup group = SessionGroup.standard;
+  bool details = false;
   Timer? _debounce;
   int _generation = 0;
   Future<void>? _refreshing;
@@ -229,17 +281,40 @@ class NgSessionsModel extends ChangeNotifier {
 
   Future<void> _refreshOnce() async {
     final generation = ++_generation;
+    _removedDuringRead = {};
     final api = scope.gateway.api;
+    final access = searchAccess;
+    bool maySearch() =>
+        generation == _generation &&
+        identical(access, searchAccess) &&
+        access.isActive &&
+        access.value;
     final browsingCrons = _browsingCrons;
     loading = true;
     error = null;
     notifyListeners();
     try {
       if (query.isNotEmpty) {
+        if (!searchAccess.value) {
+          _projectSearch(const []);
+          hasMore = false;
+          return;
+        }
         // Search is one server-side read; it does not page.
-        final page = await api.getSessionsPage(limit: _pageSize, title: query);
-        if (generation != _generation) return;
-        sessions = page.sessions.where((s) => !s.isUntitledCronShell).toList();
+        final page = await api.getSessionsPage(
+          limit: _pageSize,
+          title: query,
+          maySendSearch: maySearch,
+        );
+        if (!maySearch()) return;
+        _projectSearch([
+          for (final row in page.sessions)
+            if (!_removed(row))
+              SessionSearchHit(
+                session: row,
+                snippet: page.searchExcerpts[row.id] ?? '',
+              ),
+        ]);
         _serverOffset = 0;
         hasMore = false;
       } else {
@@ -279,7 +354,7 @@ class NgSessionsModel extends ChangeNotifier {
           if (visible >= _targetChats) break;
         }
         if (generation != _generation) return;
-        sessions = collected;
+        _browseRows = sessions = collected.where((s) => !_removed(s)).toList();
         _serverOffset = offset;
         hasMore = more;
       }
@@ -293,9 +368,15 @@ class NgSessionsModel extends ChangeNotifier {
       }
     } catch (e) {
       if (generation != _generation) return;
-      error = '$e'.replaceFirst('Exception: ', '');
+      if (query.isNotEmpty) _projectSearch(const []);
+      error = query.isEmpty
+          ? '$e'.replaceFirst('Exception: ', '')
+          : e is SessionSearchException
+          ? e.message
+          : ngL.ng_release_message_search_unavailable;
     } finally {
       if (generation == _generation) {
+        _removedDuringRead = null;
         loading = false;
         notifyListeners();
       }
@@ -305,6 +386,7 @@ class NgSessionsModel extends ChangeNotifier {
   Future<void> loadMore() async {
     if (loading || !hasMore || query.isNotEmpty) return;
     final generation = _generation;
+    _removedDuringRead = {};
     loading = true;
     notifyListeners();
     try {
@@ -328,7 +410,7 @@ class NgSessionsModel extends ChangeNotifier {
             addedVisible++;
           }
         }
-        sessions = [...collected];
+        _browseRows = sessions = collected.where((s) => !_removed(s)).toList();
         hasMore = page.sessions.isNotEmpty && page.hasMore;
         if (!hasMore || addedVisible >= _targetChats) break;
       }
@@ -337,6 +419,7 @@ class NgSessionsModel extends ChangeNotifier {
       hasMore = false;
     } finally {
       if (generation == _generation) {
+        _removedDuringRead = null;
         loading = false;
         notifyListeners();
       }
@@ -344,18 +427,34 @@ class NgSessionsModel extends ChangeNotifier {
   }
 
   void search(String value) {
+    ++_generation; // Invalidate in-flight hits before the debounce fires.
     query = value.trim();
+    error = null;
+    loading = query.isEmpty || searchAccess.value;
+    hasMore = false;
+    if (query.isEmpty) {
+      sessions = _browseRows;
+      excerpts = {};
+    } else {
+      _projectSearch(const []);
+    }
+    notifyListeners();
     _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 300), refresh);
+    if (loading) _debounce = Timer(const Duration(milliseconds: 300), refresh);
   }
 
   void clearSearch() {
     _debounce?.cancel();
+    ++_generation;
     query = '';
+    sessions = _browseRows;
+    excerpts = {};
     unawaited(refresh());
   }
 
   void replace(Session updated) {
+    final browseIndex = _browseRows.indexWhere((s) => s.id == updated.id);
+    if (browseIndex >= 0) _browseRows[browseIndex] = updated;
     final i = sessions.indexWhere((s) => s.id == updated.id);
     if (i >= 0) {
       sessions[i] = updated;
@@ -364,12 +463,24 @@ class NgSessionsModel extends ChangeNotifier {
   }
 
   void remove(String id) {
+    final removed = _removedDuringRead;
+    if (removed != null) {
+      removed.add(id);
+      for (final row in [...sessions, ..._browseRows]) {
+        if (row.id == id && row.lineageRootId != null) {
+          removed.add(row.lineageRootId!);
+        }
+      }
+    }
+    excerpts.remove(id);
+    _browseRows.removeWhere((s) => s.id == id);
     sessions.removeWhere((s) => s.id == id);
     notifyListeners();
   }
 
   @override
   void dispose() {
+    searchAccess.dispose();
     _generation++;
     _refreshPending = false;
     _debounce?.cancel();
@@ -391,7 +502,7 @@ DateTime? ngSessionTime(Session s) {
   return DateTime.fromMillisecondsSinceEpoch((t * 1000).round());
 }
 
-/// One of a chat row's actions: the value [_NgSessionsSidebarState] runs,
+/// One of a chat row's actions: the value [NgSessionsSidebarState] runs,
 /// and how both the long-press sheet and the desktop menu show it.
 typedef _NgChatAction = ({
   String value,
@@ -419,6 +530,7 @@ class NgSessionsSidebar extends StatefulWidget {
     required this.onOpen,
     required this.onNewChat,
     required this.onDestination,
+    this.docked = false,
   });
 
   final NgSessionsModel model;
@@ -427,12 +539,19 @@ class NgSessionsSidebar extends StatefulWidget {
   final VoidCallback onNewChat;
   final ValueChanged<NgDestination> onDestination;
 
+  /// When true the sidebar renders as a persistent docked pane (wide windows)
+  /// rather than a modal [Drawer]. The search/filter/scroll state is identical
+  /// in both modes so resizing across the breakpoint preserves it.
+  final bool docked;
+
   @override
-  State<NgSessionsSidebar> createState() => _NgSessionsSidebarState();
+  State<NgSessionsSidebar> createState() => NgSessionsSidebarState();
 }
 
-class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
+class NgSessionsSidebarState extends State<NgSessionsSidebar> {
+  void focusSearch() => _searchFocus.requestFocus();
   final _search = TextEditingController();
+  late SessionSearchAccess _searchOwner;
   final _searchFocus = FocusNode();
   final _scroll = ScrollController();
   NgSidebarFilter _filter = NgSidebarFilter.all;
@@ -440,6 +559,7 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
   @override
   void initState() {
     super.initState();
+    _searchOwner = widget.model.searchAccess;
     _search.text = widget.model.query;
     // The model and its server cursor outlive the drawer. Reopening it must
     // not show All while still paging the unfiltered Crons authority.
@@ -449,6 +569,28 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
     _scroll.addListener(() {
       if (_scroll.position.extentAfter < 400) widget.model.loadMore();
     });
+  }
+
+  void _syncSearchOwner() {
+    final owner = widget.model.searchAccess;
+    if (identical(owner, _searchOwner)) return;
+    _searchOwner = owner;
+    // The retained field must not keep a departed profile's query while the
+    // model has already cleared it. Re-entering the same text must be a real
+    // edit for the newly scoped browser, not an ignored identical value.
+    _search.text = widget.model.query;
+  }
+
+  @override
+  void didUpdateWidget(covariant NgSessionsSidebar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _syncSearchOwner();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _syncSearchOwner();
   }
 
   @override
@@ -480,6 +622,13 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
           label: unread ? ngL.ng_mark_as_read : ngL.ng_mark_as_unread,
           danger: false,
         ),
+      if (canCopySessionId(s))
+        (
+          value: 'copyId',
+          icon: Icons.copy_outlined,
+          label: ngL.copy_session_id,
+          danger: false,
+        ),
       (
         value: 'rename',
         icon: Icons.edit_outlined,
@@ -508,8 +657,19 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
     final choice = at == null
         ? await _actionSheet(s)
         : await _actionMenu(s, at);
-    if (!mounted || choice == null) return;
-    await _runAction(s, choice, api);
+    if (!mounted ||
+        choice == null ||
+        !identical(widget.model.scope.gateway.api, api)) {
+      return;
+    }
+    final current = widget.model.sessions
+        .where((row) => row.id == s.id)
+        .firstOrNull;
+    if (current == null ||
+        !_actionItems(current).any((a) => a.value == choice)) {
+      return;
+    }
+    await _runAction(current, choice, api);
   }
 
   Future<String?> _actionSheet(Session s) {
@@ -517,28 +677,30 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
     return showNgSheet<String>(
       context,
       builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
-              child: Text(
-                ngSessionTitle(s),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: NgType.heading.copyWith(color: c.text),
-              ),
-            ),
-            for (final a in _actionItems(s))
-              ListTile(
-                leading: Icon(a.icon, color: a.danger ? c.danger : null),
-                title: Text(
-                  a.label,
-                  style: a.danger ? TextStyle(color: c.danger) : null,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
+                child: Text(
+                  ngSessionTitle(s),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: NgType.heading.copyWith(color: c.text),
                 ),
-                onTap: () => Navigator.pop(context, a.value),
               ),
-          ],
+              for (final a in _actionItems(s))
+                ListTile(
+                  leading: Icon(a.icon, color: a.danger ? c.danger : null),
+                  title: Text(
+                    a.label,
+                    style: a.danger ? TextStyle(color: c.danger) : null,
+                  ),
+                  onTap: () => Navigator.pop(context, a.value),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -590,8 +752,12 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
     String choice,
     DashboardApiClient api,
   ) async {
+    bool currentOwner() =>
+        mounted && identical(widget.model.scope.gateway.api, api);
     try {
       switch (choice) {
+        case 'copyId':
+          await copySessionId(context, s);
         case 'read':
           if (widget.model.isUnread(s)) {
             widget.model.markRead(s.id);
@@ -599,7 +765,12 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
             widget.model.markUnread(s);
           }
         case 'pin':
-          await api.setSessionPinned(sessionId: s.id, pinned: !s.pinned);
+          final pinned = await api.setSessionPinned(
+            sessionId: s.id,
+            pinned: !s.pinned,
+          );
+          if (!currentOwner()) return;
+          widget.model.replace(s.withPinned(pinned));
           await widget.model.refresh();
         case 'rename':
           final title = await ngPromptText(
@@ -607,8 +778,10 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
             title: ngL.ng_rename_chat,
             initial: ngSessionTitle(s),
           );
-          if (title == null || title.trim().isEmpty) return;
-          await api.renameSession(sessionId: s.id, title: title);
+          if (title == null || title.trim().isEmpty || !currentOwner()) return;
+          final saved = await api.renameSession(sessionId: s.id, title: title);
+          if (!currentOwner()) return;
+          widget.model.replace(s.withTitle(saved));
           await widget.model.refresh();
         case 'archive':
           await api.setSessionArchived(
@@ -616,6 +789,7 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
             archived: true,
             clearPin: true,
           );
+          if (!currentOwner()) return;
           widget.model.remove(s.id);
           if (mounted) ngToast(context, ngL.ng_archived);
         case 'delete':
@@ -624,8 +798,9 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
             title: ngL.ng_delete_this_chat,
             body: ngL.ng_it_is_removed_from_the_gateway,
           );
-          if (!ok) return;
+          if (!ok || !currentOwner()) return;
           await api.deleteSession(s.id);
+          if (!currentOwner()) return;
           widget.model.remove(s.id);
       }
     } catch (e) {
@@ -637,181 +812,211 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
   Widget build(BuildContext context) {
     final c = NgColors.of(context);
     final scope = NgScope.of(context);
+    final content = SafeArea(
+      child: ListenableBuilder(
+        listenable: Listenable.merge([widget.model, scope.gateway]),
+        builder: (context, _) {
+          final needsYou = scope.gateway.needsYou;
+          final all = widget.model.sessions;
+          final chats = all.where(widget.model.includesChat).toList();
+          final filtered = widget.model.sort.apply(switch (_filter) {
+            NgSidebarFilter.all => chats,
+            NgSidebarFilter.running => chats.where((s) => s.isActive).toList(),
+            NgSidebarFilter.needsYou =>
+              chats
+                  .where(
+                    (s) => needsYou.contains(s.id) || widget.model.isUnread(s),
+                  )
+                  .toList(),
+            NgSidebarFilter.crons =>
+              all.where((s) => isCronSession(s)).toList(),
+          });
+          final pinned = _filter == NgSidebarFilter.all
+              ? filtered.where((s) => s.pinned).toList()
+              : <Session>[];
+          final rest = filtered.where((s) => !pinned.contains(s)).toList();
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(14, 12, 14, 6),
+                child: TextField(
+                  key: const Key('ng-session-search'),
+                  controller: _search,
+                  focusNode: _searchFocus,
+                  onChanged: (value) {
+                    widget.model.search(value);
+                    setState(() {});
+                  },
+                  style: NgType.body.copyWith(color: c.text),
+                  decoration: InputDecoration(
+                    isDense: true,
+                    filled: true,
+                    fillColor: c.input,
+                    prefixIcon: SessionSearchModeMenu(
+                      widget.model.searchAccess,
+                    ),
+                    suffixIcon: _search.text.isEmpty
+                        ? null
+                        : IconButton(
+                            key: const Key('ng-clear-search'),
+                            tooltip: ngL.clear_search,
+                            icon: const Icon(Icons.clear, size: 18),
+                            color: c.text3,
+                            constraints: const BoxConstraints.tightFor(
+                              width: 40,
+                              height: 40,
+                            ),
+                            onPressed: () {
+                              _search.clear();
+                              widget.model.clearSearch();
+                              _searchFocus.requestFocus();
+                              setState(() {});
+                            },
+                          ),
+                    hintText: ngL.ng_search_chats,
+                    hintStyle: NgType.body.copyWith(color: c.textMuted),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(NgRadii.full),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: widget.model.refresh,
+                  child: ListView(
+                    controller: _scroll,
+                    padding: const EdgeInsets.fromLTRB(10, 4, 10, 12),
+                    children: [
+                      _tiles(c),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _filters(
+                              c,
+                              chats
+                                  .where(
+                                    (s) =>
+                                        needsYou.contains(s.id) ||
+                                        widget.model.isUnread(s),
+                                  )
+                                  .length,
+                            ),
+                          ),
+                          SessionOrganisationMenu(
+                            sort: widget.model.sort,
+                            group: widget.model.group,
+                            rows: filtered,
+                            details: widget.model.details,
+                            onSort: (s) =>
+                                setState(() => widget.model.sort = s),
+                            onGroup: (g) =>
+                                setState(() => widget.model.group = g),
+                            onDetails: () => setState(
+                              () =>
+                                  widget.model.details = !widget.model.details,
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (pinned.isNotEmpty) ...[
+                        NgSectionLabel(ngL.ng_pinned),
+                        for (final s in pinned) _tile(c, s, needsYou),
+                      ],
+                      if (pinned.isNotEmpty && rest.isNotEmpty)
+                        NgSectionLabel(ngL.ng_recent),
+                      if (widget.model.error != null &&
+                          (widget.model.query.isNotEmpty || all.isEmpty))
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Text(
+                            widget.model.error!,
+                            style: NgType.bodySmall.copyWith(color: c.danger),
+                          ),
+                        )
+                      else if (!widget.model.loading && filtered.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: Text(
+                            switch (_filter) {
+                              _ when widget.model.query.isNotEmpty =>
+                                ngL.ng_no_chats_match,
+                              NgSidebarFilter.all => ngL.ng_no_chats_yet,
+                              NgSidebarFilter.running =>
+                                ngL.ng_nothing_is_running,
+                              NgSidebarFilter.needsYou =>
+                                ngL.ng_nothing_is_waiting_on_you,
+                              NgSidebarFilter.crons =>
+                                ngL.cron_conversations_empty,
+                            },
+                            textAlign: TextAlign.center,
+                            style: NgType.bodySmall.copyWith(color: c.text3),
+                          ),
+                        ),
+                      if (widget.model.group == SessionGroup.status)
+                        for (final g in labelledGroups(
+                          rest,
+                          (s) => needsYou.contains(s.id)
+                              ? ngL.ng_needs_you_2
+                              : s.isActive
+                              ? ngL.ng_running
+                              : ngL.status_idle,
+                        ).entries) ...[
+                          NgSectionLabel(g.key),
+                          for (final s in g.value) _tile(c, s, needsYou),
+                        ]
+                      else
+                        for (final s in rest) _tile(c, s, needsYou),
+                      // A short list has no scroll extent, so scroll-only
+                      // paging cannot grow it; offer an explicit read on.
+                      if (widget.model.hasMore &&
+                          !widget.model.loading &&
+                          widget.model.query.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: Center(
+                            child: TextButton.icon(
+                              key: const Key('ng-sessions-load-more'),
+                              onPressed: widget.model.loadMore,
+                              icon: const Icon(Icons.expand_more, size: 18),
+                              label: Text(ngL.load_more),
+                            ),
+                          ),
+                        ),
+                      if (widget.model.loading)
+                        const Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Center(
+                            child: SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              _footer(c, scope),
+            ],
+          );
+        },
+      ),
+    );
+    if (widget.docked) {
+      return Material(
+        color: c.sidebar,
+        child: SizedBox(width: 330, child: content),
+      );
+    }
     return Drawer(
       backgroundColor: c.sidebar,
       width: 330,
       shape: const RoundedRectangleBorder(),
-      child: SafeArea(
-        child: ListenableBuilder(
-          listenable: Listenable.merge([widget.model, scope.gateway]),
-          builder: (context, _) {
-            final needsYou = scope.gateway.needsYou;
-            final all = widget.model.sessions;
-            final chats = all.where(widget.model.includesChat).toList();
-            final filtered = switch (_filter) {
-              NgSidebarFilter.all => chats,
-              NgSidebarFilter.running =>
-                chats.where((s) => s.isActive).toList(),
-              NgSidebarFilter.needsYou =>
-                chats
-                    .where(
-                      (s) =>
-                          needsYou.contains(s.id) || widget.model.isUnread(s),
-                    )
-                    .toList(),
-              NgSidebarFilter.crons =>
-                all.where((s) => isCronSession(s)).toList(),
-            };
-            final pinned =
-                _filter == NgSidebarFilter.all && widget.model.query.isEmpty
-                ? filtered.where((s) => s.pinned).toList()
-                : <Session>[];
-            final rest = filtered.where((s) => !pinned.contains(s)).toList();
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(14, 12, 14, 6),
-                  child: TextField(
-                    key: const Key('ng-session-search'),
-                    controller: _search,
-                    focusNode: _searchFocus,
-                    onChanged: (value) {
-                      widget.model.search(value);
-                      setState(() {});
-                    },
-                    style: NgType.body.copyWith(color: c.text),
-                    decoration: InputDecoration(
-                      isDense: true,
-                      filled: true,
-                      fillColor: c.input,
-                      prefixIcon: Icon(Icons.search, color: c.text3, size: 20),
-                      suffixIcon: _search.text.isEmpty
-                          ? null
-                          : IconButton(
-                              key: const Key('ng-clear-search'),
-                              tooltip:
-                                  AppLocalizations.of(context)?.clear_search ??
-                                  'Clear search',
-                              icon: const Icon(Icons.clear, size: 18),
-                              color: c.text3,
-                              constraints: const BoxConstraints.tightFor(
-                                width: 40,
-                                height: 40,
-                              ),
-                              onPressed: () {
-                                _search.clear();
-                                widget.model.clearSearch();
-                                _searchFocus.requestFocus();
-                                setState(() {});
-                              },
-                            ),
-                      hintText: ngL.ng_search_chats,
-                      hintStyle: NgType.body.copyWith(color: c.textMuted),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(NgRadii.full),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: widget.model.refresh,
-                    child: ListView(
-                      controller: _scroll,
-                      padding: const EdgeInsets.fromLTRB(10, 4, 10, 12),
-                      children: [
-                        _tiles(c),
-                        const SizedBox(height: 8),
-                        _filters(
-                          c,
-                          chats
-                              .where(
-                                (s) =>
-                                    needsYou.contains(s.id) ||
-                                    widget.model.isUnread(s),
-                              )
-                              .length,
-                        ),
-                        if (pinned.isNotEmpty) ...[
-                          NgSectionLabel(ngL.ng_pinned),
-                          for (final s in pinned) _tile(c, s, needsYou),
-                        ],
-                        if (pinned.isNotEmpty && rest.isNotEmpty)
-                          NgSectionLabel(ngL.ng_recent),
-                        if (widget.model.error != null && all.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Text(
-                              widget.model.error!,
-                              style: NgType.bodySmall.copyWith(color: c.danger),
-                            ),
-                          )
-                        else if (!widget.model.loading && filtered.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.all(24),
-                            child: Text(
-                              switch (_filter) {
-                                _ when widget.model.query.isNotEmpty =>
-                                  ngL.ng_no_chats_match,
-                                NgSidebarFilter.all => ngL.ng_no_chats_yet,
-                                NgSidebarFilter.running =>
-                                  ngL.ng_nothing_is_running,
-                                NgSidebarFilter.needsYou =>
-                                  ngL.ng_nothing_is_waiting_on_you,
-                                NgSidebarFilter.crons =>
-                                  AppLocalizations.of(
-                                        context,
-                                      )?.cron_conversations_empty ??
-                                      'Conversations from scheduled jobs appear here, including older runs.',
-                              },
-                              textAlign: TextAlign.center,
-                              style: NgType.bodySmall.copyWith(color: c.text3),
-                            ),
-                          ),
-                        for (final s in rest) _tile(c, s, needsYou),
-                        // A short list has no scroll extent, so scroll-only
-                        // paging cannot grow it; offer an explicit read on.
-                        if (widget.model.hasMore &&
-                            !widget.model.loading &&
-                            widget.model.query.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6),
-                            child: Center(
-                              child: TextButton.icon(
-                                key: const Key('ng-sessions-load-more'),
-                                onPressed: widget.model.loadMore,
-                                icon: const Icon(Icons.expand_more, size: 18),
-                                label: Text(
-                                  AppLocalizations.of(context)?.load_more ??
-                                      'Load more…',
-                                ),
-                              ),
-                            ),
-                          ),
-                        if (widget.model.loading)
-                          const Padding(
-                            padding: EdgeInsets.all(16),
-                            child: Center(
-                              child: SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-                _footer(c, scope),
-              ],
-            );
-          },
-        ),
-      ),
+      child: content,
     );
   }
 
@@ -912,10 +1117,7 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
             NgSidebarFilter.needsYou,
             waiting > 0 ? ngL.ng_needs_you(waiting) : ngL.ng_needs_you_2,
           ),
-          chip(
-            NgSidebarFilter.crons,
-            AppLocalizations.of(context)?.crons ?? 'Crons',
-          ),
+          chip(NgSidebarFilter.crons, ngL.crons),
         ],
       ),
     );
@@ -997,18 +1199,39 @@ class _NgSessionsSidebarState extends State<NgSessionsSidebar> {
                           ),
                         ),
                       Expanded(
-                        child: Text(
-                          ngSessionTitle(s),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: NgType.label.copyWith(
-                            color: selected || marked ? c.text : c.text2,
-                            fontWeight: marked
-                                ? FontWeight.w700
-                                : selected
-                                ? FontWeight.w600
-                                : FontWeight.w500,
-                          ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              ngSessionTitle(s),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: NgType.label.copyWith(
+                                color: selected || marked ? c.text : c.text2,
+                                fontWeight: marked
+                                    ? FontWeight.w700
+                                    : selected
+                                    ? FontWeight.w600
+                                    : FontWeight.w500,
+                              ),
+                            ),
+                            if (widget.model.details)
+                              Text(
+                                sessionDetails(s),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: NgType.caption.copyWith(color: c.text3),
+                              ),
+                            if (widget.model.excerpts[s.id] case final snippet?
+                                when snippet.isNotEmpty)
+                              Text(
+                                snippet,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: NgType.caption.copyWith(color: c.text3),
+                              ),
+                          ],
                         ),
                       ),
                       const SizedBox(width: 8),

@@ -223,10 +223,7 @@ void main() {
   // The composer chip also shows the session's model; sheet assertions must
   // be scoped to the sheet itself.
   Finder inSheet(Finder f) =>
-      find.descendant(
-        of: find.byType(DraggableScrollableSheet),
-        matching: f,
-      );
+      find.descendant(of: find.byType(DraggableScrollableSheet), matching: f);
 
   // Like inSheet but also counts built-but-offscreen rows; use with
   // scrollSheetToEnd before a findsNothing check.
@@ -238,10 +235,12 @@ void main() {
 
   // The sheet's main ListView builds lazily; scroll it until built.
   Future<void> scrollToInSheet(WidgetTester tester, Finder f) async {
-    final list = find.descendant(
-      of: find.byType(DraggableScrollableSheet),
-      matching: find.byType(ListView),
-    ).first;
+    final list = find
+        .descendant(
+          of: find.byType(DraggableScrollableSheet),
+          matching: find.byType(ListView),
+        )
+        .first;
     for (var i = 0; i < 4 && f.evaluate().isEmpty; i++) {
       await tester.drag(list, const Offset(0, -250));
       await tester.pumpAndSettle();
@@ -251,10 +250,12 @@ void main() {
   // Force the sheet's list to build everything before a findsNothing check;
   // a lazily-unbuilt row would make such an assertion vacuously true.
   Future<void> scrollSheetToEnd(WidgetTester tester) async {
-    final list = find.descendant(
-      of: find.byType(DraggableScrollableSheet),
-      matching: find.byType(ListView),
-    ).first;
+    final list = find
+        .descendant(
+          of: find.byType(DraggableScrollableSheet),
+          matching: find.byType(ListView),
+        )
+        .first;
     for (var i = 0; i < 4; i++) {
       await tester.drag(list, const Offset(0, -250));
       await tester.pumpAndSettle();
@@ -454,8 +455,16 @@ void main() {
     final client = pickerClient(
       () => {
         'providers': [
-          {'slug': 'openai', 'name': 'OpenAI', 'models': ['gpt-5.2']},
-          {'slug': 'anthropic', 'name': 'Anthropic', 'models': ['claude-x']},
+          {
+            'slug': 'openai',
+            'name': 'OpenAI',
+            'models': ['gpt-5.2'],
+          },
+          {
+            'slug': 'anthropic',
+            'name': 'Anthropic',
+            'models': ['claude-x'],
+          },
         ],
       },
     );
@@ -528,53 +537,55 @@ void main() {
     client.close();
   });
 
-  testWidgets('NextGen configured provider with no models keeps filter active',
-      (tester) async {
-    final client = pickerClient(
-      () => {
-        'providers': [
-          {
-            'slug': 'custom:empty',
-            'name': 'Empty',
-            'models': <String>[],
-            'is_user_defined': true,
-            'is_current': false,
-          },
-          {
-            'slug': 'nous',
-            'name': 'Nous',
-            'models': ['ghost-a', 'ghost-b'],
-            'is_user_defined': false,
-            'is_current': false,
-          },
-        ],
-      },
-    );
-    final dashboard = DashboardClient(
-      host: '10.0.0.5',
-      proxied: true,
-      httpClient: client,
-    );
-    final gateway = NextGenGateway(_connection(), dashboard: dashboard);
-    final prefs = await SharedPreferences.getInstance();
-    final chat = NgChatController(gateway, sessionId: 'stored');
-    chat.model = 'ghost-a';
-    chat.provider = 'nous';
-    await tester.pumpWidget(_app(chat, gateway, ConnectionManager(prefs)));
-    await tester.pump(const Duration(milliseconds: 300));
-    await openNgPicker(tester);
+  testWidgets(
+    'NextGen configured provider with no models keeps filter active',
+    (tester) async {
+      final client = pickerClient(
+        () => {
+          'providers': [
+            {
+              'slug': 'custom:empty',
+              'name': 'Empty',
+              'models': <String>[],
+              'is_user_defined': true,
+              'is_current': false,
+            },
+            {
+              'slug': 'nous',
+              'name': 'Nous',
+              'models': ['ghost-a', 'ghost-b'],
+              'is_user_defined': false,
+              'is_current': false,
+            },
+          ],
+        },
+      );
+      final dashboard = DashboardClient(
+        host: '10.0.0.5',
+        proxied: true,
+        httpClient: client,
+      );
+      final gateway = NextGenGateway(_connection(), dashboard: dashboard);
+      final prefs = await SharedPreferences.getInstance();
+      final chat = NgChatController(gateway, sessionId: 'stored');
+      chat.model = 'ghost-a';
+      chat.provider = 'nous';
+      await tester.pumpWidget(_app(chat, gateway, ConnectionManager(prefs)));
+      await tester.pump(const Duration(milliseconds: 300));
+      await openNgPicker(tester);
 
-    // The only configured provider has no models; the pinned row keeps the
-    // filter active, so the hidden provider's other model stays hidden.
-    expect(inSheet(find.text('ghost-a')), findsOneWidget);
-    await scrollSheetToEnd(tester);
-    expect(inSheetAll(find.text('ghost-b')), findsNothing);
+      // The only configured provider has no models; the pinned row keeps the
+      // filter active, so the hidden provider's other model stays hidden.
+      expect(inSheet(find.text('ghost-a')), findsOneWidget);
+      await scrollSheetToEnd(tester);
+      expect(inSheetAll(find.text('ghost-b')), findsNothing);
 
-    await tester.pumpWidget(const SizedBox());
-    chat.dispose();
-    gateway.dispose();
-    client.close();
-  });
+      await tester.pumpWidget(const SizedBox());
+      chat.dispose();
+      gateway.dispose();
+      client.close();
+    },
+  );
 
   testWidgets('NextGen empty configured set with no pinned model falls back', (
     tester,
@@ -666,14 +677,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(inSheet(find.text('hidden-model')), findsOneWidget);
     expect(inSheet(find.text('chat-a')), findsNothing);
-    await tester.enterText(
-      find.byKey(const ValueKey('ng-model-search')),
-      '',
-    );
+    await tester.enterText(find.byKey(const ValueKey('ng-model-search')), '');
     await tester.pumpAndSettle();
 
     // The synthesized provider's chip filters to exactly the pinned pair.
-    await tester.tap(find.byKey(const ValueKey('ng-model-provider-huggingface')));
+    await tester.tap(
+      find.byKey(const ValueKey('ng-model-provider-huggingface')),
+    );
     await tester.pumpAndSettle();
     expect(inSheet(find.text('hidden-model')), findsOneWidget);
     expect(inSheet(find.text('chat-a')), findsNothing);
