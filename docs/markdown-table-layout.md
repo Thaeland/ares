@@ -58,8 +58,13 @@ Visual review: before **3/10**, after **8/10** for table readability/hierarchy. 
 
 Base: full release-repair head `8a848fdce003e968f72f7e0f627c88dabaca2f1a` (fast-forward merge, not a cherry-pick). It includes all CI, Linux async-save and Automotive navigation repairs supplied by the release lane.
 
-- Fatal-info analyzer: passed, zero issues.
-- Focused table/render/chat-density/Markdown-preview/delegation cohort: 149 passed, zero failures.
-- Final full and serial performance receipts: see `build/table-gates/` (recorded after execution).
+- Fatal-info analyzer: passed, zero issues (`flutter analyze --no-pub --fatal-infos`).
+- Final focused table/render/chat-density/Markdown-preview/delegation cohort: **157 passed, zero failures or skips**, terminal `success=true`, exit 0.
+- Final fixture-enabled full suite, serial concurrency 1 and excluding `perf`: **8,688 passed, zero failures or skips**, terminal `success=true`, exit 0; subprocess wall time **2,358.304 seconds**. This includes all seventy new regressions. No existing assertions or performance thresholds were weakened.
+- Separate serial performance run: **29 passed, zero failures or skips**, terminal `success=true`, exit 0; subprocess wall time **4.777 seconds**. The exact fixed-string `@Tags(['perf'])` selector asserted a nonempty, exact two-file list: `test/delivered_files_perf_test.dart` and `test/transcript_redaction_gateway_test.dart`. Host load immediately before performance: **5.22 / 10.70 / 10.52**.
+- All final commands ran on clean implementation/test commit **`e3c5f308586a902a757d81d1f99f33eeba3c4d55`**. The later receipt commit changes this document only.
+- Actual SSH, PTY and FFmpeg fixture executables were enabled at the common integration-fleet/pty worktree paths, with `TMPDIR=/Users/sam.russell/.hermes/cache/scratch`; no fixture tests were skipped.
+- Machine-readable retained evidence: `build/table-gates/{focused,full,perf}.json`, corresponding `*-summary.json`, `final-exits.json`, `perf-selector.json`, `perf-load.txt`, analyzer and expanded logs. `first-full.*` retains the initial failed sweep rather than overwriting its result. `run-final.py` records the exact commands and tested head.
+- Final changed-Dart formatting and `git diff --check` pass; release-repair head is an ancestor. No native builds/installations or publication were attempted.
 
 No dependencies, platform registration, release identity, app installs, push/tag/store or publication changes. Physical mouse/keyboard/trackpad/touch and native selection handles still require device acceptance; widget tests verify layout, Flutter scroll-controller behavior and selection registration rather than pretending to exercise OS input hardware.
