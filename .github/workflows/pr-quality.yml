@@ -16,12 +16,15 @@ jobs:
   quality:
     name: Analyze & Test
     runs-on: ubuntu-latest
-    env:
-      TMPDIR: ${{ runner.temp }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+
+      - name: Configure test scratch directory
+        run: |
+          mkdir -p "$RUNNER_TEMP/ares-ci"
+          printf 'TMPDIR=%s/ares-ci\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
 
       - name: Verify README release window
         run: |

@@ -20,7 +20,6 @@ jobs:
     name: Build and verify APK
     runs-on: ubuntu-latest
     env:
-      TMPDIR: ${{ runner.temp }}
       HAS_RELEASE_KEYSTORE: ${{ secrets.KEYSTORE_BASE64 != '' }}
       # Pin the production signer so a valid but wrong keystore cannot silently
       # break in-place upgrades. This is the certificate used for v2.1.0+.
@@ -34,6 +33,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
+
+      - name: Configure test scratch directory
+        run: |
+          mkdir -p "$RUNNER_TEMP/ares-ci"
+          printf 'TMPDIR=%s/ares-ci\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
 
       - name: Verify release scripts and README release window
         run: |
