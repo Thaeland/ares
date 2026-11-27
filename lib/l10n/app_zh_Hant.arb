@@ -8228,5 +8228,16 @@
   "ng_slash_suggestions_loading": "正在載入指令…",
   "ng_slash_suggestions_empty": "沒有相符的指令",
   "ng_slash_suggestions_label": "指令建議",
-  "ng_slash_suggestions_skill": "技能"
+  "ng_slash_suggestions_skill": "技能",
+  "settings_classic_title": "Classic 設定",
+  "settings_nextgen_title": "NextGen 設定",
+  "settings_category_general": "一般與語言",
+  "settings_category_chat": "聊天與工作階段",
+  "settings_category_device": "裝置與快捷鍵",
+  "settings_category_connections": "連線與模型",
+  "settings_category_security": "隱私與備份",
+  "settings_category_about": "關於與說明",
+  "settings_reopen_chat": "返回閘道時還原上次聊天",
+  "settings_reopen_chat_hint": "冷啟動時開啟歡迎頁面。連結和通知會開啟指定的聊天。",
+  "settings_danger": "危險操作"
 }

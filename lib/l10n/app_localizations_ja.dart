@@ -15076,4 +15076,38 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get ng_slash_suggestions_skill => 'スキル';
+
+  @override
+  String get settings_classic_title => 'Classic 設定';
+
+  @override
+  String get settings_nextgen_title => 'NextGen 設定';
+
+  @override
+  String get settings_category_general => '一般と言語';
+
+  @override
+  String get settings_category_chat => 'チャットとセッション';
+
+  @override
+  String get settings_category_device => 'デバイスとショートカット';
+
+  @override
+  String get settings_category_connections => '接続とモデル';
+
+  @override
+  String get settings_category_security => 'プライバシーとバックアップ';
+
+  @override
+  String get settings_category_about => 'アプリ情報とヘルプ';
+
+  @override
+  String get settings_reopen_chat => 'ゲートウェイに戻るときに最後のチャットを復元';
+
+  @override
+  String get settings_reopen_chat_hint =>
+      '新規起動時はようこそ画面が開きます。リンクや通知からは指定されたチャットが開きます。';
+
+  @override
+  String get settings_danger => '重要な操作';
 }

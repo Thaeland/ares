@@ -405,10 +405,10 @@ class _ConfigBackupCardState extends State<ConfigBackupCard> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 const SizedBox(width: 8),
-                Text(
+                Expanded(child: Text(
                   context.l10n.backup_restore,
                   style: Theme.of(context).textTheme.titleSmall,
-                ),
+                )),
               ],
             ),
             const SizedBox(height: 8),

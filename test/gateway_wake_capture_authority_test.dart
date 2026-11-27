@@ -1,3 +1,4 @@
+import 'support/settings_navigation.dart';
 // The wake capture-mode setting on a 0.23+ session-authority gateway.
 //
 // The owner's closed `config.set` contract (`CanonicalConfigSetParams`,
@@ -255,6 +256,7 @@ void main() {
           await tester.pump();
           await tester.pump(const Duration(milliseconds: 100));
 
+          await openSettingsCategory(tester, 'voice');
           await _expectCaptureRow(
             tester,
             wake,
@@ -331,6 +333,7 @@ void main() {
           );
           await tester.pumpAndSettle();
 
+          await openSettingsCategory(tester, 'voice');
           await _expectCaptureRow(
             tester,
             wake,

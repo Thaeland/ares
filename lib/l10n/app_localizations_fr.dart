@@ -15773,4 +15773,39 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get ng_slash_suggestions_skill => 'Compétence';
+
+  @override
+  String get settings_classic_title => 'Paramètres Classic';
+
+  @override
+  String get settings_nextgen_title => 'Paramètres NextGen';
+
+  @override
+  String get settings_category_general => 'Général et langue';
+
+  @override
+  String get settings_category_chat => 'Discussion et sessions';
+
+  @override
+  String get settings_category_device => 'Appareil et raccourcis';
+
+  @override
+  String get settings_category_connections => 'Connexions et modèles';
+
+  @override
+  String get settings_category_security => 'Confidentialité et sauvegarde';
+
+  @override
+  String get settings_category_about => 'À propos et aide';
+
+  @override
+  String get settings_reopen_chat =>
+      'Restaurer la dernière discussion au retour vers une passerelle';
+
+  @override
+  String get settings_reopen_chat_hint =>
+      'Un démarrage à froid ouvre l’accueil. Les liens et notifications ouvrent la discussion demandée.';
+
+  @override
+  String get settings_danger => 'Zone de danger';
 }

@@ -76,6 +76,7 @@ import 'files_screen.dart';
 import 'cron_screen.dart';
 import 'memory_screen.dart';
 import 'settings_screen.dart';
+import '../settings/settings_browser.dart';
 import 'model_management_screen.dart';
 import 'open_router_screen.dart';
 import 'model_admin_screen.dart';
@@ -1194,9 +1195,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
       case HermesDeepLinkKind.launch:
         return; // focus-only; no route, no prefill
       case HermesDeepLinkKind.settings:
-        // The settings destination routes to the app-wide Settings screen;
-        // the validated tab is advisory (the screen is not tab-paginated).
-        _push(SettingsScreen(connection: widget.connection));
+        _push(SettingsScreen(connection: widget.connection,
+          initialCategory: SettingsCategory.fromPath(link.path)));
         return;
       case HermesDeepLinkKind.install:
         // Navigation-only: open Capabilities for explicit user review, never
@@ -1207,7 +1207,8 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
         // In-app route only; never following an external/raw URL.
         final path = link.path ?? '';
         if (path.startsWith('/settings')) {
-          _push(SettingsScreen(connection: widget.connection));
+          _push(SettingsScreen(connection: widget.connection,
+            initialCategory: SettingsCategory.fromPath(path)));
         } else if (path == '/crons' ||
             path == '/scheduled' ||
             path == '/cron') {

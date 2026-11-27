@@ -31,6 +31,7 @@ import 'scheduled_page.dart';
 import 'sessions_sidebar.dart';
 import 'widgets.dart';
 import 'settings_page.dart';
+import '../../core/settings/settings_browser.dart';
 import 'slash_suggestions.dart';
 import '../nextgen_l10n.dart';
 import '../../core/desktop/desktop_integration.dart';
@@ -909,9 +910,7 @@ class _NgMainPageState extends State<_NgMainContent>
       case HermesDeepLinkKind.launch:
         return; // focus-only; no route, no prefill
       case HermesDeepLinkKind.settings:
-        // The NextGen settings screen is a single destination; the validated
-        // tab is advisory.
-        _go(NgDestination.settings);
+        _go(NgDestination.settings, settingsCategory: SettingsCategory.fromPath(link.path));
         return;
       case HermesDeepLinkKind.install:
         // Navigation-only: open Capabilities for explicit user review, never
@@ -921,7 +920,7 @@ class _NgMainPageState extends State<_NgMainContent>
       case HermesDeepLinkKind.open:
         final path = link.path ?? '';
         if (path.startsWith('/settings')) {
-          _go(NgDestination.settings);
+          _go(NgDestination.settings, settingsCategory: SettingsCategory.fromPath(path));
         } else if (path == '/scheduled' ||
             path == '/crons' ||
             path == '/cron') {
@@ -1014,7 +1013,7 @@ class _NgMainPageState extends State<_NgMainContent>
     _openId(null, '', workingDirectory: cwd);
   }
 
-  void _go(NgDestination d) {
+  void _go(NgDestination d, {SettingsCategory? settingsCategory}) {
     _scaffold.currentState?.closeDrawer();
     final Widget page = switch (d) {
       NgDestination.scheduled => NgScheduledPage(onOpenSession: _open),
@@ -1025,7 +1024,7 @@ class _NgMainPageState extends State<_NgMainContent>
         onOpenSession: _open,
         onNewProjectChat: _newProjectChat,
       ),
-      NgDestination.settings => const NgSettingsPage(),
+      NgDestination.settings => NgSettingsPage(initialCategory: settingsCategory),
     };
     Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
   }

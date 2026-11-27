@@ -12823,5 +12823,16 @@
   "ng_slash_suggestions_loading": "Loading commands…",
   "ng_slash_suggestions_empty": "No matching commands",
   "ng_slash_suggestions_label": "Command suggestions",
-  "ng_slash_suggestions_skill": "Skill"
+  "ng_slash_suggestions_skill": "Skill",
+  "settings_classic_title": "Classic Settings",
+  "settings_nextgen_title": "NextGen Settings",
+  "settings_category_general": "General & language",
+  "settings_category_chat": "Chat & sessions",
+  "settings_category_device": "Device & shortcuts",
+  "settings_category_connections": "Connections & models",
+  "settings_category_security": "Privacy & backup",
+  "settings_category_about": "About & help",
+  "settings_reopen_chat": "Restore last chat when returning to a gateway",
+  "settings_reopen_chat_hint": "Cold starts open the welcome screen. Links and notifications open the requested chat.",
+  "settings_danger": "Danger zone"
 }

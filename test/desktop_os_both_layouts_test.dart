@@ -1,3 +1,4 @@
+import 'support/settings_navigation.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -803,6 +804,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(find.byType(NgSettingsPage), findsOneWidget);
+          await openSettingsCategory(tester, 'device');
           expect(
             find.byKey(const Key('keep-awake-settings-card')),
             findsOneWidget,
@@ -1045,6 +1047,7 @@ void main() {
           final whileWorkingChip = find.byKey(
             const Key('keep-awake-mode-whileWorking'),
           );
+          await openSettingsCategory(tester, 'device');
           await tester.scrollUntilVisible(
             whileWorkingChip,
             100,

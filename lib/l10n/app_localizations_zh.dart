@@ -14786,6 +14786,39 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get ng_slash_suggestions_skill => '技能';
+
+  @override
+  String get settings_classic_title => 'Classic 设置';
+
+  @override
+  String get settings_nextgen_title => 'NextGen 设置';
+
+  @override
+  String get settings_category_general => '常规与语言';
+
+  @override
+  String get settings_category_chat => '聊天与会话';
+
+  @override
+  String get settings_category_device => '设备与快捷键';
+
+  @override
+  String get settings_category_connections => '连接与模型';
+
+  @override
+  String get settings_category_security => '隐私与备份';
+
+  @override
+  String get settings_category_about => '关于与帮助';
+
+  @override
+  String get settings_reopen_chat => '返回网关时恢复上次聊天';
+
+  @override
+  String get settings_reopen_chat_hint => '冷启动时打开欢迎页面。链接和通知会打开指定的聊天。';
+
+  @override
+  String get settings_danger => '危险操作';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -29570,6 +29603,39 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get ng_slash_suggestions_skill => '技能';
+
+  @override
+  String get settings_classic_title => 'Classic 设置';
+
+  @override
+  String get settings_nextgen_title => 'NextGen 设置';
+
+  @override
+  String get settings_category_general => '常规与语言';
+
+  @override
+  String get settings_category_chat => '聊天与会话';
+
+  @override
+  String get settings_category_device => '设备与快捷键';
+
+  @override
+  String get settings_category_connections => '连接与模型';
+
+  @override
+  String get settings_category_security => '隐私与备份';
+
+  @override
+  String get settings_category_about => '关于与帮助';
+
+  @override
+  String get settings_reopen_chat => '返回网关时恢复上次聊天';
+
+  @override
+  String get settings_reopen_chat_hint => '冷启动时打开欢迎页面。链接和通知会打开指定的聊天。';
+
+  @override
+  String get settings_danger => '危险操作';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -44362,4 +44428,37 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get ng_slash_suggestions_skill => '技能';
+
+  @override
+  String get settings_classic_title => 'Classic 設定';
+
+  @override
+  String get settings_nextgen_title => 'NextGen 設定';
+
+  @override
+  String get settings_category_general => '一般與語言';
+
+  @override
+  String get settings_category_chat => '聊天與工作階段';
+
+  @override
+  String get settings_category_device => '裝置與快捷鍵';
+
+  @override
+  String get settings_category_connections => '連線與模型';
+
+  @override
+  String get settings_category_security => '隱私與備份';
+
+  @override
+  String get settings_category_about => '關於與說明';
+
+  @override
+  String get settings_reopen_chat => '返回閘道時還原上次聊天';
+
+  @override
+  String get settings_reopen_chat_hint => '冷啟動時開啟歡迎頁面。連結和通知會開啟指定的聊天。';
+
+  @override
+  String get settings_danger => '危險操作';
 }

@@ -768,6 +768,7 @@ class _PetdexSettingsState extends State<PetdexSettings> {
         mainAxisSize: MainAxisSize.min,
         children: [
           SwitchListTile.adaptive(
+            key: const ValueKey('presentation-pet-enabled'),
             contentPadding: EdgeInsets.zero,
             title: Text(context.sharedL10n.appearance_pet_companion),
             subtitle: Text(context.sharedL10n.appearance_pet_companion_hint),

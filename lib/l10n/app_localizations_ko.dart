@@ -15082,4 +15082,38 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ng_slash_suggestions_skill => '스킬';
+
+  @override
+  String get settings_classic_title => 'Classic 설정';
+
+  @override
+  String get settings_nextgen_title => 'NextGen 설정';
+
+  @override
+  String get settings_category_general => '일반 및 언어';
+
+  @override
+  String get settings_category_chat => '채팅 및 세션';
+
+  @override
+  String get settings_category_device => '기기 및 단축키';
+
+  @override
+  String get settings_category_connections => '연결 및 모델';
+
+  @override
+  String get settings_category_security => '개인정보 및 백업';
+
+  @override
+  String get settings_category_about => '정보 및 도움말';
+
+  @override
+  String get settings_reopen_chat => '게이트웨이로 돌아갈 때 마지막 채팅 복원';
+
+  @override
+  String get settings_reopen_chat_hint =>
+      '앱을 새로 시작하면 환영 화면이 열립니다. 링크와 알림은 요청된 채팅을 엽니다.';
+
+  @override
+  String get settings_danger => '위험 구역';
 }

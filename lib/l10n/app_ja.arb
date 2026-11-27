@@ -7270,5 +7270,16 @@
   "ng_slash_suggestions_loading": "コマンドを読み込み中…",
   "ng_slash_suggestions_empty": "一致するコマンドはありません",
   "ng_slash_suggestions_label": "コマンドの候補",
-  "ng_slash_suggestions_skill": "スキル"
+  "ng_slash_suggestions_skill": "スキル",
+  "settings_classic_title": "Classic 設定",
+  "settings_nextgen_title": "NextGen 設定",
+  "settings_category_general": "一般と言語",
+  "settings_category_chat": "チャットとセッション",
+  "settings_category_device": "デバイスとショートカット",
+  "settings_category_connections": "接続とモデル",
+  "settings_category_security": "プライバシーとバックアップ",
+  "settings_category_about": "アプリ情報とヘルプ",
+  "settings_reopen_chat": "ゲートウェイに戻るときに最後のチャットを復元",
+  "settings_reopen_chat_hint": "新規起動時はようこそ画面が開きます。リンクや通知からは指定されたチャットが開きます。",
+  "settings_danger": "重要な操作"
 }

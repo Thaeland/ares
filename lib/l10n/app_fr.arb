@@ -7270,5 +7270,16 @@
   "ng_slash_suggestions_loading": "Chargement des commandes…",
   "ng_slash_suggestions_empty": "Aucune commande correspondante",
   "ng_slash_suggestions_label": "Suggestions de commandes",
-  "ng_slash_suggestions_skill": "Compétence"
+  "ng_slash_suggestions_skill": "Compétence",
+  "settings_classic_title": "Paramètres Classic",
+  "settings_nextgen_title": "Paramètres NextGen",
+  "settings_category_general": "Général et langue",
+  "settings_category_chat": "Discussion et sessions",
+  "settings_category_device": "Appareil et raccourcis",
+  "settings_category_connections": "Connexions et modèles",
+  "settings_category_security": "Confidentialité et sauvegarde",
+  "settings_category_about": "À propos et aide",
+  "settings_reopen_chat": "Restaurer la dernière discussion au retour vers une passerelle",
+  "settings_reopen_chat_hint": "Un démarrage à froid ouvre l’accueil. Les liens et notifications ouvrent la discussion demandée.",
+  "settings_danger": "Zone de danger"
 }

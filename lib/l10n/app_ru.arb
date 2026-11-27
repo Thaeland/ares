@@ -7270,5 +7270,16 @@
   "ng_slash_suggestions_loading": "Загрузка команд…",
   "ng_slash_suggestions_empty": "Нет подходящих команд",
   "ng_slash_suggestions_label": "Предлагаемые команды",
-  "ng_slash_suggestions_skill": "Навык"
+  "ng_slash_suggestions_skill": "Навык",
+  "settings_classic_title": "Настройки Classic",
+  "settings_nextgen_title": "Настройки NextGen",
+  "settings_category_general": "Общие настройки и язык",
+  "settings_category_chat": "Чаты и сеансы",
+  "settings_category_device": "Устройство и сочетания клавиш",
+  "settings_category_connections": "Подключения и модели",
+  "settings_category_security": "Конфиденциальность и резервные копии",
+  "settings_category_about": "О приложении и справка",
+  "settings_reopen_chat": "Восстанавливать последний чат при возврате к шлюзу",
+  "settings_reopen_chat_hint": "При холодном запуске открывается экран приветствия. Ссылки и уведомления открывают запрошенный чат.",
+  "settings_danger": "Опасные действия"
 }

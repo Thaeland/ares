@@ -1,3 +1,5 @@
+import 'support/settings_navigation.dart';
+import 'package:hermes_android/core/widgets/theme_palette_picker.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -35,7 +37,7 @@ void main() {
         .setMockMethodCallHandler(const MethodChannel('flutter_tts'), null);
   });
 
-  testWidgets('settings that only change the classic interface say so', (
+  testWidgets('Classic categories contain live Classic controls and shared appearance', (
     tester,
   ) async {
     final prefs = await SharedPreferences.getInstance();
@@ -64,43 +66,19 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    // Drive the settings list's own vertical Scrollable. The list builds
-    // lazily and corrects its offset as the tall appearance panel and the
-    // voice section are laid out; with 300 px drags the Session Sources
-    // header was never on screen between two drags and the run hit the end
-    // of the list. Short drags, with enough of them to cross the whole
-    // screen, keep every header on screen for at least one check.
-    final scroll = find
-        .descendant(
-          of: find.byType(SettingsScreen),
-          matching: find.byWidgetPredicate(
-            (widget) =>
-                widget is Scrollable &&
-                widget.axisDirection == AxisDirection.down,
-          ),
-        )
-        .first;
-    for (final section in ['Appearance', 'Voice', 'Session Sources']) {
-      final chip = find.byKey(ValueKey('classic-only-$section'));
-      // Short steps: the lazy list re-estimates extents while scrolling, and
-      // a 300 px step can carry a short section header past the viewport
-      // (the notification rows also grew the list).
-      await tester.scrollUntilVisible(
-        chip,
-        100,
-        scrollable: scroll,
-        maxScrolls: 200,
-      );
-      expect(chip, findsOneWidget, reason: section);
-      expect(
-        find.descendant(
-          of: chip,
-          matching: find.text('Classic interface only'),
-        ),
-        findsOneWidget,
-      );
-    }
-    // Text size changes both interfaces, so it is not marked.
-    expect(find.byKey(const ValueKey('classic-only-Text size')), findsNothing);
+    expect(find.text('Classic Settings'), findsOneWidget);
+    expect(find.byKey(const ValueKey('settings-control-ng.theme')), findsNothing);
+    await openSettingsCategory(tester, 'appearance');
+    expect(find.byType(ThemeAppearanceSettings), findsOneWidget);
+    expect(find.byKey(const ValueKey('settings-control-text-size')), findsOneWidget);
+    expect(find.byKey(const ValueKey('settings-control-classic.chat.density')), findsNothing);
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+    await openSettingsCategory(tester, 'chat');
+    expect(find.byKey(const ValueKey('settings-control-classic.chat.density')), findsOneWidget);
+    expect(find.byKey(const ValueKey('settings-control-classic.session.sources')), findsOneWidget);
+    expect(find.byKey(const ValueKey('ng-reopen-chat')), findsNothing);
+    expect(prefs.getBool('nextgen_enabled'), isNot(true));
+    expect(tester.takeException(), isNull);
   });
 }

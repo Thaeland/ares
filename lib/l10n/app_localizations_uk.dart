@@ -15681,4 +15681,39 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get ng_slash_suggestions_skill => 'Навичка';
+
+  @override
+  String get settings_classic_title => 'Налаштування Classic';
+
+  @override
+  String get settings_nextgen_title => 'Налаштування NextGen';
+
+  @override
+  String get settings_category_general => 'Загальні налаштування й мова';
+
+  @override
+  String get settings_category_chat => 'Чати й сеанси';
+
+  @override
+  String get settings_category_device => 'Пристрій і сполучення клавіш';
+
+  @override
+  String get settings_category_connections => 'Підключення й моделі';
+
+  @override
+  String get settings_category_security => 'Конфіденційність і резервні копії';
+
+  @override
+  String get settings_category_about => 'Про застосунок і довідка';
+
+  @override
+  String get settings_reopen_chat =>
+      'Відновлювати останній чат після повернення до шлюзу';
+
+  @override
+  String get settings_reopen_chat_hint =>
+      'За холодного запуску відкривається екран привітання. Посилання та сповіщення відкривають запитаний чат.';
+
+  @override
+  String get settings_danger => 'Небезпечні дії';
 }

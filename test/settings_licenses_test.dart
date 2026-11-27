@@ -1,3 +1,4 @@
+import 'support/settings_navigation.dart';
 import 'dart:async';
 import 'dart:io';
 
@@ -38,6 +39,7 @@ Future<SharedPreferences> _openOfflineSettings(WidgetTester tester) async {
     ),
   );
   await tester.pumpAndSettle();
+  await openSettingsCategory(tester, 'about');
   expect(find.text('Failed to load settings'), findsNothing);
   return prefs;
 }

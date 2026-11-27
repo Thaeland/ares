@@ -7270,5 +7270,16 @@
   "ng_slash_suggestions_loading": "Befehle werden geladen…",
   "ng_slash_suggestions_empty": "Keine passenden Befehle",
   "ng_slash_suggestions_label": "Befehlsvorschläge",
-  "ng_slash_suggestions_skill": "Skill"
+  "ng_slash_suggestions_skill": "Skill",
+  "settings_classic_title": "Classic-Einstellungen",
+  "settings_nextgen_title": "NextGen-Einstellungen",
+  "settings_category_general": "Allgemein & Sprache",
+  "settings_category_chat": "Chat & Sitzungen",
+  "settings_category_device": "Gerät & Tastenkürzel",
+  "settings_category_connections": "Verbindungen & Modelle",
+  "settings_category_security": "Datenschutz & Sicherung",
+  "settings_category_about": "Info & Hilfe",
+  "settings_reopen_chat": "Letzten Chat bei Rückkehr zu einem Gateway wiederherstellen",
+  "settings_reopen_chat_hint": "Beim Kaltstart erscheint die Begrüßungsseite. Links und Benachrichtigungen öffnen den angeforderten Chat.",
+  "settings_danger": "Gefahrenbereich"
 }

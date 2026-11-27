@@ -7386,5 +7386,16 @@
   "ng_slash_suggestions_loading": "Завантаження команд…",
   "ng_slash_suggestions_empty": "Немає відповідних команд",
   "ng_slash_suggestions_label": "Запропоновані команди",
-  "ng_slash_suggestions_skill": "Навичка"
+  "ng_slash_suggestions_skill": "Навичка",
+  "settings_classic_title": "Налаштування Classic",
+  "settings_nextgen_title": "Налаштування NextGen",
+  "settings_category_general": "Загальні налаштування й мова",
+  "settings_category_chat": "Чати й сеанси",
+  "settings_category_device": "Пристрій і сполучення клавіш",
+  "settings_category_connections": "Підключення й моделі",
+  "settings_category_security": "Конфіденційність і резервні копії",
+  "settings_category_about": "Про застосунок і довідка",
+  "settings_reopen_chat": "Відновлювати останній чат після повернення до шлюзу",
+  "settings_reopen_chat_hint": "За холодного запуску відкривається екран привітання. Посилання та сповіщення відкривають запитаний чат.",
+  "settings_danger": "Небезпечні дії"
 }

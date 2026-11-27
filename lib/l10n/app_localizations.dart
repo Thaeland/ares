@@ -25355,6 +25355,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Skill'**
   String get ng_slash_suggestions_skill;
+
+  /// No description provided for @settings_classic_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Classic Settings'**
+  String get settings_classic_title;
+
+  /// No description provided for @settings_nextgen_title.
+  ///
+  /// In en, this message translates to:
+  /// **'NextGen Settings'**
+  String get settings_nextgen_title;
+
+  /// No description provided for @settings_category_general.
+  ///
+  /// In en, this message translates to:
+  /// **'General & language'**
+  String get settings_category_general;
+
+  /// No description provided for @settings_category_chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat & sessions'**
+  String get settings_category_chat;
+
+  /// No description provided for @settings_category_device.
+  ///
+  /// In en, this message translates to:
+  /// **'Device & shortcuts'**
+  String get settings_category_device;
+
+  /// No description provided for @settings_category_connections.
+  ///
+  /// In en, this message translates to:
+  /// **'Connections & models'**
+  String get settings_category_connections;
+
+  /// No description provided for @settings_category_security.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & backup'**
+  String get settings_category_security;
+
+  /// No description provided for @settings_category_about.
+  ///
+  /// In en, this message translates to:
+  /// **'About & help'**
+  String get settings_category_about;
+
+  /// No description provided for @settings_reopen_chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore last chat when returning to a gateway'**
+  String get settings_reopen_chat;
+
+  /// No description provided for @settings_reopen_chat_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Cold starts open the welcome screen. Links and notifications open the requested chat.'**
+  String get settings_reopen_chat_hint;
+
+  /// No description provided for @settings_danger.
+  ///
+  /// In en, this message translates to:
+  /// **'Danger zone'**
+  String get settings_danger;
 }
 
 class _AppLocalizationsDelegate

@@ -15492,4 +15492,38 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get ng_slash_suggestions_skill => 'مهارة';
+
+  @override
+  String get settings_classic_title => 'إعدادات Classic';
+
+  @override
+  String get settings_nextgen_title => 'إعدادات NextGen';
+
+  @override
+  String get settings_category_general => 'عام واللغة';
+
+  @override
+  String get settings_category_chat => 'الدردشة والجلسات';
+
+  @override
+  String get settings_category_device => 'الجهاز والاختصارات';
+
+  @override
+  String get settings_category_connections => 'الاتصالات والنماذج';
+
+  @override
+  String get settings_category_security => 'الخصوصية والنسخ الاحتياطي';
+
+  @override
+  String get settings_category_about => 'حول التطبيق والمساعدة';
+
+  @override
+  String get settings_reopen_chat => 'استعادة آخر دردشة عند العودة إلى بوابة';
+
+  @override
+  String get settings_reopen_chat_hint =>
+      'يفتح التشغيل الأول شاشة الترحيب. تفتح الروابط والإشعارات الدردشة المطلوبة.';
+
+  @override
+  String get settings_danger => 'إجراءات حساسة';
 }

@@ -1,3 +1,4 @@
+import 'support/settings_navigation.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -145,6 +146,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
+      await openSettingsCategory(tester, 'notifications');
       final tile = find.byKey(const ValueKey('completion-sound'));
       final scroll = find
           .descendant(

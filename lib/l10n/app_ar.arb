@@ -8216,5 +8216,16 @@
   "ng_slash_suggestions_loading": "جارٍ تحميل الأوامر…",
   "ng_slash_suggestions_empty": "لا توجد أوامر مطابقة",
   "ng_slash_suggestions_label": "اقتراحات الأوامر",
-  "ng_slash_suggestions_skill": "مهارة"
+  "ng_slash_suggestions_skill": "مهارة",
+  "settings_classic_title": "إعدادات Classic",
+  "settings_nextgen_title": "إعدادات NextGen",
+  "settings_category_general": "عام واللغة",
+  "settings_category_chat": "الدردشة والجلسات",
+  "settings_category_device": "الجهاز والاختصارات",
+  "settings_category_connections": "الاتصالات والنماذج",
+  "settings_category_security": "الخصوصية والنسخ الاحتياطي",
+  "settings_category_about": "حول التطبيق والمساعدة",
+  "settings_reopen_chat": "استعادة آخر دردشة عند العودة إلى بوابة",
+  "settings_reopen_chat_hint": "يفتح التشغيل الأول شاشة الترحيب. تفتح الروابط والإشعارات الدردشة المطلوبة.",
+  "settings_danger": "إجراءات حساسة"
 }

@@ -8,22 +8,14 @@ import 'package:flutter/material.dart';
 import '../../core/parked_automotive.dart';
 import '../../core/models/connection.dart';
 import '../../core/screens/settings_screen.dart';
-import '../../core/presentation/presentation_settings.dart';
-import '../../core/services/app_licenses.dart';
+import '../../core/settings/settings_browser.dart';
 import '../../core/services/background_work_prefs.dart';
 import '../../core/services/notification_prefs.dart';
 import '../../core/widgets/completion_sound_settings.dart';
-import '../../core/widgets/keep_awake_settings_card.dart';
-import '../../core/widgets/desktop_shortcuts.dart'
-    show desktopShortcutsAvailable;
-import '../../core/widgets/keyboard_shortcuts_settings_card.dart';
 import '../../core/utils/platform_capabilities.dart';
 import '../../core/services/turn_notification_service.dart';
 import '../../core/services/hermes_sign_in.dart';
-import '../../core/services/legal_links.dart';
 import '../data/connection_check.dart';
-import '../../core/services/auto_speak_replies.dart';
-import '../../core/services/barge_in_preference.dart';
 import '../../core/widgets/gateway_wake_controls.dart';
 import '../../core/widgets/voice_live_controls.dart';
 import '../nextgen_preferences.dart';
@@ -32,11 +24,11 @@ import 'models_page.dart';
 import 'nextgen_scope.dart';
 import 'widgets.dart';
 import '../nextgen_l10n.dart';
-import '../../core/desktop/desktop_integration_card.dart';
-import '../../core/desktop/desktop_os.dart';
 
 class NgSettingsPage extends StatefulWidget {
-  const NgSettingsPage({super.key});
+  const NgSettingsPage({super.key, this.initialCategory, this.initialTarget});
+  final SettingsCategory? initialCategory;
+  final String? initialTarget;
 
   @override
   State<NgSettingsPage> createState() => _NgSettingsPageState();
@@ -46,15 +38,27 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
   ConnectionReport? _report;
   bool _checking = false;
   String? _signedInAs;
+  Object? _owner;
+  int _generation = 0;
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _loadMe());
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final gateway = NgScope.of(context).gateway;
+    if (identical(_owner, gateway)) return;
+    _owner = gateway;
+    _generation++;
+    _signedInAs = null;
+    _report = null;
+    _checking = false;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && identical(_owner, gateway)) _loadMe();
+    });
   }
 
   Future<void> _loadMe() async {
     final gateway = NgScope.of(context).gateway;
+    final generation = _generation;
     unawaited(gateway.voiceLiveMode.refresh());
     if (gateway.state.isConnected) {
       unawaited(gateway.wakeWord.refreshStatus());
@@ -62,7 +66,7 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
     }
     try {
       final res = await gateway.dashboard.apiRequest('GET', 'auth/me');
-      if (res.statusCode == 200 && mounted) {
+      if (res.statusCode == 200 && mounted && generation == _generation) {
         final user = AuthUser.fromJson(
           Map<String, dynamic>.from(jsonDecode(res.body) as Map),
         );
@@ -75,6 +79,7 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
 
   Future<void> _check() async {
     final conn = NgScope.of(context).connection;
+    final generation = _generation;
     setState(() {
       _checking = true;
       _report = null;
@@ -82,10 +87,10 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
     final report = await runConnectionCheck(
       conn,
       onProgress: (r) {
-        if (mounted) setState(() => _report = r);
+        if (mounted && generation == _generation) setState(() => _report = r);
       },
     );
-    if (!mounted) return;
+    if (!mounted || generation != _generation) return;
     setState(() {
       _checking = false;
       _report = report;
@@ -94,18 +99,122 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final c = NgColors.of(context);
     final scope = NgScope.of(context);
     final conn = scope.connection;
-    final look = NextGenLook.instance;
-    final brightness = Theme.of(context).brightness;
-    return NgPage(
-      title: ngL.ng_settings,
-      body: ListenableBuilder(
-        listenable: look,
-        builder: (context, _) => ListView(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
-          children: [
+    return ListenableBuilder(listenable: NextGenLook.instance, builder: (context, _) {
+      final c = NgColors.of(context);
+      final look = NextGenLook.instance;
+      final brightness = Theme.of(context).brightness;
+      return SettingsScreen(
+        connection: conn, dashboardClient: scope.gateway.dashboard,
+        connectionManager: scope.connManager, mode: SettingsMode.nextgen,
+        initialCategory: widget.initialCategory,
+        initialTarget: widget.initialTarget,
+        extraItems: [
+          SettingsItem(id: 'ng.theme', category: SettingsCategory.appearance,
+            scope: SettingsScope.nextgen, title: (l) => l.ng_theme,
+            summary: (l) => '${l.ng_theme}: ${switch (look.themeMode) { ThemeMode.light => l.ng_light, ThemeMode.dark => l.ng_dark, ThemeMode.system => l.ng_system }}',
+            builder: (_) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            NgSectionLabel(ngL.ng_appearance),
+            NgCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    ngL.ng_theme,
+                    style: NgType.label.copyWith(color: c.text2),
+                  ),
+                  const SizedBox(height: 8),
+                  NgSegmented<ThemeMode>(
+                    values: const [
+                      ThemeMode.system,
+                      ThemeMode.light,
+                      ThemeMode.dark,
+                    ],
+                    selected: look.themeMode,
+                    labelOf: (m) => switch (m) {
+                      ThemeMode.system => ngL.ng_system,
+                      ThemeMode.light => ngL.ng_light,
+                      ThemeMode.dark => ngL.ng_dark,
+                    },
+                    onChanged: (m) =>
+                        NextGenPreferences.setThemeMode(scope.prefs, m),
+                  ),
+                  const SizedBox(height: 18),
+                  Text(
+                    ngL.ng_accent,
+                    style: NgType.label.copyWith(color: c.text2),
+                  ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    children: [
+                      for (final a in NgAccent.values)
+                        Semantics(selected: a == look.accent,
+                          child: IconButton(
+                            tooltip: switch (a) {
+                              NgAccent.blue => ngL.theme_palette_blue,
+                              NgAccent.violet => ngL.theme_palette_purple,
+                              NgAccent.green => ngL.theme_palette_green,
+                              NgAccent.orange => ngL.theme_palette_orange,
+                              NgAccent.pink => ngL.theme_palette_pink,
+                              NgAccent.teal => ngL.theme_palette_teal,
+                            },
+                            constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+                            onPressed: () => NextGenPreferences.setAccent(scope.prefs, a),
+                            icon: CircleAvatar(radius: 18,
+                              backgroundColor: ngAccentSwatch(a, brightness),
+                              child: a == look.accent ? Icon(Icons.check, size: 18, color: c.onAccent) : null),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(ngL.ng_pure_black),
+                    subtitle: Text(ngL.ng_dark_theme_uses_true_black_oled),
+                    value: look.pureBlack,
+                    onChanged: (v) =>
+                        NextGenPreferences.setPureBlack(scope.prefs, v),
+                  ),
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(ngL.ng_glow),
+                    subtitle: Text(ngL.ng_soft_accent_light_behind_each_screen),
+                    value: look.glow,
+                    onChanged: (v) =>
+                        NextGenPreferences.setGlow(scope.prefs, v),
+                  ),
+                ],
+              ),
+            ),
+            ])),
+          SettingsItem(id: 'ng.chat.reopen', category: SettingsCategory.chat,
+            scope: SettingsScope.nextgen, title: (l) => l.settings_reopen_chat,
+            builder: (_) => Card(child: SwitchListTile(
+              key: const ValueKey('ng-reopen-chat'),
+              title: Text(ngL.settings_reopen_chat), subtitle: Text(ngL.settings_reopen_chat_hint),
+              value: NextGenPreferences.reopenLastChat(scope.prefs),
+              onChanged: (value) async {
+                await scope.prefs.setBool(NextGenPreferences.reopenKey, value);
+                if (mounted) setState(() {});
+              },
+            ))),
+          if (!isParkedAutomotive)
+            SettingsItem(id: 'voice.gateway', category: SettingsCategory.voice,
+              title: (l) => l.wake_word_title,
+              builder: (_) => NgCard(child: Column(children: [
+                ListenableBuilder(listenable: scope.gateway.voiceLiveMode,
+                  builder: (context, _) => scope.gateway.voiceLiveMode.hasStatus
+                    ? VoiceEngineSettingsPanel(controller: scope.gateway.voiceLiveMode)
+                    : const SizedBox.shrink()),
+                GatewayWakeSettingsPanel(controller: scope.gateway.wakeWord),
+              ]))),
+          SettingsItem(id: 'ng.connection', category: SettingsCategory.connections,
+            scope: SettingsScope.nextgen, title: (l) => l.ng_saved_gateways,
+            builder: (_) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             NgSectionLabel(ngL.ng_gateway_2),
             NgCard(
               child: Column(
@@ -175,12 +284,6 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
                         icon: const Icon(Icons.login, size: 18),
                         label: Text(ngL.ng_sign_in_again_2),
                       ),
-                      TextButton.icon(
-                        style: TextButton.styleFrom(foregroundColor: c.danger),
-                        onPressed: () => _signOut(conn),
-                        icon: const Icon(Icons.logout, size: 18),
-                        label: Text(ngL.ng_sign_out),
-                      ),
                     ],
                   ),
                 ],
@@ -220,6 +323,10 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
                 ),
               ),
             ],
+            ])),
+          SettingsItem(id: 'models', category: SettingsCategory.connections,
+            title: (l) => l.ng_model_management,
+            builder: (_) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             NgSectionLabel(ngL.ng_models_and_providers),
             NgCard(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -238,223 +345,32 @@ class _NgSettingsPageState extends State<NgSettingsPage> {
                 ),
               ),
             ),
-            NgSectionLabel(ngL.ng_interface),
-            KeepAwakeSettingsCard(preferences: scope.prefs),
-            const SizedBox(height: 12),
-            if (isDesktopOs) ...[
-              DesktopIntegrationCard(preferences: scope.prefs),
-              const SizedBox(height: 12),
-            ],
-            if (desktopShortcutsAvailable()) ...[
-              KeyboardShortcutsSettingsCard(preferences: scope.prefs),
-              const SizedBox(height: 12),
-            ],
-            NgSectionLabel(ngL.ng_appearance),
-            NgCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    ngL.ng_theme,
-                    style: NgType.label.copyWith(color: c.text2),
-                  ),
-                  const SizedBox(height: 8),
-                  NgSegmented<ThemeMode>(
-                    values: const [
-                      ThemeMode.system,
-                      ThemeMode.light,
-                      ThemeMode.dark,
-                    ],
-                    selected: look.themeMode,
-                    labelOf: (m) => switch (m) {
-                      ThemeMode.system => ngL.ng_system,
-                      ThemeMode.light => ngL.ng_light,
-                      ThemeMode.dark => ngL.ng_dark,
-                    },
-                    onChanged: (m) =>
-                        NextGenPreferences.setThemeMode(scope.prefs, m),
-                  ),
-                  const SizedBox(height: 18),
-                  Text(
-                    ngL.ng_accent,
-                    style: NgType.label.copyWith(color: c.text2),
-                  ),
-                  const SizedBox(height: 10),
-                  Wrap(
-                    spacing: 12,
-                    runSpacing: 12,
-                    children: [
-                      for (final a in NgAccent.values)
-                        GestureDetector(
-                          onTap: () =>
-                              NextGenPreferences.setAccent(scope.prefs, a),
-                          child: Container(
-                            width: 36,
-                            height: 36,
-                            decoration: BoxDecoration(
-                              color: ngAccentSwatch(a, brightness),
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: a == look.accent
-                                    ? c.text
-                                    : Colors.transparent,
-                                width: 2.5,
-                              ),
-                            ),
-                            child: a == look.accent
-                                ? Icon(Icons.check, size: 18, color: c.onAccent)
-                                : null,
-                          ),
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(ngL.ng_pure_black),
-                    subtitle: Text(ngL.ng_dark_theme_uses_true_black_oled),
-                    value: look.pureBlack,
-                    onChanged: (v) =>
-                        NextGenPreferences.setPureBlack(scope.prefs, v),
-                  ),
-                  SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(ngL.ng_glow),
-                    subtitle: Text(ngL.ng_soft_accent_light_behind_each_screen),
-                    value: look.glow,
-                    onChanged: (v) =>
-                        NextGenPreferences.setGlow(scope.prefs, v),
-                  ),
-                  PresentationSettingsPanel(preferences: scope.prefs),
-                ],
-              ),
-            ),
-            NgSectionLabel(ngL.ng_auto_read_replies_title),
-            NgCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ValueListenableBuilder<bool>(
-                    valueListenable: autoSpeakRepliesEnabled,
-                    builder: (context, enabled, _) => SwitchListTile(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-                      title: Text(ngL.ng_auto_read_replies_title),
-                      subtitle: Text(ngL.ng_auto_read_replies_subtitle),
-                      value: enabled,
-                      onChanged: (v) =>
-                          unawaited(AutoSpeakRepliesStore.setEnabled(v)),
-                    ),
-                  ),
-                  ValueListenableBuilder<bool>(
-                    valueListenable: bargeInEnabled,
-                    builder: (context, enabled, _) => SwitchListTile(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-                      title: Text(ngL.ng_barge_in_title),
-                      subtitle: Text(ngL.ng_barge_in_subtitle),
-                      value: enabled,
-                      onChanged: (v) =>
-                          unawaited(BargeInPreferenceStore.setEnabled(v)),
-                    ),
-                  ),
-                  const Divider(height: 16),
-                  ListenableBuilder(
-                    listenable: scope.gateway.voiceLiveMode,
-                    builder: (context, _) =>
-                        scope.gateway.voiceLiveMode.hasStatus
-                        ? Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 4,
-                                  vertical: 4,
-                                ),
-                                child: VoiceEngineSettingsPanel(
-                                  controller: scope.gateway.voiceLiveMode,
-                                ),
-                              ),
-                              const Divider(height: 16),
-                            ],
-                          )
-                        : const SizedBox.shrink(),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 4,
-                      vertical: 4,
-                    ),
-                    child: GatewayWakeSettingsPanel(
-                      controller: scope.gateway.wakeWord,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (!isParkedAutomotive) ...[
-              NgSectionLabel(ngL.ng_notifications),
-              const NgNotificationSettings(),
-            ],
-            NgSectionLabel(ngL.ng_interface),
-            NgCard(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              child: Column(
-                children: [
-                  SwitchListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-                    title: Text(ngL.setup_interface_nextgen),
-                    subtitle: Text(ngL.ng_the_new_interface_turn_off_to),
-                    value: true,
-                    onChanged: (v) =>
-                        NextGenPreferences.setEnabled(scope.prefs, v),
-                  ),
-                  NgRow(
-                    icon: Icons.tune,
-                    title: ngL.ng_more_settings,
-                    subtitle: isParkedAutomotive
-                        ? null
-                        : ngL.ng_voice_notifications_language_backups_and_the,
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) => SettingsScreen(connection: conn),
-                      ),
-                    ),
-                  ),
-                  NgRow(
-                    key: const ValueKey('ng-privacy-policy-link'),
-                    icon: Icons.privacy_tip_outlined,
-                    title: ngL.privacy_policy,
-                    onTap: openAresPrivacyPolicy,
-                  ),
-                  NgRow(
-                    icon: Icons.description_outlined,
-                    title: ngL.ng_licences,
-                    onTap: () {
-                      registerAppLicenses();
-                      showLicensePage(
-                        context: context,
-                        applicationName: ngL.hermes_agent,
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+            ])),
+          SettingsItem(id: 'ng.connection.sign-out', category: SettingsCategory.security,
+            scope: SettingsScope.nextgen, title: (l) => l.ng_sign_out,
+            builder: (_) => NgCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+              children: [Text(ngL.settings_danger, style: NgType.heading.copyWith(color: c.danger)),
+                const SizedBox(height: 8),
+                TextButton.icon(style: TextButton.styleFrom(foregroundColor: c.danger),
+                  onPressed: () => _signOut(conn), icon: const Icon(Icons.logout),
+                  label: Text(ngL.ng_sign_out_of(conn.label))),
+              ]))),
+        ],
+      );
+    });
   }
 
   Future<void> _signOut(SavedConnection conn) async {
+    final generation = _generation;
+    final scope = NgScope.of(context);
     final ok = await ngConfirm(
       context,
       title: ngL.ng_sign_out_of(conn.label),
       body: ngL.ng_this_gateway_and_its_saved_sign,
       confirm: ngL.ng_sign_out,
     );
-    if (!ok || !mounted) return;
-    await NgScope.of(context).signOut(conn);
+    if (!ok || !mounted || generation != _generation) return;
+    await scope.signOut(conn);
   }
 
   Widget _kv(NgColors c, String k, String v) => Padding(

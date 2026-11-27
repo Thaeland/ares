@@ -15688,4 +15688,40 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get ng_slash_suggestions_skill => 'Навык';
+
+  @override
+  String get settings_classic_title => 'Настройки Classic';
+
+  @override
+  String get settings_nextgen_title => 'Настройки NextGen';
+
+  @override
+  String get settings_category_general => 'Общие настройки и язык';
+
+  @override
+  String get settings_category_chat => 'Чаты и сеансы';
+
+  @override
+  String get settings_category_device => 'Устройство и сочетания клавиш';
+
+  @override
+  String get settings_category_connections => 'Подключения и модели';
+
+  @override
+  String get settings_category_security =>
+      'Конфиденциальность и резервные копии';
+
+  @override
+  String get settings_category_about => 'О приложении и справка';
+
+  @override
+  String get settings_reopen_chat =>
+      'Восстанавливать последний чат при возврате к шлюзу';
+
+  @override
+  String get settings_reopen_chat_hint =>
+      'При холодном запуске открывается экран приветствия. Ссылки и уведомления открывают запрошенный чат.';
+
+  @override
+  String get settings_danger => 'Опасные действия';
 }

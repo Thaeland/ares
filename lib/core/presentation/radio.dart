@@ -475,6 +475,7 @@ class AresRadioSettingsBody extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SwitchListTile(
+          key: const ValueKey('presentation-radio-enabled'),
           value: radio.enabled,
           onChanged: radio.setEnabled,
           title: Text(context.sharedL10n.appearance_radio),

@@ -1,0 +1,697 @@
+[
+  {
+    "id": "interface.mode",
+    "category": "general",
+    "scope": "shared"
+  },
+  {
+    "id": "language",
+    "category": "general",
+    "scope": "shared"
+  },
+  {
+    "id": "classic.theme.mode",
+    "category": "appearance",
+    "scope": "classic"
+  },
+  {
+    "id": "classic.theme.palette",
+    "category": "appearance",
+    "scope": "classic"
+  },
+  {
+    "id": "ng.theme.mode",
+    "category": "appearance",
+    "scope": "nextgen"
+  },
+  {
+    "id": "ng.theme.accent",
+    "category": "appearance",
+    "scope": "nextgen"
+  },
+  {
+    "id": "ng.theme.black",
+    "category": "appearance",
+    "scope": "nextgen"
+  },
+  {
+    "id": "ng.theme.glow",
+    "category": "appearance",
+    "scope": "nextgen"
+  },
+  {
+    "id": "presentation.theme.import",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.theme.select",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.theme.remove",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.theme.limit-dialog",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.font.chat",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.font.terminal",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.direction",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.bubble",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.embeds",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.embeds.reset",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.reactions",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.hearts",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.pet.enabled",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.pet.choose",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.pet.import",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.pet.remove",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.pet.roam",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.pet.popout",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.radio.enabled",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.radio.station",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.radio.volume",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.radio.pin",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.radio.popout",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.search",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.tour",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.tips.dismiss",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.tips.restore",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "presentation.window.unavailable",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "text-size",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "text-size.picker",
+    "category": "appearance",
+    "scope": "shared"
+  },
+  {
+    "id": "classic.chat.density",
+    "category": "chat",
+    "scope": "classic"
+  },
+  {
+    "id": "classic.chat.verbose",
+    "category": "chat",
+    "scope": "classic"
+  },
+  {
+    "id": "classic.session.sources",
+    "category": "chat",
+    "scope": "classic"
+  },
+  {
+    "id": "classic.session.source.acp",
+    "category": "chat",
+    "scope": "classic"
+  },
+  {
+    "id": "classic.session.source.api_server",
+    "category": "chat",
+    "scope": "classic"
+  },
+  {
+    "id": "classic.session.source.cli",
+    "category": "chat",
+    "scope": "classic"
+  },
+  {
+    "id": "classic.session.source.cron",
+    "category": "chat",
+    "scope": "classic"
+  },
+  {
+    "id": "classic.session.source.desktop",
+    "category": "chat",
+    "scope": "classic"
+  },
+  {
+    "id": "classic.session.source.discord",
+    "category": "chat",
+    "scope": "classic"
+  },
+  {
+    "id": "classic.session.source.gateway",
+    "category": "chat",
+    "scope": "classic"
+  },
+  {
+    "id": "classic.session.source.mobile",
+    "category": "chat",
+    "scope": "classic"
+  },
+  {
+    "id": "classic.session.source.signal",
+    "category": "chat",
+    "scope": "classic"
+  },
+  {
+    "id": "classic.session.source.slack",
+    "category": "chat",
+    "scope": "classic"
+  },
+  {
+    "id": "classic.session.source.telegram",
+    "category": "chat",
+    "scope": "classic"
+  },
+  {
+    "id": "classic.session.source.tool",
+    "category": "chat",
+    "scope": "classic"
+  },
+  {
+    "id": "classic.session.source.tui",
+    "category": "chat",
+    "scope": "classic"
+  },
+  {
+    "id": "classic.session.source.whatsapp",
+    "category": "chat",
+    "scope": "classic"
+  },
+  {
+    "id": "voice.reply",
+    "category": "voice",
+    "scope": "shared"
+  },
+  {
+    "id": "voice.reply.picker",
+    "category": "voice",
+    "scope": "shared"
+  },
+  {
+    "id": "classic.voice.handsfree",
+    "category": "voice",
+    "scope": "classic"
+  },
+  {
+    "id": "voice.auto-read",
+    "category": "voice",
+    "scope": "shared"
+  },
+  {
+    "id": "voice.barge-in",
+    "category": "voice",
+    "scope": "shared"
+  },
+  {
+    "id": "voice.engine",
+    "category": "voice",
+    "scope": "shared"
+  },
+  {
+    "id": "voice.wake.enabled",
+    "category": "voice",
+    "scope": "shared"
+  },
+  {
+    "id": "voice.wake.capture",
+    "category": "voice",
+    "scope": "shared"
+  },
+  {
+    "id": "voice.wake.device",
+    "category": "voice",
+    "scope": "shared"
+  },
+  {
+    "id": "voice.wake.rearm",
+    "category": "voice",
+    "scope": "shared"
+  },
+  {
+    "id": "notifications.enabled",
+    "category": "notifications",
+    "scope": "shared"
+  },
+  {
+    "id": "notifications.approval",
+    "category": "notifications",
+    "scope": "shared"
+  },
+  {
+    "id": "notifications.input",
+    "category": "notifications",
+    "scope": "shared"
+  },
+  {
+    "id": "notifications.turnDone",
+    "category": "notifications",
+    "scope": "shared"
+  },
+  {
+    "id": "notifications.turnError",
+    "category": "notifications",
+    "scope": "shared"
+  },
+  {
+    "id": "notifications.backgroundDone",
+    "category": "notifications",
+    "scope": "shared"
+  },
+  {
+    "id": "notifications.credits",
+    "category": "notifications",
+    "scope": "shared"
+  },
+  {
+    "id": "notifications.plugin",
+    "category": "notifications",
+    "scope": "shared"
+  },
+  {
+    "id": "notifications.activity",
+    "category": "notifications",
+    "scope": "shared"
+  },
+  {
+    "id": "notifications.sound",
+    "category": "notifications",
+    "scope": "shared"
+  },
+  {
+    "id": "notifications.sound.picker",
+    "category": "notifications",
+    "scope": "shared"
+  },
+  {
+    "id": "notifications.mute",
+    "category": "notifications",
+    "scope": "shared"
+  },
+  {
+    "id": "notifications.test",
+    "category": "notifications",
+    "scope": "shared"
+  },
+  {
+    "id": "notifications.recent",
+    "category": "notifications",
+    "scope": "shared"
+  },
+  {
+    "id": "notifications.ng-replies",
+    "category": "notifications",
+    "scope": "shared"
+  },
+  {
+    "id": "notifications.ng-requests",
+    "category": "notifications",
+    "scope": "shared"
+  },
+  {
+    "id": "notifications.push",
+    "category": "notifications",
+    "scope": "shared"
+  },
+  {
+    "id": "notifications.push.transport",
+    "category": "notifications",
+    "scope": "shared"
+  },
+  {
+    "id": "notifications.push.retry",
+    "category": "notifications",
+    "scope": "shared"
+  },
+  {
+    "id": "notifications.push.revoke",
+    "category": "notifications",
+    "scope": "shared"
+  },
+  {
+    "id": "background.enabled",
+    "category": "device",
+    "scope": "shared"
+  },
+  {
+    "id": "background.battery",
+    "category": "device",
+    "scope": "shared"
+  },
+  {
+    "id": "device.keep-awake",
+    "category": "device",
+    "scope": "shared"
+  },
+  {
+    "id": "device.keep-awake.picker",
+    "category": "device",
+    "scope": "shared"
+  },
+  {
+    "id": "desktop.tray",
+    "category": "device",
+    "scope": "shared"
+  },
+  {
+    "id": "desktop.close-to-tray",
+    "category": "device",
+    "scope": "shared"
+  },
+  {
+    "id": "desktop.hotkey",
+    "category": "device",
+    "scope": "shared"
+  },
+  {
+    "id": "desktop.hotkey.edit",
+    "category": "device",
+    "scope": "shared"
+  },
+  {
+    "id": "desktop.hotkey.reset",
+    "category": "device",
+    "scope": "shared"
+  },
+  {
+    "id": "shortcuts.rebind",
+    "category": "device",
+    "scope": "shared"
+  },
+  {
+    "id": "shortcuts.reset",
+    "category": "device",
+    "scope": "shared"
+  },
+  {
+    "id": "shortcuts.reset-all",
+    "category": "device",
+    "scope": "shared"
+  },
+  {
+    "id": "shortcuts.editor.modifiers",
+    "category": "device",
+    "scope": "shared"
+  },
+  {
+    "id": "shortcuts.editor.key",
+    "category": "device",
+    "scope": "shared"
+  },
+  {
+    "id": "shortcuts.editor.save",
+    "category": "device",
+    "scope": "shared"
+  },
+  {
+    "id": "connection.info",
+    "category": "connections",
+    "scope": "shared"
+  },
+  {
+    "id": "ng.connection.check",
+    "category": "connections",
+    "scope": "nextgen"
+  },
+  {
+    "id": "ng.connection.sign-in",
+    "category": "connections",
+    "scope": "nextgen"
+  },
+  {
+    "id": "ng.connection.saved",
+    "category": "connections",
+    "scope": "nextgen"
+  },
+  {
+    "id": "ng.connection.add",
+    "category": "connections",
+    "scope": "nextgen"
+  },
+  {
+    "id": "ng.connection.sign-out",
+    "category": "security",
+    "scope": "nextgen"
+  },
+  {
+    "id": "ng.connection.sign-out.confirm",
+    "category": "security",
+    "scope": "nextgen"
+  },
+  {
+    "id": "models.default",
+    "category": "connections",
+    "scope": "shared"
+  },
+  {
+    "id": "models.default.confirm",
+    "category": "connections",
+    "scope": "shared"
+  },
+  {
+    "id": "models.fallback.add",
+    "category": "connections",
+    "scope": "shared"
+  },
+  {
+    "id": "models.fallback.change",
+    "category": "connections",
+    "scope": "shared"
+  },
+  {
+    "id": "models.fallback.order",
+    "category": "connections",
+    "scope": "shared"
+  },
+  {
+    "id": "models.fallback.remove",
+    "category": "connections",
+    "scope": "shared"
+  },
+  {
+    "id": "models.fallback.save",
+    "category": "connections",
+    "scope": "shared"
+  },
+  {
+    "id": "models.fallback.discard",
+    "category": "connections",
+    "scope": "shared"
+  },
+  {
+    "id": "models.auxiliary",
+    "category": "connections",
+    "scope": "shared"
+  },
+  {
+    "id": "models.providers",
+    "category": "connections",
+    "scope": "shared"
+  },
+  {
+    "id": "models.refresh",
+    "category": "connections",
+    "scope": "shared"
+  },
+  {
+    "id": "models.provider-sign-in",
+    "category": "connections",
+    "scope": "shared"
+  },
+  {
+    "id": "models.nous-portal",
+    "category": "connections",
+    "scope": "shared"
+  },
+  {
+    "id": "provider.oauth",
+    "category": "connections",
+    "scope": "shared"
+  },
+  {
+    "id": "provider.oauth.start",
+    "category": "connections",
+    "scope": "shared"
+  },
+  {
+    "id": "provider.oauth.finish",
+    "category": "connections",
+    "scope": "shared"
+  },
+  {
+    "id": "provider.oauth.cancel",
+    "category": "connections",
+    "scope": "shared"
+  },
+  {
+    "id": "provider.oauth.disconnect",
+    "category": "connections",
+    "scope": "shared"
+  },
+  {
+    "id": "backup.export",
+    "category": "security",
+    "scope": "shared"
+  },
+  {
+    "id": "backup.export.passphrase",
+    "category": "security",
+    "scope": "shared"
+  },
+  {
+    "id": "backup.export.confirm",
+    "category": "security",
+    "scope": "shared"
+  },
+  {
+    "id": "backup.export.deliver",
+    "category": "security",
+    "scope": "shared"
+  },
+  {
+    "id": "backup.import",
+    "category": "security",
+    "scope": "shared"
+  },
+  {
+    "id": "backup.import.passphrase",
+    "category": "security",
+    "scope": "shared"
+  },
+  {
+    "id": "backup.import.merge",
+    "category": "security",
+    "scope": "shared"
+  },
+  {
+    "id": "backup.import.replace",
+    "category": "security",
+    "scope": "shared"
+  },
+  {
+    "id": "backup.import.confirm",
+    "category": "security",
+    "scope": "shared"
+  },
+  {
+    "id": "about.version",
+    "category": "about",
+    "scope": "shared"
+  },
+  {
+    "id": "about.privacy",
+    "category": "about",
+    "scope": "shared"
+  },
+  {
+    "id": "about.licenses",
+    "category": "about",
+    "scope": "shared"
+  },
+  {
+    "id": "about.license-detail",
+    "category": "about",
+    "scope": "shared"
+  },
+  {
+    "id": "ng.chat.reopen",
+    "category": "chat",
+    "scope": "nextgen"
+  }
+]

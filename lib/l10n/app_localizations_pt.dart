@@ -15730,6 +15730,41 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get ng_slash_suggestions_skill => 'Competência';
+
+  @override
+  String get settings_classic_title => 'Definições Classic';
+
+  @override
+  String get settings_nextgen_title => 'Definições NextGen';
+
+  @override
+  String get settings_category_general => 'Geral e idioma';
+
+  @override
+  String get settings_category_chat => 'Conversa e sessões';
+
+  @override
+  String get settings_category_device => 'Dispositivo e atalhos';
+
+  @override
+  String get settings_category_connections => 'Ligações e modelos';
+
+  @override
+  String get settings_category_security => 'Privacidade e cópia de segurança';
+
+  @override
+  String get settings_category_about => 'Acerca de e ajuda';
+
+  @override
+  String get settings_reopen_chat =>
+      'Restaurar a última conversa ao regressar a um gateway';
+
+  @override
+  String get settings_reopen_chat_hint =>
+      'Um arranque a frio abre o ecrã de boas-vindas. As ligações e notificações abrem a conversa pedida.';
+
+  @override
+  String get settings_danger => 'Zona de perigo';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -31431,4 +31466,39 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get ng_slash_suggestions_skill => 'Habilidade';
+
+  @override
+  String get settings_classic_title => 'Configurações Classic';
+
+  @override
+  String get settings_nextgen_title => 'Configurações NextGen';
+
+  @override
+  String get settings_category_general => 'Geral e idioma';
+
+  @override
+  String get settings_category_chat => 'Conversa e sessões';
+
+  @override
+  String get settings_category_device => 'Dispositivo e atalhos';
+
+  @override
+  String get settings_category_connections => 'Conexões e modelos';
+
+  @override
+  String get settings_category_security => 'Privacidade e backup';
+
+  @override
+  String get settings_category_about => 'Sobre e ajuda';
+
+  @override
+  String get settings_reopen_chat =>
+      'Restaurar a última conversa ao voltar a um gateway';
+
+  @override
+  String get settings_reopen_chat_hint =>
+      'Uma inicialização a frio abre a tela de boas-vindas. Links e notificações abrem a conversa solicitada.';
+
+  @override
+  String get settings_danger => 'Zona de perigo';
 }

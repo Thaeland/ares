@@ -7270,5 +7270,16 @@
   "ng_slash_suggestions_loading": "Cargando comandos…",
   "ng_slash_suggestions_empty": "No hay comandos que coincidan",
   "ng_slash_suggestions_label": "Sugerencias de comandos",
-  "ng_slash_suggestions_skill": "Habilidad"
+  "ng_slash_suggestions_skill": "Habilidad",
+  "settings_classic_title": "Ajustes de Classic",
+  "settings_nextgen_title": "Ajustes de NextGen",
+  "settings_category_general": "General e idioma",
+  "settings_category_chat": "Chat y sesiones",
+  "settings_category_device": "Dispositivo y atajos",
+  "settings_category_connections": "Conexiones y modelos",
+  "settings_category_security": "Privacidad y copias de seguridad",
+  "settings_category_about": "Acerca de y ayuda",
+  "settings_reopen_chat": "Restaurar el último chat al volver a una puerta de enlace",
+  "settings_reopen_chat_hint": "Al iniciar desde cero se abre la bienvenida. Los enlaces y las notificaciones abren el chat solicitado.",
+  "settings_danger": "Zona de peligro"
 }

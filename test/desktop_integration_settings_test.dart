@@ -1,3 +1,4 @@
+import 'support/settings_navigation.dart';
 // The Desktop integration card is reachable from both navigation trees on
 // desktop (Classic Settings, NextGen Settings) and absent on phones.
 import 'dart:async';
@@ -61,6 +62,7 @@ Future<void> _pumpClassic(WidgetTester tester) async {
     ),
   );
   await tester.pumpAndSettle();
+  await openSettingsCategory(tester, 'device');
 }
 
 Future<_Ng> _pumpNextGen(WidgetTester tester) async {
@@ -95,6 +97,7 @@ Future<_Ng> _pumpNextGen(WidgetTester tester) async {
   );
   await tester.pump();
   await tester.pump(const Duration(milliseconds: 300));
+  await openSettingsCategory(tester, 'device');
   return g;
 }
 

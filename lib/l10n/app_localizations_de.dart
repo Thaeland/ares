@@ -15712,4 +15712,39 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ng_slash_suggestions_skill => 'Skill';
+
+  @override
+  String get settings_classic_title => 'Classic-Einstellungen';
+
+  @override
+  String get settings_nextgen_title => 'NextGen-Einstellungen';
+
+  @override
+  String get settings_category_general => 'Allgemein & Sprache';
+
+  @override
+  String get settings_category_chat => 'Chat & Sitzungen';
+
+  @override
+  String get settings_category_device => 'Gerät & Tastenkürzel';
+
+  @override
+  String get settings_category_connections => 'Verbindungen & Modelle';
+
+  @override
+  String get settings_category_security => 'Datenschutz & Sicherung';
+
+  @override
+  String get settings_category_about => 'Info & Hilfe';
+
+  @override
+  String get settings_reopen_chat =>
+      'Letzten Chat bei Rückkehr zu einem Gateway wiederherstellen';
+
+  @override
+  String get settings_reopen_chat_hint =>
+      'Beim Kaltstart erscheint die Begrüßungsseite. Links und Benachrichtigungen öffnen den angeforderten Chat.';
+
+  @override
+  String get settings_danger => 'Gefahrenbereich';
 }

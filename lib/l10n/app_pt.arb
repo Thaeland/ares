@@ -7270,5 +7270,16 @@
   "ng_slash_suggestions_loading": "A carregar comandos…",
   "ng_slash_suggestions_empty": "Nenhum comando correspondente",
   "ng_slash_suggestions_label": "Sugestões de comandos",
-  "ng_slash_suggestions_skill": "Competência"
+  "ng_slash_suggestions_skill": "Competência",
+  "settings_classic_title": "Definições Classic",
+  "settings_nextgen_title": "Definições NextGen",
+  "settings_category_general": "Geral e idioma",
+  "settings_category_chat": "Conversa e sessões",
+  "settings_category_device": "Dispositivo e atalhos",
+  "settings_category_connections": "Ligações e modelos",
+  "settings_category_security": "Privacidade e cópia de segurança",
+  "settings_category_about": "Acerca de e ajuda",
+  "settings_reopen_chat": "Restaurar a última conversa ao regressar a um gateway",
+  "settings_reopen_chat_hint": "Um arranque a frio abre o ecrã de boas-vindas. As ligações e notificações abrem a conversa pedida.",
+  "settings_danger": "Zona de perigo"
 }
