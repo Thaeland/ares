@@ -70,19 +70,23 @@ final _markdownRefCache = <String, List<MediaTagRef>>{};
 bool _mayHoldFileLink(String text) =>
     text.contains('](') || text.contains(']:') || text.contains('<');
 
-/// A very long line with no Markdown structure characters can only be plain
-/// paragraph text; it carries no destination and does not change which
-/// blocks are code or quotation. Shorten it in the parser's copy only.
-String _boundLongPlainLines(String text) {
+/// Bound expensive, irrelevant parser work in the indexer's private copy.
+/// Rendering and explicit destinations are never changed.
+String _boundIndexLines(String text) {
   const limit = 2048;
   if (text.length <= limit) return text;
   final lines = text.split('\n');
   var changed = false;
   for (var i = 0; i < lines.length; i++) {
     final line = lines[i];
-    if (line.length <= limit || line.contains(RegExp(r'[\[\]<>`~()]'))) {
+    if (line.length <= limit) continue;
+    final quoted = _boundConsecutiveQuoteDepth(line);
+    if (quoted != line) {
+      lines[i] = quoted;
+      changed = true;
       continue;
     }
+    if (line.contains(RegExp(r'[\[\]<>`~()]'))) continue;
     // Keep the block prefix (indentation, heading/list/break markers) so the
     // line keeps its block kind, and drop the long plain text after it.
     var end = 0;
@@ -94,6 +98,21 @@ String _boundLongPlainLines(String text) {
     changed = true;
   }
   return changed ? lines.join('\n') : text;
+}
+
+/// Quote subtrees are excluded by the indexer. Avoid constructing thousands
+/// of redundant containers, while retaining the complete body and its indent
+/// (including reference definitions and code). Tabs are left alone because
+/// their indentation depends on the original column.
+String _boundConsecutiveQuoteDepth(String line) {
+  const retainedDepth = 64;
+  if (!line.startsWith('>') || line.contains('\t')) return line;
+  var end = 0;
+  while (end < line.length && line.codeUnitAt(end) == 0x3e) {
+    end++;
+  }
+  if (end <= retainedDepth) return line;
+  return '${line.substring(0, retainedDepth)}${line.substring(end)}';
 }
 
 List<MediaTagRef> _parseMarkdownFileRefs(String text) {
@@ -114,9 +133,9 @@ List<MediaTagRef> _parseMarkdownFileRefs(String text) {
   }
 
   try {
-    md.Document(extensionSet: md.ExtensionSet.gitHubFlavored)
-        .parse(_protectLazyQuoteLinks(_boundLongPlainLines(text)))
-        .forEach(collect);
+    md.Document(
+      extensionSet: md.ExtensionSet.gitHubFlavored,
+    ).parse(_protectLazyQuoteLinks(_boundIndexLines(text))).forEach(collect);
   } on StackOverflowError {
     return const []; // Pathological nesting: index nothing rather than crash.
   }
@@ -128,7 +147,8 @@ List<MediaTagRef> _parseMarkdownFileRefs(String text) {
 /// explicit in the parser copy; rendering text and destinations stay exact.
 String _protectLazyQuoteLinks(String text) {
   var quoteParagraph = false;
-  final lines = text.split('\n');
+  // Match Markdown's CRLF handling before classifying lazy continuations.
+  final lines = text.replaceAll('\r\n', '\n').split('\n');
   for (var index = 0; index < lines.length; index++) {
     final line = lines[index];
     final quote = RegExp(
